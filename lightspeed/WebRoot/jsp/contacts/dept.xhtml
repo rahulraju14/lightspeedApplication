@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<h:head>
+	<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+	<title>#{headerViewBean.domainTabTitle} Departments</title>
+
+	<ui:include src="../common/head.xhtml" />
+
+	<script language="javascript">
+		var formname = "dept";
+		var mainListId = "dept:itemlist"; // used by main list scrolling functions
+
+		function resize() {
+			<c:if test="#{not headerViewBean.mobile}">
+			// resize main left list
+			resizeScrollable('dept:itemlist', 195, 392);
+
+			// resize right-hand mini-tab area
+			element = document.getElementById('dept:miniView');
+			resizeElement(element, 183, 396);
+
+			// resize department members list
+			resizeScrollable('dept:membertable', 560, 86);
+
+			</c:if>
+
+		}
+	</script>
+</h:head>
+<h:body>
+	<c:if test="#{not headerViewBean.mobile}">
+		<script language="javascript">
+			ice.ace.jq(document).ready(function() {
+				initDomLoaded(mainListId); // do our standard page initialization tasks.
+			});
+		</script>
+	</c:if>
+	<h:form id="dept">
+		<h:outputText binding="#{headerRequestBean.tabName}"
+			value="#{headerViewBean.tabValue}" style="visibility:hidden;">
+			<f:attribute name="tabid"
+				value="#{not headerViewBean.talent ? 'departments' : 'talentdepartments'}" />
+		</h:outputText>
+
+		<div id="main">
+
+			<ui:include src="../common/header2.xhtml" />
+
+			<div id="mainCont">
+				<div id="ctrCont">
+					<div id="pnlCont">
+
+						<!-- Begin Dept List pnlLt -->
+						<div id="pnlLt">
+
+							<div class="topBdrCont">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div class="leftPanelHdr">
+								<span class="pnlHdrTxt FL">Departments</span>
+
+								<!-- ADD -->
+								<h:panelGroup styleClass="FR pad5rt"
+									rendered="#{(not departmentBean.editMode) and (not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="btnPriHotLt" />
+									<span> <ace:linkButton value="Add"
+											title="Create a new department"
+											action="#{departmentBean.actionNew}" styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</h:panelGroup>
+								<!-- ADD (disabled) -->
+								<h:panelGroup styleClass="FR pad5rt"
+									rendered="#{(departmentBean.editMode) and (not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="btnPriDisLt" />
+									<span> <ace:linkButton value="Add"
+											title="Create a new department" styleClass="btnPriDisCt"
+											type="text" onclick="return false;" />
+									</span>
+									<span class="btnPriDisRt" />
+								</h:panelGroup>
+
+								<!-- CHANGE ORDER -->
+								<h:panelGroup styleClass="FR pad10rt"
+									rendered="#{(not departmentBean.editMode) and (not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="btnPriHotLt" />
+									<span> <ace:linkButton
+											action="#{departmentBean.actionOpenChangeOrder}"
+											styleClass="btnPriHotCt"
+											title="Re-order the departments, or change the 'In Use' setting for several departments at once"
+											value="Manage Depts">
+											<!-- <span class="btnLbl2lines">Manage<br/>Depts</span> -->
+										</ace:linkButton>
+									</span>
+									<span class="btnPriHotRt" />
+								</h:panelGroup>
+
+								<!-- CHANGE ORDER (disabled) -->
+								<h:panelGroup styleClass="FR pad10rt"
+									rendered="#{(departmentBean.editMode) and (not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="btnPriDisLt" />
+									<span> <ace:linkButton styleClass="btnPriDisCt"
+											type="text" onclick="return false;"
+											title="Re-order the departments, or change the 'In Use' setting for several departments at once"
+											value="Manage Depts">
+											<!-- <span class="btnLbl2linesDis">Manage<br/>Depts</span> -->
+										</ace:linkButton>
+									</span>
+									<span class="btnPriDisRt" />
+								</h:panelGroup>
+
+							</div>
+
+							<!-- data list container for Dept -->
+							<div class="rowCont ltrtBdr">
+								<ace:dataTable id="itemlist" styleClass="bk_sl_grid"
+									selectionMode="single" singleSort="true" rowStyleClass="CT"
+									value="#{departmentBean.sortedItemList}" var="item"
+									scrollHeight="#{headerViewBean.mobile ? '' : '367'}"
+									scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+									rowSelectListener="#{departmentBean.listenRowClicked}">
+
+									<!-- LIST ORDER / PRIORITY -->
+									<ace:column headerText="Order" style="width:14%"
+										sortBy="#{item.listPriority}">
+										<h:outputText value="#{item.listPriority}" />
+									</ace:column>
+
+									<!-- DEPARTMENT NAME -->
+									<ace:column headerText="Name" styleClass="LT" style="width:50%"
+										sortBy="#{item.name}">
+										<h:outputText value="#{item.name}" />
+									</ace:column>
+
+									<!-- ON CALL SHEET check-mark -->
+									<ace:column style="width:12%">
+										<f:facet name="header">
+											<div class="CT">
+												<h:panelGroup styleClass="LH12">On Call<br />Sheet</h:panelGroup>
+											</div>
+										</f:facet>
+										<h:graphicImage rendered="#{item.showOnCallsheet}" alt=""
+											url="../../i/icon_check.gif" />
+									</ace:column>
+
+									<!-- ON PR check-mark -->
+									<ace:column style="width:12%">
+										<f:facet name="header">
+											<div class="CT">
+												<h:panelGroup styleClass="LH12">On<br />PR</h:panelGroup>
+											</div>
+										</f:facet>
+										<h:graphicImage rendered="#{item.showOnDpr}" alt=""
+											url="../../i/icon_check.gif" />
+									</ace:column>
+
+									<!-- ACTIVE / IN-USE flag -->
+									<ace:column style="width:12%">
+										<f:facet name="header">
+											<div class="CT">
+												<h:panelGroup styleClass="LH12">In<br />Use</h:panelGroup>
+											</div>
+										</f:facet>
+										<h:graphicImage rendered="#{(item.active)}" alt=""
+											url="../../i/icon_check.gif" />
+									</ace:column>
+
+								</ace:dataTable>
+							</div>
+							<!-- end poiListCont -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+						</div>
+						<!-- End Dept List - pnlLt -->
+
+						<!--  Begin Dept Details - pnlRt -->
+						<div id="pnlRt">
+
+							<h:panelGroup styleClass="errMsgCont"
+								rendered="#{! departmentBean.showChangeOrder}">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:panelGroup>
+
+							<div class="topBdrCont">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div class="rowCont FL BKwhite ltrtBdr">
+								<span class="pnlHdrTxt FL"> <h:outputText
+										rendered="#{departmentBean.element.name ne null}"
+										value="#{departmentBean.element.name}" />&#160;
+								</span>
+
+								<h:panelGroup
+									rendered="#{
+									(departmentBean.element.id ne null) and
+									(departmentBean.element.timeKeeper eq null) and
+									(departmentBean.element.production.id ne 1) and
+									(departmentBean.element.standardDeptId eq null) and
+									(not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="FR pad5rt"> <span class="btnPriEnbLt" /> <span>
+											<ace:linkButton value="Delete"
+												action="#{departmentBean.actionDelete}"
+												styleClass="btnPriEnbCt" />
+									</span> <span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup
+									rendered="#{(departmentBean.editMode) and
+									(departmentBean.element ne null) and
+									(not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="FR pad5rt"> <span class="btnPriDisLt" /> <span>
+											<ace:linkButton value="Edit"
+												title="Click Save or Cancel when you are done editing"
+												styleClass="btnPriDisCt" type="text" onclick="return false;" />
+									</span> <span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup
+									rendered="#{(not departmentBean.editMode) and
+									(departmentBean.element ne null) and
+									(not empty authBean.pgFields['3.3,edit_department'])}">
+									<span class="FR pad5rt"> <span class="btnPriHotLt" /> <span>
+											<ace:linkButton
+												title="Change the settings for the selected department"
+												value="Edit" action="#{departmentBean.actionEdit}"
+												styleClass="btnPriHotCt" />
+									</span> <span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+
+							<div id="poiDetailCont" class="ltrtBdr BKwhite">
+
+								<h:panelGrid id="miniView" styleClass="miniPanel">
+
+									<!-- miniview Tabs for Dept -->
+									<ace:tabSet id="tabs"
+										selectedIndex="#{subjectBean.selectedTab}" width="100%"
+										cellpadding="0" cellspacing="0" border="0" >
+
+										<!--  Detail Tab  -->
+										<ace:tabPane label="Details" id="poitab">
+
+											<div class="miniTabPart">
+
+												<h:panelGroup rendered="#{departmentBean.editMode}"
+													styleClass="rowCont FL pad10tp fd_btmPad">
+													<span class="fdNm"> <h:outputText value="Name:" />
+														<span class="mandatory">*</span>
+													</span>
+													<span class="fd"> <ace:textEntry maxlength="30"
+															styleClass="address" tabindex="1"
+															disabled="#{(departmentBean.element.production.id eq 1) or
+																	(departmentBean.element.standardDeptId ne null)}"
+															value="#{departmentBean.element.name}" />
+													</span>
+												</h:panelGroup>
+
+												<div class="rowCont B pad15tp pad3lt">In Use:</div>
+
+												<div class="pad10lt pad5tp">
+													<div class="rowCont FL fd_btmPad">
+														<div class="adminCkBxs fd">
+															<icecore:setEventPhase events="ValueChangeEvent"
+																phase="INVOKE_APPLICATION">
+																<h:selectBooleanCheckbox tabindex="2"
+																	valueChangeListener="#{departmentBean.listenActiveCheckbox}"
+																	disabled="#{not departmentBean.editMode or
+																			(departmentBean.element.unique) or
+																			(empty authBean.pgFields['3.3,edit_department'])}"
+																	value="#{departmentBean.element.active}"
+																	styleClass="ckbx">
+																	<ace:ajax />
+																</h:selectBooleanCheckbox>
+															</icecore:setEventPhase>
+															<span class="ckbxTxtLbl">Show department in online
+																department lists</span>
+														</div>
+													</div>
+												</div>
+
+												<div class="rowCont B pad15tp pad3lt">Include on Call
+													Sheet &amp; PR:</div>
+
+												<div class="pad10lt pad5tp">
+													<div class="rowCont FL fd_btmPad">
+														<div class="adminCkBxs fd">
+															<h:selectBooleanCheckbox tabindex="2"
+																disabled="#{not departmentBean.editMode or (empty authBean.pgFields['3.3,edit_department'])}"
+																value="#{departmentBean.element.showOnCallsheet}"
+																styleClass="ckbx">
+																<ace:ajax />
+															</h:selectBooleanCheckbox>
+															<span class="ckbxTxtLbl">Include Dept on Call
+																Sheet</span>
+														</div>
+													</div>
+
+													<div class="rowCont FL fd_btmPad">
+														<div class="adminCkBxs fd">
+															<h:selectBooleanCheckbox tabindex="3"
+																disabled="#{not departmentBean.editMode or (empty authBean.pgFields['3.3,edit_department'])}"
+																value="#{departmentBean.element.showOnDpr}"
+																styleClass="ckbx">
+																<ace:ajax />
+															</h:selectBooleanCheckbox>
+															<span class="ckbxTxtLbl">Include Dept on
+																Production Report</span>
+														</div>
+													</div>
+													<!-- end  -->
+												</div>
+
+												<div class="rowCont B pad15tp pad3lt">Description:</div>
+
+												<div class="rowCont FL pad5tp pad15lt">
+													<h:panelGroup rendered="#{not departmentBean.editMode}">
+														<h:outputText styleClass="deptDescCont FL" escape="false"
+															value="#{departmentBean.element.description}" />
+													</h:panelGroup>
+													<h:panelGroup rendered="#{departmentBean.editMode}">
+														<span class="FL W100percnt"> <ace:textAreaEntry
+																maxlength="1000" styleClass="stdTxtArea FL"
+																style="height:50px;width:85%;" tabindex="4"
+																value="#{departmentBean.element.description}" />
+														</span>
+													</h:panelGroup>
+												</div>
+
+												<div class="blueLegendContWrap FL">
+													<h:panelGroup styleClass="FL pad15tp rowCont">
+														<div class="blueLegendCont">
+															<div class="legendHdg">Department Members</div>
+															<h:panelGroup styleClass="ckbxRow pad3tp FR pad10rt"
+																rendered="#{headerViewBean.production.type.episodic}">
+																<h:selectBooleanCheckbox styleClass="ckbx" tabindex="5"
+																	value="#{departmentBean.showProject}"
+																	disabled="#{departmentBean.editMode}"
+																	valueChangeListener="#{departmentBean.listenShowProject}">
+																	<ace:ajax />
+																</h:selectBooleanCheckbox>
+																<span class="ckbxTxtLbl">Show people on this
+																	Project/Episode only</span>
+															</h:panelGroup>
+
+															<ace:dataTable styleClass="bk_sl_grid" singleSort="true"
+																id="membertable"
+																value="#{departmentBean.sortedMemberList.list}"
+																rendered="#{not empty departmentBean.sortedMemberList.list}"
+																var="entry" style="overflow-x:hidden;"
+																scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+																scrollHeight="#{headerViewBean.mobile ? '' : '90'}">
+																<ace:column style="width:50%" sortBy="#{entry.name}"
+																	headerText="Name">
+																	<h:outputText value="#{entry.name}" />
+																</ace:column>
+																<ace:column style="width:50%" sortBy="#{entry.roleName}"
+																	headerText="Position">
+																	<h:outputText value="#{entry.roleName}" />
+																</ace:column>
+															</ace:dataTable>
+														</div>
+													</h:panelGroup>
+													<!-- this was not showing up if inside the panelGroup above -->
+													<h:panelGroup styleClass="rowCont B pad5lt pad20tp"
+														rendered="#{empty departmentBean.sortedMemberList.list}">
+														There are no crew members in this department
+													</h:panelGroup>
+												</div>
+												<!-- end rolesContWrap -->
+
+											</div>
+											<!-- end Cont -->
+										</ace:tabPane>
+										<!--  End Dept Detail Tab   -->
+
+										<ace:tabPane label="Subjects">
+											<ace:dataTable var="sb" value="#{subjectBean.subjects}"
+												class="ui-datatable" scrollable="true"
+												selectionMode="single" scrollHeight="310"
+												filterListener="#{subjectBean.onFilterChange}"
+												styleClass="bk_sl_grid"  stateMap="#{subjectBean.stateMap}">
+												<ace:ajax render="@all" execute="@all"></ace:ajax>
+
+
+												<ace:column headerText="Student Id" filterBy="#{sb.stud_Id}"
+													filterMatchMode="contains" sortBy="#{sb.stud_Id}"
+													style="font-size: 13px;">
+													<h:outputText value="#{sb.stud_Id}"
+														style="font-size: 20px;text-align:center;"></h:outputText>
+												</ace:column>
+
+												<ace:column headerText="Subject Id" filterBy="#{sb.id}"
+													filterMatchMode="contains" sortBy="#{sb.id}"
+													style="font-size: 13px;" styleClass="">
+													<h:outputText value="#{sb.id}"
+														style="font-size: 20px;text-align:center;"></h:outputText>
+												</ace:column>
+
+												<ace:column headerText="English" filterBy="#{sb.english}"
+													filterMatchMode="contains" sortBy="#{sb.english}"
+													style="font-size: 13px;" styleClass="">
+													<h:outputText value="#{sb.english}"
+														style="font-size: 20px;text-align:center;"></h:outputText>
+												</ace:column>
+
+
+												<ace:column headerText="Math" filterBy="#{sb.math}"
+													filterMatchMode="contains" sortBy="#{sb.math}"
+													style="font-size: 13px;" styleClass="">
+													<h:outputText value="#{sb.math}"
+														style="font-size: 20px;text-align: center;"></h:outputText>
+												</ace:column>
+
+												<ace:column headerText="Chemistry"
+													filterBy="#{sb.chemistry}" filterMatchMode="contains"
+													sortBy="#{sb.chemistry}" style="font-size: 13px;"
+													styleClass="">
+													<h:outputText value="#{sb.chemistry}"
+														style="font-size: 20px;text-align: center;"></h:outputText>
+												</ace:column>
+
+											</ace:dataTable>
+									
+										</ace:tabPane>
+
+									</ace:tabSet>
+									<!--  END TAB set for Dept Details  -->
+
+								</h:panelGrid>
+								<!-- end miniView -->
+
+								<!-- secondary buttons -->
+								<div class="rowBtn">
+									<div class="rowBtnBdr"></div>
+									<!-- Cancel btn -->
+									<h:panelGroup rendered="#{departmentBean.editMode}">
+										<span class="FR pad10rt"> <span class="btnPriEnbLt" />
+											<span> <ace:linkButton styleClass="btnPriEnbCt"
+													title="Discard (ignore) changes to this department"
+													value="Cancel" action="#{departmentBean.actionCancel}" />
+										</span> <span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+									<!-- end Cancel btn -->
+									<!-- Save btn -->
+									<h:panelGroup rendered="#{departmentBean.editMode}">
+										<span class="FR pad5rt"> <span class="btnSecHotLt" />
+											<span> <ace:linkButton value="Save"
+													title="Save all changes to this department"
+													action="#{departmentBean.actionSave}"
+													styleClass="btnSecHotCt" />
+										</span> <span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+								</div>
+								<!-- end secondary buttons -->
+
+							</div>
+							<!-- end poiDetailCont -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+
+						</div>
+						<!-- end pnlRt -->
+					</div>
+					<!--  end pnlCont -->
+				</div>
+				<!-- end ctrCont -->
+
+				<div class="CB"></div>
+				<!-- clears float for liquid layout -->
+
+			</div>
+			<!-- end mainCont -->
+
+			<div class="footerCont CT">
+				<ui:include src="../common/footercont.xhtml" />
+			</div>
+
+		</div>
+		<!-- end main -->
+	</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+
+	<ui:include src="../common/confirmpopup.xhtml" />
+	<ui:include src="deptorder.xhtml" />
+
+</h:body>
+</html>

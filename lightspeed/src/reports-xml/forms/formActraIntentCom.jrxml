@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="formActraIntentCom" pageWidth="570" pageHeight="400" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5000000000000002"/>
+	<property name="ireport.x" value="5"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="commercialId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select * from commercial where Id = " + $P{commercialId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ssnDAO" class="com.lightspeedeps.dao.FormI9DAO" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Shoot_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Length" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="13">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="3" y="0" width="204" height="13" uuid="786a31a5-36c0-4ea8-b19b-916d79a71497"/>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="334" y="0" width="235" height="13" uuid="2100e9ad-9892-461f-8024-1797efdb50f3"/>
+				<textFieldExpression><![CDATA[$F{Location}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="211" y="0" width="120" height="13" uuid="e72e9456-3df9-4442-8efa-04dd65e8786e"/>
+				<textFieldExpression><![CDATA[$F{Shoot_Date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

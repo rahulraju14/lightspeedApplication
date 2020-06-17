@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!--  notes Mini-Tab of Breakdown page   -->
+
+	<ace:tabPane label="Notes (#{breakdownBean.strip.noteCount})" id="notetab">
+
+		<div class="rowCont FL rowGradient pad5lt pad10tp">
+			<h:outputText styleClass="pad5lt stdTxt notesMsg activeTxt"
+					rendered="#{empty breakdownBean.strip.noteList}"
+					value="No notes have been added to this scene." />
+
+			<ace:dataTable id="datastripnoteList"
+					styleClass="scenebkdn_notes"
+					value="#{breakdownBean.strip.noteList}"
+					style="width:96%;max-width:96%;min-height:278px;"
+					var="note"
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '278'}">
+				<ace:column headerText="" styleClass="B pad15rt NW" style="width:15%;">
+					<h:outputText value="#{note.user.displayName}" />
+					<br />
+					<h:outputText value="#{note.time}">
+						<f:convertDateTime pattern="M/d h:mm a"
+								timeZone="#{headerViewBean.production.timeZoneStr}" />
+					</h:outputText>
+				</ace:column>
+				<ace:column headerText="" style="width:85%;">
+					<h:outputText styleClass="pad10lt" value="#{note.text}" />
+				</ace:column>
+			</ace:dataTable>
+		</div>
+
+		<div class="rowCont FL pad8tp">
+			<ace:textAreaEntry styleClass="pad5lt stdTxt notesTxtArea"
+					maxlength="1000"
+					rendered="#{(not empty authBean.pgFields['4.1,add_note']) and
+						(breakdownBean.editMode or (empty authBean.pgFields['4.1,edit']))}"
+					value="#{breakdownBean.noteText}" />
+			<h:outputText styleClass="pad5lt stdTxt notesMsg activeTxt"
+					rendered="#{(not empty authBean.pgFields['4.1,add_note']) and
+						(not breakdownBean.editMode) and (not empty authBean.pgFields['4.1,edit'])}"
+					value="Click Edit to add a note." />
+			<h:panelGroup styleClass="FR pad5rt scene_notesBtn"
+					rendered="#{(not empty authBean.pgFields['4.1,add_note']) and
+						(breakdownBean.editMode or (empty authBean.pgFields['4.1,edit']))}">
+				<span class="btnPriEnbLt pad15lt"></span>
+				<ace:linkButton styleClass="FL btnPriEnbCt"
+						value="Add Note" action="#{breakdownBean.actionAddNote}" />
+				<span class="btnPriEnbRt" />
+			</h:panelGroup>
+		</div>
+	</ace:tabPane>
+
+</ui:composition>

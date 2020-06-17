@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Productions</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="homem" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="pageTitle">
+					My Productions
+				</div>
+
+				<ui:include src="../common/errors.xhtml" />
+
+					<div class="rowCont CT B pad30tp">
+						Display:
+						<h:selectOneMenu styleClass="txt14 pad2tp pad20lt" style="width:100px;"
+								value="#{productionContactBean.category}"
+								valueChangeListener="#{productionContactBean.selectedCategory}">
+							<f:selectItems
+									value="#{productionContactBean.productionStatusDL}" />
+							<f:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+					</div>
+
+				<div class="CB">&#160;</div>
+
+				<ui:repeat value="#{productionContactBean.sortedItemList}" var="item">
+
+					<div class="CT pad10tp">
+						<h:panelGroup styleClass="inBlock" rendered="#{item.status ne 'NO_ACCESS'}">
+							<span class="FL btnPriHotLt"></span>
+							<span>
+								<h:commandLink value="#{item.production.title}"
+										action="#{productionContactBean.actionEnterMobileProduction}"
+										styleClass="btnPriHotCt mBtnWide" >
+									<f:setPropertyActionListener value="#{item.production.id}"
+											target="#{productionContactBean.productionId}" />
+								</h:commandLink>
+							</span>
+							<span class="FL btnPriHotRt"></span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="inBlock" rendered="#{item.status eq 'NO_ACCESS'}">
+							<span class="FL btnPriDisLt"></span>
+							<span>
+								<h:commandLink value="#{item.production.title}" type="text"
+										styleClass="btnPriDisCt mBtnWide" >
+									<f:setPropertyActionListener value="#{item.production.id}"
+											target="#{productionContactBean.productionId}" />
+								</h:commandLink>
+							</span>
+							<span class="FL btnPriDisRt"></span>
+						</h:panelGroup>
+					</div>
+
+				</ui:repeat>
+
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

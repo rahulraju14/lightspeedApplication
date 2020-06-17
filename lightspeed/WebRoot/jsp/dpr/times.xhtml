@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div style="width:960px;" class="MA txt11">
+		<div class="pad2rt W80 FL CT">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>NDM End
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.ndmEnd}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.ndmEnd}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="pad2rt W80 FL CT">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>Crew Call
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.crewCall}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.crewCall}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="pad2rt W80 FL CT">
+			<h:panelGroup styleClass="B">
+				Shooting<br/>Call
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.shootingCall}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.shootingCall}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup styleClass="B FR W70 pad5tp">
+				Last Man In:
+			</h:panelGroup>
+		</div>
+
+		<div class="pad2rt W80 FL CT">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>1st Shot
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.firstShot}" > &#160;
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.firstShot}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+
+			<h:panelGroup styleClass="viewtimes FL pad3tp" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.lastManIn}">&#160;
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime pad3tp" maxlength="8" value="#{dprViewBean.dpr.lastManIn}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="CT pad2rt W165 FL">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>1st Meal<br/>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not dprViewBean.editMode}">
+				<h:panelGroup styleClass="FL viewtimes pad5lt">
+					<h:outputText value="#{dprViewBean.dpr.firstMealBegin}">	&#160;
+						<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+				</h:panelGroup>
+				<h:panelGroup styleClass="FL viewtimes">
+					<h:outputText value="#{dprViewBean.dpr.firstMealEnd}">&#160;
+						<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="FL edTime" maxlength="8" value="#{dprViewBean.dpr.firstMealBegin}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+				<ace:textEntry styleClass="FL edTime" maxlength="8" value="#{dprViewBean.dpr.firstMealEnd}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="CT pad2rt W80 FL">
+			<h:panelGroup styleClass="B">
+				1st Shot<br/>After
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.firstShotAfter1stMeal}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.firstShotAfter1stMeal}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="CT pad2rt W165 FL">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>2nd Meal<br/>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not dprViewBean.editMode}">
+				<h:panelGroup styleClass="FL viewtimes">
+					<h:outputText value="#{dprViewBean.dpr.secondMealBegin}">	&#160;
+						<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+				</h:panelGroup>
+				<h:panelGroup styleClass="FL viewtimes">
+					<h:outputText value="#{dprViewBean.dpr.secondMealEnd}">&#160;
+						<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="FL edTime" maxlength="8" value="#{dprViewBean.dpr.secondMealBegin}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+				<ace:textEntry styleClass="FL edTime" maxlength="8" value="#{dprViewBean.dpr.secondMealEnd}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+
+		<div class="CT pad4lt pad4rt W80 FL">
+			<h:panelGroup styleClass="B">
+				1st Shot<br/>After
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.firstShotAfter2ndMeal}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.firstShotAfter2ndMeal}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>&#160;
+			</h:panelGroup>
+		</div>
+
+		<div class="CT pad4rt W80 FL">
+			<h:panelGroup styleClass="B">
+				Camera<br/>Wrap
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.cameraWrap}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.cameraWrap}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>&#160;
+			</h:panelGroup>
+		</div>
+
+		<div class="CT W75 FL">
+			<h:panelGroup styleClass="B">
+				&#160;<br/>Last Man Out
+			</h:panelGroup>
+			<h:panelGroup styleClass="viewtimes FL pad5lt" rendered="#{not dprViewBean.editMode}">
+				<h:outputText value="#{dprViewBean.dpr.lastManOut}">
+					<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<ace:textEntry styleClass="edTime" maxlength="8" value="#{dprViewBean.dpr.lastManOut}">
+					<f:converter converterId="lightspeed.DateTimeConverterB"/>
+				</ace:textEntry>&#160;
+			</h:panelGroup>
+		</div>
+	</div>
+
+</ui:composition>

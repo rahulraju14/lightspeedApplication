@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<c:set var="audit" value="#{not empty authBean.pgFields['9.1,view_tc_audit']}" />
+
+	<ace:tabPane label="#{audit ? 'Audit' : ''}" disabled="#{not audit}">
+		<div id="scrolltop" class="scrollPnlTab" style="">
+
+			<div class="blueLegendContWrap MA pad20tp">
+				<div class="blueLegendCont FL">
+					<span class="legendHdg">Timecard Events</span>
+					<div class="FL rowCont gradTbl2">
+
+						<ace:dataTable styleClass="gradTbl2" id="tcEventsTable"
+								singleSort="true"
+								var="item" value="#{fullTimecardBean.timecardEventList}"
+								style="width:100%;max-width:100%;overflow-x:hidden;">
+
+							<!-- the Timed Event -->
+							<ace:column headerText="Type" styleClass="W10percnt">
+								<div class="FL pad20lt">
+									<h:outputText value="#{item.type.label}"/>
+								</div>
+							</ace:column>
+
+							<!-- the Form Field Type -->
+							<ace:column headerText="Timecard Field Type" styleClass="W15percnt">
+								<div class="FL pad20lt">
+									<h:outputText value="#{item.fieldType.label}"/>
+								</div>
+							</ace:column>
+
+							<!-- the  Line Number -->
+							<ace:column headerText="Line Number" styleClass="W10percnt">
+								<div class="FL pad20lt">
+								<h:outputText rendered="#{item.lineNumber ne -1}" value="#{item.lineNumber}"/>
+								<h:outputText rendered="#{item.lineNumber eq -1}"  value="N/A"/>
+								</div>
+							</ace:column>
+
+							<!-- the  Description -->
+							<ace:column headerText="Description" styleClass="W15percnt" sortBy="#{item.description}">
+								<div class="FL pad20lt">
+									<h:outputText value="#{empty item.description ? 'N/A' : item.description}"/>
+								</div>
+							</ace:column>
+
+							<!-- the  Old value -->
+							<ace:column headerText="Old Value" styleClass="W10percnt">
+								<div class="FL pad30lt">
+									<h:outputText value="#{item.oldValue}"/>
+								</div>
+							</ace:column>
+
+							<!-- the  New value -->
+							<ace:column headerText="New Value" styleClass="W10percnt">
+								<div class="FL pad30lt">
+									<h:outputText value="#{item.newValue}"/>
+								</div>
+							</ace:column>
+
+							<!-- the  Name -->
+							<ace:column headerText="Name" styleClass="W20percnt" sortBy="#{item.firstName}">
+								<div class="FL pad20lt">
+									<h:outputText value="#{item.lastName}, #{item.firstName}"/>
+								</div>
+							</ace:column>
+
+							<!-- the Date -->
+							<ace:column headerText="Date" styleClass="W10percnt" sortBy="#{item.date}">
+								<div style="text-align: center;">
+									<h:outputText value="#{item.date}">
+										<f:convertDateTime pattern="M/dd/yy HH:mm:ss" timeZone="#{timezone}"/>
+									</h:outputText>
+								</div>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</div> <!-- blueLegendContWrap -->
+		</div> <!-- scrollTop -->
+	</ace:tabPane>
+
+</ui:composition>

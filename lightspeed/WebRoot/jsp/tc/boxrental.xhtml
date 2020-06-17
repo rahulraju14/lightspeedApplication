@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- The Box Rental minitab of both the Basic and Full Timecard pages -->
+
+	<!-- legend wrapper -->
+	<div class="blueLegendContWrap MA pad10tp">
+		<div class="blueLegendCont FL" style="margin-top:12px;">
+			<div class="FL pad10lt" style="min-height:19px;"><!-- keep size even if btn is hidden -->
+				<h:panelGroup rendered="#{timecardBean.editHtg}">
+					<h:panelGroup styleClass="btn_legend"
+							rendered="#{timecardBean.weeklyTimecard.boxRental ne null and
+								timecardBean.weeklyTimecard.boxRental.amount ne null}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Copy to Timecard" onclick="queueClick(this,event);"
+									action="#{timecardBean.actionCopyBoxToExpenses}"
+									title="Copy the box amount to the timecard's expense table"
+									styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+
+			<div style="min-height:19px;"><!-- keep size even if btn is hidden -->
+				<h:panelGroup rendered="#{timecardBean.editRaw}">
+					<h:panelGroup styleClass="btn_legend"
+							rendered="#{timecardBean.weeklyTimecard.boxRental ne null and timecardBean.weeklyTimecard.status eq 'OPEN'}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Delete this Form" onclick="queueClick(this,event);"
+								action="#{timecardBean.actionDeleteBoxRental}"
+								title="Remove this entire Box Rental form"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend" rendered="#{timecardBean.weeklyTimecard.boxRental eq null}">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Create Form"
+							action="#{timecardBean.actionCreateBoxRental}"
+							title="Create a blank Box Rental form for this timecard"
+							styleClass="btnMiniCt" />
+					<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+
+			<div class="FL rowCont gradTbl2">
+				<h:panelGroup styleClass="rowDivider BKwhite" rendered="#{timecardBean.weeklyTimecard.boxRental eq null}">
+					<br/>
+					&#160; A Box Rental Form has not been created for this week.
+					To add the form, click Edit, then click Create Form.
+					<br/><br/>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{timecardBean.weeklyTimecard.boxRental ne null}">
+					<h:panelGroup styleClass="rowDivider BKwhite"
+							rendered="#{not empty timecardBean.viewProduction.payrollPref.payrollService.boxRentalText}">
+						<div class="W98percnt MA pad5tp pad5bm">
+							<h:outputText value="#{timecardBean.viewProduction.payrollPref.payrollService.boxRentalText}"/>
+						</div>
+					</h:panelGroup>
+
+					<div class="rowDivider BKwhite pad10bm">
+
+						<!-- AMOUNT -->
+						<div class="W96percnt MA pad5tp">
+							<span class="B LH20">Amount:</span>
+							<h:outputText styleClass="pad10lt" rendered="#{! timecardBean.editRaw}"
+									value="#{timecardBean.weeklyTimecard.boxRental.amount}">
+								<f:convertNumber type="number" pattern="#,###.00" />
+							</h:outputText>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:textEntry styleClass="pad10lt W80" rendered="#{timecardBean.editRaw}"
+										 valueChangeListener="#{timecardBean.listenBoxRentalAmount}"
+										value="#{timecardBean.weeklyTimecard.boxRental.amount}">
+									<f:convertNumber type="number" pattern="#,###.00" />
+									<ace:ajax/>
+								</ace:textEntry>
+							</icecore:setEventPhase>
+
+						<!-- INVENTORY -->
+							<div class="pad5tp">
+								<span class="B">Inventory:</span>
+								<h:panelGroup styleClass="FR" rendered="#{! timecardBean.teamPayroll}">
+									<h:selectBooleanCheckbox styleClass="ckbx" value="#{timecardBean.weeklyTimecard.boxRental.inventoryOnFile}"
+											 disabled="#{! timecardBean.editRaw}" />
+									<span class="ckbxTxtLbl_B">Inventory is on file</span>
+								</h:panelGroup>
+							</div>
+							<div class="CB"/>
+							<div>
+								<ace:textAreaEntry styleClass="FL stdTxtArea" value="#{timecardBean.weeklyTimecard.boxRental.inventory}"
+												maxlength="2000" rendered="#{timecardBean.editRaw}"
+												style="height:120px;width:100%;"/>
+								<h:panelGroup rendered="#{! timecardBean.editRaw}"
+										style="min-height:120px;max-height:120px;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;">
+									<div class="W98percnt MA">
+										<h:outputText value="#{timecardBean.weeklyTimecard.boxRental.inventory}" escape="false"/>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="rowDivider BKwhite">
+						 <h:panelGroup styleClass=" ">
+							<table class="BKwhite W100percnt" style="overflow-x:hidden;">
+								<tr>
+									<td style="width:10%;">
+										<h:outputText styleClass="FL pad3lt B" rendered="#{timecardBean.editRaw}"
+												style="margin-top: -40px;margin-bottom: 10px;" value="New Comment:" />
+										<h:outputText styleClass="FL pad3lt B #{timecardBean.editRaw ? 'pad10tp' : ''}" value="Comments:" />
+									</td>
+									<td colspan="2" style="width: 90%;">
+										<ace:textAreaEntry styleClass="FL pad3lt stdTxtArea" value="#{timecardBean.newBoxComment}"
+											maxlength="2000" rendered="#{timecardBean.editRaw}"
+											style="height:30px;width:77%;font-size:11px;"/>
+										<h:panelGroup styleClass="FR pad5tp W20percnt" rendered="#{timecardBean.editRaw}">
+											<span>
+												<span class="btnPriEnbLt" />
+												<span>
+													<ace:linkButton title="Add your new comment to this timecard" value="Add Comment"
+															onclick="queueClick(this,event);"
+															action="#{timecardBean.actionAddBoxComment}" styleClass="btnPriEnbCt" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:panelGroup>
+										<h:outputText rendered="#{not timecardBean.editRaw}"
+											styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{timecardBean.weeklyTimecard.boxRental.comments}"
+											escape="false" style="min-height:60px;max-height:90px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+										<h:outputText rendered="#{timecardBean.editRaw}"
+											styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{timecardBean.weeklyTimecard.boxRental.comments}"
+											escape="false" style="min-height:60px;max-height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+			</div>
+		</div>
+		<div class="FL rowCont pad10tp">
+			<h:outputText rendered="#{timecardBean.teamPayroll}" value="Employee/Loanout agrees that the equipment listed herein is rented to the production company for use under Employee/Loanout's
+			 direction and control. Employee/Loanout is solely responsible for any damage to or loss of such equipment. Employee/Loanout hereby waives any 
+			 and all claims against TEAM, its parent, The TEAM Companies, Inc. (TTC), or affiliates, successors, or assigns for any loss or damage of any 
+			 kind and agrees to look solely to the Production Company to resolve any such claims. Neither TEAM nor TTC shall have any obligation to indemnify 
+			 Employee/Loanout against any loss or damage, or to provide any insurance coverage for the benefit of Employee/Loanout covering the equipment 
+			 herein described. Further, the Production Company and Employee/Loanout certify that the equipment listed herein is being rented at competitive 
+			 rates. I agree that by signing the timecard, I am also agreeing to the terms and Conditions as set forth in the Box/Kit Rental Form." />
+		</div>
+	</div>
+</ui:composition>

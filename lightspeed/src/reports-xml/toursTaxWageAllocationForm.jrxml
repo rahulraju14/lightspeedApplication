@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="toursTaxWageAllocationForm" pageWidth="612" pageHeight="792" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="582" leftMargin="15" rightMargin="15" topMargin="5" bottomMargin="5" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.7715610000000086"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="466"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tcMajor6" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Major}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Major}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="formId" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="ssn" class="java.lang.String"/>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Select twaf.*, case twaf.Frequency when 'ANNUAL' then 'Annual' " +
+"when 'QUARTERLY' then 'Quarterly' when 'MONTHLY' then 'Monthly' " +
+"when 'SEMI-MONTHLY' then 'Semi-Monthly' when 'BI-WEEKLY' then 'Bi-Weekly' " +
+"when 'WEEKLY' then 'Weekly' else 'N/A' end as frequencyFormatted, " +
+"ct.display_name as Employee_Name  from Tax_Wage_Allocation_Form twaf, " +
+"Contact ct  where twaf.id = " + $P{formId} + " and ct.id = twaf.contact_id"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="twafDAO" class="com.ligthspeedeps.dao.TaxWageAllocationFormDAO" isForPrompting="false"/>
+	<parameter name="runningTotal" class="java.math.BigDecimal" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Employee_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Resident_City" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Resident_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Client_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Reallocation_Wages" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Cash_Advance_Deduction" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Retirement_Deduction" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Shareholder_Insurance" class="java.math.BigDecimal"/>
+	<field name="Net_Zero_Check" class="java.lang.Boolean"/>
+	<field name="Special_Instructions" class="java.lang.String"/>
+	<field name="Revision_Date" class="java.util.Date"/>
+	<field name="Revision_Name" class="java.lang.String"/>
+	<field name="Tax_Year" class="java.lang.String"/>
+	<field name="Total_Wages" class="java.math.BigDecimal"/>
+	<field name="frequencyFormatted" class="java.lang.String"/>
+	<field name="User_Id" class="java.lang.Integer"/>
+	<field name="Calc_FIT" class="java.lang.String"/>
+	<field name="Transmitted" class="java.lang.Boolean"/>
+	<variable name="column2Width" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[50]]></initialValueExpression>
+	</variable>
+	<variable name="column3Width" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[50]]></initialValueExpression>
+	</variable>
+	<variable name="column4Width" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[50]]></initialValueExpression>
+	</variable>
+	<variable name="column5Width" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[50]]></initialValueExpression>
+	</variable>
+	<variable name="column6Width" class="java.lang.Integer"/>
+	<background>
+		<band height="782">
+			<line>
+				<reportElement x="0" y="670" width="395" height="1" uuid="a462c955-462f-438f-b3e6-db927164223d"/>
+			</line>
+			<line>
+				<reportElement x="0" y="670" width="1" height="56" uuid="8cfcc9b5-0b42-462a-8b49-5498edd1f597"/>
+			</line>
+			<line>
+				<reportElement x="0" y="680" width="395" height="1" uuid="b9ab7efd-57ea-4f1e-b9da-6456d68c2c85"/>
+			</line>
+			<line>
+				<reportElement x="0" y="691" width="395" height="1" uuid="2ed9b87f-326a-407b-a8dd-38a5362b69de"/>
+			</line>
+			<line>
+				<reportElement x="0" y="702" width="395" height="1" uuid="dd125062-fa39-4080-9312-5396cbcc04c7"/>
+			</line>
+			<line>
+				<reportElement x="1" y="713" width="395" height="1" uuid="c4a3d025-fa99-4871-ae81-fa33c34c9552"/>
+			</line>
+			<line>
+				<reportElement x="0" y="724" width="170" height="1" uuid="eddf2926-cfad-4d60-90a3-056add5e980b"/>
+			</line>
+			<line>
+				<reportElement x="170" y="670" width="1" height="56" uuid="ed0ea1e9-8297-4e48-bdd7-763bd026da06"/>
+			</line>
+			<line>
+				<reportElement x="285" y="670" width="1" height="44" uuid="0ac9d36a-f60e-48ac-8eee-697f0d721fe3"/>
+			</line>
+			<line>
+				<reportElement x="395" y="670" width="1" height="95" uuid="3b510a7c-d549-4a1a-98bd-c79543c97c79"/>
+			</line>
+			<line>
+				<reportElement x="581" y="670" width="1" height="95" uuid="eb5cc0cb-51f6-44c5-a86a-6e44307ba335"/>
+			</line>
+			<line>
+				<reportElement x="395" y="765" width="186" height="1" uuid="286fe358-62f7-4a88-a1d0-cd181cba9424"/>
+			</line>
+			<line>
+				<reportElement x="395" y="670" width="186" height="1" uuid="6d8e9fda-c957-45cb-8566-d7d47685e963"/>
+			</line>
+			<rectangle>
+				<reportElement x="105" y="56" width="70" height="601" backcolor="#99CCFF" uuid="4e43662c-542c-4396-92b9-88f2c3a1459b"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement x="0" y="65" width="582" height="1" uuid="b35ca3d3-321f-4eda-9ef9-987414dca556"/>
+			</line>
+			<line>
+				<reportElement x="0" y="56" width="582" height="1" uuid="10a3d2e4-c143-499f-988c-f081d6453191"/>
+			</line>
+			<line>
+				<reportElement x="0" y="98" width="582" height="1" uuid="978dc688-c0fd-4b6b-a0c5-e3b908c5e895"/>
+			</line>
+			<line>
+				<reportElement x="0" y="107" width="582" height="1" uuid="efaf7e46-7b98-43ef-b11c-45fb8110136c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="116" width="582" height="1" uuid="cb2fd08b-9ed5-48e8-b138-050cb951b544"/>
+			</line>
+			<line>
+				<reportElement x="0" y="125" width="582" height="1" uuid="82ab8628-906e-404d-8608-6c67877d91dd"/>
+			</line>
+			<line>
+				<reportElement x="0" y="134" width="582" height="1" uuid="21e38a91-030d-42f5-bb27-7f25f965fb38"/>
+			</line>
+			<line>
+				<reportElement x="0" y="143" width="582" height="1" uuid="7e13110f-21cc-4bbf-949a-0877549e53d8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="152" width="582" height="1" uuid="a0b6dfe4-89e3-4585-beb6-b14e70f71632"/>
+			</line>
+			<line>
+				<reportElement x="0" y="161" width="582" height="1" uuid="9bddec7e-acac-46f1-84c1-fbb6219fdd82"/>
+			</line>
+			<line>
+				<reportElement x="0" y="170" width="582" height="1" uuid="f54f6c64-82e2-4cb0-ad02-5a39d1146120"/>
+			</line>
+			<line>
+				<reportElement x="0" y="179" width="582" height="1" uuid="565686f8-114b-40e9-adb8-e28ccb0b5f02"/>
+			</line>
+			<line>
+				<reportElement x="0" y="188" width="582" height="1" uuid="42481c71-2d07-4592-98fd-89490a38c07e"/>
+			</line>
+			<line>
+				<reportElement x="0" y="197" width="582" height="1" uuid="764934c4-64c1-4542-89f8-37d085243f22"/>
+			</line>
+			<line>
+				<reportElement x="0" y="206" width="582" height="1" uuid="b473bcde-4ef0-449d-b367-5a24a1010a41"/>
+			</line>
+			<line>
+				<reportElement x="0" y="215" width="582" height="1" uuid="2f8ed493-2a88-4245-98cd-fd17bd0cb4af"/>
+			</line>
+			<line>
+				<reportElement x="0" y="224" width="582" height="1" uuid="487d43d9-9db0-43b3-9e2c-84e7ae789ec1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="233" width="582" height="1" uuid="d85981b7-ee8f-46f0-b821-9246e72fdca4"/>
+			</line>
+			<line>
+				<reportElement x="0" y="242" width="582" height="1" uuid="9f4b5946-4414-4f79-8ef1-d8d2105a604f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="251" width="582" height="1" uuid="11590523-c9c0-4a9f-bc68-e1184ca99e09"/>
+			</line>
+			<line>
+				<reportElement x="0" y="260" width="582" height="1" uuid="941a34d9-90d4-40a7-852c-10241f67fe36"/>
+			</line>
+			<line>
+				<reportElement x="0" y="269" width="582" height="1" uuid="ebff28d0-1c70-4cad-b668-0c4703c9ee77"/>
+			</line>
+			<line>
+				<reportElement x="0" y="278" width="582" height="1" uuid="e4b1f1ac-c746-475f-a307-ac41f73a5b7c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="287" width="582" height="1" uuid="e8bdf75c-ec9b-45e5-9486-2ddfd74cef2f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="296" width="582" height="1" uuid="8ec18809-9bb7-43e3-a93f-5b12aa932fd7"/>
+			</line>
+			<line>
+				<reportElement x="0" y="305" width="582" height="1" uuid="1fc4ac93-8376-4814-97dd-7be3e7fb33f6"/>
+			</line>
+			<line>
+				<reportElement x="0" y="314" width="582" height="1" uuid="99c11d1a-cabd-42a3-83fe-939e6a6199e0"/>
+			</line>
+			<line>
+				<reportElement x="0" y="323" width="582" height="1" uuid="b150964e-35e7-453c-aa66-07d3fb7a1bd5"/>
+			</line>
+			<line>
+				<reportElement x="0" y="332" width="582" height="1" uuid="3e9b11af-5d28-439e-a67a-4e07a57c013a"/>
+			</line>
+			<line>
+				<reportElement x="0" y="341" width="582" height="1" uuid="0649b8c5-4874-4333-a176-e2a4959e6a57"/>
+			</line>
+			<line>
+				<reportElement x="0" y="350" width="582" height="1" uuid="f24e791f-becb-4f4d-8528-7bfc43515b32"/>
+			</line>
+			<line>
+				<reportElement x="0" y="359" width="582" height="1" uuid="809899ee-2e23-4fc2-99df-24b27663a627"/>
+			</line>
+			<line>
+				<reportElement x="0" y="368" width="582" height="1" uuid="b6f7a3e7-44d9-499a-abf6-ea5e58d4ad51"/>
+			</line>
+			<line>
+				<reportElement x="0" y="377" width="582" height="1" uuid="ed534c68-412d-4566-96b4-f718105e64a8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="386" width="582" height="1" uuid="cb8e1605-90f2-4d50-9c4e-bc2afff61f8a"/>
+			</line>
+			<line>
+				<reportElement x="0" y="395" width="582" height="1" uuid="4ad9e949-a1fa-41b0-a73e-00e6beecd9ee"/>
+			</line>
+			<line>
+				<reportElement x="0" y="404" width="582" height="1" uuid="381d0e12-df36-42b1-97fe-27a62e92f7b1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="413" width="582" height="1" uuid="56cefbd0-5141-4384-b4bf-6431d9729236"/>
+			</line>
+			<line>
+				<reportElement x="0" y="422" width="582" height="1" uuid="7c72e8bd-985d-452e-9184-46c6c5f2f747"/>
+			</line>
+			<line>
+				<reportElement x="0" y="431" width="582" height="1" uuid="d6fc9c3e-cfac-4dbc-8276-b215d91f6f4d"/>
+			</line>
+			<line>
+				<reportElement x="0" y="440" width="582" height="1" uuid="699c33e0-2bec-4c12-aab5-c41c96027de4"/>
+			</line>
+			<line>
+				<reportElement x="0" y="449" width="582" height="1" uuid="55de8c96-9b38-47df-8137-d9ce7e7d8c5d"/>
+			</line>
+			<line>
+				<reportElement x="0" y="458" width="582" height="1" uuid="7ff49a91-642b-46bd-9bf8-e8379d2c067b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="467" width="582" height="1" uuid="ac4c5098-3453-475e-91c3-fcdce31c4f25"/>
+			</line>
+			<line>
+				<reportElement x="0" y="476" width="582" height="1" uuid="9506cc37-418c-4480-a16a-e54551d0880f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="485" width="582" height="1" uuid="7037fe3e-d09d-4b03-b667-834fd1bb572a"/>
+			</line>
+			<line>
+				<reportElement x="0" y="494" width="582" height="1" uuid="df9e03ca-56e2-4ee3-a744-db2ad52e0578"/>
+			</line>
+			<line>
+				<reportElement x="0" y="503" width="582" height="1" uuid="0b45b2ee-72c9-4c77-8831-625b6965f3a8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="512" width="582" height="1" uuid="31c79b54-b1b7-4c96-ab7f-c06db1d7910b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="521" width="582" height="1" uuid="52bfcf4d-edfb-4023-b90a-4b3f4dc3ebed"/>
+			</line>
+			<line>
+				<reportElement x="0" y="530" width="582" height="1" uuid="45ca3c02-102a-49f3-bab9-cb6849635ad1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="539" width="582" height="1" uuid="81d320ba-1e99-4c04-a046-76efdf3ad146"/>
+			</line>
+			<line>
+				<reportElement x="0" y="548" width="582" height="1" uuid="9b88cab1-fb18-4576-894b-ffa089380230"/>
+			</line>
+			<line>
+				<reportElement x="0" y="557" width="582" height="1" uuid="4cf95b19-1f51-471b-abdd-d93b390cf383"/>
+			</line>
+			<line>
+				<reportElement x="0" y="566" width="582" height="1" uuid="c5828cf7-b46c-43cd-b341-072c9e2ea4c3"/>
+			</line>
+			<line>
+				<reportElement x="0" y="575" width="582" height="1" uuid="0b7506ee-d4c4-4934-b657-e8e54e58eef8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="584" width="582" height="1" uuid="6679e0c9-19aa-4078-9849-33d9174ef10f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="593" width="582" height="1" uuid="988d9537-7b99-4ccb-95e9-0a0852fb7686"/>
+			</line>
+			<line>
+				<reportElement x="0" y="602" width="582" height="1" uuid="eaba280f-42de-4646-8ec0-84e8d3b8fe64"/>
+			</line>
+			<line>
+				<reportElement x="0" y="611" width="582" height="1" uuid="aa35c760-fd13-496f-861e-144a470a8b8d"/>
+			</line>
+			<line>
+				<reportElement x="0" y="620" width="582" height="1" uuid="efdf81b3-feba-4eb6-bfb0-68600effd5d5"/>
+			</line>
+			<line>
+				<reportElement x="0" y="629" width="582" height="1" uuid="fbf5006d-3797-4005-916a-05d174456130"/>
+			</line>
+			<line>
+				<reportElement x="0" y="638" width="582" height="1" uuid="53b27048-0cae-4a51-adaf-2443a616a72c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="647" width="582" height="1" uuid="6d9d0b58-f606-45b0-8755-4fb1985e123c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="656" width="582" height="1" uuid="99b749e8-7db4-4c75-b127-d9b4dadd7a6d"/>
+			</line>
+			<line>
+				<reportElement x="0" y="56" width="1" height="613" uuid="5680cb52-2d99-4fb1-802a-a9bf97e3fbaa"/>
+			</line>
+			<line>
+				<reportElement x="581" y="56" width="1" height="601" uuid="f575af4d-5bc3-4b42-9914-47e7a9eb6ce2"/>
+			</line>
+			<line>
+				<reportElement x="105" y="56" width="1" height="613" uuid="177acff6-9727-4cba-8002-e82d9b04b321"/>
+			</line>
+			<line>
+				<reportElement x="175" y="56" width="1" height="613" uuid="bef039ad-fe9d-452f-b57a-c648df1b6d54"/>
+			</line>
+			<line>
+				<reportElement x="204" y="56" width="1" height="613" uuid="975fc2d7-9a8c-4b69-8f3c-fa3491839d12"/>
+			</line>
+			<line>
+				<reportElement x="265" y="56" width="1" height="613" uuid="17b65751-b196-4187-96a2-1f5ca39cd809"/>
+			</line>
+			<line>
+				<reportElement x="340" y="56" width="1" height="613" uuid="06fd3ac9-4203-4bd2-9529-e5e47c761d4b"/>
+			</line>
+			<rectangle>
+				<reportElement x="266" y="108" width="74" height="8" backcolor="#CC99FF" uuid="d7ddc5bc-e0da-4ec0-a9f2-29ac6e467137"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="180" width="74" height="8" backcolor="#CC99FF" uuid="6f12b68c-08a7-4bca-9f78-53df003891a9"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="306" width="74" height="8" backcolor="#CC99FF" uuid="830dd25e-080e-4ccf-b985-273643aae4a7"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="342" width="74" height="8" backcolor="#CC99FF" uuid="8b5bcd61-ea57-478d-b5b8-8bdb74ed164c"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="351" width="74" height="8" backcolor="#CC99FF" uuid="f6fc65fc-98d9-4f0d-a892-cb3150d16454"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="378" width="74" height="8" backcolor="#CC99FF" uuid="6de0e014-1e90-4c22-94fc-e0ebd3c33310"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="387" width="74" height="8" backcolor="#CC99FF" uuid="ee08631e-eaaa-4782-afb8-ba69e90a54fa"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="468" width="74" height="8" backcolor="#CC99FF" uuid="7642000b-977e-465a-b642-01cfa1113e0b"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="459" width="74" height="8" backcolor="#CC99FF" uuid="7047901b-c304-4bd1-966c-7a392b62af37"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="477" width="74" height="8" backcolor="#CC99FF" uuid="b735c575-0559-4346-80ad-9f69b37b24a3"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="486" width="74" height="8" backcolor="#CC99FF" uuid="411f9653-81bb-4666-9ef6-47d35ea1de2e"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="513" width="74" height="8" backcolor="#CC99FF" uuid="c38f682f-27c2-4705-86d1-eb4423b78870"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="522" width="74" height="8" backcolor="#CC99FF" uuid="4aed0533-48f8-4c84-9a7d-7af0f6f86a38"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="549" width="74" height="8" backcolor="#CC99FF" uuid="b87f041f-c3cc-4795-bf70-56d537319cc7"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="558" width="74" height="8" backcolor="#CC99FF" uuid="38ca72df-2cd5-4d77-b562-1daa8364119a"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="567" width="74" height="8" backcolor="#CC99FF" uuid="fa7ec125-fe81-4c05-8570-53b7e2e86096"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="603" width="74" height="8" backcolor="#CC99FF" uuid="631141ff-8d56-4065-a60e-3014890ae690"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="630" width="74" height="8" backcolor="#CC99FF" uuid="0cab5563-9513-44a3-8a98-148d4a9e89af"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="266" y="648" width="74" height="8" backcolor="#CC99FF" uuid="7dd3e71e-862f-4f41-b922-c04212265b3b"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement x="0" y="82" width="582" height="1" uuid="694b538b-a60a-45ba-8029-d7dfc5dcdb40"/>
+			</line>
+			<line>
+				<reportElement x="0" y="670" width="341" height="1" uuid="6004a489-7d33-47f0-adc7-7ea486ab939e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="205" y="657" width="60" height="12" forecolor="#990000" backcolor="#FFC0CB" uuid="7f47861c-47f2-4e2a-b9a5-d2b0b2679f26">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!($F{Total_Wages}.equals($P{runningTotal}))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="57" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="twBold" x="11" y="13" width="105" height="10" uuid="87eb10cd-0a98-4941-bac5-c4d3a15df099"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_EmployeeName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="11" y="23" width="105" height="10" uuid="1e924716-e7cb-448a-9478-006ba2531906"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_SSN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="11" y="33" width="105" height="10" uuid="786e4545-ca73-441a-8f4a-10f2d40b3ca4"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Resident_City_State}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="11" y="44" width="105" height="10" uuid="130f4d34-bff3-4b3f-bd8a-869b86538b0b"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Frequency}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="338" y="34" width="75" height="10" uuid="5f284165-5a9b-488e-8987-00adde91e75f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_ClientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="416" y="44" width="153" height="10" uuid="c27e5e56-8c07-49c4-a373-30fb04fa17cb"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Reallocation_Txt}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="117" y="13" width="116" height="10" uuid="3905ca23-dc77-4e82-8baa-2a231aba914f"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Employee_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="117" y="23" width="116" height="10" uuid="0853d970-340d-4884-b9ca-5543ae85d74c"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.taxWageAllocationFormSSN4($P{formId})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="117" y="33" width="116" height="10" uuid="ff664b77-71d9-419a-8d10-fc1c729fe5ad"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Resident_City} + ", " + $F{Resident_State}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="117" y="44" width="116" height="10" uuid="fb42551a-9367-416c-9e79-d73b39592484"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequencyFormatted}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="416" y="34" width="143" height="10" uuid="eed819ba-55cc-4a71-907e-4c0dc0f5e8ef"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Client_Name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefBold" x="0" y="0" width="582" height="12" uuid="04c91c26-dcb2-45f7-8707-4abacd41d1cf"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Title}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twBold" x="338" y="13" width="75" height="10" uuid="bc7d55d5-59f9-4d53-bb24-a4e3f260422c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Revision}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twBold" x="316" y="23" width="97" height="10" uuid="8cad91d4-ea38-4983-b685-4590e49fa1b6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_RevisionName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="416" y="13" width="143" height="10" uuid="b1495e65-054c-4486-87a6-f9b34ee395f1"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Revision_Date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="416" y="23" width="143" height="10" uuid="46539e75-ef8f-4d91-83d7-bf2377919ffa"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Revision_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twBold" x="259" y="44" width="48" height="10" uuid="135f8763-9a1b-4f4d-8562-e2b9b575350b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_TaxYear}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twBold" x="309" y="44" width="25" height="10" uuid="13c0145b-0f9c-45be-a05f-518fb20b4e43"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tax_Year}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="404" y="44" width="12" height="9" uuid="304cfcf0-c7a1-4536-8ade-2b357fa3de13"/>
+				<imageExpression><![CDATA[($F{Reallocation_Wages} == true) ? $P{imagePath} + "/check_box.gif" : $P{imagePath} + "/check_box_blank.gif"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="253" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="0" y="-2" width="105" height="12" uuid="41defffa-ea25-4130-a74b-c5ecc7b78346"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_State}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="105" y="-2" width="70" height="12" uuid="fa210aed-9706-42dd-af6c-ba980789c1c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_TeamOnly}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="201" y="-2" width="60" height="12" uuid="d7caa7c7-1947-45d2-a92e-81cb4d255056"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_Wages}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="268" y="-2" width="70" height="12" uuid="c3046c3b-aaa7-4f44-9a8c-6efcbe44dbbd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_Fit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="400" y="-2" width="182" height="12" uuid="74fb97af-b25e-4418-86a5-a9fbb6a57f90"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_Special_Instructions}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="361" y="9" width="199" height="19" uuid="59f3fcc9-9992-42e7-8692-06007933fcd1"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_FIT_Special_Instructions}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="176" y="17" width="25" height="10" uuid="0debdf87-c57b-4496-aef8-495d2032b22f"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_Fit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="105" y="17" width="70" height="10" uuid="b5dafca7-6258-4cda-98ae-10e8d6122d5c"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Federal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="0" y="17" width="105" height="10" uuid="6ec3601e-7bcf-4568-ba71-eac57a354899"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Federal_Withholding}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" x="268" y="26" width="70" height="18" uuid="7d18e579-8073-4e34-9f87-876cb8687913"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_State_Local_Withholding}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="42" width="582" height="210" uuid="af6ed9ad-dc5b-4b9c-8598-8a63ce9ad2ff"/>
+				<subreportParameter name="formId">
+					<subreportParameterExpression><![CDATA[$P{formId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/taxWageAllocationTable.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBold" mode="Transparent" x="268" y="17" width="70" height="10" uuid="472d5388-c04b-4ead-964d-c4404310784e">
+					<printWhenExpression><![CDATA[($F{Calc_FIT}.isEmpty() || (new BigDecimal(Double.parseDouble($F{Calc_FIT}.toString().replaceAll(",",""))).divide($F{Total_Wages}, 4, RoundingMode.HALF_UP).doubleValue() >= 0.15))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Calc_FIT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tax_wage_warning" mode="Opaque" x="266" y="17" width="74" height="9" uuid="472d5388-c04b-4ead-964d-c4404310784e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[(!$F{Calc_FIT}.isEmpty() && (new BigDecimal(Double.parseDouble($F{Calc_FIT}.toString().replaceAll(",",""))).divide($F{Total_Wages}, 4, RoundingMode.HALF_UP).doubleValue() < 0.15))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Calc_FIT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="twDefBold" stretchType="RelativeToTallestObject" x="201" y="17" width="60" height="10" uuid="1352ce88-5087-4aae-a711-e11a386e445c"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Total_Wages}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="123" splitType="Stretch">
+			<textField>
+				<reportElement style="twBold" x="6" y="11" width="154" height="10" uuid="9a37684f-c993-4cb4-982b-b6adde842eb5"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Cash_Advance_Deduction}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="6" y="22" width="180" height="10" uuid="37def408-993a-4ddf-b9a9-6d90ab8c1efb"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_401K_Deduction}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="6" y="33" width="180" height="10" uuid="85c3649d-1fb2-4b4c-b34f-036c4d6af0e3"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Fringe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="6" y="44" width="180" height="10" uuid="37edede5-b932-40f1-a054-fb26002513df"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Shareholder_Insurance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="6" y="55" width="85" height="10" uuid="d02ad81f-1328-44a7-b646-dfd72d9a2016"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Net_Zero_Check}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="24" y="110" width="578" height="12" uuid="4d94968d-a9ac-4652-8d98-29335615472d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_TEAM_Address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="3" y="68" width="180" height="10" uuid="04dccd20-afe5-4eba-8c36-77f27eb2eb93"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Column_Header_Special_Instructions} + ":"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="tcDefault8" x="3" y="80" width="390" height="29" uuid="7e7f0f98-a15b-4d86-8662-51288a5983c3"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Special_Instructions}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault8" x="300" y="9" width="75" height="12" uuid="80344765-405f-4fef-ac36-08ef510d6ca9"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Taken_After_Net}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault8" x="300" y="20" width="75" height="12" uuid="cf62b0a0-168d-40ed-b8b4-62e984a23f5d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Pre_Tax_Deduction}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault8" x="300" y="31" width="75" height="12" uuid="110645bb-d054-40ad-afdf-6159a0836e80"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_Full_Taxable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault8" x="300" y="42" width="75" height="12" uuid="9118283d-541a-496d-ba7d-0ba329cee3b6"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_FIT_SIT_Taxable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBold" x="397" y="11" width="180" height="10" uuid="5d57fa25-689b-4075-b6d2-4949a08e6431"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_General_Instructions_Title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBoldItalic" x="397" y="20" width="180" height="18" uuid="40a47208-0cf0-4e44-9c96-18eb2906641c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_General_Instructions_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBoldItalic" x="397" y="38" width="180" height="34" uuid="8dca8dbc-e316-48de-a815-c20f5444e210"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_General_Instructions_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBoldItalic" x="397" y="70" width="180" height="19" uuid="16c9b9cd-5282-4d1b-a0ce-1d91964f6956"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_General_Instructions_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="twBoldItalic" x="397" y="88" width="180" height="18" uuid="a9de9089-be18-4145-ad13-1aafc0c6ea92"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Tours_Allocation_General_Instructions_4}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="197" y="12" width="86" height="10" uuid="2a03b1a2-c00f-4f58-b480-46eda3a6217f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cash_Advance_Deduction}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="197" y="23" width="86" height="10" uuid="e1adb83d-e745-4352-b50b-a71e55c095b1"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Retirement_Deduction}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="197" y="34" width="86" height="10" uuid="ee5dc619-3bfd-4262-ad4f-06b1acea5246"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fringe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="197" y="45" width="86" height="10" uuid="af2153b2-7a2d-4e0d-b8ad-578d56af45c6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shareholder_Insurance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="twBold" x="180" y="0" width="26" height="10" uuid="9e896bc2-0378-485d-8b25-7fff21bec61e"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="tax_wage_warning" x="193" y="0" width="70" height="10" uuid="77483de2-70e9-4ea0-8cbb-90200c3749c8">
+					<printWhenExpression><![CDATA[!($F{Total_Wages}.equals($P{runningTotal}))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{runningTotal} != null) ? $P{runningTotal} : $F{Total_Wages}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="twDefBold" mode="Opaque" x="206" y="0" width="56" height="10" uuid="77483de2-70e9-4ea0-8cbb-90200c3749c8">
+					<printWhenExpression><![CDATA[$F{Total_Wages}.equals($P{runningTotal})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{runningTotal} != null) ? $P{runningTotal} : $F{Total_Wages}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="twBold" x="116" y="55" width="20" height="10" uuid="3447e49d-91ba-4cd9-826f-bdba5182e6bb"/>
+				<textElement>
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[YES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="104" y="55" width="12" height="9" uuid="53b31280-9dbb-44c3-95ac-4b446ba96d0f"/>
+				<imageExpression><![CDATA[($F{Net_Zero_Check} == true) ? $P{imagePath} + "/check_box.gif" : $P{imagePath} + "/check_box_blank.gif"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

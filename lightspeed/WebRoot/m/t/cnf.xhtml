@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Timecard Submitted</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="pickdaym" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="txtL1 pad20tp">
+						<h:outputText value="Your Timecard Has Been"
+								rendered="#{(headerViewBean.user.accountNumber eq mobileTimecardBean.weeklyTimecard.userAccount)}"/>
+						<h:outputText value="The Timecard Has Been"
+								rendered="#{(headerViewBean.user.accountNumber ne mobileTimecardBean.weeklyTimecard.userAccount)}"/>
+				</div>
+				<div class="txtL1 pad5tp">
+						<h:outputText value="Submitted" />
+				</div>
+
+				<div class="prodTitle pad20tp">
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.lastNameFirstName}" />
+				</div>
+				<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+				</div>
+
+				<div class="txtL2 inCtlRow">
+					<span class="midBtn">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<div class="txtL2 pad5tp">
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.totalHours}" />
+						<h:outputText value=" Hours" />
+				</div>
+
+				<div class="CT pad20tp">
+					<span class="inBlock">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="Return to Timecard" action="pickdaym" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</span>
+				</div>
+
+				<div class="CT txtL3 pad20tp pad10lt">
+					A confirmation email will be sent to you.
+				</div>
+
+			</div>
+
+	</h:form>
+
+ 	<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

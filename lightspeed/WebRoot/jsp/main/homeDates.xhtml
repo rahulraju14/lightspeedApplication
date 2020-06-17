@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Parameters: -->
+	<!--   aicp: true if Commercial production -->
+	<!--   showScriptTabs: true if production is using scripts/scheduling features -->
+
+	<!-- Current Production Details -->
+	<div class="rowCont">
+		<div class="rowHdgBk"><div class="pad5tp pad5lt B">Production</div></div>
+		<div class="FL #{messageCenterBean.project.hasUnits ? 'rowGradientNB' : ''}">
+			<div class="FL rowCont LH6">&#160;</div><!-- this provides vert. space, rather than padding, looks better with the gradient bkgd for multiple units -->
+			<h:outputText styleClass="FL rowCont B pad15lt"
+				value="#{messageCenterBean.project.production.title}" />
+			<h:outputText styleClass="FL rowCont stdTxt pad2tp pad15lt"
+				rendered="#{headerViewBean.production.type.episodic}"
+				value="#{messageCenterBean.project.title}" />
+		</div>
+
+		<ace:dataTable
+			styleClass="FL bk_sl_grid #{messageCenterBean.project.hasUnits ? 'rowGradient' : ''}"
+			id="homeProdInfoTbl"
+			value="#{messageCenterBean.project.units}"
+			var="unit"
+			style="width:100%;max-width:100%;overflow-x:hidden;"
+			scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+			scrollHeight="#{headerViewBean.mobile ? '' : '250'}">
+			<ace:column id="column0">
+				<h:panelGroup
+					styleClass="FL pad6bm">
+					<div class="homeProdWrap MA pad5bm">
+						<div id="homeProdCont">
+							<span class="FL rowCont">
+								<h:panelGroup
+									styleClass="FL pad-8tp pad5lt BKwhite txtBlue"
+									rendered="#{messageCenterBean.project.hasUnits}">
+									&#160;
+									<h:outputText
+										styleClass="B"
+										value="Unit:" />
+									<h:outputText
+										value="#{unit.name}" />
+									&#160;
+								</h:panelGroup>
+							</span>
+							<div class="FL rowCont pad5tp pad40lt">
+								<span class="B FL W120">
+									<span class="FR pad5rt">Production Day:</span>
+								</span>
+								<h:outputText styleClass="stdTxt"
+									value="#{messageCenterBean.shootMessage[unit.number]}" />
+							</div>
+							<div class="FL rowCont pad5tp pad40lt">
+								<span class="B FL W120">
+									<span class="FR pad5rt">Start Date:</span>
+								</span>
+								<h:outputText
+									value="#{unit.projectSchedule.startDate}">
+									<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</div>
+							<h:panelGroup styleClass="FL rowCont pad5tp pad40lt"
+								rendered="#{unit.number eq 1}">
+								<span class="B FL W120">
+									<span class="FR pad5rt">Projected End Date:</span>
+								</span>
+								<h:outputText
+									value="#{messageCenterBean.project.originalEndDate}">
+									<f:convertDateTime pattern="M/d/yyyy"
+										timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL rowCont pad5tp pad40lt" rendered="#{showScriptTabs}">
+								<span class="B FL W120">
+									<span class="FR pad5rt">Revised End Date:</span>
+								</span>
+								<h:outputText
+									value="#{messageCenterBean.lastShootDate[unit.number]}">
+									<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</h:panelGroup>
+						</div>
+					</div>
+				</h:panelGroup>
+			</ace:column>
+		</ace:dataTable>
+	</div><!-- end rowCont -->
+
+</ui:composition>

@@ -1,0 +1,243 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL BKwhite">
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I am aware that federal law provides for imprisonment and/or fines for false statements or
+					use of false documents in &lt;/br&gt; connection with the completion of this form." />
+		</div>
+
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I attest, under penalty of perjury, that I am (check one of the following):" />
+		</div>
+
+		<!-- Citizenship Radio buttons Start -->
+		<div class="FL pad5tp">
+			<div class="FL W55percnt">
+				<h:selectOneRadio styleClass="h_radio p10"
+						id="CITIZENSHIP_STATUS" value="#{formI9Bean.citizenshipType}"
+						layout="pageDirection" disabled="#{not formI9Bean.empEdit}"
+						valueChangeListener="#{formI9Bean.listenValueChange}">
+	
+					<f:selectItem itemValue="c"
+						itemLabel="A citizen of the United States" />
+					<f:selectItem itemValue="n"
+						itemLabel="A noncitizen national of the United States (See instructions)" />
+					<f:selectItem itemValue="p"
+						itemLabel="A lawful permanent resident (Alien Registration Number/USCIS Number):" />
+					<f:selectItem itemValue="a"
+						itemLabel="An alien authorized to work until (expiration date, if applicable, mm/dd/yyyy)" />
+				</h:selectOneRadio>
+			</div>
+
+			<div class="FL W40percnt">
+	
+				<div class="rowCont B_false" style="margin-top:70px;">
+					<span class="#{((formI9Bean.citizenshipType eq 'p') and
+							empty (formI9Bean.form.alienRegNumber1)) ? 'requiredField' : ''}">
+						<ace:textEntry id="ALIEN_REG_NUMBER1" size="35"
+							maxlength="35" styleClass="pad-5tp" style="line-height:22px;height:18px"
+							disabled="#{not formI9Bean.empEdit or formI9Bean.citizenshipType ne 'p'}"
+							value="#{formI9Bean.form.alienRegNumber1}" />
+					</span>
+				</div>
+	
+				<div class="rowCont B_false pad10tp">
+					<span style="width:60px;">
+						<ace:dateTimeEntry id="WORK_AUTH_EXPIRATION_DATE"
+							value="#{formI9Bean.form.workAuthExpirationDate}"
+							style="display:inline; width:110px;" renderAsPopup="true"
+							tabindex="0" valueChangeListener="#{formI9Bean.listenValueChange}"
+							disabled="#{not formI9Bean.empEdit or formI9Bean.citizenshipType ne 'a'}"
+							styleClass="#{((formI9Bean.citizenshipType eq 'a') and
+								empty (formI9Bean.form.workAuthExpirationDate)) ? 'requiredField' : ''}">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+							<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/> 
+						</ace:dateTimeEntry>
+					</span>
+					<h:outputText styleClass="txt11"
+						value=".Some aliens may write &quot;N/A&quot; in this field." />
+				</div>
+			</div>
+
+		</div>
+		<!-- Citizenship Radio buttons End -->
+
+		<!-- Middle part for Aliens Start -->
+		<div class="rowCont pad25lt">
+			<div>
+				<h:outputText escape="false" value="&lt;em&gt;(See instructions)&lt;/em&gt;" />
+			</div>
+
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+
+			<h:outputText escape="false"
+				value="&lt;em&gt;For aliens authorized to work, provide your Alien Registration Number/USCIS
+						Number &lt;strong&gt; OR  &lt;/strong&gt; Form I-94 Admission Number:&lt;/em&gt;"
+				styleClass="txt14">
+			</h:outputText>
+
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+
+			<!-- div for 3-D Barcode image start-->
+			<div>
+				<div class="W75percnt FL">
+
+					<!-- Alien Registration Number Start-->
+					<div class="rowCont FL">
+						<span> <h:outputText escape="false" styleClass="FL"
+								value="1. Alien Registration Number/USCIS Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+							empty (formI9Bean.form.alienRegNumber2) and
+							empty (formI9Bean.form.formI9AdmissionNo)) ? 'requiredField' : ''}">
+								<ace:textEntry id="ALIEN_REG_NUMBER2"
+									value="#{formI9Bean.form.alienRegNumber2}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									maxlength="35" styleClass="pad-5tp"
+									disabled="#{not formI9Bean.empEdit or
+										formI9Bean.citizenshipType ne 'a' or
+										not empty (formI9Bean.form.formI9AdmissionNo)}">
+									 <ace:ajax render="@this FORM_I94_ADMISSION_NO FOREIGN_PASSPORT_NO FOREIGN_COUNTRY_OF_ISSUANCE"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Alien Registration Number End-->
+
+					<div class="rowCont" style="margin-left:15%">
+						<h:outputText styleClass="LH10 txt15 B" value="OR" />
+					</div>
+
+					<!-- Form I-94 Admission Number Start-->
+					<div class="rowCont FL">
+						<span> <h:outputText escape="false" styleClass="FL"
+								value="2. Form I-94 Admission Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+							empty (formI9Bean.form.alienRegNumber2) and
+							empty (formI9Bean.form.formI9AdmissionNo)) ? 'requiredField' : ''}">
+								<ace:textEntry id="FORM_I94_ADMISSION_NO"
+									value="#{formI9Bean.form.formI9AdmissionNo}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									maxlength="35" styleClass="pad-5tp"
+									disabled="#{not formI9Bean.empEdit or
+										formI9Bean.citizenshipType ne 'a' or
+										not empty (formI9Bean.form.alienRegNumber2)}">
+									<ace:ajax render="@this ALIEN_REG_NUMBER2 FOREIGN_PASSPORT_NO FOREIGN_COUNTRY_OF_ISSUANCE"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Form I-94 Admission Number End-->
+
+					<div class="rowCont FL">
+						<h:outputText styleClass="LH10" value="&#160;" />
+					</div>
+
+					<div class="pad15lt FL">
+						<h:outputText escape="false"
+							value="If you obtained your admission number from CBP in connection
+								with your arrival in the United &lt;/br&gt; States, include the following:" />
+					</div>
+					<div class="rowCont FL">
+						<h:outputText styleClass="LH10" value="&#160;" />
+					</div>
+
+					<!-- Foreign Passport Number Start-->
+					<div class="rowCont pad30lt FL">
+						<span> <h:outputText escape="false" styleClass="FL"
+								value="Foreign Passport Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+							(not empty formI9Bean.form.formI9AdmissionNo) and
+							(empty formI9Bean.form.foreignPassportNo)) ? 'requiredField' : ''}">
+								<ace:textEntry id="FOREIGN_PASSPORT_NO"
+									maxlength="35" style="min-width:55%;"
+									value="#{formI9Bean.form.foreignPassportNo}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									styleClass="pad-5tp"
+									disabled="#{not formI9Bean.empEdit or
+										formI9Bean.citizenshipType ne 'a' or
+										not empty (formI9Bean.form.alienRegNumber2)}">
+									<ace:ajax render="@this ALIEN_REG_NUMBER2 FORM_I94_ADMISSION_NO FOREIGN_COUNTRY_OF_ISSUANCE" event="blur"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Foreign Passport Number End-->
+
+					<div class="rowCont FL">
+						<h:outputText styleClass="LH10" value="&#160;" />
+					</div>
+
+					<!-- Country of Issuance Start-->
+					<div class="rowCont pad30lt FL">
+						<span> <h:outputText escape="false" styleClass="FL"
+								value="Country of Issuance:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+								not empty (formI9Bean.form.formI9AdmissionNo) and
+								(empty formI9Bean.form.foreignCountryOfIssuance)) ? 'requiredField' : ''}">
+								<ace:textEntry id="FOREIGN_COUNTRY_OF_ISSUANCE"
+									maxlength="35" styleClass="pad-5tp"
+									value="#{formI9Bean.form.foreignCountryOfIssuance}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									style="width:60%;"
+									disabled="#{not formI9Bean.empEdit or
+										formI9Bean.citizenshipType ne 'a' or
+										empty (formI9Bean.form.formI9AdmissionNo)}">
+									<ace:ajax execute="@this FOREIGN_COUNTRY_OF_ISSUANCE" />
+									<ace:ajax render="@this FOREIGN_COUNTRY_OF_ISSUANCE" event="blur"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Country of Issuance End-->
+
+				</div>
+				<!-- width 75 prcnt -->
+
+				<!-- 3-D Barcode image -->
+				<div style="width:19%" class="FL">
+					<h:graphicImage alt="" value="" style="width:172px; margin-left:8px;"
+						url="../../i/forms/i9BarcodeBox.jpg">
+					</h:graphicImage>
+				</div>
+			</div>
+			<!-- div for 3-D Barcode image end -->
+
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+
+			<div class="rowCont FL pad15lt">
+				<h:outputText escape="false" value="Some aliens may write &quot;N/A&quot; on the Foreign
+							Passport Number and Country of Issuance fields. (See instructions)" />
+			</div>
+
+		</div>
+		<!-- Middle part for Aliens end -->
+
+	</div>
+</ui:composition>

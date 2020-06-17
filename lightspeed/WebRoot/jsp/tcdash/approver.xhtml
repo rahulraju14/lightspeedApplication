@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Approver Dashboard</title>
+
+		<ui:include src="../common/head.xhtml" /> 
+
+		<script language="javascript">
+
+		function resize() {
+
+			<c:if test="#{not headerViewBean.mobile}">
+
+			/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+			INCREASE first parameter to decrease the size of the area! */
+			var element = document.getElementById('approve:miniView');
+			resizeElement(element, 180, 415);
+
+			/*
+			We want the PR area to range from a minimum of 240px to a max of 280px.  The minimum keeps all the PR data
+			visible except for part of the graph.  The maximum should include everything in the PR area.
+			*/
+
+			/** diff: pixels occupied by client stuff besides the two tables, i.e., our headers, minitab, footers. */
+			var diff = 290;
+
+			/** Minimum size desired for the PR area */
+			var prMin = 230;
+			/** Maximum size needed for the PR area */
+			var prMax = 280;
+			/** Calculated height for PR area, should be between prMin and prMax. */
+			var prHeight = prMin;
+
+			/** Minimum size desired for timecard table (not including header) */
+			var tcMin = 70;
+			/** If timecard height less than tcFavor, give it all extra space. */
+			var tcFavor = 140;
+			/** Calculated height for the timecard area. */
+			var tcHeight = tcMin;
+
+			/** Calculated height for the gap between the two areas. */
+			var gapHeight = 2;
+
+			/** calculate avail = space available for the 2 table areas and the gap between them. */
+			var avail = document.documentElement.clientHeight - diff;
+			var t;
+			var extra = avail - (prMin + tcMin + gapHeight);
+			if (extra > 0) {
+				if ( (tcFavor - tcMin) > extra ) {
+					// favoring timecard for now -- leave PR at minimum
+					t = 0;
+				}
+				else { // enough to share -- give PR 1/2 of extra past "favored" height of timecards
+					t = (extra - (tcFavor-tcMin)) / 2;
+				}
+				//console.log("t="+ t + " ex=" + extra);
+				if (t > (prMax - prMin)) {
+					t = prMax - prMin;
+				}
+				prHeight = prMin + t;
+				extra = extra - t;
+				t = extra / 20;
+				if (t > 12) {
+					t = 12;
+				}
+				gapHeight = 2 + t;
+				extra = extra - t;
+				tcHeight = tcMin + extra;
+			}
+			//console.log("tcHt=" + tcHeight + ", prHt=" + prHeight);
+
+			element = getScrollDiv('approve:tctable'); /* the scrollable div within the datatable */
+			if (element != null) {
+				/* force permanent vertical scrollbar in timecard table, for better header alignment */
+				element.style.overflowY = 'scroll';
+				var coll = document.getElementById('approve:dtlCollapsed');
+				//console.log("coll=" + coll);
+
+				if (coll == null) { // detail - bottom section - is displayed (NOT collapsed)
+					element.style.maxHeight = tcHeight + "px";
+					element.style.height = tcHeight + "px";
+
+					resizeOne('scrollbottom', prHeight);
+					resizeOne('tablegap', gapHeight);
+				}
+				else { // detail - bottom section - is HIDDEN/collapsed
+					var ht = tcHeight + prHeight - 6;
+					element.style.maxHeight = ht + "px";
+					element.style.height = ht + "px";
+					resizeOne('tablegap', 0);
+				}
+			}
+
+
+			/* resize tables and divs on Gross Payroll minitab */
+			element = getScrollDiv('approve:gptable'); /* the scrollable div within the datatable */
+			if (element != null) {
+				/* force permanent vertical scrollbar in timecard table, for better header alignment */
+				element.style.overflowY = 'scroll';
+				var coll = document.getElementById('approve:gpDtlCollapsed');
+				if (coll == null) { // detail - bottom section - is displayed (NOT collapsed)
+					element.style.maxHeight = tcHeight + "px";
+					element.style.height = tcHeight + "px";
+					resizeOne('gpScrollbottom', prHeight);
+					resizeOne('gpTablegap', gapHeight);
+				}
+				else { // detail - bottom section - is HIDDEN/collapsed
+					var ht = tcHeight + prHeight - 6;
+					element.style.maxHeight = ht + "px";
+					element.style.height = ht + "px";
+					resizeOne('gpTablegap', 0);
+				}
+			}
+
+			element = getScrollDiv('approve:cpaybrk'); /* the scrollable div within the datatable */
+			if (element != null) {
+				/* force permanent vertical scrollbar in Gross pay-breakdown table, for better header alignment */
+				element.style.overflowY = 'scroll';
+			}
+
+
+			/* resize tables and divs on Transfer To Payroll minitab */
+			element = getScrollDiv('approve:batchtable'); /* the scrollable div within the top datatable */
+			if (element != null) {
+				var tpMin = 174; // minimum size of batch and timecard tables (includes blue wrapper)
+				diff = 256; // headers and footers including mini-tab header
+				gapHeight = 8; // minimum gap between batch and timecard sections
+				/** calculate avail = space available for the 2 table areas and the gap between them. */
+				avail = document.documentElement.clientHeight - diff;
+				extra = avail - ((2 * tpMin) + gapHeight); // how much beyond minimum
+				//console.log("avail=" + avail + ", extra=" + extra);
+				if (extra > 0) {
+					t = extra / 40;
+					if (t > 12) {
+						t = 12;
+					}
+					gapHeight = 8 + t;
+					extra = (extra - t) / 2; // split remaining space between top and bottom
+				}
+				else {
+					extra = 0;
+				}
+				tcHeight = tpMin + extra - 64; // scroll div height (NOT including blue wrapper or table header)
+
+				/* force permanent vertical scrollbar in batch table, for better header alignment */
+				element.style.overflowY = 'scroll';
+				element.style.maxHeight = tcHeight + "px";
+				element.style.height = tcHeight + "px";
+
+				resizeOne('tpTablegap', gapHeight); // set the new gap height
+
+				// Transfer to payroll minitab - bottom half: tpTcTable
+				element = getScrollDiv('approve:tpTcTable'); /* the scrollable div within the datatable */
+				if (element != null) {
+					/* force permanent vertical scrollbar in timecard table, for better header alignment */
+					element.style.overflowY = 'scroll';
+					element.style.maxHeight = tcHeight + "px";
+					element.style.height = tcHeight + "px";
+				}
+			}
+
+			element = getScrollDiv('approve:sftable'); /* the scrollable div within the top datatable */
+			if (element != null) {
+				/* resize start-form list table */
+				resizeScrollable('approve:sftable', 270, 305);
+				/* force permanent vertical scrollbar in batch table, for better header alignment */
+				element.style.overflowY = 'scroll';
+			}
+
+			element = getScrollDiv('approve:sftableTours'); /* the scrollable div within the top datatable */
+			if (element != null) {
+				/* resize start-form list table */
+				resizeScrollable('approve:sftableTours', 270, 305);
+				/* force permanent vertical scrollbar in batch table, for better header alignment */
+				element.style.overflowY = 'scroll';
+			}
+
+			element = getScrollDiv('approve:sftable2'); /* the scrollable div within the top datatable */
+			if (element != null) {
+				/* resize start-form list table */
+				resizeScrollable('approve:sftable2', 290, 305);
+				/* force permanent vertical scrollbar in batch table, for better header alignment */
+				element.style.overflowY = 'scroll';
+			}
+
+//			element = document.getElementById('sfListScrollDiv');
+//			if(element != null) {
+//				resizeElement(element, 223, 360);
+//			}
+
+			// Hot Costs Summary table
+//			element = getScrollDiv('approve:hcSumTable'); /* the scrollable div within the top datatable */
+//			if (element != null) {
+//				/* resize start-form list table */
+//				resizeScrollable('approve:hcSumTable', 290, 305);
+//				/* force permanent vertical scrollbar in hot costs summary table, for better header alignment */
+//				element.style.overflowY = 'scroll';
+//			}
+
+			// Hot Costs Data table
+			element = getScrollDiv('approve:hcDataTable'); /* the scrollable div within the top datatable */
+			if (element != null) {
+				/* resize start-form list table */
+				resizeScrollable('approve:hcDataTable', 290, 305);
+				/* force permanent vertical scrollbar in hot costs data table, for better header alignment */
+				element.style.overflowY = 'scroll';
+			}
+
+			element = document.getElementById('hcSummaryScrollDiv');
+			if(element != null) {
+				resizeElement(element, 223, 360);
+			}
+
+			element = document.getElementById('hotCostsDataScrollDiv');
+			if(element != null) {
+				resizeElement(element, 228, 360);
+			}
+
+			// The onscroll setting on the table was lost when the table was rebuilt; this may be
+			// because it is within a tab. (We don't have this problem on usual left-side lists.)
+			setMainScrollOn(mainListId); // (re)set the 'onscroll' function
+
+			</c:if>
+
+		}
+
+		function resizeOne( name, height) {
+			var element = document.getElementById(name);
+			if (element != null) {
+				element.style.maxHeight = height + "px";
+				element.style.height = height + "px";
+			}
+		}
+
+		var formname = "approve";
+
+		var mainListId = "approve:tctable"; // used by main list scrolling functions
+		var altListId = "approve:gptable"; // alternate id, for Gross Pay tab, used by main list scrolling functions
+		var alt2ListId = "approve:sftable"; // 2nd alternate id, for Start Forms tab, used by main list scrolling functions
+
+		</script>
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(mainListId); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+		<h:form id="approve">
+			<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+				<f:attribute name="tabid" value="tcapprover" />
+			</h:outputText>
+			<!-- restore our saved mini-tab selection: -->
+			<h:outputText value="#{filterBean.checkMiniTab}" style="visibility:hidden" />
+
+			<c:set var="tours" value="#{headerViewBean.production.type.tours}" />
+			<c:set var="lsadmin" value="#{not empty authBean.pgFields['2.0,write_any']}" />
+			<c:set var="showTab" value="#{(not tours) or lsadmin}" />
+			<c:set var="projectActive" value="#{(not headerViewBean.production.type.aicp) or headerViewBean.project.status eq 'ACTIVE'}"/><!-- LS-2849 -->
+
+			<div id="main">
+
+				<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" />
+
+				<ui:include src="../common/header2.xhtml" />
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+							<!-- Begin Element Details - pnlFull -->
+							<div id="pnlFull" class="MA">
+
+								<div class="topBdrCont FL">
+									<div class="midTop">
+										<div class="ltTopCnr"></div>
+										<div class="rtTopCnr"></div>
+									</div>
+								</div>
+
+								<div class="rowCont FL ltrtBdr BKwhite"> <!-- Top header -->
+
+									<!-- Force a bean reference to instantiate (early) the correct bean based on the
+									 current mini-tab. This allows the bean to register with FilterBean before any
+									 callbacks are attempted. -->
+									<h:panelGroup rendered="#{headerViewBean.miniTab eq 0}">
+										<h:outputText value="" rendered="#{startFormListBean.selectedTab eq 99}"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{headerViewBean.miniTab eq 1}">
+										<h:outputText value="" rendered="#{approverDashboardBean.selectedTab eq 99}"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}">
+										<h:outputText value="" rendered="#{hotCostsSummaryBean.selectedTab eq 99}"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{headerViewBean.miniTab eq 2}">
+										<h:outputText value="" rendered="#{approverDashboardBean.selectedTab eq 99}"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{headerViewBean.miniTab eq 3}">
+										<h:outputText value="" rendered="#{transferToPayrollBean.selectedTab eq 99}"/>
+									</h:panelGroup>
+
+									<h:panelGroup styleClass="errMsgContFull pad10tp"
+											rendered="#{! printTimecardBean.visible}" >
+										<ui:include src="../common/errorsMain.xhtml" />
+									</h:panelGroup>
+
+									<div class="rowCont LH20">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+
+											<!-- WEEK/ENDING FILTER -->
+											<div class="W10percnt FL">
+												<h:outputText styleClass="pnlHdrTxt" value="Dashboard" />
+											</div>
+											<div class="W15percnt FL pad2tp ">
+												<h:panelGroup rendered="#{headerViewBean.miniTab ne 4 and
+														(not tours or headerViewBean.miniTab gt 0)}" >
+													<h:outputText styleClass="#{(headerViewBean.miniTab eq 0 ? 'txt12 B_false' : 'txt12 B')}" value="W/E" />
+													<h:selectOneMenu immediate="true" styleClass="pad8lt"
+															disabled="#{headerViewBean.miniTab eq 0}"
+															value="#{filterBean.weekEndDate}" style="width:100px;"
+															valueChangeListener="#{filterBean.listenWeekEndChange}" >
+														<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+														<f:selectItems value="#{filterBean.endDateList}"/>
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectOneMenu>
+												</h:panelGroup>
+												<!-- Start Hot Costs mini-tab -->
+												<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}" >
+													<h:panelGroup>
+														<h:outputText styleClass="txt12 B_true" value="W/E" />
+														<h:selectOneMenu immediate="true" styleClass="pad8lt"
+																disabled="false" rendered="#{hotCostsBean.showSummaryView}"
+																value="#{hotCostsBean.weekEndDate}" style="width:100px;"
+																valueChangeListener="#{hotCostsBean.listenWeekEndChange}" >
+															<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+															<f:selectItems value="#{filterBean.endDateList}"/>
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectOneMenu>
+														<h:selectOneMenu immediate="true" styleClass="pad8lt"
+																disabled="#{hotCostsDataEntryBean.editMode}" rendered="#{!hotCostsBean.showSummaryView}"
+																value="#{hotCostsBean.weekEndDate}" style="width:100px;"
+																valueChangeListener="#{hotCostsBean.listenWeekEndChange}" >
+															<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+															<f:selectItems value="#{filterBean.endDateList}"/>
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectOneMenu>
+													</h:panelGroup>
+												</h:panelGroup>
+												<!-- End Hot Costs mini-tab -->
+											</div>
+
+											<!-- DEPT/BATCH/... FILTER -->
+											<div class="W35percnt FL pad2tp">
+												<h:panelGroup rendered="#{headerViewBean.miniTab ne 4}">
+													<h:outputText styleClass="txt12 B" value="Filter:" />
+													<h:selectOneMenu immediate="true" styleClass="pad8lt"
+															disabled="#{filterBean.miniTab eq 3}"
+															value="#{filterBean.filterType}" style="width:90px;"
+															valueChangeListener="#{filterBean.listenFilterByChange}" >
+														<f:selectItems value="#{filterBean.filterByList}"/>
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectOneMenu>
+													<h:selectOneMenu id="dept" immediate="true" styleClass="pad8lt"
+															disabled="#{filterBean.miniTab eq 3}"
+															value="#{filterBean.selectFilterValue}" style="width:200px;"
+															valueChangeListener="#{filterBean.listenSelectFilterChange}" >
+														<f:selectItems value="#{filterBean.selectFilterList}"/>
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectOneMenu>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}">
+													<h:panelGroup rendered="#{!hotCostsBean.showSummaryView}" styleClass="pad10rt">
+														<h:selectOneMenu immediate="true" styleClass="pad8lt"
+																disabled="#{hotCostsDataEntryBean.editMode}"
+																value="#{hotCostsDataEntryBean.dayOfWeekNum}" style="width:100px;"
+																valueChangeListener="#{hotCostsDataEntryBean.listenDayOfWeekChange}" >
+															<f:selectItems value="#{hotCostsBean.daysOfWeek}" />
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectOneMenu>
+													</h:panelGroup>
+													<h:outputText styleClass="txt12 B" value="Dept:" />
+													<h:selectOneMenu id="hcdeptData" immediate="true" styleClass="pad8lt"
+															disabled="#{hotCostsDataEntryBean.editMode}" rendered="#{!hotCostsBean.showSummaryView}"
+															value="#{hotCostsDataEntryBean.selectedDept}" style="width:200px;"
+															valueChangeListener="#{hotCostsDataEntryBean.listenDeptChange}" >
+														<f:selectItems value="#{hotCostsBean.departmentsDL}"/>
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectOneMenu>
+													<h:selectOneMenu id="hcdeptSummary" immediate="true" styleClass="pad8lt"
+															disabled="false" rendered="#{hotCostsBean.showSummaryView}"
+															value="#{hotCostsSummaryBean.selectedDept}" style="width:200px;"
+															valueChangeListener="#{hotCostsSummaryBean.listenDeptChange}" >
+														<f:selectItems value="#{hotCostsBean.departmentsDL}"/>
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectOneMenu>
+												</h:panelGroup>
+											</div>
+
+											<!-- EMPLOYEE NAME FILTER -->
+											<div class="W20percnt FL pad2tp">
+												<h:panelGroup rendered="#{headerViewBean.miniTab ne 4}" >
+													<h:panelGroup rendered="#{filterBean.miniTab eq 3 or not empty filterBean.employeeList}" >
+														<h:outputText styleClass="txt12 B" value="Name" />
+
+														<h:panelGroup rendered="#{filterBean.miniTab ne 3}" >
+															<h:selectOneMenu immediate="true" styleClass="pad8lt"
+																	value="#{filterBean.employeeAccount}" style="width:150px;"
+																	valueChangeListener="#{filterBean.listenEmployeeChange}" >
+																<f:selectItems value="#{filterBean.employeeList}"/>
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneMenu>
+														</h:panelGroup>
+														<h:panelGroup rendered="#{filterBean.miniTab eq 3}" >
+															<h:selectOneMenu immediate="true" styleClass="pad8lt"
+																	disabled="true"
+																	style="width:150px;">
+																<f:selectItem itemLabel="All" itemValue="0"/>
+															</h:selectOneMenu>
+														</h:panelGroup>
+													</h:panelGroup>
+												</h:panelGroup>
+											</div>
+										</icecore:setEventPhase>
+
+										<div class="W20percnt FL">
+											<!-- PRINT BUTTON -->
+											<h:panelGroup rendered="#{headerViewBean.miniTab eq 0 and not tours}">
+												<h:panelGroup rendered="#{not empty authBean.pgFields['9.2,view']}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Print" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Print a Start Form Rate Sheet"
+																	action="#{startFormListBean.actionPrint}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Export" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Create a spreadsheet containing the Start Form data"
+																	action="#{startFormListBean.actionExport}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+											</h:panelGroup>
+
+											<!-- HOT COSTS: EXPORT, EDIT, DELETE AND HTG BUTTONS -->
+											<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}">
+												<h:panelGroup rendered="#{!hotCostsBean.showSummaryView}">
+												<!-- <h:panelGroup rendered="#{!hotCostsBean.showSummaryView
+														(not empty authBean.pgFields['9.4,run_htg'])}"> -->
+													<h:panelGroup styleClass="FR pad5rt" rendered="#{!hotCostsDataEntryBean.editMode}">
+														<span class="btnPriEnbLt"/>
+														<span>
+															<ace:linkButton value="Delete" styleClass="btnPriEnbCt" style="min-width:10px;"
+																	title="Delete selected Hot Costs rows."
+																	action="#{hotCostsDataEntryBean.actionDeleteDailyHotCosts}"/>
+														</span>
+														<span class="btnPriEnbRt"/>
+													</h:panelGroup>
+													<h:panelGroup styleClass="FR pad5rt" rendered="#{hotCostsDataEntryBean.editMode}">
+														<span class="btnPriDisLt"/>
+														<span>
+															<ace:linkButton value="Delete" styleClass="btnPriDisCt" style="min-width:10px;"
+																	title="Delete selected Hot Costs rows."
+																	onClick="return false;"/>
+														</span>
+														<span class="btnPriDisRt"/>
+													</h:panelGroup>
+													<h:panelGroup styleClass="FR pad5rt" rendered="#{!hotCostsDataEntryBean.editMode}">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Run HTG" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Run the Hours-to-Gross process on one or more timecards"
+																	action="#{hotCostsDataEntryBean.actionCalcHtg}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+													<h:panelGroup styleClass="FR pad5rt" rendered="#{hotCostsDataEntryBean.editMode}">
+														<span class="btnPriDisLt"/>
+														<span>
+															<ace:linkButton value="Run HTG" styleClass="btnPriDisCt" style="min-width:10px;"
+																	title="Run the Hours-to-Gross process on one or more timecards"
+																	onClick="return false;"/>
+														</span>
+														<span class="btnPriDisRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<!-- Export Bttn -->
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg and !hotCostsDataEntryBean.editMode and !hotCostsBean.showSummaryView)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Export" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Export Hot Costs Report"
+																	action="#{hotCostsDataEntryBean.actionExport}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg and hotCostsDataEntryBean.editMode and !hotCostsBean.showSummaryView)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriDisLt"/>
+														<span>
+															<ace:linkButton value="Export" styleClass="btnPriDisCt" style="min-width:10px;"
+																	title="Export Hot Costs Report"
+																	onClick="return false;"/>
+														</span>
+														<span class="btnPriDisRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg and hotCostsBean.showSummaryView)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Export" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Export Hot Costs Summary Report"
+																	action="#{hotCostsSummaryBean.actionExport}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+
+												<!-- Edit Bttn -->
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg and !hotCostsDataEntryBean.editMode and !hotCostsBean.showSummaryView)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Edit" styleClass="btnPriHotCt"
+																	title="Edit Daily Hot Costs"
+																	action="#{hotCostsDataEntryBean.actionEditData}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg and hotCostsDataEntryBean.editMode and !hotCostsBean.showSummaryView)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriDisLt"/>
+														<span>
+															<ace:linkButton value="Edit" styleClass="btnPriDisCt"
+																	title="Edit Daily Hot Costs"
+																	onClick="return false;"/>
+														</span>
+														<span class="btnPriDisRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+											</h:panelGroup><!-- END HOT COSTS -->
+
+											<h:panelGroup rendered="#{headerViewBean.miniTab eq 1 or headerViewBean.miniTab eq 2}">
+												<h:panelGroup rendered="#{(approverDashboardBean.weeklyTimecard.id ne null) and
+														((headerViewBean.user.accountNumber eq approverDashboardBean.weeklyTimecard.userAccount) or
+														(not empty authBean.pgFields['9.4,print']) or
+														(approverDashboardBean.userHasEditHtg))}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Print" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Print one or more timecards or a PR discrepancy report"
+																	action="#{approverDashboardBean.actionPrint}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{(approverDashboardBean.weeklyTimecard.id ne null) and
+														(not empty authBean.pgFields['9.4,run_htg'])}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Run HTG" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Run the Hours-to-Gross process on one or more timecards"
+																	action="#{approverDashboardBean.actionHtg}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+											</h:panelGroup>
+
+											<h:panelGroup rendered="#{headerViewBean.miniTab eq 3}">
+												<h:panelGroup rendered="#{(approverDashboardBean.userHasEditHtg)}">
+													<h:panelGroup styleClass="FR pad5rt">
+														<span class="btnPriHotLt"/>
+														<span>
+															<ace:linkButton value="Print" styleClass="btnPriHotCt" style="min-width:10px;"
+																	title="Print a batch report of all displayed batches"
+																	action="#{transferToPayrollBean.actionPrint}"/>
+														</span>
+														<span class="btnPriHotRt"/>
+													</h:panelGroup>
+												</h:panelGroup>
+											</h:panelGroup>
+										</div>
+									</div><!-- End of Top header -->
+
+									<div class="centerFullPg2">
+										<h:panelGrid id="miniView" styleClass="miniPanel">
+											<!-- Tabs -->
+											<ace:tabSet id="tabs" selectedIndex="#{filterBean.miniTab}">
+
+												<!-- Start Forms tab -->
+												<ui:include src="startList.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+												</ui:include>
+
+												<!-- TC Review tab -->
+												<ui:include src="tcReview.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+													<ui:param name="showTab" value="#{showTab}" />
+													<ui:param name="projectActive" value="#{projectActive}" />
+												</ui:include>
+
+												<!-- Gross payroll tab -->
+												<ui:include src="grossPay.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+													<ui:param name="showTab" value="#{showTab}" />
+													<ui:param name="projectActive" value="#{projectActive}" />
+												</ui:include>
+
+												<!-- Transfer to payroll tab -->
+												<ui:include src="transfer.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+													<ui:param name="showTab" value="#{showTab}" />
+													<ui:param name="projectActive" value="#{projectActive}" />
+												</ui:include>
+
+												<!-- Hot Costs tab -->
+												<ui:include src="hotCosts.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+													<ui:param name="showTab" value="#{showTab}" />
+												</ui:include>
+
+												<!-- Update rates tab -->
+												<!-- EXCLUDE for now
+												<ui:include src="updateRates.xhtml">
+													<ui:param name="aicp" value="#{aicp}" />
+												</ui:include>
+												-->
+
+											</ace:tabSet><!-- END TAB set -->
+										</h:panelGrid>
+										<!-- end miniView -->
+
+										<!-- secondary (bottom right corner) buttons -->
+										<!-- Only the HOT COSTS tab has Save/Cancel buttons -->
+										<div class="rowBtnFullPg">
+											<div class="rowBtnBdr"></div>
+											<div class="FL MA rowCont">
+												<!-- Cancel btn -->
+												<h:panelGroup rendered="#{headerViewBean.miniTab eq 4 and
+													!hotCostsBean.showSummaryView and hotCostsDataEntryBean.editMode}">
+													<span class="FR pad10rt">
+														<span class="btnPriEnbLt" />
+														<span>
+															<ace:linkButton styleClass="btnPriEnbCt"
+																onmouseup="showErrors();" title="Cancel Hot Costs Changes"
+																value="Cancel" action="#{hotCostsDataEntryBean.actionCancel}" />
+														</span>
+														<span class="btnPriEnbRt" />
+													</span>
+												</h:panelGroup>
+												<!-- end Cancel btn -->
+												<!-- Save btn -->
+												<h:panelGroup rendered="#{headerViewBean.miniTab eq 4 and
+													!hotCostsBean.showSummaryView and hotCostsDataEntryBean.editMode}">
+													<span class="FR pad10rt">
+														<span class="btnPriHotLt" />
+														<span>
+															<ace:linkButton styleClass="btnPriHotCt"
+																onmouseup="showErrors();" title="Save Hot Costs Changes"
+																value="Save" action="#{hotCostsDataEntryBean.actionSave}" />
+														</span>
+														<span class="btnPriHotRt" />
+													</span>
+												</h:panelGroup>
+												<!-- end Save btn -->
+											</div>
+										</div>
+										<!-- end secondary buttons -->
+									</div>
+								</div><!-- end outer container -->
+
+								<div class="btmBdrCont">
+									<div class="midBtm">
+										<div class="ltBtmCnr"></div>
+										<div class="rtBtmCnr"></div>
+									</div>
+								</div>
+							</div><!-- end pnlFull -->
+						</div>
+						<!-- end pnlCont -->
+					</div>
+					<!-- end ctrCont -->
+					<div class="CB"></div>
+					<!-- clears float for liquid layout -->
+				</div>
+				<!-- end mainCont -->
+
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+			</div><!-- end main -->
+
+			<ace:textEntry style="visibility:hidden" id="scrollPos" value="#{hotCostsBean.scrollPos}" />
+
+		</h:form>
+
+		<ui:include src="../tcpopup/printTimecard.xhtml" />
+		<!-- used for import of either Timecards or Production Report -->
+
+		<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}"><!-- Hot Costs mini-tab -->
+			<ui:include src="../tcpopup/hotCostsImport.xhtml" />
+			<!-- used for displaying the results of the import -->
+			<ui:include src="../tcpopup/hotCostsImportMessages.xhtml" />
+			<!-- used for re-rates of cast and crew -->
+			<ui:include src="../tcpopup/hotCostsReRate.xhtml" />
+			<ui:include src="../tcpopup/updateHotCosts.xhtml" />
+			<ui:include src="../tcpopup/deleteHotCosts.xhtml" />
+			<ui:include src="../tcpopup/addHotCosts.xhtml" />
+			<ui:include src="../tcpopup/cloneHotCostsBudget.xhtml" />
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{headerViewBean.miniTab eq 1 or headerViewBean.miniTab eq 2}">
+		<!-- Timecard Review or Gross Payroll mini-tabs -->
+
+			<ui:include src="../tcpopup/reject.xhtml" >
+				<ui:param name="bean" value="#{rejectPromptBean}" />
+			</ui:include>
+
+			<ui:include src="../tcpopup/approvePrompt.xhtml" />
+			<ui:include src="../tcpopup/exportTimecard.xhtml" /> <!-- for TC exports -->
+			<ui:include src="../tcpopup/htgPrompt.xhtml" />
+			<ui:include src="../tcpopup/htgMessages.xhtml" />
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{headerViewBean.miniTab eq 1}">
+			<ui:include src="../tcpopup/viewDpr.xhtml" />
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{headerViewBean.miniTab eq 1 or headerViewBean.miniTab eq 2}">
+			<h:panelGroup rendered="#{approverDashboardBean.showChangePin}">
+				<ui:include src="../tcpopup/changePin.xhtml" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{headerViewBean.miniTab eq 3}">
+			<ui:include src="../tcpopup/reassignSelect.xhtml" /> <!-- for Batch transfer re-assign function if W/E=all  -->
+			
+			<h:panelGroup rendered="#{headerViewBean.production.batchTransferExtraField}">
+				<ui:include src="../tcpopup/emailProdBatch.xhtml" /><!-- Batch transfer: transmit timecards prompt w/ report style selection -->
+			</h:panelGroup>
+			<h:panelGroup rendered="#{! headerViewBean.production.batchTransferExtraField}">
+				<ui:include src="../tcpopup/emailBatch.xhtml" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<ui:include src="../common/confirmpopupbig.xhtml" />
+
+		<ui:include src="../common/popupinput.xhtml" /><!-- for Batch transfer Create New Batch function  -->
+		<ui:include src="../common/popupSelect.xhtml" /> <!-- for Batch transfer re-assign function  -->
+		<ui:include src="../common/popupTwoInput.xhtml" /> <!-- for TC exports to SB budgeting -->
+
+	</h:body>
+</html>

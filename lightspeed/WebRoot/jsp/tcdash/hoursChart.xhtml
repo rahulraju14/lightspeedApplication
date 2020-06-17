@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- HOURS CHART for some Dashboard pages -->
+
+	<div class="blueLegendContWrap FL pad10tp" style="width:36%;">
+		<div class="blueLegendCont"> <!-- Blue content -->
+			<span class="legendHdg">Hours Worked</span>
+
+			<div class="W100percnt FL BKwhite" style="overflow: auto">
+				<div class="pad5lt FL txt11" style="width:13%">
+					<div class="chartLegendBar" style="background-color:blue;"/>
+					Current
+					<br/>
+					Employee
+					<div class="chartLegendBar" style="background-color: #64afff;"/>
+					Dept. Avg
+					<div class="chartLegendBar" style="background-color: #800000;"/>
+					Crew Avg
+				</div>
+				<div class="FL pad20lt" style="width:75%">
+		<!-- Need to fix for Icefaces 4.x		 -->
+					<ace:chart styleClass="txt15 B" rendered="#{approverDashboardBean.chartData ne null}"
+						animated="false"
+						highlighter="false"
+						yAxis="#{approverDashboardBean.yAxis}"
+						xAxis="#{approverDashboardBean.xAxis}"
+						defaultSeriesColors="#{approverDashboardBean.paints}"
+						defaultSeriesConfig="#{approverDashboardBean.configSeries}"
+						legend="false" style="backgound-color:white;"
+						value="#{approverDashboardBean.chartData}"
+						width="340" height="180"
+					/>
+					
+				</div>
+			</div>
+		</div>
+	</div><!-- end of bottom Left panel -->
+</ui:composition>

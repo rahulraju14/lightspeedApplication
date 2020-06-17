@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="htgMessages" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c8ebd71-7de7-4257-9219-e852f41c44ee">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="HtgMessages" uuid="8180b327-3e2a-4ca4-8b44-44b8397628af">
+		<field name="text" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset1" uuid="76ad3c06-3e7d-4774-8714-bd94e33b01bb"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="REPORT_SECTION_TITLE" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="REPORT_BODY" class="java.util.List" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<textField>
+				<reportElement uuid="38a3c1e3-e5ba-4c00-b812-5a9cb75e793b" x="0" y="13" width="572" height="36"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="46" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c5f0cb3f-d4f5-4bac-8afa-7de0aca798cd" x="0" y="15" width="541" height="20"/>
+				<textElement>
+					<font size="14" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SECTION_TITLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="156" splitType="Stretch">
+			<componentElement>
+				<reportElement uuid="5c419c52-628a-4ce1-892e-a182604b8168" x="0" y="0" width="572" height="20"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="HtgMessages" uuid="2adeab33-23ba-4ee5-b367-aaf0940cffe9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{REPORT_BODY})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="572">
+						<textField>
+							<reportElement uuid="9360e821-89ce-415a-8e77-6030c41598a9" x="0" y="0" width="572" height="20" forecolor="#000000"/>
+							<textElement>
+								<paragraph lineSpacing="Single"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

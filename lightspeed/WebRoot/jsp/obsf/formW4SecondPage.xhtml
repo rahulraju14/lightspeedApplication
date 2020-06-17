@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- parameters:
+		formVersion - string - form version, 2 digits, e.g., '18'
+		pre2018style - boolean - true if W4 version PRIOR to 2018
+		is2018style - boolean - true if W4 version FOR 2018 or LATER
+		formDir - string - directory for images  -->
+	
+	<!-- 2017: PAGE 2:
+				- include of DEDUCTIONS WORKSHEET
+				- TWO-EARNER WORKSHEET
+		2018:  PAGE 4:
+				- TWO-EARNER WORKSHEET
+				- trailing image(s) for tables, etc. -->
+	
+	<div class="BKwhite FL scrollPnlTab sfFormBorder1">
+	
+		<!-- 2017: PAGE 2 HEADER -->
+		<div class="FL pad6lt #{pre2018style ? 'pad10tp' : 'pad30tp'}" style="width:820px;">
+			<h:outputText styleClass="FL" value="Form W-4 (20#{formVersion})" />
+			<div class="FR">
+				<h:outputText escape="false" value="Page "/> 
+				<h:outputText escape="false" styleClass="B txt15" value="#{pre2018style ? '2' : '4'}" /> 
+			</div>
+		</div>
+
+		<!-- Main div -->
+		<div class="rowCont pad6lt sfFormBorder3" style=";width:820px;">
+			
+			<!-- DEDUCTIONS AND ADJUSTMENTS WORKSHEET (2017 only: top of page 2) -->
+			<c:if test="#{pre2018style}">	
+				<ui:include src="formW4DeductionSheet.xhtml">
+					<ui:param name="formDir" value="#{formDir}" />
+					<ui:param name="formVersion" value="#{formVersion}" /><!-- hard-code so generated ID's are unique -->
+					<ui:param name="pre2018style" value="#{pre2018style}" />
+					<ui:param name="is2018style" value="#{is2018style}" />
+				</ui:include>
+			</c:if>
+			
+			<!-- Horizontal rule -->
+			<h:panelGroup rendered="#{pre2018style}">
+				<hr class="rowCont FL" style="height:3px;background:black;border:0;" />
+			</h:panelGroup>
+			
+			<h:outputText styleClass="txt15" style="margin-left:20%" escape="false"
+				value="&lt;strong&gt; Two-Earners/Multiple Jobs Worksheet &lt;/strong&gt; (See Two earners or multiple jobs on page 1.)" />
+
+			<!-- Horizontal rule -->
+			<hr class="rowCont FL" style="height:3px;background:black;border:0;"/>
+
+			<!-- EARNER/MULTIPLE JOBS WORKSHEET START -->
+			<div class="rowCont">
+				<!-- First block Start-->
+				<div class="W85percnt FL">
+					<h:graphicImage style="width:820px; margin-top:-1px;" url="../../i/forms/#{formDir}/formW4Img_4.png" alt=""/>
+				</div>
+				<!-- First Block End -->
+
+				<!-- Second Block Start -->
+				<div class="W15percnt FL" style="margin-top:#{is2018style ? '54px' : '17px'};">
+
+					<!-- 1/ ESTIMATED EXEMPTIONS -->
+					<div class="fd_sm2 pad10lt"> 
+						<ace:textEntry id="EstExemptions" maxlength="3" 
+							style="width:83%;text-align:center;height:9px;"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.estExemptions}">
+							<ace:ajax render="@this compare1and2"/>
+						</ace:textEntry>
+					</div>
+
+					<!-- 2/ TABLE 1 LOOKUP -->
+					<div class="fd_sm2 pad10lt" style="margin-top:38px"> 
+						<ace:textEntry id="Table1Lookup" maxlength="11"
+							style="width:83%;text-align:center;height:9px;" 
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.table1Lookup}">
+							<ace:ajax render="@this compare1and2"/>
+						</ace:textEntry>
+					</div>
+
+					<!-- 3/ COMPARE 1 AND 2 -->
+					<div class="fd_sm2 pad22tp">
+						<h:outputText styleClass="FL rowCont" style="text-align:center;"
+							value="#{formW4Bean.form.compare1and2}" id="compare1and2"/>
+					</div>
+
+					<!-- 4/ PAGE 2 SEC 2 NET -->
+					<div class="fd_sm2" style="margin-top:79px; margin-left:-100px;">
+						<h:outputText styleClass="FL rowCont"
+							value="#{formW4Bean.form.table1Lookup}"
+							rendered="#{formW4Bean.form.compare1and2 eq null}"/>
+					</div>
+
+					<!-- 5/ USE VALUE 2 -->
+					<div class="fd_sm2 pad-80lt" style="margin-top:97px;margin-left:-100px;">
+						<h:outputText styleClass="FL rowCont"
+							value="#{formW4Bean.form.estExemptions}"
+							rendered="#{formW4Bean.form.compare1and2 eq null}"/>
+					</div>
+
+					<!-- 6/ USE VALUE 1/ DIFF EXEMPTIONS -->
+					<div class="fd_sm2" style="margin-top:20px;">
+						<h:outputText style="text-align:center;"
+							styleClass="FL rowCont pad3tp"
+							value="#{formW4Bean.form.diffExemptions}"
+							rendered="#{formW4Bean.form.compare1and2 eq null}"/>
+					</div>
+
+					<!-- 7/ TABLE 2 LOOKUP -->
+					<div class="fd_sm2 pad20lt">
+						<ace:textEntry  id="Table2Lookup" maxlength="11"
+							style="width:86%; height:9px;text-align:right;margin-top:2px;"
+						 	disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.table2Lookup}"
+							rendered="#{formW4Bean.form.compare1and2 eq null}">
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@all" />
+						</ace:textEntry>
+					</div>
+
+					<!-- 8/ MULT 6 AND 7/ ADDITIONAL WITHHOLDING -->
+					<h:outputText styleClass="FL rowCont pad3tp"
+						value="#{formW4Bean.form.addtlWithholding}"
+						rendered="#{formW4Bean.form.compare1and2 eq null}"
+						style="text-align:right; margin-left: -10px;">
+						<f:convertNumber type="number" pattern="#,##0." />
+					</h:outputText>
+
+					<!-- 9/ DIVIDE BY PAY PERIODS -->
+					<div class="fd_sm2 pad20lt pad50tp">
+						<ace:textEntry id="AddtlPerPayPeriod" style="width:88%; text-align:right;"
+							maxlength="9" disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.addtlPerPayPeriod}"
+							rendered="#{formW4Bean.form.compare1and2 eq null}">
+							<f:convertNumber type="number" pattern="#,##0." />
+						</ace:textEntry>
+					</div>
+				</div>
+				<!-- Second Block End -->
+			</div>	
+			<!-- EARNER/MULTIPLE JOBS WORKSHEET END -->	
+			
+			<h:graphicImage style="width:820px; margin-top:-1px;" url="../../i/forms/#{formDir}/formW4Img_5.png" alt=""/>
+		</div>
+		<!-- Main div End-->
+		
+		<h:graphicImage styleClass="pad6lt pad4tp" style="width:820px;" url="../../i/forms/#{formDir}/formW4Img_6.png" alt=""/>
+		
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH22" value="&#160;" />
+		</div>
+
+	</div>
+</ui:composition>

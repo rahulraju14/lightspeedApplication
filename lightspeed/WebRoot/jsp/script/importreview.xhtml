@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Import Script - Scene Review</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	element = document.getElementById('impRevSceneList');
+	resizeElement(element, 300, 160);
+
+	element = document.getElementById('impReviewCont');
+	resizeElement(element, 178, 200);
+	</c:if>
+}
+
+var formname = "importreview";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript" type="text/javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="importreview">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="newrevision" />
+	</h:outputText>
+
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+						<span class="pnlHdrTxt FL">
+							<h:outputText value="#{headerViewBean.project.title}"/>
+						</span>
+						<!-- remove these until they can be generated dynamically
+						span class="pnlHdrTxt FR pad10rt">
+							<h:outputText
+								value="Step 2 of 4"/>
+						</span>
+							-->
+
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="centerFullTb MA">
+
+							<div id="miniView">
+
+								<div id="impReviewCont">
+									<!-- Tabs for import review list -->
+									<ace:tabSet id="tabs" selectedIndex="0" styleClass="W100percnt">
+
+										<!--  Import Script Review Tab   -->
+										<ace:tabPane label="Script Review">
+
+<div class="rowCont pad10tp">
+	<h:panelGroup styleClass="FL" rendered="#{empty scriptReviewBean.script.scenes}">
+		<h:outputText value=" The script has no scenes."/>
+	</h:panelGroup>
+
+	<h:panelGroup styleClass="FL pad20lt B"
+		rendered="#{not empty scriptReviewBean.script.scenes}">
+		<h:outputText value=" #{scriptReviewBean.script.description}"/>
+ 		<h:outputText value="(Rev. #{scriptReviewBean.script.revisionNumber} -&#160;" styleClass="pad5lt"/>
+		<h:outputText value="#{scriptReviewBean.script.date}">
+			<f:convertDateTime type="both" timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy h:mm a)" />
+		</h:outputText>
+	</h:panelGroup>
+</div>
+
+<div class="MA pad10tp" style="width:938px;">
+	<ace:dataTable value="#{scriptReviewBean.sceneViewList}"
+			var="sceneView" styleClass="grid_import" style="width:920px;"
+			rows="1">
+		<ui:include src="scenelistcolheadings.xhtml" />
+		<ace:column colspan="8" style="display:none;"></ace:column>
+	</ace:dataTable>
+</div>
+
+<div id="impRevSceneList" class="FL rowCont">
+	<table align="center">
+		<tr>
+			<td valign="top" align="center" >
+				<!-- data representation . id="scenelist". binding="#{scriptReviewBean.sceneTable}" -->
+				<ui:repeat value="#{scriptReviewBean.sceneViewList}" var="sceneView" id="scenelist"	>
+
+					<h:panelGrid columns="8" cellpadding="0" style="width:922px;"
+							styleClass="grid1r scenelistedit_#{sceneView.edit}"
+							onclick="sceneRowClicked('importreview:scenelist:' + #{sceneView.rowNumber} + ':editbtn', #{sceneView.scene.omitted});return false;"
+							columnClasses="columnExpand,columnSheet,columnScene,columnIntExt,columnLocation,columnDayNight,columnPages,columnScriptDay">
+
+						<ace:column>
+							<h:commandButton value="" style="height:15px;"
+									image="#{sceneView.showData ? '../../i/minus.gif' : '../../i/plus.gif'}"
+									action="#{scriptReviewBean.expandTableListener}">
+								<f:setPropertyActionListener target="#{scriptReviewBean.showRowNumber}"
+										value="#{sceneView.rowNumber}" />
+								<ace:ajax />
+							</h:commandButton>
+							<h:commandButton style="display:none;" action="#{scriptReviewBean.actionEdit}" id="editbtn" value="n"
+									rendered="#{not sceneView.edit}">
+								<f:setPropertyActionListener target="#{scriptReviewBean.showRowNumber}" value="#{sceneView.rowNumber}" />
+								<ace:ajax />
+							</h:commandButton>
+						</ace:column>
+
+						<ace:column>
+							<h:outputText value="TBD" />
+						</ace:column>
+
+						<ace:column>
+							<div class="FL scc #{scriptReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+								<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+							</div>
+							<h:panelGroup
+								style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+								styleClass="scc #{scriptReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+								<a href="#" class="non_link" title="#{sceneView.sceneNumbers}">
+									<h:outputText styleClass="DB" value="#{sceneView.sceneNumbers}" />
+								</a>
+							</h:panelGroup>
+							<div class="FL scc #{scriptReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+								<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+							</div>
+						</ace:column>
+
+						<ace:column>
+							<h:outputText value="#{sceneView.scene.ieType}"
+								rendered="#{! sceneView.edit}" />
+							<span class="FL pad1lt">
+								<h:selectOneListbox value="#{sceneView.scene.ieType}"
+										rendered="#{sceneView.edit}"
+										disabled="#{sceneView.scene.omitted}"
+										size="1">
+									<f:selectItems value="#{enumList.intExtList}"/>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</span>
+						</ace:column>
+
+						<ace:column>
+							<h:outputText value="#{sceneView.title}"
+								rendered="#{! sceneView.scene.omitted and ! sceneView.edit}" />
+							<h:outputText value="(Omitted)" rendered="#{sceneView.scene.omitted}"/>
+							<span class="FL pad1lt">
+								<h:selectOneListbox styleClass="setLocImpRev" value="#{locationSelector.locationId}"
+										rendered="#{! sceneView.scene.omitted and sceneView.edit}"
+										valueChangeListener="#{locationSelector.actionLocationSelected}"
+										disabled="#{sceneView.scene.omitted}"
+										size="1">
+									<f:selectItems value="#{locationSelector.locationList}"/>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</span>
+						</ace:column>
+
+						<ace:column>
+							<h:outputText value="#{sceneView.scene.dnType}"
+									rendered="#{! sceneView.edit}" styleClass="columnDayNight"/>
+							<span class="FL pad1lt">
+								<h:selectOneListbox value="#{sceneView.scene.dnType}"
+										rendered="#{sceneView.edit}"
+										disabled="#{sceneView.scene.omitted}"
+										size="1">
+									<f:selectItems value="#{enumList.dayNightList}"/>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</span>
+						</ace:column>
+
+						<ace:column rendered="#{not sceneView.scene.omitted}">
+							<ace:textEntry style="width:48px;" value="#{sceneView.scene.pageLength}"
+								autocomplete="off">
+								<ace:ajax />
+							</ace:textEntry>
+						</ace:column>
+						<ace:column rendered="#{sceneView.scene.omitted}">
+							<h:outputText>&#160;</h:outputText>
+						</ace:column>
+
+						<ace:column rendered="#{not sceneView.scene.omitted}">
+							<ace:textEntry style="width:48px;" value="#{sceneView.scene.scriptDay}"
+								autocomplete="off">
+								<ace:ajax />
+							</ace:textEntry>
+						</ace:column>
+						<ace:column rendered="#{sceneView.scene.omitted}">
+							<h:outputText>&#160;</h:outputText>
+						</ace:column>
+
+					</h:panelGrid>
+
+					<ui:include src="scriptelementexpansion.xhtml" >
+						<ui:param name="rowNum" value="#{sceneView.rowNumber}"></ui:param>
+					</ui:include>
+
+				</ui:repeat>
+			</td>
+		</tr>
+	</table>
+</div>
+										</ace:tabPane><!--  End Stripboard List Tab -->
+									</ace:tabSet>
+
+								</div>
+							</div><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+								<!--
+								<h:commandButton id="cancel" value="Cancel Import" styleClass="btnPriHot"
+									panelConfirmation="confirmCancel"
+									action="cancel" actionListener="#{scriptReviewBean.cancelImport}"/>
+								-->
+								<h:panelGroup styleClass="FL pad5lt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton
+												action="#{scriptReviewBean.actionCancelImport}"
+												value="Cancel Import"
+												styleClass="btnPriEnbCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnPriEnbRt" />
+								</h:panelGroup>
+								<!-- <h:commandButton id="next" action="next" styleClass="btnSecHot"
+										value="Next" actionListener="#{scriptReviewBean.exitReview}"/> -->
+								<h:panelGroup>
+									<span class="FR pad15rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton
+												actionListener="#{scriptReviewBean.exitReview}"
+												action="next"
+												value="Next"
+												styleClass="btnSecHotCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" /><!-- 'New Location' popup dialog -->
+<ui:include src="../common/locationdialog.xhtml" /><!-- 'New Location' popup dialog -->
+
+</h:body>
+</html>

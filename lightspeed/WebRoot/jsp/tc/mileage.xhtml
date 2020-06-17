@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- The Mileage minitab of both the Basic and Full Timecard pages -->
+
+	<!-- legend wrapper -->
+	<div class="blueLegendContWrap MA pad10tp">
+		<div class="blueLegendCont FL" style="margin-top:12px;">
+
+			<div style="min-height:19px;"><!-- keep size even if btn is hidden -->
+
+				<h:panelGroup rendered="#{timecardBean.editRaw}">
+					<h:panelGroup styleClass="btn_legend" rendered="#{timecardBean.weeklyTimecard.mileage ne null and timecardBean.weeklyTimecard.status eq 'OPEN'}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Delete this Form" onclick="queueClick(this,event);"
+								action="#{timecardBean.actionDeleteMileageForm}"
+								title="Remove this entire Mileage form"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend pad10rt">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Create Form" rendered="#{timecardBean.weeklyTimecard.mileage eq null}"
+							action="#{timecardBean.actionCreateMileageForm}"
+							title="Create a blank mileage log for this timecard"
+							styleClass="btnMiniCt" />
+						<ace:linkButton value="Add entry" rendered="#{timecardBean.weeklyTimecard.mileage ne null}"
+							action="#{timecardBean.actionAddMileage}" onclick="queueClick(this,event);"
+							title="Add a new line to the mileage log"
+							styleClass="btnMiniCt" />
+					<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+
+			<div class="FL rowCont gradTbl2">
+				<h:panelGroup styleClass="rowDivider BKwhite" rendered="#{timecardBean.weeklyTimecard.mileage eq null}">
+					<br/>
+					&#160; A Mileage Form has not been created for this week.
+					<h:outputText rendered="#{not timecardBean.editRaw}" value=" To add the form, click Edit, then click Create Form." />
+					<br/><br/>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{timecardBean.weeklyTimecard.mileage ne null}">
+
+					<h:panelGroup styleClass="rowDivider BKwhite"
+							rendered="#{not empty timecardBean.viewProduction.payrollPref.payrollService.otherText}">
+						<div class="W98percnt MA pad5tp pad5bm">
+							<h:outputText value="#{timecardBean.viewProduction.payrollPref.payrollService.otherText}"/>
+						</div>
+					</h:panelGroup>
+
+					<!-- note: datatable id is used in javascript! -->
+					<ace:dataTable styleClass="gradTbl2 CT txt11" id="mileagelist" rowStyleClass="CT txt11"
+							value="#{timecardBean.weeklyTimecard.mileage.mileageLines}"
+							var="mileage"
+							style="width:100%;max-width:100%;overflow-x:hidden;">
+						<ace:columnGroup type="header">
+							<ace:row>
+								<ace:column style="width:5%;"></ace:column>
+								<ace:column style="width:13%;"></ace:column>
+								<ace:column style="width:50%;"></ace:column>
+								<ace:column style="width:16%" colspan="2">Odometer</ace:column>
+								<ace:column style="width:8%;"></ace:column>
+								<ace:column style="width:8%;"></ace:column>
+							</ace:row>
+							<ace:row styleClass="CT txt11">
+								<ace:column style="width:5%;"></ace:column>
+								<ace:column style="width:13%;">Date</ace:column>
+								<ace:column style="width:50%;">Destination</ace:column>
+								<ace:column style="width:8%">Start</ace:column>
+								<ace:column style="width:8%">End</ace:column>
+								<ace:column style="width:8%;">Miles</ace:column>
+								<ace:column style="width:8%;">Taxable</ace:column>
+							</ace:row>
+						</ace:columnGroup>
+
+						<!-- Delete icon -->
+						<ace:column headerText="">
+							<h:panelGroup rendered="#{timecardBean.editRaw}">
+								<h:commandButton value="" tabindex="-1" styleClass="deleteXbtn"
+									actionListener="#{timecardBean.actionDeleteMileageLine}">
+								</h:commandButton>
+							</h:panelGroup>
+						</ace:column>
+
+						<!-- Date -->
+						<ace:column headerText="Date" styleClass="B">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:dateTimeEntry rendered="#{timecardBean.editRaw}"
+									patter="M/d/yy" renderAsPopup="true" styleClass="cal_date"
+									value="#{mileage.date}" valueChangeListener="#{timecardBean.listenMileageChange}">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+									<ace:ajax/>
+								</ace:dateTimeEntry>							
+							</icecore:setEventPhase>
+							<h:outputText value="#{mileage.date}" rendered="#{! timecardBean.editRaw}">
+								<f:convertDateTime pattern="M/d/yy" timeZone="#{timezone}" />
+							</h:outputText>
+						</ace:column>
+
+						<!-- Destination -->
+						<ace:column headerText="Destination">
+							<ace:textEntry styleClass="W96percnt pad5lt"
+								value="#{mileage.destination}" maxlength="40"
+								rendered="#{timecardBean.editRaw}">
+							</ace:textEntry>
+							<h:outputText value="#{mileage.destination}" styleClass="pad5lt"
+								rendered="#{! timecardBean.editRaw}" />
+						</ace:column>
+
+						<!-- Odometer start -->
+						<ace:column headerText="Start">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:textEntry value="#{mileage.odometerStart}" 
+										valueChangeListener="#{timecardBean.listenMileageChange}"
+										maxlength="11" styleClass="tcEdDlr"
+										rendered="#{timecardBean.editRaw}" >
+									<f:convertNumber type="number" pattern="#,##0.0" />
+									<ace:ajax/>
+								</ace:textEntry>
+							</icecore:setEventPhase>
+							<h:outputText value="#{mileage.odometerStart}" styleClass="FR pad5rt"
+									rendered="#{(not timecardBean.editRaw)}">
+								<f:convertNumber type="number" pattern="#,##0.0" />
+							</h:outputText>
+						</ace:column>
+
+						<!-- Odometer end -->
+						<ace:column headerText="End">
+							<f:facet name="footer">
+								<h:outputText styleClass="B FR pad5rt" value="Total:" />
+							</f:facet>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:textEntry value="#{mileage.odometerEnd}" 
+										valueChangeListener="#{timecardBean.listenMileageChange}"
+										maxlength="11" styleClass="tcEdDlr"
+										rendered="#{timecardBean.editRaw}" >
+									<f:convertNumber type="number" pattern="#,##0.0" />
+									<ace:ajax/>
+								</ace:textEntry>
+							</icecore:setEventPhase>
+							<h:outputText value="#{mileage.odometerEnd}" styleClass="FR pad5rt"
+								rendered="#{(not timecardBean.editRaw)}">
+								<f:convertNumber type="number" pattern="#,##0.0" />
+							</h:outputText>
+						</ace:column>
+
+						<!-- Miles -->
+						<ace:column headerText="Miles">
+							<f:facet name="footer">
+								<div class="ftrBorder CT B">
+								<h:outputText value="#{timecardBean.weeklyTimecard.mileage.miles}">
+									<f:convertNumber type="number" pattern="#,##0.0" />
+								</h:outputText>
+								</div>
+							</f:facet>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:textEntry value="#{mileage.miles}" 
+										disabled="#{not empty mileage.odometerEnd and not empty mileage.odometerStart}"
+										maxlength="11" styleClass="tcEdDlr"
+										rendered="#{timecardBean.editRaw}"
+										valueChangeListener="#{timecardBean.listenMileageChange}" >
+									<f:convertNumber type="number" pattern="#,##0.0" />
+									<ace:ajax/>
+								</ace:textEntry>
+							</icecore:setEventPhase>
+							<h:outputText value="#{mileage.miles}" styleClass="FR pad5rt"
+								rendered="#{not timecardBean.editRaw}">
+								<f:convertNumber type="number" pattern="#,##0.0" />
+							</h:outputText>
+						</ace:column>
+
+						<!-- taxable -->
+						<ace:column headerText="Taxable">
+							<f:facet name="footer"><!-- generate vertical border in Total line -->
+								<div class="ftrBorder">&#160;
+								</div>
+							</f:facet>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{mileage.taxable}" 
+										valueChangeListener="#{timecardBean.listenMileageChange}"
+										disabled="#{! timecardBean.editRaw}">
+									<ace:ajax/>
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</ace:column>
+					</ace:dataTable>
+
+					<hr class="rowDivider"/>
+					<div class="FL rowCont  ">
+						 <h:panelGroup>
+							<table class="BKwhite W100percnt" style="overflow-x:hidden;">
+								<tr>
+									<td style="width:10%;">
+										<h:outputText styleClass="FL pad3lt B" rendered="#{timecardBean.editRaw}"
+												style="margin-top: -40px;margin-bottom: 10px;" value="New Comment:" />
+										<h:outputText styleClass="FL pad3lt B #{timecardBean.editRaw ? 'pad10tp' : ''}" value="Comments:" />
+									</td>
+									<td colspan="2" style="width: 90%;">
+										<ace:textAreaEntry styleClass="FL pad3lt stdTxtArea" value="#{timecardBean.newMileageComment}"
+											maxlength="2000" rendered="#{timecardBean.editRaw}"
+											style="height:30px;width:77%;font-size:11px;"/>
+										<h:panelGroup styleClass="FR pad5tp W20percnt" rendered="#{timecardBean.editRaw}">
+											<span>
+												<span class="btnPriEnbLt" />
+												<span>
+													<ace:linkButton title="Add your new comment to this timecard" value="Add Comment"
+															onclick="queueClick(this,event);"
+															action="#{timecardBean.actionAddMileageComment}" styleClass="btnPriEnbCt" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:panelGroup>
+										<h:outputText rendered="#{not timecardBean.editRaw}"
+											styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{timecardBean.weeklyTimecard.mileage.comments}"
+											escape="false" style="min-height:60px;max-height:90px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+										<h:outputText rendered="#{timecardBean.editRaw}"
+											styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{timecardBean.weeklyTimecard.mileage.comments}"
+											escape="false" style="min-height:60px;max-height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+			</div>
+		</div>
+	</div>
+</ui:composition>

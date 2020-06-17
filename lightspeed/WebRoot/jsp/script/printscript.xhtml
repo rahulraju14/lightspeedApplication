@@ -1,0 +1,270 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The "Print Script" pop-up dialog; used on Scripts page -->
+
+<h:form>
+	<c:set var="bean" value="#{scriptPageBean}" />
+
+	<ace:dialog visible="#{bean.showPrintOptions}"
+			header="#{bean.printTitle}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionPrintClose}"/>
+
+		<div class="popupBdyAW" style="">
+
+			<div class="CT rowCont" style="width:94%;margin-top:20px;left:1%;">
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</div>
+
+			<div class="popup_main">
+				<div class="popup_inner">
+					<div class="rowCont">
+						<span class="popup_inner_leg">
+							Options
+						</span>
+
+						<div class="rowCont pad10lt">
+
+							<!-- PAGE FORMAT -->
+							<div class="rowCont">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Page Format</span>
+								</div>
+								<h:selectOneRadio styleClass="h_radio FL W40percnt" id="printstyle"
+										layout="lineDirection"
+										valueChangeListener="#{bean.listenPrintStyle}"
+										value="#{bean.printStyle}">
+									<f:selectItem itemLabel="Full Pages" itemValue="f"/>
+									<f:selectItem itemLabel="Sides" itemValue="s" />
+									<ace:ajax />
+								</h:selectOneRadio>
+								<div class="FL W30percnt">
+									<h:panelGroup styleClass="pad4lt">
+										<h:selectOneMenu style="width:114px;margin:0;"
+												rendered="#{bean.printStyle eq 's'}"
+												value="#{bean.sidesType}">
+											<f:selectItem itemLabel="2-up Duplicate" itemValue="2" />
+											<f:selectItem itemLabel="2-up Sequential" itemValue="1" />
+											<ace:ajax />
+										</h:selectOneMenu>
+										<h:selectOneMenu
+												rendered="#{bean.printStyle eq 'f'}"
+												disabled="true" style="width:114px;margin:0;"
+												value="#{bean.sidesType}">
+											<f:selectItem itemLabel=" " itemValue="2" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</div>
+							</div>
+
+							<!-- WATERMARK -->
+							<div class="rowCont pad10tp">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Watermark</span>
+								</div>
+								<div class="FL W75percnt">
+									<h:panelGroup rendered="#{
+											(bean.printStyle eq 'f' and headerViewBean.production.watermark eq 'OPTIONAL') or
+											(bean.printStyle eq 's' and headerViewBean.production.watermarkSides eq 'OPTIONAL')}">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+												valueChangeListener="#{bean.listenWatermark}"
+												value="#{bean.watermark}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+											Apply Watermark
+									</h:panelGroup>
+									<h:panelGroup rendered="#{
+											(bean.printStyle eq 'f' and headerViewBean.production.watermark ne 'OPTIONAL') or
+											(bean.printStyle eq 's' and headerViewBean.production.watermarkSides ne 'OPTIONAL')}">
+										<h:selectBooleanCheckbox styleClass="ckbx" disabled="true"
+												value="#{bean.watermark}"/>
+											Apply Watermark
+									</h:panelGroup>
+								</div>
+							</div>
+							<div class="rowCont">
+								<div class="FL W25percnt">
+									&#160;
+								</div>
+								<div class="FL W50percnt">
+									<h:selectOneRadio styleClass="h_radio FL pad20lt" id="watermarkdate"
+											value="#{bean.watermarkDate}"
+											layout="lineDirection"
+											disabled="#{not bean.watermark}">
+										<f:selectItem itemLabel="Name" itemValue="n" />
+										<f:selectItem itemLabel="Name &amp; Date" itemValue="y" />
+									</h:selectOneRadio>
+								</div>
+							</div>
+
+							<!-- PAGE COLOR -->
+							<h:panelGroup styleClass="rowCont pad10tp">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Print page color</span>
+								</div>
+								<div class="FL W75percnt">
+									<h:panelGroup styleClass="pad4lt">
+										<h:selectOneMenu
+											disabled="#{bean.printStyle eq 's'}"
+											value="#{bean.colorStyle}">
+											<f:selectItems value="#{bean.colorStyleDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+
+							<!-- HIGHLIGHT -->
+							<h:panelGroup styleClass="rowCont pad10tp" rendered="#{bean.doPrint}">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Highlight Lines</span>
+								</div>
+								<div class="FL W75percnt">
+									<h:panelGroup>
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											disabled="#{empty bean.characterNames}"
+											value="#{bean.printHighlight}" >
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</h:panelGroup>
+									Highlight your lines in the script
+								</div>
+							</h:panelGroup>
+
+							<!-- TITLE PAGES -->
+							<h:panelGroup styleClass="rowCont pad10tp">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Title Pages</span>
+								</div>
+								<div class="FL W75percnt">
+									<h:panelGroup>
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{bean.includeTitlePages}"/>
+									</h:panelGroup>
+									Include title page(s)
+								</div>
+							</h:panelGroup>
+
+
+							<!-- PRINT RAGE - 4 rows -->
+							<ace:buttonGroup id="selection"
+									styleClass="W96percnt pad5lt"
+									mutuallyExclusive="true"
+									value="#{bean.printSelection}">
+								<!-- referenced by the 4 readioButtons below! -->
+
+							<div class="rowCont pad10tp">
+								<div class="padPop3tp FL W25percnt">
+									<span class="B">Print Range</span>
+								</div>
+								<div class="FL W75percnt">
+									<ace:radioButton group="selection" id="range-c"
+											value="#{bean.printRangeCurrent}"
+											valueChangeListener="#{bean.listenChangeRange}"
+											label="Current Selection" labelPosition="right">
+										<ace:ajax />
+									</ace:radioButton>
+								</div>
+							</div>
+							<div class="rowCont pad5tp">
+								<div class="FL W25percnt">&#160;
+								</div>
+								<div class="FL W75percnt">
+									<ace:radioButton group="selection" id="range-a"
+											value="#{bean.printRangeAll}"
+											valueChangeListener="#{bean.listenChangeRange}"
+											label="Entire Script" labelPosition="right">
+										<ace:ajax />
+									</ace:radioButton>
+								</div>
+							</div>
+							<div class="rowCont pad5tp">
+								<div class="FL W25percnt">&#160;
+								</div>
+								<div class="FL W75percnt">
+									<ace:radioButton group="selection" id="range-r"
+											value="#{bean.printRangeRevision}"
+											valueChangeListener="#{bean.listenChangeRange}"
+											label="Pages revised by" labelPosition="right">
+										<ace:ajax />
+									</ace:radioButton>
+									<h:selectOneMenu style="margin-left:10px;position:relative;top:0px"
+											disabled="#{not bean.printRangeRevision}"
+											value="#{bean.printRevision}">
+										<f:selectItems value="#{bean.revisionDL}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="rowCont pad5tp">
+								<div class="FL W25percnt">&#160;
+								</div>
+								<div class="FL W75percnt">
+									<ace:radioButton group="selection" id="range-s"
+											value="#{bean.printRangeScenes}"
+											valueChangeListener="#{bean.listenChangeRange}"
+											label="Scenes" labelPosition="right">
+										<ace:ajax />
+									</ace:radioButton>
+									<h:inputText styleClass="W240 pad10lt"
+											value="#{bean.scenesToPrint}"
+											disabled="#{not bean.printRangeScenes}"
+											maxlength="100" size="40" />
+								</div>
+							</div>
+							<div class="rowCont pad5tp">
+								<div class="FL W25percnt">&#160;
+								</div>
+								<div class="FL W75percnt">
+									<div class="pad30lt I pad2bm">
+										<span>To select multiple scenes, place commas</span>
+										<br/>
+										<span>between each scene number, e.g., '9,54,87,109'.</span>
+									</div>
+								</div>
+							</div>
+							</ace:buttonGroup>
+
+							<div class="rowCont pad5tp">
+								&#160;
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="popBtnCont pad15tp">
+				<span class="FR padPop10rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel" immediate="true"
+							action="#{bean.actionPrintCancel}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad10rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="#{bean.printButtonOkLabel}"
+							action="#{bean.actionPrintOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

@@ -1,0 +1,173 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- SCENES and ADVANCE SCHEDULE SCENES for Call Sheet -->
+	<!-- parameters:
+		scenes: list of SceneCalls
+		advance: true/false - true iff the Advance Schedule is being displayed
+		editMode: true iff called from Edit page
+	 -->
+
+	<h:panelGroup rendered="#{advance}">
+		<div class="tblHdr_bk rowCont">
+			<span class="tblHdr_txt">
+				ADVANCE SCHEDULE
+			</span>
+		</div>
+	</h:panelGroup>
+
+	<div class="FL rowCont">
+		<ace:dataTable styleClass="gradTbl2"
+			style="width:100%;max-width:100%;"
+			value="#{scenes}" var="sceneCall">
+
+			<ace:column headerText="Date" rendered="#{advance}" styleClass="CT" style="width:8%;">
+				<h:panelGroup>
+					<h:commandLink rendered="#{(not callSheetViewBean.production.type.crossProject) and
+							(not empty authBean.pgFields['6.2,link_stripboard'])}"
+						action="stripboardview">
+						<h:outputText value="Day #{sceneCall.dayNumber} - " />
+						<h:outputText value="#{sceneCall.date}" >
+							<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" type="date" pattern="M/d"/>
+						</h:outputText>
+					</h:commandLink>
+					<h:panelGroup rendered="#{(callSheetViewBean.production.type.crossProject) or
+							(empty authBean.pgFields['6.2,link_stripboard'])}">
+						<h:outputText value="Day #{sceneCall.dayNumber} - " />
+						<h:outputText value="#{sceneCall.date}" >
+							<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" type="date" pattern="M/dd"/>
+							</h:outputText>
+					</h:panelGroup>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Epi#" rendered="#{callSheetViewBean.production.type.crossProject}"
+				 styleClass="LT" style="width:4%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<div class="CT">
+						<h:outputText value="#{sceneCall.episode}" />
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="10" styleClass="W98percnt CT" value="#{sceneCall.episode}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Scene" styleClass="CT" style="width:4%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<div class="CT">
+						<ace:linkButton value="#{sceneCall.number eq null ? '' : sceneCall.number}"
+								action="breakdown" actionListener="#{breakdownBean.openSheet}"
+								rendered="#{(not callSheetViewBean.production.type.crossProject) and
+										(not empty authBean.pgFields['6.2,link_scene'])}">
+							<f:attribute name="sceneNo" value="#{sceneCall.number}"/>
+						</ace:linkButton>
+						<h:outputText value="#{sceneCall.number}"
+								rendered="#{(callSheetViewBean.production.type.crossProject) or
+										(empty authBean.pgFields['6.2,link_scene'])}"/>
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="10" styleClass="W98percnt CT" value="#{sceneCall.number}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Set/Scene Description" styleClass="CT" style="width:45%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{sceneCall.heading}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="190" styleClass="W99percnt" value="#{sceneCall.heading}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="D/N" styleClass="CT" style="width:4%;">
+				<f:facet name="footer">
+					<h:panelGroup rendered="#{not advance}">
+					<div class="RT B">TOTAL:&#160;
+					</div>
+					</h:panelGroup>
+				</f:facet>
+
+				<h:panelGroup styleClass="CT" rendered="#{not editMode}">
+					<h:outputText value="#{sceneCall.dayNight}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="10" styleClass="W98percnt CT" value="#{sceneCall.dayNight}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Pages" styleClass="CT" style="width:5%;">
+				<f:facet name="footer">
+					<h:panelGroup styleClass="CT B" rendered="#{not advance}">
+						<h:outputText value="#{callSheetViewBean.callsheet.pages}" />&#160;
+					</h:panelGroup>
+				</f:facet>
+
+				<h:panelGroup styleClass="CT" rendered="#{not editMode}">
+						<h:outputText value="#{sceneCall.pages}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="10" styleClass="W98percnt CT" value="#{sceneCall.pages}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Cast" styleClass="CT" style="width:10%;">
+				<h:panelGroup styleClass="LT" rendered="#{not editMode}">
+					<h:outputText value="#{sceneCall.castIds}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="40" styleClass="W98percnt" value="#{sceneCall.castIds}" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="" styleClass="CT" style="width:auto;">
+				<f:facet name="header">Location
+					<h:panelGroup rendered="#{editMode}"  styleClass="FR pad5rt">
+						<span class="btnMiniLtHot" />
+						<h:panelGroup rendered="#{not advance}">
+							<ace:linkButton value="Refresh"
+								title="Refresh the list of scenes."
+								action="#{callSheetViewBean.actionRefreshScenes}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{advance}">
+							<ace:linkButton value="Refresh"
+								title="Refresh the list of scenes."
+								action="#{callSheetViewBean.actionRefreshAdvance}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						</h:panelGroup>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</f:facet>
+
+				<h:panelGroup rendered="#{not editMode}">
+					 <ace:linkButton value="#{sceneCall.location}"
+							rendered="#{not empty sceneCall.locationId}"
+							action="realelements">
+						<f:setPropertyActionListener value="com.lightspeedeps.RealWorldElementId" target="#{jumpBean.attribute}"/>
+						<f:setPropertyActionListener value="#{sceneCall.locationId}" target="#{jumpBean.value}"/>
+					</ace:linkButton>
+					<h:outputText value="#{sceneCall.location}"
+							rendered="#{empty sceneCall.locationId}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry maxlength="100" styleClass="W98percnt" value="#{sceneCall.location}" />
+				</h:panelGroup>
+			</ace:column>
+		</ace:dataTable>
+	</div>
+
+</ui:composition>

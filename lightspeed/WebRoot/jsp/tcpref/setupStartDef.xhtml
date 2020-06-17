@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- START FORM DEFAULTS section of SETUP mini-tab of Payroll Preferences page (screen number 9.9) -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+
+	<!-- SECOND SECTION - START FORM DEFAULTS -->
+	<div class="rowCont B pad15tp">
+		<div class="W98percnt MA">
+
+			<h:panelGroup rendered="#{not headerViewBean.production.allowOnboarding}">
+				<div class="rowCont B">
+					Start Form Defaults:
+				</div>
+			</h:panelGroup>
+
+			<div class="rowCont">
+
+				<div class="W50percnt FL #{headerViewBean.production.allowOnboarding ? 'pad45lt' : 'pad15lt'}"><!-- LEFT-hand column of START FORM DEFAULTS -->
+					<h:panelGroup rendered="#{not aicp}">
+						<div class="rowCont pad10tp">
+							<h:panelGroup styleClass="FL B pad2tp W100">
+							Prod/Episode#:
+							</h:panelGroup>
+							<h:outputText styleClass="FL pad2tp" rendered="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.payrollPref.accountMajor}" />
+							<ace:textEntry styleClass=" " rendered="#{payrollSetupBean.editMode}"
+									maxlength="6"
+									value="#{payrollSetupBean.payrollPref.accountMajor}" />
+						</div>
+					</h:panelGroup>
+					<div class="FL rowCont pad10tp">
+						<div class="FL" style="width:40%">
+							<h:panelGroup styleClass="FL B pad2tp W75">
+								Work City:
+							</h:panelGroup>
+							<h:outputText styleClass="FL pad2tp" rendered="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.payrollPref.workCity}" />
+							<ace:textEntry styleClass=" " rendered="#{payrollSetupBean.editMode}"
+									maxlength="50" value="#{payrollSetupBean.payrollPref.workCity}" />
+						</div>
+						<div class="FL" style="width:41%;margin-left: 87px;">
+							<h:panelGroup styleClass="FL B pad2tp W100">
+								Work State:
+							</h:panelGroup>
+							<h:selectOneMenu styleClass=" " disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.payrollPref.workState}">
+								<f:selectItems value="#{payrollSetupBean.stateCodePreferencesDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					 <div class="FL rowCont pad10tp">
+						<div class="FL" style="width:40%">
+							<h:panelGroup styleClass="FL B pad2tp W70">
+								Work Zip:
+							</h:panelGroup>
+							<h:outputText styleClass="FL pad2tp" rendered="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.payrollPref.workZip}" />
+							<ace:textEntry styleClass=" " rendered="#{payrollSetupBean.editMode}"
+								maxlength="50" value="#{payrollSetupBean.payrollPref.workZip}" />
+						</div>
+						<h:panelGroup rendered="#{headerViewBean.production.payrollPref.includeTouring}">
+							<div class="FL" style="width:41%;margin-left: 87px;">
+								<h:panelGroup styleClass="FL B pad2tp W100">
+									Work Country:
+								</h:panelGroup>
+								<h:selectOneMenu style="width: 43px;" styleClass=" " disabled="#{not payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.workCountry}">
+									<f:selectItems value="#{applicationScopeBean.countryCodeDL}" />
+										<ace:ajax />
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div><!-- end left-hand column of Start Form settings -->
+
+				<div class="W5percnt "><!-- * * * * * *  spacing (column break) * * * * * * * * -->
+				</div>
+
+				<div class="W40percnt FL"><!-- RIGHT-hand column of Start Form settings -->
+
+					<div class="rowCont pad10tp">
+						<h:panelGroup styleClass="FL B pad2tp W100">
+							Mileage Rate:
+						</h:panelGroup>
+						<h:outputText styleClass="FL pad2tp" rendered="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.payrollPref.mileageRate}">
+							<f:convertNumber pattern="#0.00#" />
+						</h:outputText>
+						<ace:textEntry rendered="#{payrollSetupBean.editMode}"
+								maxlength="6" value="#{payrollSetupBean.payrollPref.mileageRate}">
+							<f:convertNumber pattern="#0.00#" />
+						</ace:textEntry>
+					</div>
+					<div class="rowCont pad10tp">
+							<h:panelGroup styleClass="FL B pad2tp pad10rt">
+								Use Wage &amp; Overtime rules from:
+							</h:panelGroup>
+						<h:selectOneMenu disabled="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.payrollPref.overtimeRule}">
+							<f:selectItems value="#{payrollSetupBean.wageRuleStateDL}" />
+								<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+
+				</div><!-- end right-hand column -->
+
+			</div>
+
+			<!-- <div class="CB FL pad10tp">&#160;</div> --><!-- bottom padding for gradient -->
+
+		</div>
+	</div>
+
+</ui:composition>

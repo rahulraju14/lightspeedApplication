@@ -1,0 +1,516 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<c:set var="show" value="#{true}" /><!-- not empty authBean.pgFields['10.5,view'] -->
+	<c:set var="sfprod" value="#{contactFormBean.production}" scope="request" />
+	<c:set var="aicp" value="#{sfprod.type.aicp}" scope="request" />
+
+	<ace:tabPane id="formPane" label="#{show ? 'Start Forms' : ''}" disabled="#{not show}" cache="dynamic" >
+
+		<div class="miniTab" style="margin-top:-1px;">
+			<!-- contact document list start -->
+			<div class="W26percnt FL">
+				<div class="rowCont pad10lt">
+				<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+					<div id="formLegend" class="blueLegendCont scrollPnlTab pad15tp" onscroll="setScrollPos(this.scrollTop);"
+							style="height:410px; width:100%;background: white;">
+						<c:forEach items="#{contactFormBean.empContactList}" var="items">
+							<ui:include src="contactFormEmployment.xhtml">
+								<ui:param name="contactDocumentList" value="#{items}" />
+							</ui:include>
+						</c:forEach>
+						<!-- custom text. LS-4219 -->
+						<h:panelGroup class="blueLegendCont pad8lt pad10tp" rendered="#{not empty sfprod.customText2}"
+								style="background:white;width:95%">
+							<h:outputText styleClass="FL W95percnt pad8lt pad10tp" value="#{sfprod.customText2}" escape="false" />
+						</h:panelGroup>
+					</div><!-- blueLegendCont -->
+					</h:panelGroup>
+				</div>
+				<!-- End of Contact document list -->
+			</div><!-- W22percnt -->
+
+			<div class="W72percnt FL">
+				<div class="rowCont">
+					<!-- Start form blue legend start -->
+					<div class="blueLegendContWrap">
+						<div class="blueLegendCont" id="sfLegend"
+							style="margin-left:2%;margin-top:15px;">
+							<span class="legendHdg">Start Form :
+								<h:outputText value="#{contactFormBean.clickedDocumentName}"/>
+							</span>
+
+							<div style="min-height:19px;">
+								<!-- Auto-fill legend button starts -->
+								<h:panelGroup rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id) and
+										contactFormBean.contactDocument.submitable and (not contactFormBean.contactDocument.formType.canada
+										and not contactFormBean.contactDocument.formType.modelRelease)
+										and (contactFormBean.contactDocument.formType.autoFilled)}">
+									<h:panelGroup styleClass="btn_legend pad10rt">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Auto-fill"
+												action="#{contactFormBean.actionAutoFillForm}"
+												styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- Auto-fill legend button ends -->
+								
+								<!-- Auto-fill button for Canada Actra Contract and Actra Work Permit LS-2539 -->
+								<h:panelGroup rendered="#{(contactFormBean.contactDocument.formType.canada) and
+									(contactFormBean.editAuth) and contactFormBean.isApprover}">
+									<h:panelGroup styleClass="btn_legend pad10rt">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Auto-fill"
+												action="#{contactFormBean.actionAutoFillForm}"
+												styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- Auto-fill legend button ends -->
+								
+								<!-- Auto-fill button for Model Release Form. Only show for approver that has not signed LS-3279 -->
+								<h:panelGroup rendered="#{(contactFormBean.contactDocument.formType.modelRelease) and (contactFormBean.editAuth)
+									and contactFormBean.isApprover and contactFormBean.contactDocument.approvalSignature eq null}">
+									<h:panelGroup styleClass="btn_legend pad10rt">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Auto-fill"
+												action="#{contactFormBean.actionAutoFillForm}"
+												styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- Auto-fill legend button ends -->
+								
+								<!-- Auto-fill legend button for WTPA Approver -->
+								<h:panelGroup rendered="#{(contactFormBean.contactDocument.formType.wtpa) and
+														(contactFormBean.editAuth) and
+														(contactFormBean.contactDocument.status eq 'PENDING')}">
+									<h:panelGroup styleClass="btn_legend pad10rt">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Auto-fill"
+												action="#{contactFormBean.actionAutoFillForm}"
+												styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- Auto-fill legend button ends -->
+							</div>
+
+							<!-- Text editor for xfdf -->
+							<h:panelGroup rendered="#{contactFormBean.editMaster}">
+								<h:panelGroup styleClass="rowCont FL pad15lt pad15bm">
+									<h:panelGroup id="Editor" styleClass="xfdfTxtCont">
+										<ace:textAreaEntry id="xfdfEdit" styleClass="stdTxt W100percnt" style="height:100%;"
+											language="en" saveOnSubmit="true" height="100%" value="#{contactFormBean.textEditor}"/>
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+
+							<!-- Message Box -->
+							<h:panelGroup rendered="#{contactFormBean.infoMessage ne null}">
+								<div class="rowCont" style="margin-top:12%">
+									<div class="FL BKwhite sfFormBorder1 pad15bm"
+										style="height:60px; width:410px;padding-left:10px;padding-top:15px; margin-left:24%">
+										<h:outputText styleClass="txt17 pad15tp" value="#{contactFormBean.infoMessage}" />
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- Web viewer -->
+							<h:panelGroup rendered="#{not contactFormBean.standardDoc and
+								(not contactFormBean.contactDocument.disableJump) and
+								(contactFormBean.contactDocument ne null)}">
+								<div id="viewer" style="width:100%;">
+								</div>
+							</h:panelGroup>
+
+							<!-- Standard documents -->
+							<h:panelGroup rendered="#{(contactFormBean.standardDoc)
+											and (! contactFormBean.editMaster)
+											and (contactFormBean.isPreviewDocument or
+												(contactFormBean.contactDocument ne null) and (not contactFormBean.isUnavailable))}">
+								<div id="scrolldiv" class="FL scrollPnlTab W100percnt" onscroll="setScrollPos(this.scrollTop);"
+										style="height:410px;overflow-x:auto;">
+
+									<!-- Form I9 -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'I9')}">
+										<!-- Version 1 -->
+										<h:panelGroup rendered="#{formI9Bean.i9Version eq 1}">
+											<ui:include src="formI9.xhtml"></ui:include>
+										</h:panelGroup>
+										<!-- Version 2 -->
+										<h:panelGroup rendered="#{formI9Bean.i9Version eq 2 or formI9Bean.i9Version eq 3}">
+											<ui:include src="formI9_17.xhtml"></ui:include>
+										</h:panelGroup>
+										<!-- Version 4 -->
+										<h:panelGroup rendered="#{formI9Bean.i9Version eq 4}">
+											<ui:include src="formI9_20.xhtml"></ui:include>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<!-- Payroll Start -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'START')}">
+										<div id="sfdiv" class="pad15lt pad-5tp"> <ui:include src="../sf/startPayroll.xhtml"/> </div>
+									</h:panelGroup>
+
+									<!-- Summary sheet -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'SUMMARY')}">
+										<div id="ssdiv" class="pad25lt">
+											<ui:include src="summarySheetWrapper.xhtml" />
+										</div>
+									</h:panelGroup>
+
+									<!-- W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'W4')}">
+										<!-- Determine which version of the W4 to display LS-2933 -->
+										<h:panelGroup rendered="#{formW4Bean.form.version lt 20}">
+											<ui:include src="formW4.xhtml"/>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{formW4Bean.form.version eq 20}">
+											<ui:include src="formW4_20.xhtml"/>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<!-- CA WTPA Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'CA_WTPA')}">
+										<ui:include src="caWtpaForm.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- NJ W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'NJ_W4')}">
+										<ui:include src="formNJW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- NY WTPA Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'NY_WTPA')}">
+										<ui:include src="nyWtpaForm.xhtml"/>
+									</h:panelGroup>
+
+									<!-- Direct Deposit -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'DEPOSIT')}">
+										<ui:include src="directDepositForm.xhtml"/>
+									</h:panelGroup>
+
+									<!-- W9 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'W9')}">
+										<ui:include src="formW9.xhtml"/>
+									</h:panelGroup>
+
+									<!-- Minor Trust Account Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MTA')}">
+										<ui:include src="formMTA.xhtml"/>
+									</h:panelGroup>
+
+									<!-- Indemnification Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'INDEM')}">
+										<ui:include src="indemnificationForm.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- Model Release (Print) Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MODEL_RELEASE')}">
+										<ui:include src="formModelRelease.xhtml"/>
+									</h:panelGroup>
+									
+							<!--  *** STATE W4s ***  -->
+
+									<!-- A4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'AZ_W4')}">
+										<ui:include src="formA4.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- AL W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'AL_W4')}">
+										<ui:include src="formALW4_14.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- AR W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'AR_W4')}">
+										<ui:include src="formARW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- CA W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'CA_W4')}">
+										<ui:include src="formCAW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- CT W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'CT_W4')}">
+										<ui:include src="formCTW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- DC W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'DC_W4')}">
+										<ui:include src="formDCW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- DE W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'DE_W4')}">
+										<ui:include src="formDEW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- G4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'GA_W4')}">
+										<ui:include src="formG4.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- HI-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'HI_W4')}">
+										<ui:include src="formHIW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- IA-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'IA_W4')}">
+										<ui:include src="formIAW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- ID-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'ID_W4')}">
+										<ui:include src="formIDW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- IL-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'IL_W4')}">
+										<ui:include src="formILW4.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- IN-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'IN_W4')}">
+										<ui:include src="formINW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- KS-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'KS_W4')}">
+										<ui:include src="formKSW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- KY-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'KY_W4')}">
+										<ui:include src="formKYW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- L4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'LA_W4')}">
+										<ui:include src="formL4.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MA W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MA_W4')}">
+										<ui:include src="formMAW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MD W4 Form -->
+									<h:panelGroup rendered="#{contactFormBean.formType eq 'MD_W4'}">
+										<ui:include src="formMDW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- ME-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'ME_W4')}">
+										<ui:include src="formMEW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MN W4 Form -->
+									<h:panelGroup rendered="#{contactFormBean.formType eq 'MN_W4'}">
+										<ui:include src="formMNW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MO W4 Form -->
+									<h:panelGroup rendered="#{contactFormBean.formType eq 'MO_W4'}">
+										<ui:include src="formMOW4_20.xhtml"/>
+									</h:panelGroup>
+
+                                    <!-- MI W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MI_W4')}">
+										<ui:include src="formMIW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MS W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MS_W4')}">
+										<ui:include src="formMSW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- MT W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'MT_W4')}">
+										<ui:include src="formMTW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- NC W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'NC_W4')}">
+										<ui:include src="formNCW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- NE W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'NE_W4')}">
+										<ui:include src="formNEW4_20.xhtml"/>
+									</h:panelGroup>
+
+									<!-- NY W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'NY_W4')}">
+										<ui:include src="formNYW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- OH W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'OH_W4')}">
+										<ui:include src="formOHW4_20.xhtml" />
+									</h:panelGroup>
+										
+									<!-- OK W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'OK_W4')}">
+										<ui:include src="formOKW4_20.xhtml" />
+									</h:panelGroup>
+									
+									<!-- OR W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'OR_W4')}">
+										<ui:include src="formORW4_20.xhtml" />
+									</h:panelGroup>
+									
+									<!-- PR W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'PR_W4')}">
+										<ui:include src="formPRW4_20.xhtml" />
+									</h:panelGroup>
+									
+									<!-- RI-W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'RI_W4')}">
+										<ui:include src="formRIW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- SC W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'SC_W4')}">
+										<ui:include src="formSCW4_20.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- VA W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'VA_W4')}">
+										<ui:include src="formVAW4_20.xhtml" />
+									</h:panelGroup>
+									
+									<!-- VT W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'VT_W4')}">
+										<ui:include src="formVTW4_20.xhtml" />
+									</h:panelGroup>
+
+									<!-- WI W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'WI_W4')}">
+										<ui:include src="formWIW4_20.xhtml" />
+									</h:panelGroup>
+
+									<!-- WV W4 Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'WV_W4')}">
+										<ui:include src="formWVW4_20.xhtml" />
+									</h:panelGroup>
+
+							<!--  *** Canadian forms ***  -->
+
+									<!-- ACTRA Contract Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'ACTRA_CONTRACT')
+															or (contactFormBean.clickedDocumentName eq 'ACTRA Contract')}">
+										<ui:include src="formActraContract.xhtml"/>
+									</h:panelGroup>
+
+									<!-- ACTRA Work Permit Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'ACTRA_PERMIT')
+															or (contactFormBean.clickedDocumentName eq 'ACTRA Work Permit')}">
+										<ui:include src="formActraWorkPermit.xhtml"/>
+									</h:panelGroup>
+									
+									<!-- UDA INM Contract Form -->
+									<h:panelGroup rendered="#{(contactFormBean.formType eq 'UDA_INM')
+															or (contactFormBean.clickedDocumentName eq 'UDA INM Contract')}">
+										<ui:include src="formUDAContract.xhtml"/>
+									</h:panelGroup>
+
+								</div>
+						    </h:panelGroup>
+						</div>
+					</div>
+					<!-- Start form blue legend END -->
+				</div><!-- rowCont  -->
+
+				<h:panelGroup rendered="#{(! contactFormBean.isPreviewDocument) and
+						(not contactFormBean.standardDoc) and
+						(contactFormBean.contactDocument ne null) and
+						(contactFormBean.contactDocument.comments ne null) and
+						(not contactFormBean.contactDocument.disableJump)}">
+					<!-- Public Comments wrapper -->
+					<div class="blueLegendContWrap MA pad20tp pad12lt">
+						<div class="blueLegendCont FL" style="margin-left:2%;width:50%;margin-bottom:6px;">
+							<div class="legendHdg">Comments</div>
+							<table class="gridPlain W100percnt" style="overflow-x:hidden;">
+								<tr>
+									<td>
+										<h:outputText styleClass="FL pad2lt pad1tp pad1bm txt11"
+											value="#{contactFormBean.contactDocument.comments}" escape="false"
+											style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{(! contactFormBean.isPreviewDocument) and
+						(not contactFormBean.standardDoc) and
+						(contactFormBean.contactDocument ne null) and
+						(not contactFormBean.contactDocument.disableJump)  }">
+					<!-- HISTORY -->
+					<div class="blueLegendContWrap MA pad20tp pad12lt">
+						<h:panelGroup styleClass="blueLegendCont pad20tp FR" style="margin-left:2%;width:50%;margin-bottom:6px;">
+							<div class="legendHdg">History</div>
+							<div style="min-height:19px;"> <!-- keeps size even if btn is hidden -->
+								<h:panelGroup styleClass="btn_legend" rendered="#{(not customFormBean.showAllHistory) and (customFormBean.contactDoc.id ne null)}">
+									<span class="btnMiniLtHot"/>
+									<ace:linkButton value="All entries"
+											action="#{customFormBean.actionHistoryShowAll}" styleClass="btnMiniCt"
+											onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="btn_legend" rendered="#{(customFormBean.showAllHistory) and (customFormBean.contactDoc.id ne null)}">
+									<span class="btnMiniLtHot"/>
+									<ace:linkButton value="Signatures only"
+											action="#{customFormBean.actionHistoryShowSignatures}" styleClass="btnMiniCt"
+											onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot"/>
+								</h:panelGroup>
+							</div>
+							<table class="W100percnt BKwhite" style="border-collapse:collapse;"
+									 cellpadding="0" cellspacing="0">
+								<tr style="width: 100%;">
+									<td style="width:86%;">
+										<div class="FL W100percnt" style="height:50%;">
+											<ui:repeat style="width:99%;border:1px solid #ccc;overflow:auto;max-height:100px;"
+												value="#{customFormBean.contactDoc.contactDocEvents}"
+												var="event" styleClass="pad2lt txt11">
+												<h:panelGroup rendered="#{customFormBean.showAllHistory or (event.type.signed)}">
+													<div class="pad5lt pad10bm">
+														<h:panelGroup rendered="#{customFormBean.showAllHistory}">
+															<h:outputText value="#{event.display}"/>
+														<br/>
+														</h:panelGroup>
+														<h:panelGroup styleClass="txt12 pad10lt" rendered="#{event.type.signed}">
+															<h:outputText value="Electronically signed by" styleClass="U" />
+															<h:outputText value=" #{event.name}" styleClass="U B txtBlue" />
+															<h:outputText value=" #{event.displayTime}" />
+															<br/>
+															<h:outputText value="# #{event.uuid}" styleClass="pad10lt" />
+														</h:panelGroup>
+													</div>
+												</h:panelGroup>
+											</ui:repeat>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</div>
+					<!-- HISTORY END -->
+				</h:panelGroup>
+
+			</div><!-- W72percnt -->
+		</div><!-- scrollDiv -->
+	</ace:tabPane>
+</ui:composition>

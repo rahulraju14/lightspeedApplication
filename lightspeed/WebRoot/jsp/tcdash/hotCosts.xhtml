@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Hot Costs tab of Dashboard page (screen number 9.4) -->
+	<!--
+	Parameters:
+		aicp : true if Commercial (AICP) production is being displayed
+ -->
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+	<c:set var="show" value="#{showTab and (not aicp) and (not empty authBean.pgFields['9.12,view_hc'])}" />
+
+	<ace:tabPane label="#{show ? 'Hot Costs' : ''}" disabled="#{not show}">
+		<c:choose>
+			<c:when test="#{hotCostsBean.showSummaryView}">
+				<div id="main2">
+					<div id="hcSummaryScrollDiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+						<div class="rowCont">&#160;</div>
+						<ui:include src="hotCostsSummary.xhtml"/>
+
+						<!-- End of Top Summary By Department section -->
+						<div class="rowCont">&#160;</div>
+						<div class="topBdrCont FL">
+							<div class="midTop">
+							</div>
+						</div>
+						<div class="rowCont">&#160;</div>
+						<ui:include src="hotCostsSummaryGrandTotals.xhtml"/>
+					</div>
+					<div class="rowCont">&#160;</div>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<c:set var="editable" value="#{hotCostsDataEntryBean.editMode}" />
+				<div id="main3">
+					<div id="hotCostsDataScrollDiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+						<div class="rowCont">&#160;</div>
+						<div class="W25percnt FL pad10lt">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Summary"
+								 onclick="queueClick(this,event);"
+								action="#{hotCostsDataEntryBean.actionSummaryView}"
+								title="Go to Summary" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</div>
+						<h:panelGroup styleClass="W45percnt FR">
+							<h:panelGroup styleClass="pad10rt FR">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Copy Budget Values"
+									 onclick="queueClick(this,event);"
+									actionListener="#{hotCostsDataEntryBean.actionCloneBudgetedValues}"
+									title="Copy budgeted hot costs values" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="pad5rt FR">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Import Timecards"
+									 onclick="queueClick(this,event);"
+									actionListener="#{hotCostsDataEntryBean.actionImport}"
+									title="Import from timecards" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<div>&#160;</div>
+						<div>&#160;</div>
+						<div>
+							<ui:include src="hotCostsDataUpdate.xhtml" />
+						</div>
+
+						<div class="rowCont">&#160;</div>
+
+						<ui:include src="hotCostsDataDetail.xhtml" />
+
+					</div>
+					<div class="rowCont">&#160;</div>
+				</div>
+				<!-- End of Main -->
+			</c:otherwise>
+		</c:choose>
+	</ace:tabPane>
+</ui:composition>

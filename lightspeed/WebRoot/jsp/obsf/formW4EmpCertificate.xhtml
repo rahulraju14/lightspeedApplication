@@ -1,0 +1,411 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- parameters:
+		formVersion - string - form version, 2 digits, e.g., '18'
+		pre2018style - boolean - true if W4 version PRIOR to 2018
+		is2018style - boolean - true if W4 version FOR 2018 or LATER
+		formDir - string - directory for images
+ -->
+
+	<!-- "EMPLOYEE WITHHOLDING CERTIFICATE" portion of W4 - - ALL YEARS -->
+
+<style type="text/css">
+	.h_radio td {
+		/* this provides horizontal spacing between 'line-direction' radio buttons in h:selectOneRadio */
+		/* For line 3, single/married/etc., need less spacing to fit on one line. (global css has 10px) */
+		padding-right: 8px;
+	}
+</style>
+
+	<div class="BKwhite" style="width:820px;">
+		
+		<!-- Main Form Start -->
+		<!-- FIRST ROW START -->
+		<div class="rowCont FL">
+
+			<!-- FIRST NAME START -->
+			<div class="W35percnt FL pad4tp">
+				<div class="rowCont pad5lt" style="height:45px; border-right:solid 1px; margin-top:-5px;">
+					<span class="fdNm_w2" style="width: 200px;"> 
+						<h:outputText value="1 Your first name and middle initial" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{empty (formW4Bean.form.firstName) ? 'requiredField' : ''}">
+							<ace:textEntry id="FirstName" maxlength="30" style="width:95%;"
+								disabled="#{not formW4Bean.empEdit}"
+								value="#{formW4Bean.form.firstName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- FIRST NAME END -->
+
+			<!-- LAST NAME START -->
+			<div class="W35percnt FL pad4tp">
+				<div class="rowCont pad10lt" style="height:45px; border-right:solid 1px; margin-top:-5px;">
+					<span class="fdNm_w2"> <h:outputText value="Last Name" /> </span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{empty (formW4Bean.form.lastName) ? 'requiredField' : ''}">
+							<ace:textEntry id="LastName" maxlength="30" style="width:95%;"
+								disabled="#{not formW4Bean.empEdit}"
+								value="#{formW4Bean.form.lastName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- LAST NAME END -->
+
+			<!-- SOCIAL SECURITY NUMBER START -->
+			<div class="W30percnt FL pad4tp">
+				<div class="rowCont pad15lt" style="height:45px; margin-top:-5px;">
+					<span class="fdNm_w2" style="width: 190px;">
+						<h:outputText value="2  Your social security number" />
+					</span>
+
+					<h:panelGroup rendered="#{not formW4Bean.empEdit}">
+						<span class="fd_sm2 pad3lt #{empty (formW4Bean.form.socialSecurity) ? 'requiredField' : ''}">
+							<ace:textEntry value="#{formW4Bean.form.viewSSN}" disabled="true" style="width:89%"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{formW4Bean.empEdit}">
+						<span class="fd_sm2 pad3lt #{empty (formW4Bean.form.socialSecurity) ? 'requiredField' : ''}">
+							<ace:textEntry id="SocialSecurity" style="width:89%;" maxlength="11"
+								disabled="#{not formW4Bean.empEdit}"
+								value="#{formW4Bean.form.socialSecurity}">
+								<f:converter converterId="lightspeed.SSNConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+
+				</div>
+			</div> <!-- SOCIAL SECURITY NUMBER END -->
+		</div> <!-- FIRST ROW END -->
+
+		<!-- Horizontal rule -->
+		<hr class="rowCont FL" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- SECOND ROW START -->
+		<div class="rowCont">
+
+			<!-- FIRST BLOCK START -->
+			<div class="W47percnt FL" style=" border-right:solid 1px;">
+				<!-- HOME ADDRESS START -->
+				<div class="rowCont pad-3tp" style="height:42px;">
+					<span class="fdNm_w2" style="width:500px;">
+						<h:outputText value="Home address (number and street or rural route)" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{empty (formW4Bean.form.address.addrLine1) ? 'requiredField' : ''}">
+							<ace:textEntry id="HomeAddress" maxlength="60" style="width:96%;"
+								disabled="#{not formW4Bean.empEdit}"
+								value="#{formW4Bean.form.address.addrLine1}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- HOME ADDRESS END -->
+
+				<!-- CITY OR TOWN START-->
+				<div class="FL" style="width:63%">
+					<div class="rowCont" style="height:42px;">
+						<span class="fdNm_w2" style="width:220px;"> 
+							<h:outputText value="City or Town" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{empty (formW4Bean.form.address.city) ? 'requiredField' : ''}">
+								<ace:textEntry id="HomeCity" style="width:90%;" maxlength="35"
+									disabled="#{not formW4Bean.empEdit}"
+									value="#{formW4Bean.form.address.city}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- CITY OR TOWN END-->
+
+				<!-- STATE START -->
+				<div class="W14percnt FL">
+					<div class="rowCont" style="height:42px;">
+						<span class="fdNm_w"> <h:outputText value="State" /> </span>
+						<h:selectOneMenu styleClass="FL W90percnt"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.address.state}"
+							style="height:23px; #{formW4Bean.form.address.state eq null ? 'background-color: rgb(255,255,170)' : ''};">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+				</div>
+				<!-- STATE END -->
+
+				<!-- ZIP CODE START -->
+				<div class="W18percnt FL">
+					<div class="rowCont" style="height:42px;">
+						<span class="fdNm_w pad8lt"> <h:outputText value="Zip Code" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt #{empty (formW4Bean.form.address.zip) ? 'requiredField' : ''}">
+								<ace:textEntry id="HomeAddZipCode" style="width:95%;" maxlength="10"
+									disabled="#{not formW4Bean.empEdit}"
+									value="#{formW4Bean.form.address.zip}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- ZIP CODE END -->
+			</div>
+			<!-- FIRST BLOCK END -->
+
+			<!-- SECOND BLOCK START -->
+			<div class="W52percnt FL">
+
+				<!-- EMPLOYEE MARITAL STATUS START -->
+				<div class="FL pad3tp #{(formW4Bean.form.marital eq null) ? 'requiredDiv' : ''}">
+					<span class="pad5lt FL B"> 
+						<h:outputText value="3" />
+					</span>
+					<!-- OPTIONS -->
+					<h:selectOneRadio layout="lineDirection"
+	 						id="emp_status" styleClass="h_radio"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.marital}">
+						<f:selectItem itemLabel="Single" itemValue="s" />
+						<f:selectItem itemLabel="Married"  itemValue="m" />
+						<f:selectItem itemLabel="Married, but withhold at higher Single rate." itemValue="w" />
+					</h:selectOneRadio>
+				</div>
+
+				<!-- NOTE -->
+				<div class="rowCont FL pad5lt pad1tp">
+					<h:outputText escape="false" styleClass="txt10"
+						rendered="#{is2018style}"
+						value="&lt;strong&gt; Note: &lt;/strong&gt; If married filing separately, 
+						check &quot;Married, but withhold at higher Single rate.&quot;" /> 
+					<h:outputText escape="false" styleClass="txt10"
+						rendered="#{pre2018style}"
+						value="&lt;strong&gt; Note: &lt;/strong&gt; If married, but legally separated, 
+						or spouse is a nonresident alien, check the &quot;Single&quot; box." /> 
+				</div>
+				<!-- EMPLOYEE MARITAL STATUS END -->
+
+				<!-- Horizontal rule -->
+				<hr class="rowCont FL" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+				<!-- LAST NAME DIFFERS SS/ CHECKBOX -->
+				<div class="rowCont pad2tp pad5lt">
+					<h:outputText escape="false"
+						value="&lt;strong&gt; 4 &#160; If your last name differs from that shown on your social security 
+						card, &lt;/br&gt; &#160; &#160; check here. You must call 800-772-1213 for a replacement 
+						card.&lt;/strong&gt; &amp;#9654;">
+					</h:outputText>
+					<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx"
+								disabled="#{not formW4Bean.empEdit}" value="#{formW4Bean.form.nameDiffers}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+					<!-- <h:selectBooleanCheckbox
+						disabled="#{not formW4Bean.empEdit}"
+						value="#{formW4Bean.form.nameDiffers}"/> -->
+				</div>
+			</div> <!-- SECOND BLOCK END -->
+			<!-- SECOND ROW END -->
+
+			<!-- Horizontal rule -->
+			<hr class="rowCont FL" style="height:1px;background:black;border:0;margin-right:-3px; width:99%;" />
+					
+			<!-- THIRD SECTION - LINES 5-7 + IMAGE-7 -->
+			<div class="rowCont">
+				<!-- FIRST BLOCK START -->
+				<div class="W88percnt FL">
+					<h:graphicImage style="#{pre2018style ? 'width:820px;' : 'width:823px;margin-top:-2px;'}" 
+						url="../../i/forms/#{formDir}/formW4Img_7.png" alt=""/>
+				</div>
+				<!-- FIRST BLOCK END -->
+
+				<!-- SECOND BLOCK START -->
+				<div class="W12percnt FL">
+
+					<!-- 5/ TOTAL ALLOWANCES -->
+					<div class="fd_sm2 #{((empty (formW4Bean.form.allowances)) and (not formW4Bean.form.exempt)) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="2" id="TotalAllowances"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.allowances}" 
+							style="width:92%; margin-left:-4px;text-align:center; height:8px;">
+							<ace:ajax render="@this exempt" execute="@this"/>
+						</ace:textEntry>
+					</div>
+
+					<!-- 6/ ADDITIONAL AMOUNT WITHHELD -->
+					<div class="fd_sm2 pad1tp">
+						<ace:textEntry id="AddtlAmount" maxlength="35"
+							style="width:81%; margin-left:9px; margin-top:1px; text-align:right; height:8px;"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.addtlAmount}">
+							<f:convertNumber type="number" pattern="#,##0." />
+						</ace:textEntry>
+					</div>
+
+					<!-- 7/ EXEMPT -->
+					<div>
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu id="exempt"
+								styleClass="FL W90percnt pad50tp"
+								style="margin-top:54px; margin-left:-87px; width:186px;height:18px;"
+								disabled="#{(not formW4Bean.empEdit) or (not empty (formW4Bean.form.allowances))}"
+								value="#{formW4Bean.form.exempt}">
+								<f:selectItems value="#{formW4Bean.exemptList}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</div>
+				</div>
+				<!-- SECOND BLOCK END -->
+			</div>
+
+			<!-- SIGNATURE ROW START -->
+			<!-- SIGNATURE LABEL -->
+			<div class="FL pad10tp" style="height:27px;width:30%">
+				<h:outputText escape="false" styleClass="txt12"
+						value="&lt;strong&gt; Employee&apos;s signature &lt;/strong&gt; &lt;/br&gt;
+						(This form is not valid unless you sign it.) &amp;#9658;"/>
+			</div>
+
+			<!-- SIGNATURE VALUE -->
+			<!-- Display the most recent employee signature. -->
+			<div class="W50percnt FL pad10tp" style="height: 27px;">
+				<div class="rowCont">
+					<span>
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formW4Bean.contactDoc.empSignature ne null}">
+							<h:outputText value="E-signed by" styleClass="U" />
+							<h:outputText value=" #{formW4Bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formW4Bean.contactDoc.empSignature.displayTime}" />
+							<br/>
+							<h:outputText value="# #{formW4Bean.contactDoc.empSignature.uuid}"/>
+						</h:outputText>
+					</span>
+					<!-- SIGN AND SUBMIT BUTTON START -->
+					<h:panelGroup rendered="#{(formW4Bean.contactDoc.submitable) or (formW4Bean.contactDoc.status eq 'PENDING')}">
+						<h:panelGroup styleClass="btn_legend" style="margin-top:15px; margin-right:10px;">
+							<h:panelGroup rendered="#{(formW4Bean.contactDoc.status ne 'PENDING') and (formW4Bean.empEdit or
+									(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign &amp; Submit"
+									action="#{contactFormBean.actionSubmit}"
+									title="Signature field" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not (formW4Bean.empEdit or
+									(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+									or (formW4Bean.contactDoc.status eq 'PENDING')}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- SIGN AND SUBMIT BUTTON END -->
+				</div>
+			</div>
+
+			<!-- SIGNATURE DATE -->
+			<div class="W20percnt FL pad20tp">
+				<h:outputText styleClass="B txt12" escape="false" value="Date &amp;#9658; "/>
+				<h:outputText value="#{formW4Bean.contactDoc.empSignature.date}">
+					<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+			</div>
+			<!-- SIGNATURE ROW END -->
+
+			<!-- Horizontal rule -->
+			<hr class="rowCont FL" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<div class="rowCont FL txt11">
+				<!-- EMPLOYER NAME AND ADDRESS START -->
+				<div class="FL pad4tp" style="width:59%">
+					<div class="rowCont" 
+							style="height:#{pre2018style ? '42px' : '56px'}; border-right:solid 1px; margin-top:-5px;">
+						<span class="fdNm_w2" style="width: 550px; font-weight:normal;">
+							<h:outputText rendered="#{is2018style}" style="line-height:12px;" escape="false"
+									value="8 Employer&apos;s name and address 
+									(&lt;strong&gt;Employer:&lt;/strong&gt; Complete boxes 8 and 10 if sending to IRS and &lt;/br&gt;
+									&#160; complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)" /> 
+							<h:outputText rendered="#{pre2018style}"
+									value="8 Employer&apos;s name and address 
+									(Employer: Complete lines 8 and 10 only if sending to the IRS.)" /> 
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:outputText value="#{formW4Bean.form.employerName}"/>
+								<h:outputText value="#{formW4Bean.form.employerAddress}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- EMPLOYER NAME AND ADDRESS END -->
+
+				<!-- OFFICE CODE START -->
+				<div class="FL pad4tp" style="width:16%">
+					<!-- Office code (optional) -->
+					<div class="rowCont pad5lt" style="height:#{pre2018style ? '42px' : '56px'}; border-right:solid 1px; margin-top:-5px;">
+						<span class="fdNm_w2" style=" font-weight:normal;">
+							<h:outputText rendered="#{is2018style}" style="line-height:12px;" escape="false"
+								value="9 First date of &lt;/br&gt;&#160; employment" />
+							<h:outputText rendered="#{pre2018style}" value="9 Office code(optional)" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:outputText value="#{formW4Bean.form.officeCode}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+					<!-- OFFICE CODE END -->
+
+				<!-- EMPLOYER IDENTIFICATION NUMBER (EIN) START-->
+				<div class="W24percnt FL pad4tp">
+					<div class="rowCont pad10lt" style="height:#{pre2018style ? '42px' : '56px'}; margin-top:-5px;"> 
+						<span class="fdNm_w2" style="font-weight:normal; width: 200px;"> 
+							<h:outputText rendered="#{is2018style}" style="line-height:12px;" escape="false"
+									value="10 Employer identification &lt;/br&gt;&#160; &#160;number (EIN)" /> 
+							<h:outputText rendered="#{pre2018style}" value="10 Employer identification number (EIN)" /> 
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:outputText value="#{formW4Bean.form.empIdNumber}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- EMPLOYER IDENTIFICATION NUMBER (EIN) END-->
+			</div>
+			<!-- Main Form End -->
+
+			<!-- Horizontal rule -->
+			<hr class="rowCont FL" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- PAGE 1- FOOTER -->
+			<div class="CB" />
+			<div class="FL pad4tp" style="width:57%">
+				<h:outputText styleClass="B"
+						value="For Privacy Act and Paperwork Reduction Act Notice, see page #{pre2018style ? '2' : '4'}." />
+			</div>
+
+			<div class="FL W25percnt pad4tp">
+				<h:outputText value="Cat. No. 10220Q" />
+			</div>
+
+			<div class="FR W14percnt pad4tp">
+				<h:outputText value="Form " />
+				<h:outputText styleClass="B txt15" value="W-4 " />
+				<h:outputText value="(20#{formW4Bean.form.version})" />
+			</div>
+
+		</div>
+	</div>
+</ui:composition>

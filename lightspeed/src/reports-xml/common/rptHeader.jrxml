@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptHeader" pageWidth="552" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="552" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d396dd8a-2503-44f6-90df-a2c25e334707">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="constant" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="unused" class="java.lang.String"/>
+	<title>
+		<band splitType="Prevent"/>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Prevent">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="43dfaea7-ca77-4a97-9774-93125c70a35c" key="textField-4" x="6" y="2" width="321" height="22"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{productionName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="07ea7ece-0d40-4bb6-a989-e460bee807ea" key="textField-1" mode="Transparent" x="327" y="2" width="222" height="22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{constant}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1e06ac27-bb1b-42f2-bcac-e07e48e41d3d" key="textField-5" x="6" y="25" width="405" height="18"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($P{projectName}==null ? "" : $P{projectName})+" "+ ( ($P{showUnit}!=Boolean.TRUE || $P{unitName}==null) ? " " : "- "+$P{unitName}))]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="MM/dd/yyyy" isBlankWhenNull="false">
+				<reportElement uuid="b7041796-70e5-48b3-8b41-a4eb744dc126" key="textField" x="411" y="25" width="138" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[("Date: ") + new SimpleDateFormat("MM/dd/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="81916c38-dd04-4688-92e7-57a8243198a5" key="line-9" x="0" y="53" width="552" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+</jasperReport>

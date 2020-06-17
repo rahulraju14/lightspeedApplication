@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+		<!-- Dialog box for displaying ZipCode with multiple cities user selection would be one from list  -->
+	<h:form>
+		<c:set var="bean" value="#{zipCitiesPopupBean}"/>
+		
+		<ace:dialog visible="#{bean.visible}" 
+			header="#{bean.title}"
+			closable="true" 
+			draggable="true" 
+			modal="true"  
+			hideEffect="fade"
+			showEffect="fade" 
+			resizable="false" 
+			width="450"
+			height="450">
+			
+			<ace:ajax event="close" execute="@this"
+				listener="#{bean.actionClose}" />
+			
+			<div class="popupBdyAN">			
+				<div class="popCont90">
+					<div class="popup_main">
+						<div class="rowCont">
+							<!-- SELECT ROW START -->
+							<h:panelGroup style="text-align:left;">
+								<div class="msg">
+									<h:panelGroup rendered="#{bean.errormsg}">
+										<p style="margin-top: 303px; margin-left: 46px; position: absolute; color: red;">
+										At least one of the listed cities must be selected.</p>
+									</h:panelGroup>
+								</div>
+								<div class="pad25tp pad5lt W100percnt">
+										<ace:dataTable 
+											value="#{bean.cityStateList}"
+											var="row"
+											styleClass="bk_sl_grid CT" 
+											rowIndexVar="rowIndex" 
+											rowStyleClass="LT" 
+											scrollable="#{!(bean.cityStateList.size() le 5) }"  
+											scrollHeight="200"
+											style=" margin-left: 24px;">
+											
+									<!-- row holds the AddressInformation object-->
+											<ace:column style="width:8%;text-align: center;">
+												<h:panelGroup>
+													<ace:radioButton styleClass="radioTxtLbl"
+														value="#{row.selected}" valueChangeListener="#{bean.listenSelectedRowChange}">
+														<f:attribute name="currentRow" value="#{row}"/>
+														<ace:ajax render="@all" />
+													</ace:radioButton>
+												</h:panelGroup>
+											</ace:column>
+
+											<!-- Zip code -->
+											<ace:column headerText="Zip code" style="width:15%">
+												<h:outputText value="#{row.zipCode}" />
+											</ace:column>
+
+											<!-- City name -->
+											<ace:column headerText="City name" style="width:30%">
+												<h:outputText value="#{row.city}" />
+											</ace:column>
+
+										</ace:dataTable>
+								</div>
+								</h:panelGroup>
+							<!-- SELECT Row END -->
+						</div>
+						
+					</div>
+				</div>
+
+			<div  style="position: static; margin-top: 362px; margin-left: 271px;">
+					<span class="FR pad50rt"> 
+						<span class="btnPriEnbLt" /> 
+						<span>
+							<ace:linkButton value="#{zipCitiesPopupBean.buttonCancelLabel}"
+								action="#{zipCitiesPopupBean.actionCancel}"
+								styleClass="btnPriEnbCt" />
+						</span> 
+						<span class="btnPriEnbRt" />
+					</span>
+					 <span class="FR pad5rt"> 
+					 	<span class="btnSecHotLt" /> 
+					 	<span>
+							<ace:linkButton value="#{zipCitiesPopupBean.buttonOkLabel}"
+								action="#{zipCitiesPopupBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						 <span class="btnSecHotRt" />
+					</span>
+				</div>
+				</div>
+			
+		</ace:dialog>
+	</h:form>
+</ui:composition>

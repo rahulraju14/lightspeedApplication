@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div class="FL pad20lt rowCont pad10bm" style="width:55%">
+
+		<!-- Public Comments wrapper -->
+		<h:panelGroup styleClass="blueLegendContWrap MA pad12tp"
+				rendered="#{contactFormBean.contactDocument.comments ne null}">
+			<div class="blueLegendCont FL pad12tp">
+				<div class="legendHdg">Comments</div>
+				<table class="gridPlain W100percnt" style="overflow-x:hidden;">
+					<tr>
+						<td>
+							<h:outputText styleClass="FL pad2lt pad1tp pad1bm txt11"
+								value="#{contactFormBean.contactDocument.comments}" escape="false"
+								style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</h:panelGroup>
+
+		<!-- HISTORY -->
+		<div class="blueLegendContWrap MA">
+			<h:panelGroup styleClass="blueLegendCont pad30tp FR">
+				<div class="legendHdg">History</div>
+				<div style="min-height:19px;"> <!-- keeps size even if btn is hidden -->
+					<h:panelGroup styleClass="btn_legend" rendered="#{(not bean.showAllHistory) and (bean.contactDoc.id ne null)}">
+						<span class="btnMiniLtHot"/>
+						<ace:linkButton value="All entries" 
+								action="#{bean.actionHistoryShowAll}" styleClass="btnMiniCt"
+								onmouseup="showErrors();" onclick="queueClick(this,event);" />
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="btn_legend" rendered="#{(bean.showAllHistory) and (bean.contactDoc.id ne null)}">
+						<span class="btnMiniLtHot"/>
+						<ace:linkButton value="Signatures only" 
+								action="#{bean.actionHistoryShowSignatures}" styleClass="btnMiniCt"
+								onmouseup="showErrors();" onclick="queueClick(this,event);" />
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+				</div>
+				<table class="W100percnt BKwhite" style="border-collapse:collapse;">
+					<tr style="width: 100%;">
+						<td style="width:86%;">
+							<div class="FL W100percnt" style="height:50%;">
+								<ui:repeat style="width:99%;border:1px solid #ccc;"
+									value="#{events}"
+									var="event" styleClass="pad2lt txt11">
+									<h:panelGroup rendered="#{bean.showAllHistory or (event.type.signed)}">
+										<div class="pad5lt pad10bm">
+											<h:panelGroup rendered="#{bean.showAllHistory}">
+												<h:outputText value="#{event.display}"/>
+
+												<h:panelGroup styleClass="txt12" rendered="#{event.type eq 'DECLINE'}">
+													<br/>
+													<h:outputText value="By" styleClass="U pad10lt" />
+													<h:outputText value=" #{event.name}" styleClass="U B txtBlue" />
+													<h:outputText value=" #{event.displayTime}" />
+												</h:panelGroup>
+											<br/>
+											</h:panelGroup>
+											<h:panelGroup styleClass="txt12 pad10lt" rendered="#{event.type.signed}">
+												<h:outputText value="Electronically signed by" styleClass="U" />
+												<h:outputText value=" #{event.name}" styleClass="U B txtBlue" />
+												<h:outputText value=" #{event.displayTime}" />
+												<br/>
+												<h:outputText value="# #{event.uuid}" styleClass="pad10lt" />
+											</h:panelGroup>
+										</div>
+									</h:panelGroup>
+								</ui:repeat>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</div>
+		<!-- HISTORY END -->
+	</div>
+</ui:composition>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Stripboard View</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+
+	//element = document.getElementById('sv:sL');
+	//resizeElement(element, 266, 310);
+
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('sv:sL', 265, 310);	// scheduled lists...
+	resizeScrollable('sv:sL_2', 265, 310); // unit #2, etc...
+	resizeScrollable('sv:sL_3', 265, 310);
+	resizeScrollable('sv:sL_4', 265, 310);
+	resizeScrollable('sv:sL_5', 265, 310);
+	resizeScrollable('sv:sL_6', 265, 310);
+	resizeScrollable('sv:sL_7', 265, 310);
+	resizeScrollable('sv:sL_8', 265, 310);
+	resizeScrollable('sv:uL', 265, 310);	// unscheduled tab
+	resizeScrollable('sv:oL', 265, 310);	// boneyard (omitted) tab
+	</c:if>
+
+	// remove ICEfaces default onscroll function to stop
+	// server interaction on every scroll action
+	//clearOnScroll("sv:sL");
+	//clearOnScroll("sv:sL_2");
+	//clearOnScroll("sv:sL_3");
+	//clearOnScroll("sv:sL_4");
+	//clearOnScroll("sv:sL_5");
+	//clearOnScroll("sv:sL_6");
+	//clearOnScroll("sv:sL_7");
+	//clearOnScroll("sv:sL_8");
+	//clearOnScroll("sv:uL");
+	//clearOnScroll("sv:oL");
+
+}
+
+var mainListId = "sv:sL"; // used by main list scrolling functions
+var formname = "sv";
+
+</script>
+
+</h:head>
+<h:body>
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+<h:form id="sv">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="stripboardview" />
+</h:outputText>
+
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<!-- <div id="mainCont"> -->
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="#{stripBoardViewBean.stripboard.description}"/>
+							</span>
+							<h:panelGroup rendered="#{(not empty stripBoardViewBean.stripboardList) and
+									 (not empty authBean.pgFields['6.1,edit'])}">
+								<h:panelGroup rendered="#{stripBoardViewBean.enableEdit}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+										<ace:linkButton value="Edit"
+												action="#{stripBoardViewBean.actionEdit}"
+												styleClass="btnPriHotCt">
+									 		<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+									 		<f:setPropertyActionListener value="#{stripBoardViewBean.stripboard.id}" target="#{jumpBean.value}"/>
+										</ace:linkButton>
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup
+										rendered="#{not stripBoardViewBean.enableEdit}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+										<ace:linkButton
+											value="Edit"
+											styleClass="btnPriDisCt" type="text" onclick="return false;" />
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup
+									rendered="#{(not empty stripBoardViewBean.stripboardList) and
+									(stripBoardViewBean.stripboardId ne headerViewBean.project.stripboard.id) and
+									(not empty authBean.pgFields['6.1,set_default'])}">
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Make Default" action="#{stripBoardViewBean.actionMakeDefault}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup
+									rendered="#{((empty stripBoardViewBean.stripboardList) or
+									(stripBoardViewBean.stripboardId eq headerViewBean.project.stripboard.id)) and
+									(not empty authBean.pgFields['6.1,set_default'])}">
+								<span class="FR pad10rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Make Default"
+										styleClass="btnPriDisCt" type="text" onclick="return false;" />
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<div class="FR pad15rt pad5tp">
+								<span class="fdNm">Strip board:</span>
+								<h:selectOneListbox styleClass="fd_lg"
+										value="#{stripBoardViewBean.stripboardId}"
+										disabled="#{empty stripBoardViewBean.stripboardList or empty authBean.pgFields['6.1.1,all']}"
+										valueChangeListener="#{stripBoardViewBean.listenSelectedStripboardId}"
+										size="1">
+									<f:selectItems
+										value="#{stripBoardViewBean.stripboardList}"/>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</div>
+
+							<div class="FR pad15rt pad5tp">
+								<span class="fdNm_sm">Layout:</span>
+								<h:selectOneListbox styleClass="fd_sm"
+										value="#{stripBoardViewBean.layout}"
+										disabled="#{empty stripBoardViewBean.stripboardList}"
+										valueChangeListener="#{stripBoardViewBean.listenSelectedLayout}"
+										size="1">
+									<f:selectItem itemValue="THIN" itemLabel="Thin"></f:selectItem>
+									<f:selectItem itemValue="THICK" itemLabel="Thick"></f:selectItem>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</div>
+						</div>
+
+						<div class="centerFullTb MA">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+								<h:panelGroup>
+
+										<div id="sbSchTab">
+											<!-- Tabs for stripboard lists -->
+											<ace:tabSet id="t" selectedIndex="#{stripBoardViewBean.selectedTab}"
+												width="100%" cellpadding="0" cellspacing="0" border="0">
+
+												<!--  Scheduled Tab   -->
+												<ace:tabPane label="#{stripBoardViewBean.firstTabName}" id="st">
+												<div class="cont99Wrap pad5tp"><!-- ice4, added this to restrict table -->
+
+													<div class="rowCont MA pad15tp">
+														<div id="sbSchTopOptions">
+															<div class="FL">
+																<span class="fdNm_lg">Scheduled Strips:</span>
+																<span class="fd">
+																 (
+																	<h:outputText
+																		value=" #{stripBoardViewBean.unitScheduledCount[1]}" />
+																		<b>of </b>
+																	<h:outputText
+																		value="#{stripBoardViewBean.totalStripsCount}" />
+																	)
+																</span>
+															</div>
+															<ui:include src="sbviewcontrols.xhtml" />
+														</div>
+													</div>
+
+													<ace:dataTable
+														selectionMode="" singleSort="true"
+														style="width:100%;max-width:100%;"
+														scrollHeight="#{headerViewBean.mobile ? '' : '321'}"
+														scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+														columnWidths="8%,5%,47%,6%,10%,6%,18%" border="0"
+														value="#{stripBoardViewBean.scheduleList}" id="sL"
+														var="strip" styleClass="bk_sl_grid">
+
+													 <ui:include src="sbviewschedcolumns.xhtml" />
+
+													</ace:dataTable>
+												</div>
+												</ace:tabPane><!--  END Scheduled Tab -->
+
+												<!-- Additional Units Scheduled Tabs   -->
+
+											 	<c:forEach begin="2" end="#{headerViewBean.project.unitCount}" var="unitNum">
+												<ace:tabPane label="#{stripBoardViewBean.unitName[unitNum]}">
+
+													<div class="rowCont MA pad15tp">
+														<div id="sbSchTopOptions">
+															<div class="FL">
+																<span class="fdNm_lg">Scheduled Strips:</span>
+																<span class="fd">
+																 (
+																	<h:outputLabel for=""
+																		value=" #{stripBoardViewBean.unitScheduledCount[unitNum]}" />
+																		<b>of </b>
+																	<h:outputLabel for=""
+																		value="#{stripBoardViewBean.totalStripsCount}" />
+																	)
+																</span>
+															</div>
+															<ui:include src="sbviewcontrols.xhtml" />
+														</div>
+													</div>
+
+													<ace:dataTable
+														selectionMode="" singleSort="true"
+														style="width:100%;max-width:100%;"
+														scrollHeight="#{headerViewBean.mobile ? '' : '321'}"
+														scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+														columnWidths="8%,5%,47%,6%,10%,6%,18%" border="0"
+														value="#{stripBoardViewBean.unitStripList[unitNum]}" id="sL_#{unitNum}"
+														var="strip" styleClass="bk_sl_grid">
+
+													 <ui:include src="sbviewschedcolumns.xhtml" />
+
+													</ace:dataTable>
+												</ace:tabPane><!--  END Scheduled Tab -->
+											 	</c:forEach>
+
+												<!--  Unscheduled Strips Tab   -->
+												<ace:tabPane label="Unscheduled" id="ut">
+
+													<div class="rowCont pad15tp">
+														<div id="sbUnSchTopOptions">
+															<div class="FL">
+																<span class="fdNm_lg">Unscheduled Strips:</span>
+																<span class="fd">
+																 (
+																	<h:outputText value="#{stripBoardViewBean.unscheduledStripsCount}" />
+																	<b>of </b>
+																	<h:outputText value="#{stripBoardViewBean.totalStripsCount}" />
+																	)
+																</span>
+															</div>
+															<h:outputText rendered="#{not stripBoardViewBean.currentProject.hasUnits}">
+																<ui:include src="sbviewcontrols.xhtml" />
+															</h:outputText>
+														</div>
+													</div>
+
+													<ace:dataTable
+														selectionMode="" singleSort="true"
+														style="width:100%;max-width:100%;"
+														scrollHeight="#{headerViewBean.mobile ? '' : '320'}"
+														scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+														columnWidths="8%,5%,47%,6%,10%,6%,18%"
+														value="#{stripBoardViewBean.unScheduleList}" id="uL"
+														sortColumn="#{stripBoardViewBean.sortColumnName}"
+														sortAscending="#{stripBoardViewBean.ascending}"
+														var="strip" styleClass="bk_sl_grid">
+
+													 <ui:include src="sbviewcolumns.xhtml" />
+
+													</ace:dataTable>
+												</ace:tabPane>
+												<!--  End Unscheduled Tab -->
+
+												<!--  Omitted/Boneyard Tab   -->
+												<ace:tabPane label="Boneyard" id="bt">
+
+													<div class="rowCont MA pad15tp">
+														<div id="sbOmitTopOptions">
+															<div class="FL">
+																<span class="fdNm_lg">Omitted Strips:</span>
+																<span class="fd">
+																 (
+																	<h:outputText value="#{stripBoardViewBean.omittedStripsCount}" />
+																	<b>of </b>
+																	<h:outputText value="#{stripBoardViewBean.totalStripsCount}" />
+																	)
+																</span>
+															</div>
+															<h:outputText rendered="#{not stripBoardViewBean.currentProject.hasUnits}">
+																<ui:include src="sbviewcontrols.xhtml" />
+															</h:outputText>
+														</div>
+													</div>
+
+													<ace:dataTable
+														selectionMode="" singleSort="true"
+														style="width:100%;max-width:100%;"
+														scrollHeight="#{headerViewBean.mobile ? '' : '320'}"
+														scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+														columnWidths="8%,5%,47%,6%,10%,6%,18%"
+														value="#{stripBoardViewBean.omittedList}" id="oL"
+														sortColumn="#{stripBoardViewBean.sortColumnName}"
+														sortAscending="#{stripBoardViewBean.ascending}"
+														var="strip" styleClass="bk_sl_grid">
+
+														<ui:include src="sbviewcolumns.xhtml" />
+
+													</ace:dataTable>
+
+												</ace:tabPane><!--  End Omitted/Boneyard Tab -->
+
+											</ace:tabSet>
+										</div>
+								</h:panelGroup>
+							</h:panelGrid><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+
+</h:body>
+</html>

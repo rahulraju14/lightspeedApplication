@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Popup Panel for HTG processing options -->
+	<h:form>
+		<ace:dialog visible="#{htgPromptBean.visible}"
+				header="#{htgPromptBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+
+			<ace:ajax event="close" execute="@this" listener="#{htgPromptBean.actionCancel}"/>		
+
+			<div class="popupBdyAW" style="">
+				<h:panelGroup>
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</h:panelGroup>
+
+				<div class="popCont90">
+					<div class="popup_main">
+						<div class="rowCont">
+							<div class="rowCont B_false pad20tp pad5lt">
+								Automatically calculate the gross pay amounts for the following
+								range of timecards.<br /> <br /> Please note: Only timecards
+								which are in your approval queue or which are unsubmitted may be
+								calculated.
+							</div>
+							<div class="rowCont pad5lt">
+								<!-- indent ALL criteria -->
+								<!-- START OF HTG CRITERIA -->
+								<div class="FL W25percnt pad15tp">Select a range of
+									timecards:</div>
+								<div class="FL W60percnt pad10tp">
+										<!-- Includes batch timecards -->
+										<h:panelGroup rendered="#{not empty htgPromptBean.batchName}">
+											<h:selectOneRadio style="width:80%;white-space: pre;" styleClass="h_radio B_false" value="#{htgPromptBean.rangeSelection}"
+													valueChangeListener="#{htgPromptBean.listenRangeSelection}"	layout="pageDirection">
+												<f:selectItem itemValue="c" itemLabel="Current Employee &amp; Occupation only &#13; #{htgPromptBean.message}"/>
+												<f:selectItem itemValue="p" itemLabel="All Occupations for this Employee"/>
+												<f:selectItem itemValue="d" itemLabel="The entire #{htgPromptBean.deptName} department"/>
+												<f:selectItem itemValue="b" itemLabel="The entire #{htgPromptBean.batchName} batch"/>
+												<f:selectItem itemValue="a" itemLabel="The entire Crew"/>
+												<f:ajax/>
+											</h:selectOneRadio>
+										</h:panelGroup>
+										<!-- Includes unbatched timecards -->
+										<h:panelGroup rendered="#{htgPromptBean.unbatched}">
+											<h:selectOneRadio style="width:80%;white-space: pre;" styleClass="h_radio B_false" value="#{htgPromptBean.rangeSelection}"
+													valueChangeListener="#{htgPromptBean.listenRangeSelection}"	layout="pageDirection">
+												<f:selectItem itemValue="c" itemLabel="Current Employee &amp; Occupation only &#13; #{htgPromptBean.message}"/>
+												<f:selectItem itemValue="p" itemLabel="All Occupations for this Employee"/>
+												<f:selectItem itemValue="d" itemLabel="The entire #{htgPromptBean.deptName} department"/>
+												<f:selectItem itemValue="u" itemLabel="All un-batched timecards"/>
+												<f:selectItem itemValue="a" itemLabel="The entire Crew"/>
+											</h:selectOneRadio>
+										</h:panelGroup>										
+								</div>
+								<!-- WEEK-ENDING DATE -->
+								<div class="rowCont pad20tp">
+									<div class="padPop3tp FL W25percnt">
+										<span class="B">Week Ending:</span>
+									</div>
+									<div class="FL W75percnt">
+										<h:panelGroup styleClass="pad4lt">
+											<h:selectOneMenu 
+												disabled="#{htgPromptBean.rangeSelection eq 'b'}"
+												value="#{htgPromptBean.weekEndDate}">
+												<f:convertDateTime
+													timeZone="#{applicationScopeBean.timeZone}"
+													pattern="MM/dd/yyyy" />
+												<f:selectItems value="#{htgPromptBean.weekEndDateDL}" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+								</div>
+								<div class="rowCont pad15tp">
+									<div class="FL padPop3tp W25percnt">Status:</div>
+									<div class="FL W75percnt">
+										<span class="FL ckbxTxtLbl">
+											<h:selectBooleanCheckbox
+													value="#{htgPromptBean.calculateUnsubmitted}">
+											</h:selectBooleanCheckbox>
+										</span>
+										<span class="FL ckbxTxtLbl pad5lt">Also calculate pay amounts for Unsubmitted timecards.</span>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="popBtnCont4">
+					<span class="FR padPop25rt"> <span class="btnPriEnbLt" /> <span>
+							<ace:linkButton value="#{htgPromptBean.buttonCancelLabel}"
+								action="#{htgPromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+					</span> <span class="btnPriEnbRt" />
+					</span> <span class="FR pad5rt"> <span class="btnSecHotLt" /> <span>
+							<ace:linkButton value="#{htgPromptBean.buttonOkLabel}"
+								action="#{htgPromptBean.actionOk}" styleClass="btnSecHotCt" />
+					</span> <span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

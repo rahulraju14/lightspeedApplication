@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL rowCont stepBorder pad15tp">
+		<h:commandButton id="step5" value=""
+			styleClass="FL pad3lt pad2tp #{approvalPathsBean.showStep5 ? 'stepCloseIcon' : 'stepOpenIcon'}" tabindex="-1"
+			actionListener="#{approvalPathsBean.listenShowStep}"
+			title="Click to view the Step.">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" value="Step 5: "/>
+			<h:outputText styleClass="stepHdr" value="Assign Document Editors."/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep5}">
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<!-- <div class="rowCont FL pad10lt pad30tp">
+				<h:outputText styleClass="stepNum" value="Step 5: "/>
+				<h:outputText styleClass="stepHdr" value="Assign Document Editors."/>
+			</div> -->
+			<div class="rowCont FL pad18tp">
+				<span class="FL pad20lt">
+					<h:outputText styleClass="apText" escape="false"
+						value="Aside from the Approvers listed in the sections above, are there any other people who need to be able to edit
+						the document before it is sent &lt;/br&gt; to the Employee. Document editors are able to view, edit and send the document to the  Employee."/>
+				</span>
+			</div>
+		</h:panelGroup>
+
+		<!-- DOCUMENT EDTORS START -->
+		<div class="blueLegendContWrap">
+			<div class="blueLegendCont pad25tp pad10lt" style="width:39%; height:195px;">
+				<div class="legendHdg">Document Editors</div>
+
+				<!-- SELECTED EDITORS LIST START -->
+				<div class="blueLegendContWrap">
+					<div class="blueLegendCont pad12tp pad30lt" id="docEditorLegend" style="width:85%; background: white;">
+
+						<!-- ADD EDITOR BUTTON -->
+						<h:panelGroup styleClass="btn_legend pad10rt"
+							rendered="#{(not empty approvalPathsBean.selectedApprovalPathId) and (approvalPathsBean.editMode)}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Add Editor"
+									disabled="#{not approvalPathsBean.editMode}"
+									actionListener="#{approvalPathsBean.actionAddEditors}"
+									styleClass="btnMiniCt" title="Add Editors" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend LH18">
+							<!-- No legend buttons, so do this to align the table below with the one on the left -->
+						</h:panelGroup>
+
+						<div class="FL W100percnt">
+							<ace:dataTable id="docEditors"
+								value="#{approvalPathsBean.documentEditorList}"
+								var="item" scrollHeight="130"
+								rowIndexVar="idx" scrollable="true"
+								styleClass="bk_sl_grid"
+								style="min-height: 130px;">
+
+								<!-- THE DELETE [CROSS] BUTTON -->
+								<ace:column styleClass="W8percnt CT">
+									<h:commandButton value=""  title="Remove" styleClass="deleteXbtn"
+										rendered="#{approvalPathsBean.editMode}"
+										actionListener="#{approvalPathsBean.listenRemoveApproverFromTable}">
+									</h:commandButton>
+								</ace:column>
+
+								<!-- THE EDITORS -->
+								<ace:column styleClass="W90percnt" style="text-align:left;">
+									<h:outputText styleClass="pad10lt FL" value="#{item.label}" />
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div>
+				</div> <!-- SELECTED EDITORS LIST END -->
+			</div>
+		</div> <!-- DOCUMENT EDTORS END -->
+	</h:panelGroup>
+
+</ui:composition>

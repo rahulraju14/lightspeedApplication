@@ -1,0 +1,214 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- COupon Generation and Search tab -->
+<ace:tabPane label="Discount Coupons" id="coupontab">
+
+	<div class="FL pad10tp">
+
+		<span class="FL pad10lt pad5rt"># of coupons:</span>
+		<ace:textEntry styleClass="fd_40"
+				value="#{couponBean.quantity}"/>
+
+		<span class="FL pad10lt pad5rt">Uses per coupon:</span>
+		<ace:textEntry styleClass="fd_40"
+				value="#{couponBean.useCount}"/>
+
+		<span class="FL pad10lt pad5rt">Prefix:</span>
+		<ace:textEntry styleClass="fd_100"
+				value="#{couponBean.prefix}"/>
+
+		<span class="FL B pad10lt pad15rt pad3tp">Expires:</span>
+		<span class="FL">
+			<ace:dateTimeEntry title="Coupon expiration date" tabindex="0"
+					value="#{couponBean.expiration}" styleClass="cal_date"
+					renderAsPopup="true" >
+				<f:converter converterId="lightspeed.MultiDateConverter"/>
+			</ace:dateTimeEntry>
+		</span>
+
+	</div>
+
+	<div class="CB"/>
+
+	<div class="FL pad10tp">
+
+		<span class="FL pad10lt pad5rt">SKU/pattern:</span>
+		<ace:textEntry styleClass="fd_75"
+				value="#{couponBean.skuPattern}"/>
+
+		<span class="FL pad10lt pad5rt">Allow SMS:</span>
+		<h:selectBooleanCheckbox styleClass="FL" value="#{couponBean.smsOk}"/>
+
+		<span class="FL pad10lt pad5rt">Max Users:</span>
+		<ace:textEntry styleClass="fd_40"
+				value="#{couponBean.numUsers}"/>
+
+		<span class="FL pad10lt pad5rt">Amount($,%):</span>
+		<ace:textEntry styleClass="fd_40"
+				value="#{couponBean.amount}"/>
+
+	</div>
+	<div class="CB"/>
+
+	<div class="FL pad10tp">
+		<ace:radioButtons value="#{couponBean.generatedDiscountType}" labelPosition="right">
+			<f:selectItem value="#{couponBean.discountTypes[0]}" />
+			<f:selectItem value="#{couponBean.discountTypes[1]}" />
+			<f:selectItem value="#{couponBean.discountTypes[2]}" />
+			<!-- We currently don't allow all types to be selected, only first 3
+			<f:selectItems value="#{couponBean.discountTypes}"/>
+			 -->
+			<ace:ajax />
+		</ace:radioButtons>
+
+	</div>
+
+	<div class="CB"/>
+
+	<div class="FL pad10tp W95percnt">
+		<span class="FL pad10lt pad5rt">Description:</span>
+		<ace:textEntry styleClass="fd W80percnt"
+				value="#{couponBean.description}"/>
+	</div>
+
+	<div class="FL pad10tp W95percnt">
+		<span class="FL pad10lt pad5rt">Redemption message:</span>
+		<ace:textEntry styleClass="fd W80percnt"
+				value="#{couponBean.message}"/>
+	</div>
+
+	<div class="CB"/>
+	<h:panelGroup styleClass="FL pad15tp">
+		<span class="pad20lt FL">
+			<span class="btnMiniLt"/>
+			<span>
+				<ace:linkButton value="Generate"
+					action="#{couponBean.actionGenerate}"
+					styleClass="btnMiniCt">
+				</ace:linkButton>
+			</span>
+			<span class="btnMiniRt"/>
+		</span>
+	</h:panelGroup>
+
+	<div class="CB pad10bm"/>
+	<hr />
+	<hr />
+
+	<h:panelGroup styleClass="FL pad10tp">
+		<div class="FL">
+			<span class="FL B pad10lt pad15rt pad3tp">From:</span>
+			<span class="FL">
+				<ace:dateTimeEntry tabindex="0"
+						value="#{couponBean.startDate}" styleClass="cal_date"
+						renderAsPopup="true" title="Start of range to display">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+				</ace:dateTimeEntry>
+			</span>
+			<br/>
+		</div>
+
+		<span class="FL B pad15rt pad3tp">To:</span>
+		<span class="FL">
+			<ace:dateTimeEntry styleClass="cal_date" tabindex="0"
+					value="#{couponBean.endDate}" title="End of range to display"
+					renderAsPopup="true">
+				<f:converter converterId="lightspeed.MultiDateConverter"/>
+			</ace:dateTimeEntry>
+		</span>
+		<h:panelGroup styleClass="FL">
+			<span>
+				<span class="btnMiniLt"/>
+				<span>
+					<ace:linkButton value="Refresh"
+							action="#{couponBean.actionSearch}"
+							styleClass="btnMiniCt">
+					</ace:linkButton>
+				</span>
+				<span class="btnMiniRt"/>
+			</span>
+			<br/>
+			<span class="FL pad5tp">
+				<span class="B FL">Filter: </span>
+			<ace:checkboxButtons header="Filters:" mutuallyExclusive="false" 
+					value="#{couponBean.selectedDiscountTypes}" labelPosition="right">
+				<f:selectItems value="#{couponBean.discountTypes}"/>
+				<ace:ajax />
+			</ace:checkboxButtons>
+			</span>
+		</h:panelGroup>
+	</h:panelGroup>
+
+	<span id="timeshtCont">
+		<ace:dataTable styleClass="bk_sl_grid pad5tp" id="coupontable"
+				value="#{couponBean.couponList}"
+				var="coupon" 
+				scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+				scrollHeight="#{headerViewBean.mobile ? '' : '200'}"
+				rows="100"
+				paginator="true"
+				paginatorAlwaysVisible="false"
+				paginatorPosition="top" pagesToSkip="5" pageCount="5"
+				paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"
+				style="width:100%;max-width:100%;position:relative;float:left;z-index:100;" >
+			<!-- 
+				columnWidths="3%,8%,6%,9%,4%,3%,3%,10%,6%,7%,7%,34%"
+			 -->
+			<ace:column headerText="ID">
+				<h:outputText value="#{coupon.id}"/>
+			</ace:column>
+			<ace:column headerText="Created">
+				<h:outputText value="#{coupon.couponType.created}">
+					<f:convertDateTime pattern="M/d/yy HH:mm" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+			</ace:column>
+			<ace:column headerText="Expires">
+				<h:outputText value="#{coupon.couponType.expires}">
+					<f:convertDateTime pattern="M/d/yy" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+			</ace:column>
+			<ace:column headerText="Type">
+				<ace:linkButton
+						value="#{coupon.couponType.discountType}"
+						actionListener="#{couponBean.actionCouponView}">
+					<f:attribute name="currentRow" value="#{coupon}" />
+				</ace:linkButton>
+			</ace:column>
+			<ace:column headerText="Amt">
+				<h:outputText value="#{coupon.couponType.amount}" >
+				</h:outputText>&#160;
+			</ace:column>
+			<ace:column headerText="Usrs">
+				<h:outputText value="#{coupon.couponType.numberUsers}" >
+				</h:outputText>&#160;
+			</ace:column>
+			<ace:column headerText="SMS">
+				<h:outputText value="#{coupon.couponType.smsEnabled ? 'Y' : 'N'}" >
+				</h:outputText>&#160;
+			</ace:column>
+			<ace:column headerText="Code">
+				<h:outputText value="#{coupon.code}" />&#160;
+			</ace:column>
+			<ace:column headerText="SKU">
+				<h:outputText value="#{coupon.couponType.skuPattern}" />&#160;
+			</ace:column>
+			<ace:column headerText="Redeemer">
+				<h:outputText value="#{coupon.redeemerAcct}" />&#160;
+			</ace:column>
+			<ace:column headerText="Redeemed">
+				<h:outputText value="#{coupon.redeemed}">
+					<f:convertDateTime pattern="M/d/yy HH:mm" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+			</ace:column>
+			<ace:column headerText="Description">
+				<h:outputText escape="false" value="#{coupon.couponType.message} " />&#160;
+			</ace:column>
+		</ace:dataTable>
+	</span>
+
+</ace:tabPane>
+</ui:composition>

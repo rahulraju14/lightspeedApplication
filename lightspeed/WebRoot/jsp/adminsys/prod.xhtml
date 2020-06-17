@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The Prod Admin / Productions page -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Productions</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('prod:itemlist', 252, 367);
+
+	element = document.getElementById('prod:miniView');
+	resizeElement(element, 181, 300); /* 181,347 */
+	</c:if>
+}
+var formname = "prod";
+var mainListId = "prod:itemlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="prod">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="adminproductions" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin POI List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="poiHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Productions</span>
+
+						<!-- Remove "Add" button from the Prod Admin / Productions page. DH 2/17/19
+						<h:panelGroup styleClass="FR pad5rt" rendered="#{(not empty authBean.pgFields['0.1,account'])}">
+							<span class="btnPriHotLt"/>
+							<span>
+								<ace:linkButton value="Add"
+									action="#{productionAdminBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt"/>
+						</h:panelGroup>
+						 -->
+
+					</div>
+
+					<div class="rowCont FL ltrtBdr BKwhite">
+						<div class="FR">
+							<h:selectOneMenu styleClass="txt11 FR pad2tp pad2rt" style="width:110px;"
+								value="#{productionAdminBean.category}"
+								valueChangeListener="#{productionAdminBean.selectedCategory}">
+								<f:selectItems
+									value="#{productionAdminBean.productionTypeDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<!-- data list container -->
+					<div id="poiListCont" class="rowCont ltrtBdr">
+						<ace:dataTable id="itemlist" rows="50"
+							styleClass="bk_sl_grid"
+							value="#{productionAdminBean.testProductionList}" var="item"
+							scrollHeight="#{headerViewBean.mobile ? '' : '267'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							rowSelectListener="#{productionAdminBean.listenRowClicked}"
+							selectionMode="single"
+							paginator="true" paginatorPosition="top"
+							lazy="true"
+							pageCount="5">
+
+							<ace:column id="column0" headerText="Id">
+								<h:outputText value="#{item.prodId}"/>
+							</ace:column>
+							<ace:column id="column1" headerText="Name" filterBy="#{item.title}" filterValue="#{productionAdminBean.productionTitle}">
+								<h:outputText
+									value="#{item.title}"/>
+							</ace:column>
+							<ace:column id="column2" headerText="Studio" filterBy="#{item.studio}">
+								<h:outputText
+									value="#{item.studio}"/>
+							</ace:column>
+							<ace:column id="column3" headerText="Owner" filterBy="#{item.owningAccount}">
+								<h:outputText style="font-size:11px;padding-right:18px;"
+									value="#{item.owningAccount}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end poiListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End List - pnlLt -->
+
+					<!--  Begin Details - pnlRt -->
+					<div id="pnlRt">
+
+						<h:panelGroup styleClass="errMsgCont">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+
+						<div class="rowCont FL BKwhite ltrtBdr">
+							<span class="pnlHdrTxt FL">
+								<h:outputText
+									rendered="#{productionAdminBean.element.title ne null}"
+									value="#{productionAdminBean.element.title}"/>&#160;
+							</span>
+
+							<h:panelGroup rendered="#{productionAdminBean.editMode and (productionAdminBean.element.id ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{productionAdminBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not productionAdminBean.editMode) and (productionAdminBean.element ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{productionAdminBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not productionAdminBean.editMode) and (productionAdminBean.element ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{productionAdminBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div id="detailCont" class="ltrtBdr BKwhite">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+									<!-- miniview Tabs -->
+									<ace:tabSet selectedIndex="#{productionAdminBean.selectedTab}">
+
+										<!-- Admin tab -->
+										<ui:include src="prodAdmin.xhtml" />
+
+										<!--  Detail Tab  -->
+										<ui:include src="prodDetails.xhtml" />
+
+										<!-- PAYROLL mini-tab -->
+										<ui:include src="prodPayroll.xhtml" />
+
+									</ace:tabSet><!--  END TAB set -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+							<h:outputText styleClass="FL" value="(v #{applicationScopeBean.version})" />
+								<!-- Cancel btn -->
+								<h:panelGroup rendered="#{productionAdminBean.editMode}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt"
+													onclick="queueClick(this,event);"
+													value="Cancel" action="#{productionAdminBean.actionCancel}" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup><!-- end Cancel btn -->
+								<!-- Save btn -->
+								<h:panelGroup rendered="#{productionAdminBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnSecHotLt"/>
+										<span>
+										<ace:linkButton value="Save" onmouseup="showErrors();"
+												onclick="queueClick(this,event);"
+												action="#{productionAdminBean.actionSave}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt"/>
+									</span>
+								</h:panelGroup>
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end poiDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+
+					</div><!-- end pnlRt -->
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+		</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="../common/confirmpopup.xhtml" />
+
+</h:body>
+</html>

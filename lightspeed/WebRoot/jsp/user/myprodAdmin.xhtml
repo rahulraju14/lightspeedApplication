@@ -1,0 +1,245 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Production / Admin Tab. Only defined/visible if the production is assigned a Team-affiliated PayrollService -->
+
+<!-- visible to super-admins, and Team payroll coordinators -->
+
+<f:loadBundle var="msg" basename="com.lightspeedeps.util.app.messageResources"/>
+								
+<c:set var="bean" value="#{productionContactBean}" scope="request" />
+<c:set var="prod" value="#{bean.production}" scope="request" />
+<c:set var="pref" value="#{prod.payrollPref}" scope="request" />
+
+<c:set var="isTeamProd" value="#{(bean.production ne null) and 
+								(pref.payrollService ne null) and 
+								(pref.payrollService.teamPayroll)}" scope="request" />
+
+<c:set var="canada" value="#{(prod ne null) and prod.type.canadaTalent}" scope="request" />
+<c:set var="showMRbox" value="#{isTeamProd and fFApplicationScopeBean.useFeature('TTCO_MRF_STARTS_AND_TIMECARDS')}" scope="request" />
+
+<ace:tabPane label="Admin" rendered="#{(isAdminTab or bean.production ne null) and (not canada) and
+		((not empty authBean.pgFields['2.0,write_any']) or headerViewBean.teamBiller or isTeamProd)}">
+		<!-- 'isAdminTab' reference is just to force evaluation of c:set and loading of referenced fields -->
+
+	<!-- GENERIC ADMIN SECTION -->
+	<div class="rowGradient pad15tp">
+
+		<!-- LEFT HALF -->
+		<h:panelGroup styleClass="W45percnt FL pad5lt">
+			<h:panelGroup styleClass="rowCont pad5tp FL">
+				<h:outputText styleClass="ckbxTxtLbl_B" value="Show script/scheduling tabs" style="width:45%;" />
+				<h:selectBooleanCheckbox styleClass="ckbx" id="scriptingTab"
+					value="#{prod.showScriptTabs}"
+					disabled="#{not bean.editMode}">
+					<ace:ajax />
+				</h:selectBooleanCheckbox>
+			</h:panelGroup>
+			<h:panelGroup styleClass="rowCont pad10tp FL">
+				<div>
+					<span class="fdNm_sm FL" style="width:45%;">
+						<h:outputText value="I-9 Attachments are:" />
+					</span>
+					<h:selectOneMenu value="#{pref.i9Attachment}" disabled="#{not bean.editMode}"
+						id="i9Attachment">
+						<f:selectItems value="#{bean.existencePolicyDL}" />
+					</h:selectOneMenu>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="rowCont FL">
+				<div style="min-height:35px;">
+					<span class="fdNm_sm FL" style="width:45%;">
+						<h:outputText value="Payroll Service:" />
+					</span>
+					<h:outputText styleClass="FL pad3tp" value="#{pref.payrollService.name}"/>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<!-- RIGHT HALF -->
+		<h:panelGroup styleClass="W53percnt FL">
+			<div class="H34">
+				<!-- Representative Email -->
+				<h:panelGroup styleClass="rowCont FL">
+					<span class="fdNm_sm FL" style="width:40%;">
+						<h:outputText value="Representative Email:" />
+					</span>
+				</h:panelGroup>
+				<!-- End Representative Email Id -->
+			</div>
+			<!-- Onboarding Transfer Email -->
+			<h:panelGroup styleClass="rowCont FL" style="margin-left: 20px;">
+				<div>
+					<span class="fdNm_sm FL" style="width:35%;">
+						<h:outputText value="Onboarding Transfer:" />
+					</span>
+					<ace:textEntry maxlength="100" style="width:220px;" disabled="#{! bean.editMode}"
+						id="onboardingEmailAddress" value="#{pref.onboardEmailAddress}" />
+				</div>
+			</h:panelGroup>
+			<!-- Onboarding Transfer Email Id End-->
+			<!-- Timecard Transfer Email: -->
+			<h:panelGroup styleClass="rowCont FL" style="margin-left:20px;">
+				<div>
+					<span class="fdNm_sm FL"  style="width:35%;">
+						<h:outputText value="Batch Transfer:" />
+					</span>
+					<ace:textEntry maxlength="100" style="width:220px;" disabled="#{! bean.editMode}"
+						id="batchEmailAddress" value="#{pref.batchEmailAddress}" />
+				</div>
+			</h:panelGroup>
+			<!-- Timecard Transfer Email Id End -->
+		</h:panelGroup>
+	</div>
+
+	<div class="CB"></div>
+
+	<!-- TEAM ADMIN SECTION -->
+	<h:panelGroup class="rowGradient pad10tp" rendered="#{isTeamProd}">
+
+		<!-- LEFT HALF -->
+		<h:panelGroup styleClass="myProdDetailsBtmLt FL pad5lt" style="width:45%;">
+			<!-- Payroll Client Id -->
+			<h:panelGroup styleClass="rowCont FL">
+				<div>
+					<span class="fdNm_sm FL" style="width:45%;">
+						<h:outputText value="Payroll Client Id:" />
+					</span>
+					<ace:textEntry maxlength="6" style="float:left;width:100px;" disabled="#{! bean.editMode}"
+						id="payrollId" value="#{pref.payrollProdId}" />
+				</div>
+			</h:panelGroup>
+			<!-- End Payroll Client Id -->
+			<!-- Employer of record -->
+			<h:panelGroup styleClass="rowCont FL"
+					rendered="#{bean.editMode}">
+				<div>
+					<span class="fdNm_sm FL"  style="width:45%;">
+						<h:outputText value="Employer of Record:" />
+					</span>
+					<h:selectOneMenu id="teamEor" value="#{pref.teamEor}" disabled="#{pref.includeTouring}">
+						<f:selectItems value="#{bean.employerOfRecordList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="rowCont FL"
+					rendered="#{not bean.editMode}">
+				<div>
+					<span class="fdNm_sm FL" style="width:45%;">
+						<h:outputText value="Employer of Record:" />
+					</span>
+					<h:outputText styleClass="FL pad3tp"
+							value="#{(pref.teamEor eq null) ? '(none)' :
+								pref.teamEor.prompt}" />
+				</div>
+			</h:panelGroup>
+			<!-- Employer of record End -->
+			<!-- Pdf group type -->
+			<h:panelGroup styleClass="rowCont FL">
+				<div>
+					<span class="fdNm_sm FL" style="width:45%;">
+						<h:outputText value="PDF Grouping By:" />
+					</span>
+					<h:selectOneMenu value="#{pref.pdfGroupingType}" disabled="#{! bean.editMode}"
+						id="pdfGrouping">
+						<f:selectItems value="#{bean.pdfGroupingTypeList}" />
+					</h:selectOneMenu>
+				</div>
+			</h:panelGroup>
+			<!-- Pdf group type End -->
+
+			<!-- Batch Transfer Extra Fields -->
+			<h:panelGroup styleClass="rowCont pad5tp FL">
+				<h:selectBooleanCheckbox styleClass="ckbx" id="batchExtraFields"
+						value="#{prod.batchTransferExtraField}"
+						disabled="#{not bean.editMode}">
+				</h:selectBooleanCheckbox>
+				<h:outputText styleClass="ckbxTxtLbl_B" value="#{msg.WeeklyBatch_Transmit_ExtraField_Label}"  />
+			</h:panelGroup>
+			<!-- Batch Transfer Extra Fields End -->
+
+			<!-- INCLUDE TOUR/CREW OPTION -->
+			<h:panelGroup styleClass="rowCont pad5tp FL" rendered="#{prod.type eq 'TV_COMMERCIALS'}">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectBooleanCheckbox styleClass="ckbx" id="includeTouringRates"
+						valueChangeListener="#{bean.listenTouringOptionChange}"
+						value="#{pref.includeTouring}"
+						disabled="#{not bean.editMode}">
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<h:outputText styleClass="ckbxTxtLbl_B" value="#{msg.Payroll_Pref_include_touring_label}" />
+				</icecore:setEventPhase>
+			</h:panelGroup>
+
+			<!-- USE MODEL RELEASE OPTION. LS-4506 -->
+			<h:panelGroup styleClass="rowCont pad5tp FL"
+					rendered="#{(prod.type eq 'TV_COMMERCIALS') and showMRbox}">
+				<h:selectBooleanCheckbox styleClass="ckbx" id="useModelRelease"
+						value="#{pref.useModelRelease}"
+						disabled="#{not bean.editMode}">
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<h:outputText styleClass="ckbxTxtLbl_B" value="#{msg.Payroll_Pref_use_model_release_label}" />
+			</h:panelGroup>
+
+		</h:panelGroup>
+
+		<!-- RIGHT HALF -->
+		<h:panelGroup styleClass="W53percnt FL">
+			<!-- Start OT rate -->
+				<h:panelGroup styleClass="rowCont FL">
+					<span class="fdNm_sm FL" style="width: 100%">
+						<h:outputText value="Premium vs. Non-Premium Overtime Default" />
+					</span>
+				</h:panelGroup>
+				<!-- End OT rate -->
+			<!-- Premium Rate and  Non-Premium rate-->
+				<h:panelGroup styleClass="rowCont FL" style="margin-left: 20px; margin-top:8px;">
+					<div>
+						<h:selectOneRadio styleClass="h_radio" layout="pageDirection" id="usePremRates"
+							disabled="#{not bean.editMode}" value="#{pref.usePremiumRate}">
+								<f:selectItem itemLabel="Premium Rate" itemValue="true" />
+								<f:selectItem itemLabel="Non-Premium Rate" itemValue="false" />
+							<ace:ajax />
+						</h:selectOneRadio>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>
+
+	</h:panelGroup>
+
+	<div class="CB"></div>
+
+	<div class="projectSubCont pad3tp">
+		<div class="W98percnt" style="z-index: 100">
+			<span class="fdNm_w3 pad5tp FL">Custom Text 1 (Invitation):
+			</span>
+			<h:panelGroup styleClass="rowCont" rendered="#{bean.editMode}">
+				<ace:textAreaEntry maxlength="500" styleClass="FL W100percnt H140"
+						value="#{prod.customText1}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="rowCont" rendered="#{(not bean.editMode)}">
+				<h:outputText styleClass="FL W90percnt" value="#{prod.customText1}"/>
+			</h:panelGroup>
+
+			<span class="fdNm_w3 pad5tp FL">Custom Text 2 (Starts page):
+			</span>
+			<h:panelGroup styleClass="rowCont" rendered="#{bean.editMode}">
+				<ace:textAreaEntry maxlength="2000" styleClass="FL W100percnt H140"
+						value="#{prod.customText2}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="rowCont" rendered="#{(not bean.editMode)}">
+				<h:outputText styleClass="FL W90percnt" value="#{prod.customText2}" escape="false" />
+			</h:panelGroup>
+		</div>
+	</div>
+
+</ace:tabPane>
+<!--  End of Admin Tab   -->
+</ui:composition>

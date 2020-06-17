@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stripboardThinDate" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="efe1a783-7ca2-4275-96da-0cf80750bc69">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="font" markup="none" fontName="Arial" fontSize="10" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{length}.intValue()>=15 ?Boolean.TRUE:Boolean.FALSE]]></conditionExpression>
+			<style fontName="Arial" fontSize="7" pdfFontName="Times-Roman"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{length}.intValue()<=14?Boolean.TRUE:Boolean.FALSE]]></conditionExpression>
+			<style fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT *, LENGTH(cast_ids) length FROM stripboard_report  where report_id ='5-141229151739'  order by istatus, sequence;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="unitNumber" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="projectId" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="constant" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[ReportsConstants.stripboardRepName]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="report_id" class="java.lang.String"/>
+	<field name="segment" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="sequence" class="java.lang.Integer"/>
+	<field name="sheet" class="java.lang.Integer"/>
+	<field name="scenes" class="java.lang.String"/>
+	<field name="int_ext" class="java.lang.String"/>
+	<field name="day_night" class="java.lang.String"/>
+	<field name="script_day" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="synopsis" class="java.lang.String"/>
+	<field name="pages" class="java.lang.String"/>
+	<field name="cast_ids" class="java.lang.String"/>
+	<field name="background_rgb" class="java.lang.Integer"/>
+	<field name="text_rgb" class="java.lang.Integer"/>
+	<field name="istatus" class="java.lang.Integer"/>
+	<field name="length" class="java.lang.Integer"/>
+	<variable name="constant" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[ReportsConstants.stripboardRepName]]></initialValueExpression>
+	</variable>
+	<group name="pgbrk">
+		<groupExpression><![CDATA[$F{istatus}]]></groupExpression>
+		<groupHeader>
+			<band height="1"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="1">
+				<break>
+					<reportElement uuid="fedba92b-4b92-4c8c-aefe-6d713368d134" x="0" y="0" width="551" height="1">
+						<printWhenExpression><![CDATA[new Boolean($F{istatus} != null)]]></printWhenExpression>
+					</reportElement>
+				</break>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="110" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="cbbba039-b17d-42da-99e3-b6dff01634b4" key="subreport-1" isPrintRepeatedValues="false" x="0" y="0" width="552" height="55"/>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$V{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="unitName">
+					<subreportParameterExpression><![CDATA[$P{unitName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="showUnit">
+					<subreportParameterExpression><![CDATA[$P{showUnit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptHeader.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true" runToBottom="true">
+				<reportElement uuid="02e8465d-bc21-4870-8473-a64eeb6bb707" key="subreport-1" isPrintRepeatedValues="false" x="0" y="55" width="552" height="55"/>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$P{projectId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/stripboardCast.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="56" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="5e47a83d-9351-46a9-b620-ab2d5d9e8749" key="subreport-1" x="0" y="1" width="552" height="55"/>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$P{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="unitName">
+					<subreportParameterExpression><![CDATA[$P{unitName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="showUnit">
+					<subreportParameterExpression><![CDATA[$P{showUnit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="1ac7f037-9feb-4280-b4ea-3e4c7e752aeb" key="rectangle-1" x="1" y="18" width="551" height="27" backcolor="#CCFFFF"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="38225ee2-d130-4853-9bef-78205e2e1fbc" key="staticText-2" x="1" y="18" width="61" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ScenesInStrip]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="90598eb5-099b-41b4-8d83-298f2bc6b1d7" key="staticText-3" x="62" y="18" width="25" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.IE]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="e337366e-e113-4127-9e95-f184161133e5" key="staticText-4" x="344" y="18" width="55" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.DayNight]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="b77fb839-48e1-4840-a4f0-6b6815f4ebc1" key="staticText-5" x="87" y="18" width="257" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" isItalic="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.location]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="6b1348d6-1dc1-4f1b-b820-e84eb860c04b" key="staticText-6" x="399" y="18" width="32" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ScriptDayInStrip]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="061439cf-7214-4774-8087-823aa46aae64" key="staticText-7" x="431" y="18" width="32" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.PagesInStrip]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="f3d24a83-1cbc-41d1-adfa-706ebd119146" key="staticText-8" x="463" y="18" width="89" height="27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Ids]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bbbe9837-c8f7-4729-ba1b-3d8859389557" x="2" y="0" width="549" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{istatus}.intValue()>1&&$F{istatus}.intValue()<10?$F{status}+" -":"")+" "+($F{istatus}.intValue()==100? "Unscheduled" : ($F{istatus}.intValue()==101 ? "Omitted" : "Scheduled"))]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="e67042cc-e3ca-4313-bcb3-e3dcc7e6de12" key="rectangle-2" style="internal_day" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DAY"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ced9259e-1d8f-463a-8a7c-3afd4faf481c" key="rectangle-3" style="internal_night" positionType="Float" x="1" y="0" width="551" height="18" forecolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean(($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ae3fa93c-ce2c-4a39-84fc-c0ce05494d5f" key="rectangle-4" style="external_day" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean(($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DAY")))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="a33cedca-918b-4628-b7b3-776fb7e4f77a" key="rectangle-5" style="external_night" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("EXT")&&($F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="e07b5c08-6711-4589-962d-d747220acad3" key="rectangle-6" style="banner" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{type}.equalsIgnoreCase("BANNER"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="9c9a3fad-786e-402f-be72-c541fd8b74d0" key="rectangle-7" style="end_of_day" positionType="Float" x="1" y="0" width="551" height="18" backcolor="#A9A9A9">
+					<printWhenExpression><![CDATA[new Boolean($F{type}.equalsIgnoreCase("END_OF_DAY"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="5367a61d-2a3e-4f4b-abad-cf5547b433e7" key="rectangle-8" style="external_evening" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean ($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("EVENING"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="5aa26050-ee53-4010-8148-dc5544c612a3" key="rectangle-10" style="internal_evening" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("EVENING"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="a794da3a-2dfb-4bcb-81d5-6639b3d903ab" key="rectangle-11" style="internal_dusk" positionType="Float" mode="Opaque" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="60419ef1-d3ce-4e9f-807d-c127b6ea5fcc" key="rectangle-12" style="external_dusk" positionType="Float" mode="Opaque" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="083d0f7e-7bce-44dc-958b-96bd0a68c2d3" key="rectangle-13" style="internal_dawn" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DAWN"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="56caf782-f2b3-4354-819c-b1a75c90465f" key="rectangle-14" style="internal_afternoon" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("AFTERNOON"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="d616c2d4-0da7-4ff5-b2ac-33b21b9f78db" key="rectangle-15" style="internal_morning" positionType="Float" x="1" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("MORNING"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="50f48e4d-7a98-42bb-8c62-c597955e2d96" key="rectangle-16" style="external_dawn" positionType="Float" x="1" y="0" width="551" height="18" forecolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DAWN"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="aba25fc7-1a8b-4fa9-a6ad-0e9b07651476" key="rectangle-17" style="external_morning" positionType="Float" x="1" y="0" width="551" height="18" forecolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("MORNING"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="26eb013b-619b-47b6-8793-12d978130895" key="rectangle-18" style="external_afternonn" positionType="Float" x="1" y="0" width="551" height="18" forecolor="#000000">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("AFTERNOON"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="e62e4fdf-9526-43f9-a90e-3b0b81d58f9c" key="rectangle-19" positionType="Float" x="1" y="0" width="551" height="18" backcolor="#FF9933">
+					<printWhenExpression><![CDATA[new Boolean($F{int_ext}.equalsIgnoreCase("E/I") || $F{int_ext}.equalsIgnoreCase("I/E") && ($F{day_night}.equalsIgnoreCase("NIGHT") || $F{day_night}.equalsIgnoreCase("GOLDEN") ||$F{day_night}.equalsIgnoreCase("OVERNIGHT")||$F{day_night}.equalsIgnoreCase("DUSK")||$F{day_night}.equalsIgnoreCase("SUNSET")||$F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{day_night}.equalsIgnoreCase("EVENING")))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="6978b368-b32a-41fd-8f93-31b0d2de2ad1" key="rectangle-19" positionType="Float" x="1" y="0" width="551" height="18" backcolor="#FFCC99">
+					<printWhenExpression><![CDATA[new Boolean(($F{int_ext}.equalsIgnoreCase("E/I") || $F{int_ext}.equalsIgnoreCase("I/E")) && ($F{day_night}.equalsIgnoreCase("DAY") || $F{day_night}.equalsIgnoreCase("SUNRISE") ||$F{day_night}.equalsIgnoreCase("DAWN")||$F{day_night}.equalsIgnoreCase("MORNING")||$F{day_night}.equalsIgnoreCase("AFTERNOON")))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="9da6f6d5-6fed-4dad-8a27-13d0d00278e9" key="rectangle-19" positionType="Float" x="1" y="0" width="551" height="18" backcolor="#A9A9A9">
+					<printWhenExpression><![CDATA[new Boolean(($F{int_ext}.equalsIgnoreCase("E/I") || $F{int_ext}.equalsIgnoreCase("I/E") || $F{int_ext}.equalsIgnoreCase("INT") || $F{int_ext}.equalsIgnoreCase("EXT")) && $F{day_night}.equalsIgnoreCase("N_A"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="2e89e60b-d7d5-41d4-873c-cba6c72f4d6b" key="rectangle-9" style="omitted" positionType="Float" x="1" y="0" width="61" height="18" backcolor="#CC0000">
+					<printWhenExpression><![CDATA[new Boolean ($F{status}.equalsIgnoreCase("OMITTED"))]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="65dbfe92-aa15-4249-b09d-df31011a4917" key="textField" positionType="Float" x="1" y="0" width="61" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean(!(($F{type}).equalsIgnoreCase("END_OF_DAY")||($F{type}.equalsIgnoreCase("BANNER"))))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{scenes}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ef78ad94-ac37-4c12-8291-530ff6eb8777" key="textField" positionType="Float" x="62" y="0" width="25" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{int_ext}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c313acac-cd97-46b6-8d52-959a395e8628" key="textField" positionType="Float" x="344" y="0" width="55" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{day_night}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0c88a12b-7c73-4746-bd2f-97384acf4bec" key="textField" positionType="Float" x="399" y="0" width="32" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{script_day}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="eefc43cb-2b93-4725-98b7-b33a86acfdc4" key="textField" positionType="Float" x="87" y="0" width="257" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY") ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="323065e9-7a22-4edd-95f1-90cbce638d7f" key="textField" positionType="Float" x="431" y="0" width="32" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY") ))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pages}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4ee2ed8f-8a1b-49f0-a5e4-91a806b65b4f" key="castid" style="font" positionType="Float" x="463" y="0" width="89" height="18" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY") ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cast_ids}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="192a599b-6f22-4a7a-9474-9acb824c204d" key="textField-1" positionType="Float" x="2" y="0" width="94" height="18">
+					<printWhenExpression><![CDATA[new Boolean($F{type}.equalsIgnoreCase("END_OF_DAY"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cast_ids}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="565ef9fe-4b4b-45cb-b9a3-c5a5ac52a077" x="0" y="0" width="551" height="18">
+					<printWhenExpression><![CDATA[new Boolean ($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY") )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="69e711df-94e8-4bbc-b33c-dedda5db849f" x="431" y="0" width="32" height="18">
+					<printWhenExpression><![CDATA[new Boolean (($F{type}.equalsIgnoreCase("BANNER"))|| $F{type}.equalsIgnoreCase("END_OF_DAY"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pages}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="009a5a2f-93e6-4cb5-affe-25474b68b2b8" key="white" positionType="Float" x="431" y="0" width="32" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pages}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="181656a5-c9e6-4308-9245-60d4f56bde0d" key="white" positionType="Float" x="344" y="0" width="55" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{day_night}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6a5ec421-875d-443a-b8c6-80139f279d7d" key="white" positionType="Float" x="87" y="0" width="257" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="59a6ce4b-0fc5-4315-a37c-d4d85f9ef8f3" key="white" positionType="Float" x="399" y="0" width="32" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{script_day}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="85c6a3dc-b0e7-4d98-996d-f2c4ea8fd738" key="white" positionType="Float" x="62" y="0" width="25" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{int_ext}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="32109804-c077-481d-9bdf-89e0687baea6" key="white" positionType="Float" x="1" y="0" width="61" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{scenes}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2ce3317b-8c81-4bc1-a5e1-42023e1198db" key="white" style="font" positionType="Float" x="463" y="0" width="89" height="18" isRemoveLineWhenBlank="true" forecolor="#FFFFFF">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY")) && ($F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("NIGHT") || $F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("INT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("DUSK")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("TWILIGHT")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("GOLDEN")||$F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("SUNSET") || $F{int_ext}.equalsIgnoreCase("EXT")&& $F{day_night}.equalsIgnoreCase("NIGHT")))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cast_ids}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5f314f22-940c-4eaa-8160-86dd0dbbeb0e" key="scenes" x="1" y="0" width="61" height="18">
+					<printWhenExpression><![CDATA[new Boolean(!($F{type}.equalsIgnoreCase("BANNER")||$F{type}.equalsIgnoreCase("END_OF_DAY")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eec1ff32-a8a5-4362-bc63-3c163c3bfe07" key="int_ext" x="62" y="0" width="25" height="18">
+					<printWhenExpression><![CDATA[new Boolean(!($F{type}.equalsIgnoreCase("BANNER")||$F{type}.equalsIgnoreCase("END_OF_DAY")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4a5ab1c7-5578-448d-b492-f20a90dedcbb" key="day_night" x="344" y="0" width="55" height="18">
+					<printWhenExpression><![CDATA[new Boolean(!($F{type}.equalsIgnoreCase("BANNER")||$F{type}.equalsIgnoreCase("END_OF_DAY")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ada7c0c4-081c-41f5-9177-66c46b1bf0d3" key="script_day" x="399" y="0" width="32" height="18">
+					<printWhenExpression><![CDATA[new Boolean(!($F{type}.equalsIgnoreCase("BANNER")||$F{type}.equalsIgnoreCase("END_OF_DAY")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="84e923f1-868f-44e8-abda-85b917b11c2f" key="staticText-20" x="431" y="0" width="32" height="18">
+					<printWhenExpression><![CDATA[new Boolean (!($F{type}.equalsIgnoreCase("BANNER") || $F{type}.equalsIgnoreCase("END_OF_DAY") ))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="47f48644-b0e0-46d5-8705-e954fb3396b5" key="staticText-21" x="463" y="0" width="89" height="18">
+					<printWhenExpression><![CDATA[new Boolean(!($F{type}.equalsIgnoreCase("BANNER")||$F{type}.equalsIgnoreCase("END_OF_DAY")))]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="fa2b67a1-fc02-4df0-9beb-1c3b207abec6" key="subreport-1" x="0" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="90e420ad-f509-4b07-9141-2bd48e56fb09" key="textField" style="font12" x="521" y="0" width="30" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f8353a7f-c0d4-4004-9dc4-0b0a93771baa" key="staticText-14" x="106" y="7" width="286" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[No strips matched your report criteria.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

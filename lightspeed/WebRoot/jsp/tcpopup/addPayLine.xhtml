@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- "Insert Row" pop-up for the Pay Breakdown table on the Full Timecard page -->
+	<h:form>
+		<ace:dialog visible="#{fullTimecardBean.showAddPayLine}"
+				header="Insert Row"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false"
+				styleClass="xtraSmPopup2">
+				
+			<ace:ajax event="close" execute="@this" listener="#{fullTimecardBean.actionCancel}"/>		
+			<div class="xtraSmPopBdy2">
+				<div class="xtraSmPopup2_main">
+					<div class="pad55tp pad30lt">
+						Insert a row before row #:
+						<span class="pad15lt B_false">
+							<h:selectOneMenu
+									value="#{fullTimecardBean.payLineNumber}">
+								<f:selectItems value="#{fullTimecardBean.payLineNumberDL}" />
+							</h:selectOneMenu>
+						</span>
+					</div>
+				</div>
+
+				<div class="xtraSmpopBtnCont4 pad50tp FL">
+					<span class="FR pad40rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+									action="#{fullTimecardBean.actionCancelPayLine}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Insert"
+									action="#{fullTimecardBean.actionInsertPayLineOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

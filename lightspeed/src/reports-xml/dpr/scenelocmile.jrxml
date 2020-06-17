@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="scenelocmiles" pageWidth="540" pageHeight="1008" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c91bfe1f-2d42-4c6b-ba42-76961d64479f">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tag" mode="Transparent" markup="styled"/>
+	<parameter name="dprId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[68]]></defaultValueExpression>
+	</parameter>
+	<parameter name="episodic" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select dpr_scene.*
+from dpr, dpr_scene
+where dpr.id = dpr_scene.Dpr_Id
+and dpr.id = $P{dprId};]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Episode" class="java.lang.String"/>
+	<field name="Scene_Number" class="java.lang.String"/>
+	<field name="Title" class="java.lang.String"/>
+	<field name="Location" class="java.lang.String"/>
+	<field name="Mileage" class="java.lang.String"/>
+	<field name="DPR_Id" class="java.lang.Integer"/>
+	<pageHeader>
+		<band height="10" splitType="Prevent">
+			<staticText>
+				<reportElement uuid="a2609a17-b1dc-4770-bd30-780dd0667265" style="prDefBold" mode="Opaque" x="0" y="0" width="225" height="10" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Set/Scene Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d041a608-23f9-4d71-9b5e-4627fb444c4f" key="staticText-1" style="prDefBold" mode="Opaque" x="225" y="0" width="27" height="10" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Epi #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d041a608-23f9-4d71-9b5e-4627fb444c4f" key="staticText-1" style="prDefBold" mode="Opaque" x="252" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Scene #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="525d3cd8-143d-4122-9cd5-2d89222c324b" key="staticText-2" style="prDefBold" mode="Opaque" x="288" y="0" width="225" height="10" backcolor="#CCCCCC"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bb953860-5ca3-47da-8282-03430e57240a" key="staticText-3" style="prDefBold" mode="Opaque" x="513" y="0" width="27" height="10" backcolor="#CCCCCC"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Miles]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2609a17-b1dc-4770-bd30-780dd0667265" style="prDefBold" mode="Opaque" x="0" y="0" width="252" height="10" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Set/Scene Description]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="10" splitType="Prevent">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="1af29786-512a-48a3-92dc-b6835e973478" key="textField" style="prDefault" stretchType="RelativeToTallestObject" x="0" y="0" width="225" height="10">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="3bb10c6c-95f9-49aa-9a41-09f20c82dd71" key="textField" style="prDefault" stretchType="RelativeToTallestObject" x="225" y="0" width="27" height="10">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Episode}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="3bb10c6c-95f9-49aa-9a41-09f20c82dd71" key="textField" style="prDefault" stretchType="RelativeToTallestObject" x="252" y="0" width="36" height="10"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Scene_Number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement uuid="c5d5ad1d-7717-47e4-8a59-f4826e659b6b" key="textField" style="tag" stretchType="RelativeToTallestObject" mode="Transparent" x="288" y="0" width="225" height="10"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="854d552d-4c35-4de4-a0df-c5def20fb022" key="textField" style="prDefault" stretchType="RelativeToTallestObject" x="513" y="0" width="27" height="10"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Mileage}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="1af29786-512a-48a3-92dc-b6835e973478" key="textField" style="prDefault" stretchType="RelativeToTallestObject" x="0" y="0" width="252" height="10">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

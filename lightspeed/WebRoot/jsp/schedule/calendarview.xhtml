@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Calendar</title>
+		
+		<ui:include src="../common/head.xhtml" />
+		
+		<script language="javascript">
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+					element = document.getElementById('prschviewFrm:calScroll');
+					resizeElement(element, 238, 465);
+				</c:if>
+			}
+			
+			var formname = "prschviewFrm";
+		</script>
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript" type="text/javascript">
+			ice.ace.jq( document ).ready(function() {
+				initDomLoaded(); // do our standard page initialization tasks.
+			});
+			</script>
+		</c:if>
+		<h:form id="prschviewFrm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="calendar" />
+			</h:outputText>
+
+			<div id="main" style="min-height:700px;">
+				<ui:include src="../common/header2.xhtml" />
+				<div id="mainCont" style="height:97%;">
+					<div id="ctrCont">
+						<div id="pnlCont">
+							<div id="pnlFull" class="MA">
+								<div class="topBdrCont FL">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+			
+								<div class="rowCont ltrtBdr BKwhite FL">
+									<div class="rowCont">
+										<div class="pnlHdrTxt FL #{headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1 ? 'hdrUnitIcon' : ''}">
+											<h:outputText
+												rendered="#{headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1}"
+												styleClass="FL NW txtBrtBlue txt12 pad4tp pad8lt #{headerViewBean.project.hasUnits ? '' : 'pad30lt'}"
+												value="#{calendarViewBean.unit.number}" />
+												<!-- unit number ok -->
+											<div class="FL W80percnt">
+												<h:outputText
+													styleClass="FL W300 #{headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1 ? 'pad-14tp pad30lt' : ''}"
+													value="#{headerViewBean.project.title}"/>
+											</div>
+										</div>
+										<h:outputText rendered="#{not empty authBean.pgFields['6.0,edit']}">
+											<span class="FR pad5rt">
+												<span class="btnPriHotLt" />
+												<ace:linkButton
+													value="Edit" actionListener="#{calendarViewBean.edit}"	action="calendaredit"
+													styleClass="btnPriHotCt" />
+												<span class="btnPriHotRt" />
+											</span>
+										</h:outputText>
+										<h:outputText rendered="#{not empty authBean.pgFields['6.0,edit']}">
+											<span class="FR pad5rt">
+												<span class="btnPriEnbLt" />
+												<ace:linkButton
+													value="Export" action="#{projectService.actionExportBudget}"
+													title="Export script element schedule data for Showbiz Budgeting import"
+													styleClass="btnPriEnbCt" />
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:outputText>
+										<h:panelGroup
+											rendered="#{headerViewBean.project.hasUnits}"
+											styleClass="FR pad15rt pad5tp">
+											<h:outputText styleClass="FL pad10lt pad5rt pad5tp B" value="Unit:" />
+											<h:selectOneMenu
+												immediate="true" style="height:20px;line-height:13px;"
+												value="#{calendarViewBean.selectedUnitId}"
+												valueChangeListener="#{calendarViewBean.actionChangeUnit}" >
+												<f:selectItems value="#{calendarViewBean.unitDL}"/>
+												<ace:ajax/>
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+									<h:panelGroup styleClass="errMsgContFull pad16tp">
+										<ui:include src="../common/errorsMain.xhtml" />
+									</h:panelGroup>
+									<div id="calTopViewCont" class="rowGradient rowDivider pad5tp">
+										<div class="centerFullPg MA">
+											<div class="calTopViewCol1 FL pad5tp">
+												<span class="FL">
+													<span class="fdNm_lg">Start Date:</span>
+													<h:outputText styleClass="fd_lg" value="#{calendarViewBean.startDate}">
+														<f:convertDateTime pattern="EEEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+													</h:outputText>
+												</span>
+												<div class="FL">
+													<span class="fdNm_lg">Scheduled Finish:</span>
+													<h:outputText styleClass="fd_lg" value="#{calendarViewBean.endDate}">
+														<f:convertDateTime pattern="EEEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+													</h:outputText>
+												</div>
+											</div>
+											<div class="calTopViewCol2 calTopViewPagtr pad2tp">
+												<div class="FL W110">
+													<h:commandLink
+														styleClass="FL"
+														action="#{calendarViewBean.prevMonth}">
+														<h:graphicImage
+															url="../../i/previous.gif"
+															title="Previous Month" alt=""/>
+													</h:commandLink>
+													<div class="FL CT W75">
+														<h:outputText styleClass="pgntrTxt"
+															value="#{calendarViewBean.monthNames[calendarViewBean.curMonth]}" />
+													</div>
+													<h:commandLink
+														styleClass="FL"
+														action="#{calendarViewBean.nextMonth}">
+														<h:graphicImage
+															url="../../i/next.gif"
+															title="Next Month" alt=""/>
+													</h:commandLink>
+												</div>	
+												<span class="FL">
+													<h:commandLink action="#{calendarViewBean.prevYear}">
+														<h:graphicImage
+															url="../../i/previous.gif"
+															title="Previous Year" alt="" />
+													</h:commandLink>
+													<h:outputText styleClass="pgntrTxt"
+														value="#{calendarViewBean.curYear}">
+													</h:outputText>
+													<h:commandLink action="#{calendarViewBean.nextYear}">
+														<h:graphicImage
+															url="../../i/next.gif"
+															title="Next Year" alt="" />
+													</h:commandLink>
+												</span>
+											</div>
+											<div class="calTopViewCol3 FR pad5tp">
+												<h:outputText styleClass="B fd_lg" value="#{headerViewBean.today}">
+													<f:convertDateTime pattern="EEEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+												</h:outputText>
+												<h:outputText styleClass="fd_lg" value="#{calendarViewBean.shootDayMsg}" />
+											</div>
+										</div>
+									</div>
+									<div class="rowCont">&#160;</div>
+									<div class="CB"></div>
+									<div id="calBtmViewCont">
+										
+										<h:panelGroup id="calScroll" styleClass="MA pad5tp" layout="block">
+											<ace:dataTable 
+												styleClass="grid1cal" value="#{calendarViewBean.weekList}" 
+												var="oneweek"
+												style="width:100%;max-width:100%;"
+												scrollHeight="#{headerViewBean.mobile ? '' : '364'}">
+												
+												<ace:column headerText="Sunday" id="Sunday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[1]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[1]}">
+															<h:outputText styleClass="daynum B FL pad2tp" value="#{oneweek.dayNumber[1]}" />
+															<h:commandLink styleClass="FL pad2tp ccimage" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}">
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[1]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL" value="" alt=""
+																	rendered="#{oneweek.callSheetDayNo[1]}" url="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[1]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[1]}" value="#{oneweek.strpBrdNo[1]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[1]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat  var="sceneListDay" value="#{oneweek.sceneListDay[1]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}"	title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[1]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[1]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[1]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Monday" id="Monday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[2]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[2]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[2]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}" >
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[2]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL"  value="" alt=""
+																	rendered="#{oneweek.callSheetDayNo[2]}" url="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[2]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[2]}" value="#{oneweek.strpBrdNo[2]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[2]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[2]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}"	title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[2]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[2]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[2]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Tuesday" id="Tuesday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[3]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[3]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[3]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}">
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[3]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL" value="" alt=""
+																	rendered="#{oneweek.callSheetDayNo[3]}" url="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[3]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[3]}" value="#{oneweek.strpBrdNo[3]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[3]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[3]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}" title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[3]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[3]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[3]}" alt=""/>
+														</h:panelGroup>
+													 </h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Wednesday" id="Wednesday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[4]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[4]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[4]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}" >
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[4]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL" alt=""
+																	rendered="#{oneweek.callSheetDayNo[4]}" value="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[4]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[4]}" value="#{oneweek.strpBrdNo[4]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[4]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[4]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}"	title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[4]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[4]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[4]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Thursday" id="Thursday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[5]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[5]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[5]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}" >
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[5]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL" alt=""
+																	rendered="#{oneweek.callSheetDayNo[5]}" value="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[5]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[5]}" value="#{oneweek.strpBrdNo[5]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[5]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[5]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}"	title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[5]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[5]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[5]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Friday" id="Friday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[6]}" layout="block">
+														<h:panelGroup rendered="#{oneweek.showDataDay[6]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[6]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}">
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[6]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL" alt=""
+																	rendered="#{oneweek.callSheetDayNo[6]}" value="../../i/icon_crewcall.gif" width="55" height="33" />
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[6]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[6]}" value="#{oneweek.strpBrdNo[6]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[6]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[6]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}" title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[6]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[6]}" />
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[6]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+												<ace:column headerText="Saturday" id="Saturday" styleClass="daybox">
+													<h:panelGroup styleClass="#{oneweek.highlightDay[7]}">
+														<h:panelGroup rendered="#{oneweek.showDataDay[7]}">
+															<h:outputText styleClass="daynum B FL" value="#{oneweek.dayNumber[7]}" />
+															<h:commandLink value="" styleClass="FL pad2tp ccimage"
+																rendered="#{not empty authBean.pgFields['6.0,link_call_sheet']}"
+																action="#{jumpBean.actionViewCallSheet}">
+																<f:setPropertyActionListener value="com.lightspeedeps.callsheetdate" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.date[7]}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.unitnumber" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.number}" target="#{jumpBean.value}"/>
+																<h:graphicImage styleClass="FL"
+																	rendered="#{oneweek.callSheetDayNo[7]}" value="../../i/icon_crewcall.gif" width="55" height="33" alt=""/>
+																<h:outputText title="View Call Sheet" styleClass="FL dayct U" value="#{oneweek.callTimeDay[7]}" />
+															</h:commandLink>
+															<h:commandLink styleClass="bk_daysb FR pad2tp" value=""
+																rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}" action="stripboardview" title="View Stripboard">
+																<h:outputText styleClass="daysbnum" rendered="#{oneweek.stripBrdDay[7]}" value="#{oneweek.strpBrdNo[7]}" />
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.project.stripboard.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{calendarViewBean.unit.id}" target="#{jumpBean.value}"/>
+																<f:setPropertyActionListener value="com.lightspeedeps.stripboardViewDay" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{oneweek.strpBrdNo[7]}" target="#{jumpBean.value}"/>
+															</h:commandLink>
+															<h:panelGroup styleClass="scenelist FL pad2tp" rendered="#{not empty authBean.pgFields['6.0,link_scene']}" layout="block">
+																<ui:repeat var="sceneListDay" value="#{oneweek.sceneListDay[7]}">
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{not sceneListDay.renderHLink}">,</h:panelGroup>
+																	<h:panelGroup styleClass="scenenum FL" rendered="#{sceneListDay.renderHLink}">
+																		<h:commandLink value="" action="breakdown" actionListener="#{breakdownBean.openSheet}" title="View Breakdown">
+																			<f:attribute name="sceneNo" value="#{sceneListDay.sceneNumbers}" />
+																			<h:outputText value="#{sceneListDay.sceneNumbers}" />
+																		</h:commandLink>
+																	</h:panelGroup>
+																</ui:repeat>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:panelGroup styleClass="rowCont CT dayempty" rendered="#{not oneweek.showDataDay[7]}">
+															<h:outputText styleClass="FL B" value="#{oneweek.dayNumber[7]}"></h:outputText>
+															<h:graphicImage styleClass="pad20tp" value="#{oneweek.imagePathDay[7]}" alt=""/>
+														</h:panelGroup>
+													</h:panelGroup>
+												</ace:column>
+											</ace:dataTable>
+							 			</h:panelGroup><!-- end calScroll -->
+									</div><!-- end calBtmCont -->
+								</div><!-- end outer content cont -->
+								<div class="btmBdrCont FL">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+							</div><!-- end pnlFull -->
+						</div><!--  end pnlCont -->
+					</div><!-- end ctrCont -->
+					<div class="CB"></div><!-- clears float for liquid layout -->
+				</div><!-- end mainCont -->
+				<h:commandButton id="escapekey" value="escape" style="visibility:hidden;" />
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+			</div><!-- end main -->
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+	</h:body>
+</html>

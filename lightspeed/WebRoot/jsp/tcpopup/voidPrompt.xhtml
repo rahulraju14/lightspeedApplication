@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Void Timecard confirmation.  This is an extension of the -->
+	<!-- password/PIN confirmation dialog (message + pw entry + PIN entry + ok/cancel buttons); -->
+	<!-- it includes a comment field which is added to the timecard when the void is processed. -->
+	<!-- This is based on the confirmpopupbig class (size). -->
+	<h:form>
+		<ace:dialog visible="#{commentPinPromptBean.askPin}"
+				header="#{commentPinPromptBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{commentPinPromptBean.actionCancel}"/>		
+
+			<div class="popupBdyAW">
+				<div>
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="popCont80">
+					<div class="popup_main stdTxt">
+
+						<h:panelGroup rendered="#{commentPinPromptBean.pinError}"  styleClass="RED">
+							The password and PIN entered do not match the information we have on file.<br/>
+						</h:panelGroup>
+
+						<h:outputText escape="false" value="#{commentPinPromptBean.message}" />
+
+						<div>
+							<h:panelGroup>
+								<div class="rowCont pad10tp">
+									<span>(Required) Please describe why you are voiding the </span>
+									<h:outputText value=" #{commentPinPromptBean.documentType}"/>:
+								</div>
+								<div class="rowCont pad5tp">
+									<ace:textAreaEntry styleClass="FL pad3lt stdTxtArea" value="#{commentPinPromptBean.comment}"
+										tabindex="2"
+										maxlength="1000" style="height:30px;width:80%;font-size:11px;"/>
+								</div>
+								<div class="rowCont pad5tp">
+									The above comment will appear in the comments section of the
+									<h:outputText value=" #{commentPinPromptBean.documentType} "/>
+									and will be visible to the employee.
+								</div>
+								<div class="rowCont pad15tp B U">
+									Voiding a <h:outputText value=" #{commentPinPromptBean.documentType}"/> is permanent and cannot be undone.
+								</div>
+							</h:panelGroup>
+
+							<span class="rowCont pad20tp">
+								<h:panelGroup>
+									<span class="fdNm FL">
+										<h:outputText value="Password:" />
+									</span>
+									<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+										<ace:textEntry secret="true" tabindex="3" maxlength="20" id="void_focus"
+											action="#{commentPinPromptBean.actionOk}"
+											redisplay="true" value="#{commentPinPromptBean.password}" />
+									</span>
+								</h:panelGroup>
+							</span>
+							<span class="rowCont pad10tp">
+								<span class="fdNm FL">
+									<h:outputText value="PIN:" />
+								</span>
+								<span class="fd FL">
+									<ace:textEntry secret="true" tabindex="4" maxlength="8" id="CommentPin" action="#{commentPinPromptBean.actionOk}"
+										redisplay="true" value="#{commentPinPromptBean.pin}" />
+								</span>
+							</span>
+
+							<div class="rowCont pad15tp">
+								Select <b>Void</b> to continue.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 pad20rt">
+					<h:panelGroup rendered="#{not empty commentPinPromptBean.buttonCancelLabel}">
+						<span class="FR pad5rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+								<ace:linkButton value="#{commentPinPromptBean.buttonCancelLabel}" tabindex="6"
+									action="#{commentPinPromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+					</h:panelGroup>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt"/>
+						<span>
+							<ace:linkButton value="#{commentPinPromptBean.buttonOkLabel}" tabindex="5"
+								action="#{commentPinPromptBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt"/>
+					</span>
+				</div>
+			</div>
+
+		</ace:dialog>
+	</h:form>
+</ui:composition>

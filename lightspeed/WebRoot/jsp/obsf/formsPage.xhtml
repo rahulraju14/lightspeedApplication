@@ -1,0 +1,920 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- This comprises the bulk of the Start Forms page, for both
+		in-production use (Payroll / Start Forms) and under the My Starts tab. -->
+<!-- params:
+		myStarts - boolean - true indicates this is the My Starts page
+ -->
+
+	<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+	<h:outputText style="display: none;" value="#{contactFormBean.setUp}"/>
+
+	<c:set var="aicp" value="#{contactFormBean.production.type.aicp}" />
+	<c:set var="formTab" value="#{headerViewBean.miniTab eq 0 }"/>
+	<c:set var="attachTab" value="#{headerViewBean.miniTab eq 3}" />
+	<c:set var="notPreview" value="#{! contactFormBean.isPreviewDocument}" />
+	<c:set var="document" value="#{contactFormBean.contactDocument}" />
+	<c:set var="docExists" value="#{document ne null}" />
+
+	<c:set var="renderAttach" value="#{notPreview and docExists and (formTab or attachTab)
+			and ((contactFormBean.editAuth or contactFormBean.isApprover)
+				or (contactFormBean.isOwner))
+			and (! contactFormBean.summarySheet)
+			and (document.status ne 'VOID')
+			and (document.status ne 'LOCKED')
+			and (! document.formType.w4Type)
+			and (document.formType ne 'I9' or contactFormBean.allowI9attachment)}" />
+
+		<div id="mainCont">
+			<div id="ctrCont">
+				<div id="pnlCont">
+					<!--  Begin Element Details - pnlFull -->
+					<div id="pnlFull" class="MA">
+
+						<div class="topBdrCont FL">
+							<div class="midTop">
+								<div class="ltTopCnr"></div>
+								<div class="rtTopCnr"></div>
+							</div>
+						</div>
+
+						<div class="rowCont FL ltrtBdr BKwhite"> <!-- Top header -->
+
+						<h:panelGroup rendered="#{(! popupUploadBean.visible)
+								and (! contactFormBean.showChangePin) and (! commentPinPromptBean.askPin)
+								and (! pinPromptBean.askPin) and (! submitPromptBean.askPin)}">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<!-- Top header -->
+						<div class="rowCont">
+							<div class="W60percnt FL pad3tp">
+
+								<!-- For My Starts tab -->
+								<h:panelGroup rendered="#{myStarts}">
+
+									<!-- PRODUCTON LIST DROP DOWN -->
+									<h:panelGroup rendered="#{not empty contactFormBean.productionList}" >
+										<h:outputText styleClass="pnlHdrTxt FL pad5lt pad2tp" value="Start Forms for #{contactFormBean.startFormLabelTitle}:" />
+										<h:selectOneMenu styleClass="FL pad20lt pad5tp" style="max-width:50%;"
+											valueChangeListener="#{contactFormBean.listenProduction}"
+											value="#{contactFormBean.selectedProdId}"
+											disabled="#{contactFormBean.prodSelectDisabled or contactFormBean.editMode}">
+											<f:selectItems value="#{contactFormBean.productionList}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</h:panelGroup>
+
+									<!-- PROJECT LIST DROP DOWN -->
+									<h:panelGroup rendered="#{contactFormBean.production.type.aicp}" >
+										<h:panelGroup rendered="#{not empty contactFormBean.projectList}">
+											<h:outputText styleClass="pnlHdrTxt FL pad15lt pad2tp" value="#{contactFormBean.projectTitle}:" />
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<h:selectOneMenu styleClass="FL pad20lt pad5tp"
+													style="max-width:50%;"
+													valueChangeListener="#{contactFormBean.listenProject}"
+													value="#{contactFormBean.selectedProjectId}"
+													disabled="#{contactFormBean.prodSelectDisabled or contactFormBean.editMode}">
+													<f:selectItems value="#{contactFormBean.projectList}" />
+													<ace:ajax />
+												</h:selectOneMenu>
+											</icecore:setEventPhase>
+										</h:panelGroup>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- For StartForms tab -->
+								<h:panelGroup rendered="#{not (myStarts or contactFormBean.isPreviewDocument)}">
+									<h:outputText styleClass="pnlHdrTxt FL" style="top:1px;" value="Start Forms for"/>
+
+									<!-- CONTACT LIST DROP DOWN -->
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectOneMenu rendered="#{(not empty authBean.pgFields['10.5,name_list'])}"
+											styleClass="FL W30percnt pad10lt"
+											disabled="#{contactFormBean.editMode}"
+											value="#{contactFormBean.selectedContact.id}"
+											valueChangeListener="#{contactFormBean.listenContactChange}"
+											id="contactList" immediate="true">
+											<f:selectItems value="#{contactFormBean.contactsDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+
+									<h:outputText rendered="#{(empty authBean.pgFields['10.5,name_list'])}"
+										styleClass="pnlHdrTxt pad5lt FL" style="top:1px;" value="#{contactFormBean.currentContactName}"/>
+
+									<!-- SHOW ALL PROJECTS CHECKBOX -->
+									<h:panelGroup styleClass="W30percnt pad40lt" rendered="#{(not empty authBean.pgFields['10.5,all_projects']) and aicp}">
+										<span class="pad4tp">
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<h:selectBooleanCheckbox styleClass="FL pad20lt" style="margin-top:3px"
+													value="#{contactFormBean.showAllProjects}"
+													disabled="#{contactFormBean.editMode}"
+													valueChangeListener="#{contactFormBean.listenAllProjects}">
+													<ace:ajax />
+												</h:selectBooleanCheckbox>
+											</icecore:setEventPhase>
+											<h:outputText styleClass="FL pad3tp" value="Show all #{contactFormBean.projectsTitle}" /> 
+										</span>
+									</h:panelGroup>
+
+									<!-- SHOW MODEL RELEASE STARTS CHECKBOX LS-4504 -->
+									<h:panelGroup styleClass="W30percnt pad40lt" rendered="#{(not empty authBean.pgFields['0.2,admin_tab']) and aicp
+											and contactFormBean.production.payrollPref.useModelRelease}">
+										<span class="pad4tp">
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<h:selectBooleanCheckbox styleClass="FL pad20lt" style="margin-top:3px"
+														value="#{contactFormBean.showMrStarts}"
+														disabled="#{contactFormBean.editMode}"
+														valueChangeListener="#{contactFormBean.listenShowMrStarts}">
+													<ace:ajax />
+												</h:selectBooleanCheckbox>
+											</icecore:setEventPhase>
+											<h:outputText styleClass="FL pad3tp" value="Show MR Payroll Starts" /> 
+										</span>
+									</h:panelGroup>
+
+								</h:panelGroup>
+							</div>
+
+							<div class="FR pad10rt">
+
+								<!-- VOID button -->
+								<h:panelGroup rendered="#{(not myStarts)
+										and (formTab)
+										and (not contactFormBean.editMaster)
+										and (contactFormBean.isApprover)
+										and (document.status.voidable)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Void"
+												styleClass="btnPriHotCt"
+												action="#{contactFormBean.actionVoid}"
+												title="Void the selected document."/>
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+								<!-- End Void button -->
+
+								<!-- DELETE button, enabled -->
+								<h:panelGroup rendered="#{(formTab)
+														and (docExists)
+														and (document.status eq 'OPEN' or document.status eq 'PENDING')
+														and notPreview
+														and (! contactFormBean.summarySheet)
+														and (contactFormBean.infoMessage eq null)
+														and (document.formType ne 'ACTRA_CONTRACT' or contactFormBean.isApprover)
+														and (contactFormBean.editAuth or contactFormBean.isApprover)}">
+									<span class="FR pad5rt">
+										<span class="btnPriEnbLt"/>
+										<span>
+										<ace:linkButton value="Delete" action="#{contactFormBean.actionDelete}"
+												title="Delete the currently displayed document"
+												styleClass="btnPriEnbCt" />
+										</span>
+										<span class="btnPriEnbRt"/>
+									</span>
+								</h:panelGroup>
+
+								<!-- DELETE button, disabled (never allow to display?) -->
+								<h:panelGroup rendered="#{false and (formTab)
+														and (contactFormBean.infoMessage eq null)
+														and notPreview
+														and ((contactFormBean.isApprover or (not empty authBean.pgFields['10.5,delete'])) and
+														(! document.submitable and document.status ne 'PENDING')
+														or ((not empty authBean.pgFields['10.5,delete']) and
+															document.status eq 'PENDING'))
+														and (not contactFormBean.appEdit)}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+										<ace:linkButton value="Delete" styleClass="btnPriDisCt" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+
+								<!-- ATTACHMENT DELETE button -->
+								<h:panelGroup rendered="#{(attachTab)
+										and (attachmentBean.attachment ne null)
+										and (contactFormBean.editAuth or contactFormBean.isApprover or attachmentBean.attachment.isOwner)}">
+									<span class="FR pad5rt">
+										<span class="btnPriEnbLt"/>
+										<span>
+										<ace:linkButton value="Delete" action="#{attachmentBean.actionDelete}"
+											title="Delete the selected attachment." styleClass="btnPriEnbCt" />
+										</span>
+										<span class="btnPriEnbRt"/>
+									</span>
+								</h:panelGroup>
+
+								<!-- PULL button -->
+								<h:panelGroup rendered="#{(not myStarts) and (formTab)
+									and (not contactFormBean.editMaster) and (contactFormBean.pullAuth)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Pull"
+												styleClass="btnPriHotCt"
+												action="#{contactFormBean.actionPull}"
+												title="Pull the selected document."/>
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+								<!-- End Pull button -->
+
+								<!-- RECALL button -->
+								<h:panelGroup rendered="#{(not myStarts) and (formTab)
+									and (not contactFormBean.editMaster) and (contactFormBean.recallAuth)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Recall"
+											action="#{contactFormBean.actionRecall}"
+												styleClass="btnPriHotCt"
+												title="Recall the selected document."/>
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+								<!-- End Recall button -->
+
+								<!-- EDIT button for Standard Document-->
+								<h:panelGroup rendered="#{(not contactFormBean.editMode)
+											and (formTab or headerViewBean.miniTab eq 4 )
+											and (contactFormBean.standardDoc or contactFormBean.summarySheet)
+											and notPreview
+											and (contactFormBean.editAuth)
+											and (docExists)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+											<ace:linkButton value="Edit" action="#{contactFormBean.actionEdit}"
+												title="Edit the information in this document"
+												styleClass="btnPriHotCt" />
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<!-- Disabled edit button -->
+								<h:panelGroup rendered="#{(contactFormBean.editMode)
+											and (formTab or headerViewBean.miniTab eq 4)}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup>
+								<!--End of EDIT button for Standard Documents-->
+
+
+								<!-- EDIT BUTTON FOR CUSTOM DOCUMENT START -->
+								<h:panelGroup rendered="#{(formTab)
+											and (! contactFormBean.standardDoc)
+											and notPreview
+											and (docExists)
+											and (customFormBean.readOnly)
+											and (contactFormBean.editAuth)
+											and (not contactFormBean.editMaster)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+											<ace:linkButton value="Edit" action="#{customFormBean.actionEdit}"
+												title="Edit the fields in this custom document"
+												styleClass="btnPriHotCt" />
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<!-- Disabled edit button for Custom Document -->
+								<h:panelGroup rendered="#{(! customFormBean.readOnly)
+											and (formTab)
+											and (! contactFormBean.standardDoc)
+											and (contactFormBean.editAuth)}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup>
+								<!-- EDIT BUTTON FOR CUSTOM DOCUMENTS END -->
+
+								<!-- SEND Button -->
+								<h:panelGroup rendered="#{(not myStarts)
+												and (not contactFormBean.editMode)
+												and (formTab)
+												and (not contactFormBean.editMaster)
+												and (document.status eq 'PENDING')
+												and (contactFormBean.isApprover or contactFormBean.isEditor)
+												and (customFormBean.readOnly)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Send" action="#{contactFormBean.actionSend}"
+												styleClass="btnPriHotCt"
+												title="Make the current document available to the employee."/>
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+								<!-- End Send Button -->
+
+								<!-- PRINT button -->
+
+								<h:panelGroup rendered="#{(formTab)
+												and notPreview
+												and (not contactFormBean.editMode)
+												and (! contactFormBean.summarySheet)
+												and (contactFormBean.infoMessage eq null)
+												and (docExists)
+												and (not contactFormBean.editMaster)}">
+									<h:panelGroup>
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+												<h:panelGroup rendered="#{not document.formType.useOnboardingApi}">
+													<ace:linkButton value="Print" action="#{contactFormBean.actionPrint}" styleClass="btnPriHotCt" />
+												</h:panelGroup>
+												<h:panelGroup rendered="#{document.formType.useOnboardingApi}">
+													<ace:linkButton target="_blank" value="Print" href="#{headerViewBean.contextPath}/onboardingapi?id=#{document.id}" styleClass="btnPriHotCt" />
+												</h:panelGroup>
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- Print button for W-4 Instructions -->
+								<h:panelGroup rendered="#{headerViewBean.miniTab eq 5}">
+									<h:panelGroup>
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+												<ace:linkButton value="Print" action="#{contactFormBean.actionPrintSupportingDoc('W4_INSTR')}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>		
+
+								<!-- Print button for W-4 Instructions -->
+								<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}">
+									<h:panelGroup>
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+												<ace:linkButton value="Print" action="#{contactFormBean.actionPrintSupportingDoc('W4_WORKSHEET')}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>		
+								
+								<!-- ATTACHMENT'S PRINT button -->
+								<h:panelGroup rendered="#{(attachTab)
+											and (attachmentBean.attachment ne null)
+											and (attachmentBean.infoMessage eq null)}">
+									<h:panelGroup >
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Print" action="#{attachmentBean.actionPrint}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- UPDATE MASTER button -->
+								<h:panelGroup rendered="#{(formTab)
+												and (customFormBean.readOnly)
+												and ((not empty authBean.pgFields['10.5,update_master'])
+													or contactFormBean.pseudoApprover)
+												and notPreview
+												and (document.formType eq 'OTHER')}">
+									<h:panelGroup rendered="#{not contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Update Master" action="#{contactFormBean.actionUpdateMaster}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- Disabled UPDATE MASTER button -->
+									<h:panelGroup rendered="#{contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriDisLt" />
+											<span>
+												<ace:linkButton value="Update Master" styleClass="btnPriDisCt" onclick="return false;"/>
+											</span>
+											<span class="btnPriDisRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- EDIT MASTER button -->
+								<h:panelGroup rendered="#{(formTab)
+													and (not empty authBean.pgFields['10.5,edit_master'])
+													and (docExists)
+													and (document.formType eq 'OTHER')
+													and (customFormBean.readOnly)}">
+									<h:panelGroup rendered="#{not contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Edit Master" action="#{contactFormBean.actionEditMaster}"
+												styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- Disabled EDIT MASTER button -->
+									<h:panelGroup rendered="#{contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriDisLt" />
+											<span>
+												<ace:linkButton value="Edit Master" styleClass="btnPriDisCt" onclick="return false;"/>
+											</span>
+											<span class="btnPriDisRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- EDIT PRIVATE button -->
+								<h:panelGroup rendered="#{(formTab)
+													and (not empty authBean.pgFields['10.5,edit_master'])
+													and (docExists)
+													and (document.formType eq 'OTHER')
+													and (customFormBean.readOnly)}">
+									<h:panelGroup rendered="#{not contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Edit Private" action="#{contactFormBean.actionEditPrivateXfdf}"
+												styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- Disabled EDIT MASTER button -->
+									<h:panelGroup rendered="#{contactFormBean.editMaster}">
+										<span class="FR pad5rt">
+											<span class="btnPriDisLt" />
+											<span>
+												<ace:linkButton value="Edit Private" styleClass="btnPriDisCt" onclick="return false;"/>
+											</span>
+											<span class="btnPriDisRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- ATTACHMENT UPLOAD button -->
+								<h:panelGroup rendered="#{renderAttach}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Attach" action="#{contactFormBean.actionUploadAttachment}"
+											title="Upload an attachment for the selected document." styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+
+							</div> <!-- FR -->
+						</div><!-- End of Top header -->
+
+						<div class="centerFullPg2">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+								<!-- Tabs for Payroll / Start Forms -->
+								<ace:tabSet id="tabs" selectedIndex="#{contactFormBean.selectedTab}">
+
+									<div id="scrollStartForm" class="scrollPnlTab">
+										<!-- Tab 0: Forms mini-tab (view and edit distributed forms) -->
+										<ui:include src="contactForm.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+										</ui:include>
+                                    
+										<!-- Tab 1: Document Events mini-tab -->
+										<ui:include src="documentEvents.xhtml">
+										</ui:include>
+
+										<!-- Tab 2: I9 Instructions mini-tab -->
+										<ui:include src="i9Instructions.xhtml">
+										</ui:include>
+	                               
+										<!-- Tab 3: Attachment mini-tab -->
+										<ui:include src="obAttachment.xhtml">
+										</ui:include>
+									
+									<c:if test="${document.formType eq 'W4' and formW4Bean.form.version eq 20}">	
+										<!-- Tab 4: W-4 Worksheet mini-tab -->
+										<ui:include src="formW4Worksheet_20.xhtml">
+										</ui:include>
+										
+										<!-- Tab 5 : W-4 Instructions mini-tab -->
+										<ui:include src="formW4Instructions_20.xhtml">
+										</ui:include>
+									</c:if>
+									</div>
+
+								</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary (bottom right corner) buttons -->
+							<div class="rowBtnFullPg">
+								<div class="rowBtnBdr"></div>
+								<div class="FL MA rowCont">
+									<!-- Save and Cancel Buttons -->
+									<!-- CANCEL BUTTON -->
+									<h:panelGroup rendered="#{((contactFormBean.editMode)
+												and (formTab)
+												and (contactFormBean.standardDoc))
+												or (contactFormBean.editMaster)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt" onclick="queueClick(this,event);"
+													title="Do NOT save the changes you have made to this document"
+													value="Cancel" action="#{contactFormBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:panelGroup>
+
+									<!-- SAVE BUTTON -->
+									<h:panelGroup rendered="#{((contactFormBean.editMode)
+												and (formTab or headerViewBean.miniTab eq 4)
+												and (contactFormBean.standardDoc))
+												 or (contactFormBean.editMaster)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+											<ace:linkButton value="Save" onmouseup="showErrors();" onclick="queueClick(this,event);"
+												title="Save the changes you have made to this document"
+												action="#{contactFormBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- End of Save and Cancel Buttons -->
+
+									<!-- CANCEL BUTTON FOR CUSTOM DOCUMENTS -->
+									<h:panelGroup rendered="#{(! customFormBean.readOnly)
+												and (formTab or headerViewBean.miniTab eq 4)
+												and (! contactFormBean.standardDoc)
+												and (! contactFormBean.editMaster)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt" onclick="queueClick(this,event);"
+													title="Do NOT save the changes you have made to this custom document"
+													value="Cancel" action="#{customFormBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:panelGroup>
+
+									<!-- CUSTOM SAVE ANNOTATIONS BUTTON -->
+									<h:panelGroup rendered="#{(! customFormBean.readOnly)
+												and (formTab)
+												and (! contactFormBean.standardDoc)
+												and (! contactFormBean.editMaster)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+												<ace:linkButton value="Save" onclick="lsSaveAnnotations();"
+													title="Save the changes you have made to this custom document"
+													action="#{customFormBean.actionSave}"
+													styleClass="btnSecHotCt"/>
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:panelGroup>
+
+									<!-- SUBMIT btn -->
+									<h:panelGroup rendered="#{(formTab)
+														and (docExists)
+														and (document.submitable)
+														and notPreview
+														and (not contactFormBean.editMode)
+														and (not contactFormBean.editMaster)
+														and (contactFormBean.editAuth)
+														and ((document.formType.showSubmit and
+																(contactFormBean.vContact.id eq document.contact.id))
+															or ((! document.document.standard) and
+																(document.document.employeeAction eq 'SUBMIT')))}">
+										<span class="FR pad10rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton title="Submit for approval" value="Submit"
+												 styleClass="btnSecHotCt" action="#{contactFormBean.actionSubmit}"/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+									<!-- end Submit btn -->
+
+									<!-- LOCK button -->
+									<h:panelGroup rendered="#{(formTab)
+														and (docExists)
+														and (document.status eq 'APPROVED')
+														and notPreview
+														and (not contactFormBean.editMode)
+														and (not contactFormBean.editMaster)
+														and (contactFormBean.isApprover)}">
+										<span class="FR pad10rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Lock"
+												 styleClass="btnSecHotCt" action="#{contactFormBean.actionLock}"/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+									<!-- End Lock button -->
+
+									<!-- Return Button -->
+									<!-- <h:outputText rendered="#{(formTab) and (not myStarts)
+											and (contactFormBean.isPreviewDocument or contactFormBean.isJump or contactFormBean.onboardingJump)
+											and (not contactFormBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton title="Return to previous page" value="Return"
+												 actionListener="#{contactFormBean.navigateToPreviousPage}" styleClass="btnSecHotCt"/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:outputText> -->
+									<!-- end of Return Button -->
+
+									<h:panelGroup rendered="#{(not myStarts)
+														and (formTab)
+														and (not contactFormBean.editMaster)
+														and (contactFormBean.mayApprove)
+														and (not contactFormBean.editMode)
+														and (document.formType.usesApprove)}">
+										<!-- REJECT button -->
+										<span class="FR pad10rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Reject"
+													styleClass="btnSecHotCt"
+													action="#{contactFormBean.actionReject}"
+													title="Reject the selected document."/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+										<!-- End Reject button -->
+
+										<!-- APPROVE button -->
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Approve"
+													styleClass="btnSecHotCt"
+													action="#{contactFormBean.actionApprove}"
+													title="Approve the selected document."/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+										<!-- End Approve button -->
+									</h:panelGroup>
+
+									<!-- Sign button -->
+									<h:panelGroup rendered="#{false}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Sign"
+													styleClass="btnSecHotCt"
+													title="Sign the selected document."/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+									<!-- End Sign button -->
+
+									<!-- ACKNOWLEDGE BUTTON -->
+									<h:panelGroup rendered="#{(document.document.employeeAction eq 'ACK')
+														and (document.submitable)
+														and (contactFormBean.vContact.id eq document.contact.id)
+														and (not contactFormBean.editMaster)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Acknowledge"
+													styleClass="btnSecHotCt"
+													action="#{contactFormBean.actionAcknowledge}"
+													title="Acknowledge Document."/>
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+									<!-- END ACKNOWLEDGE BUTTON -->
+
+									<!-- Hidden buttons 'clicked' by buttons embedded in custom PDFs -->
+									<h:panelGroup rendered="#{(! contactFormBean.standardDoc)
+											and (formTab)}">
+										<span class="FR" style="display:none;">
+											<c:if test="#{(customFormBean.readOnly)}">
+												<h:commandLink id="actionAppSign1of1"
+														action="#{contactFormBean.actionApproverSign1of1}" />
+												<h:commandLink id="actionAppSign1of2"
+														action="#{contactFormBean.actionApproverSign1of2}" />
+												<h:commandLink id="actionAppSign2of2"
+														action="#{contactFormBean.actionApproverSign2of2}" />
+												<h:commandLink id="actionAppSign2"
+														action="#{contactFormBean.actionApproverSign2}" />
+												<h:commandLink id="actionAppSign3"
+														action="#{contactFormBean.actionApproverSign3}" />
+												<h:commandLink id="actionEmpSign1of1"
+														action="#{contactFormBean.actionEmployeeSign1of1}" />
+												<h:commandLink id="actionEmpSign1of1Init1"
+														action="#{contactFormBean.actionEmployeeSign1of1Init1}" />
+												<h:commandLink id="actionEmpSign1of1Init2"
+														action="#{contactFormBean.actionEmployeeSign1of1Init2}" />
+												<h:commandLink id="actionEmpSign1of2"
+														action="#{contactFormBean.actionEmployeeSign1of2}" />
+												<h:commandLink id="actionEmpSign2of2"
+														action="#{contactFormBean.actionEmployeeSign2of2}" />
+												<h:commandLink id="actionEmpSign1of3"
+														action="#{contactFormBean.actionEmployeeSign1of3}" />
+												<h:commandLink id="actionEmpSign2of3"
+														action="#{contactFormBean.actionEmployeeSign2of3}" />
+												<h:commandLink id="actionEmpSign3of3"
+														action="#{contactFormBean.actionEmployeeSign3of3}" />
+												<h:commandLink id="actionEmpSign1ofN"
+														action="#{contactFormBean.actionEmployeeSign1ofN}" />
+												<h:commandLink id="actionEmpSign2ofN"
+														action="#{contactFormBean.actionEmployeeSign2ofN}" />
+												<h:commandLink id="actionEmpSign3ofN"
+														action="#{contactFormBean.actionEmployeeSign3ofN}" />
+												<h:commandLink id="actionEmpSign4ofN"
+														action="#{contactFormBean.actionEmployeeSign4ofN}" />
+												<h:commandLink id="actionEmpSign5ofN"
+														action="#{contactFormBean.actionEmployeeSign5ofN}" />
+												<h:commandLink id="actionEmpSign6ofN"
+														action="#{contactFormBean.actionEmployeeSign6ofN}" />
+												<h:commandLink id="actionEmpSignLast3of4"
+														action="#{contactFormBean.actionEmployeeSignLast3of4}" />
+												<h:commandLink id="actionEmpSign2of2Opt"
+														action="#{contactFormBean.actionEmployeeSign2of2Opt}" />
+												<h:commandLink id="actionEmpSign6of6"
+														action="#{contactFormBean.actionEmployeeSign6of6}" />
+												<h:commandLink id="actionEmpSign7of7"
+														action="#{contactFormBean.actionEmployeeSign7of7}" />
+												<!-- INITIAL -->
+												<h:commandLink id="actionEmpInit1of1"
+														action="#{contactFormBean.actionEmployeeInit1of1}" />
+												<h:commandLink id="actionEmpInit1of2"
+														action="#{contactFormBean.actionEmployeeInit1of2}" />
+												<h:commandLink id="actionEmpInit2of2"
+														action="#{contactFormBean.actionEmployeeInit2of2}" />
+												<h:commandLink id="actionEmpInit1"
+														action="#{contactFormBean.actionEmployeeInit1}" />
+												<h:commandLink id="actionEmpInit2"
+														action="#{contactFormBean.actionEmployeeInit2}" />
+												<h:commandLink id="actionEmpInit3"
+														action="#{contactFormBean.actionEmployeeInit3}" />
+											</c:if>
+											<c:if test="#{(! customFormBean.readOnly)}">
+												<h:commandLink id="actionAppSign1of1"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionApproverSign1of1}" />
+												<h:commandLink id="actionAppSign1of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionApproverSign1of2}" />
+												<h:commandLink id="actionAppSign2of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionApproverSign2of2}" />
+												<h:commandLink id="actionAppSign2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionApproverSign2}" />
+												<h:commandLink id="actionAppSign3"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionApproverSign3}" />
+												<h:commandLink id="actionEmpSign1of1"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1of1}" />
+												<h:commandLink id="actionEmpSign1of1Init1"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1of1Init1}" />
+												<h:commandLink id="actionEmpSign1of1Init2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1of1Init2}" />
+												<h:commandLink id="actionEmpSign1of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1of2}" />
+												<h:commandLink id="actionEmpSign2of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign2of2}" />
+												<h:commandLink id="actionEmpSign1of3"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1of3}" />
+												<h:commandLink id="actionEmpSign2of3"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign2of3}" />
+												<h:commandLink id="actionEmpSign3of3"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign3of3}" />
+												<h:commandLink id="actionEmpSign1ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign1ofN}" />
+												<h:commandLink id="actionEmpSign2ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign2ofN}" />
+												<h:commandLink id="actionEmpSign3ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign3ofN}" />
+												<h:commandLink id="actionEmpSign4ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign4ofN}" />
+												<h:commandLink id="actionEmpSign5ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign5ofN}" />
+												<h:commandLink id="actionEmpSign6ofN"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign6ofN}" />
+												<h:commandLink id="actionEmpSignLast3of4"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSignLast3of4}" />
+												<h:commandLink id="actionEmpSign2of2Opt"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign2of2Opt}" />
+												<h:commandLink id="actionEmpSign6of6"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign6of6}" />
+												<h:commandLink id="actionEmpSign7of7"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeSign7of7}" />
+												<!-- INITIAL -->
+												<h:commandLink id="actionEmpInit1of1"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit1of1}" />
+												<h:commandLink id="actionEmpInit1of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit1of2}" />
+												<h:commandLink id="actionEmpInit2of2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit2of2}" />
+												<h:commandLink id="actionEmpInit1"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit1}" />
+												<h:commandLink id="actionEmpInit2"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit2}" />
+												<h:commandLink id="actionEmpInit3"
+														onclick="lsSaveAnnotations();"
+														action="#{contactFormBean.actionEmployeeInit3}" />
+											</c:if>
+										</span>
+									</h:panelGroup>
+
+								</div>
+							</div>
+							<!-- end secondary buttons -->
+						</div>
+
+					</div><!-- end outer container -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm">
+								<div class="ltBtmCnr"></div>
+								<div class="rtBtmCnr"></div>
+							</div>
+						</div>
+					</div> <!-- end pnlFull -->
+				</div> <!--  end pnlCont -->
+			</div> <!-- end ctrCont -->
+
+			<div class="CB"></div>
+			<!-- clears float for liquid layout -->
+
+		</div>
+		<!-- end mainCont -->
+
+		<div class="footerCont CT">
+			<ui:include src="../common/footercont.xhtml" />
+		</div>
+
+	</div>
+	<!-- end main -->
+
+</ui:composition>

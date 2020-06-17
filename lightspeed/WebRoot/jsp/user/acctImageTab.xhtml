@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: Images mini-tab -->
+
+	<ace:tabPane label="Images">
+		<div id="imagesCont">
+
+			<h:panelGroup styleClass="LH29">
+				&#160;
+			</h:panelGroup>
+
+			<div class="rowCont FL">
+				<div id="imgPreviewCont">
+
+					<div class="subSecHdg_images FL LH20">&#160;</div><!-- keeps legend in right spot since there is no legend title -->
+
+					<h:panelGroup
+							rendered="#{userViewBean.editMode and userViewBean.selectedTab eq 2 and (not empty userViewBean.user.images)}"
+							styleClass="btn_delImg">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton value="Delete Image" id="deleteImg"
+								action="#{imagePaginatorBean.actionDeleteImage}"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup
+							rendered="#{userViewBean.editMode and userViewBean.selectedTab eq 2}"
+							styleClass="btn_newImg">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton value="New Image" id="newImg"
+								action="#{userViewBean.actionOpenNewImage}"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<ui:include src="../common/imageTable.xhtml">
+						<ui:param name="list" value="#{userViewBean.user.imageResources}" />
+						<ui:param name="imageTitle" value="Image" />
+					</ui:include>
+
+				</div>
+			</div><!-- end imagesCont -->
+		</div>
+	</ace:tabPane><!--  End Images Tab  -->
+
+</ui:composition>

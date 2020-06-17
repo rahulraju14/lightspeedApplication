@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="lightspeed">
+
+	<property name="war.dir" location="target" />
+	<property name="warFilename" value="betawin.n.m.0.betaX.war" /><!-- usual format for beta war file name -->
+
+	<property name="src.dir" location="${basedir}/WebRoot"/>
+	<property name="src.dir.css" location="${basedir}/src/c-uncompressed"/>
+	<property name="src.dir.js"  location="${basedir}/src/js-uncompressed"/>
+	<property name="build.dir"   location="${basedir}/WebRoot"/>
+	<property name="build.dir.css" location="${build.dir}/resources"/>
+	<property name="build.dir.js"  location="${build.dir}/resources"/>
+	<property name="build.desktop.js"  location="${build.dir.js}/script.js"/>
+	<property name="build.mobile.js"  location="${build.dir.js}/script_m.js"/>
+	<property name="build.jar" location="${basedir}/external/compressor.jar"/>
+
+	<property environment="env"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
+
+	<macrodef name="yui-compress">
+		<attribute name="todir"/>
+		<attribute name="yui-switches" default="-v --type js"/>
+		<element name="files" implicit="yes"/>
+		<sequential>
+			<apply executable="java">
+				<arg value="-jar"/>
+				<arg value="${build.jar}"/>
+				<arg line="@{yui-switches}"/>
+				<arg value="-o"/>
+				<targetfile/>
+				<compositemapper>
+					<mapper type="glob" from="*.uc.js" to="@{todir}/*.js"/>
+					<mapper type="glob" from="*.uc.css" to="@{todir}/*.css"/>
+				</compositemapper>
+				<files/>
+			</apply>
+		</sequential>
+	</macrodef>
+
+
+	<path id="lightspeed.classpath">
+		<pathelement location="WebRoot/WEB-INF/classes"/>
+		<fileset dir="WebRoot/WEB-INF/lib" includes="*.jar"/>
+		<pathelement location="external/PDFNet-6.9.0.jar"/>
+	</path>
+
+	<fileset id="no-munge.js.files" dir="${src.dir.js}">
+		<include name="*.uc.js"/>
+	</fileset>
+
+	<fileset id="css.files" dir="${src.dir.css}">
+		<include name="*.uc.css"/>
+	</fileset>
+
+	<target name="init">
+		<mkdir dir="WebRoot/WEB-INF/classes"/>
+		<mkdir dir="${war.dir}"/>
+		<copy includeemptydirs="false" todir="WebRoot/WEB-INF/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+				<exclude name="c-uncompressed/"/>
+				<exclude name="js-uncompressed/"/>
+				<exclude name="reports-xml/"/>
+				<exclude name="sql/"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="WebRoot/WEB-INF/classes"/>
+		<delete>
+			<fileset dir="${build.dir.js}" includes="*.js"/>
+			<fileset dir="${build.dir.css}" includes="*.css"/>
+			<fileset dir="${war.dir}" includes="*.war"/>
+		</delete>
+	</target>
+
+	<target name="cleanall" depends="clean"/>
+
+	<target name="compress" depends="init" description="Minify js and css files">
+		<echo message="Compressing ..."/>
+		<yui-compress todir="${build.dir.js}" yui-switches="--nomunge">
+			<fileset refid="no-munge.js.files"/>
+		</yui-compress>
+		<yui-compress todir="${build.dir.css}" yui-switches="--type css">
+			<fileset refid="css.files"/>
+		</yui-compress>
+	</target>
+
+	<target name="combine" depends="compress" description="Concatenate js files">
+		<concat destfile="${build.desktop.js}" append="no" fixlastline="yes" overwrite="no">
+			<filelist dir="${build.dir.js}">
+				<file name="script_desktop.js"/>
+				<file name="script_common.js"/>
+			</filelist>
+		</concat>
+		<concat destfile="${build.mobile.js}" append="no" fixlastline="yes" overwrite="no">
+			<filelist dir="${build.dir.js}">
+				<file name="script_mobile.js"/>
+				<file name="script_common.js"/>
+			</filelist>
+		</concat>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac debug="true" debuglevel="${debuglevel}" destdir="WebRoot/WEB-INF/classes" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src"/>
+			<exclude name="c-uncompressed/"/>
+			<exclude name="js-uncompressed/"/>
+			<exclude name="reports-xml/"/>
+			<exclude name="sql/"/>
+			<classpath refid="lightspeed.classpath"/>
+		</javac>
+	</target>
+
+	<target name="makewar" depends="compile,combine" description="Create a war for the TTCO project">
+		<delete>
+			<fileset dir="${war.dir}" includes="*.war"/>
+		</delete>
+		<war destfile="${war.dir}/${warFilename}" webxml="WebRoot/WEB-INF/web.xml">
+			<fileset dir="WebRoot" > 
+				<exclude name="upload/**/*" />
+				<exclude name="report/**/*" />
+				<exclude name="WEB-INF/classes/com/lightspeedeps/test/**" />
+				<exclude name="WEB-INF/**/*.mex" />
+			</fileset>
+			<classes dir="${basedir}/src" includes="/META-INF**/*.xml" />
+		</war>
+	</target>
+
+	<target name="build" depends="combine,compile,makewar">
+		<echo message="${ant.project.name}: ${ant.file}"/>
+	</target>
+
+</project>

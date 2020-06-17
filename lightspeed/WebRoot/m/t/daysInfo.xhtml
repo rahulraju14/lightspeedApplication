@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Start Information section of the Weekly Payroll page (days.xhtml) -->
+
+	<c:set var="bean" value="#{mobileTimecardBean}" />
+	<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+	<a id="startinfo" /><!-- scroll-to-top position -->
+
+	<div class="CT pad10tp">
+		<div class="mBtnFull inBlock">
+			<h:commandLink value="Start Information #{bean.startInfoRequired ? '*Required*' : ''}" id="mStartInfo"
+					styleClass="mBtnFull #{bean.startInfoRequired ? 'btnSecHotCt' : 'btnPriHotCt'}"
+					action="#{bean.actionToggleStartInfo}" />
+		</div>
+	</div>
+
+	<h:panelGroup styleClass="B" rendered="#{bean.showStartInfo}">
+
+		<h:panelGroup rendered="#{bean.showPrivate}">
+			<div class="inInfoRow">
+				<h:outputText styleClass="pad4tp" value="Social Sec #:" />
+
+				<!-- SHOW/HIDE SSN toggle button -->
+				<h:panelGroup rendered="#{(! empty bean.weeklyTimecard.viewSSN) and
+						(bean.editHtg or (headerViewBean.user.accountNumber eq bean.weeklyTimecard.userAccount))}"
+						styleClass="CT inBlock" style="top:0px;">
+					<span class="FL btnPriHotSmLt"/>
+					<span>
+						<h:commandLink value="Hide" rendered="#{bean.showEditSsn}" id="mHideSsn"
+								action="#{mobileTimecardBean.actionToggleShowSsn}" styleClass="btnPriHotSmCt" />
+						<h:commandLink value="Show" rendered="#{! bean.showEditSsn}" id="mShowSsn"
+								action="#{mobileTimecardBean.actionToggleShowSsn}" styleClass="btnPriHotSmCt" />
+					</span>
+					<span class="FL btnPriHotSmRt"/>
+				</h:panelGroup>
+
+				<!-- SSN - SOCIAL SECURITY # - enabled/disabled -->
+				<ace:textEntry styleClass="FR pad15rt" rendered="#{bean.showPrivate and (bean.editRaw or bean.editHtg) and
+						(bean.showEditSsn or (empty bean.weeklyTimecard.viewSSN))}"
+						maxlength="11" tabindex="1" style="height:10%;width:70%;" id="mStartSsn"
+						autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+						value="#{bean.weeklyTimecard.socialSecurity}">
+					<f:converter converterId="lightspeed.SSNConverter" />
+					<ace:ajax />
+				</ace:textEntry>
+
+				<ace:textEntry rendered="#{bean.showPrivate and (empty bean.weeklyTimecard.viewSSN) and !(bean.editRaw or bean.editHtg)}"
+						disabled="true" value="###-##-????" style="height:10%;width:70%;" styleClass="FR pad15rt"/>
+
+				<ace:textEntry rendered="#{bean.showPrivate and (not empty bean.weeklyTimecard.viewSSN) and not bean.showEditSsn}"
+						disabled="true" value=" #{bean.weeklyTimecard.viewSSN}" style="height:10%;width:70%;" styleClass="FR pad15rt"/>
+
+				<ace:textEntry rendered="#{! bean.showPrivate}"
+						disabled="true" value="###-##-####" style="height:10%;width:70%" styleClass="FR pad15rt"/>
+			</div>
+		</h:panelGroup>
+
+		<div class="inInfoCityState">
+			<h:outputText styleClass="FL pad3tp" value="Work City:"/>
+			<ace:textEntry tabindex="2" style="width:40%;height: 65%;" styleClass="FL pad3lt pad2tp"
+					disabled="#{! (bean.editRaw or bean.editHtg)}" id="mStartWorkCity"
+					autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+					value="#{bean.weeklyTimecard.cityWorked}" maxlength="50">
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText styleClass="FL pad4tp pad10lt" value="Work State:" />
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu tabindex="3" style="width:12%;" styleClass="pad3tp"
+						value="#{bean.weeklyTimecard.stateWorked}" id="mStartWorkState"
+						valueChangeListener="#{bean.listenWorkStateChange}"
+						rendered="#{(bean.editRaw or bean.editHtg)}">
+					<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+					<ace:ajax />
+				</h:selectOneMenu>
+				<ace:textEntry value="#{bean.weeklyTimecard.stateWorked}"
+						disabled="true" style="width:8%;height:60%;" styleClass="FL pad3lt pad2tp"
+						rendered="#{! (bean.editRaw or bean.editHtg)}" />
+			</icecore:setEventPhase>
+			<!-- 
+			 onkeyup="lSubmit(event,'days:citykey');"
+			<h:commandButton id="citykey" value="city" visible="false" action="#{bean.actionCityWorkedChange}"/>
+			  -->
+		</div>
+
+		<h:panelGroup rendered="#{bean.teamPayroll}">
+			<div class="inInfoRow">
+				<h:outputText styleClass="pad4tp" value="Employee will be paid as" />
+				<h:selectOneRadio id="mStartPaidAs" styleClass="h_radio pad1tp" layout="lineDirection"
+					value="#{bean.weeklyTimecard.paidAs}" valueChangeListener="#{bean.listenMStartPaidAsChange}"  tabOrder="4"
+					disabled="#{(! (bean.editRaw or bean.editHtg)) or bean.weeklyTimecard.startForm.paidAs ne null}">
+					<f:selectItem itemValue="I" itemLabel="Individual"/>
+					<f:selectItem itemValue="LO" itemLabel="Loan-out"/>
+					<f:converter converterId="lightspeed.PaidAsConverter" />
+					<ace:ajax/>
+				</h:selectOneRadio>
+			</div>
+		</h:panelGroup>
+		<!-- <h:panelGroup rendered="#{bean.teamPayroll and bean.weeklyTimecard.paidAs.loanOut}"> 
+			<div class="inInfoRow">
+				<h:outputText styleClass="pad4tp" value="Federal ID:" />
+				<ace:textEntry style="height:10%;width:70%;" tabOrder="5" value="#{bean.weeklyTimecard.fedCorpId}"
+					disabled="#{! (bean.editRaw or bean.editHtg) or (not empty bean.weeklyTimecard.fedCorpId)}">
+					<f:converter converterId="lightspeed.FedIdConverter" />
+					<ace:ajax/>
+				</ace:textEntry>
+			</div>
+		</h:panelGroup> -->
+		<!-- ENTER BUTTON -->
+		<h:panelGroup rendered="#{(bean.editRaw or bean.editHtg)}">
+			<div class="inCtlRow pad15tp">
+
+				<h:panelGroup styleClass="MA inBlock"
+						rendered="#{(bean.startInfoChanged or bean.startInfoRequired) and (bean.editRaw or bean.editHtg)}">
+					<span class="FL btnPriHotLt"></span>
+					<span>
+						<h:commandLink value="Enter" onclick="queueClick(this,event);" id="mTcEnterBttn"
+								action="#{bean.actionEnterStartInfo}" styleClass="btnPriHotCt" />
+					</span>
+					<span class="FL btnPriHotRt"></span>
+				</h:panelGroup>
+				<h:panelGroup styleClass="MA inBlock"
+						rendered="#{(! (bean.startInfoChanged or bean.startInfoRequired)) or ! (bean.editRaw or bean.editHtg)}">
+					<span class="FL btnPriDisLt"></span>
+					<span>
+						<h:commandLink value="Enter" type="text" styleClass="btnPriDisCt" />
+					</span>
+					<span class="FL btnPriDisRt"></span>
+				</h:panelGroup>
+
+			</div>
+		</h:panelGroup>
+
+	</h:panelGroup>
+	<!-- END Box Rental section -->
+
+</ui:composition>

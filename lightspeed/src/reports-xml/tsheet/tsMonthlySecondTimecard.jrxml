@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tsMonthlyFirstTimecard" pageWidth="968" pageHeight="26" whenNoDataType="AllSectionsNoDetail" columnWidth="960" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.331000000000002"/>
+	<property name="ireport.x" value="391"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="weeklyId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timesheetId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select wtc.*, "
++ "case t.Pay_Category1  when 'REIMB' then 'REM'  when 'PER_DIEM_NONTAX' then 'PER'  when 'PER_DIEM_TAX' then 'TPD'  when 'SAL_ADVANCE_NONTAX' then 'ADI'  when 'PRE_TAX_401K' then '401K_R'  when 'ROTH' then 'ROTH'  when 'PRE_TAX_INS3' then 'Pre_Tx_Ins_ded'  when 'PRE_TAX_INS2' then 'Pre_Tx_Ins'  when 'BONUS' then 'BON'  when 'MILEAGE_NONTAX' then 'MIL'  when 'CAN_TAX_DED' then 'CANADA'  when 'INSURANCE' then 'INS'  when 'AUTO_EXP' then 'AUT'  else '---' end as PayCategory1, "
++ "case t.Pay_Category2  when 'REIMB' then 'REM'  when 'PER_DIEM_NONTAX' then 'PER'  when 'PER_DIEM_TAX' then 'TPD'  when 'SAL_ADVANCE_NONTAX' then 'ADI'  when 'PRE_TAX_401K' then '401K_R'  when 'ROTH' then 'ROTH'  when 'PRE_TAX_INS3' then 'Pre_Tx_Ins_ded'  when 'PRE_TAX_INS2' then 'Pre_Tx_Ins'  when 'BONUS' then 'BON'  when 'MILEAGE_NONTAX' then 'MIL'  when 'CAN_TAX_DED' then 'CANADA'  when 'INSURANCE' then 'INS'  when 'AUTO_EXP' then 'AUT'  else '---' end as PayCategory2, "
++ "case t.Pay_Category3  when 'REIMB' then 'REM'  when 'PER_DIEM_NONTAX' then 'PER'  when 'PER_DIEM_TAX' then 'TPD'  when 'SAL_ADVANCE_NONTAX' then 'ADI'  when 'PRE_TAX_401K' then '401K_R'  when 'ROTH' then 'ROTH'  when 'PRE_TAX_INS3' then 'Pre_Tx_Ins_ded'  when 'PRE_TAX_INS2' then 'Pre_Tx_Ins'  when 'BONUS' then 'BON'  when 'MILEAGE_NONTAX' then 'MIL'  when 'CAN_TAX_DED' then 'CANADA'  when 'INSURANCE' then 'INS'  when 'AUTO_EXP' then 'AUT'  else '---' end as PayCategory3, "
++ "case t.Pay_Category4  when 'REIMB' then 'REM'  when 'PER_DIEM_NONTAX' then 'PER'  when 'PER_DIEM_TAX' then 'TPD'  when 'SAL_ADVANCE_NONTAX' then 'ADI'  when 'PRE_TAX_401K' then '401K_R'  when 'ROTH' then 'ROTH'  when 'PRE_TAX_INS3' then 'Pre_Tx_Ins_ded'  when 'PRE_TAX_INS2' then 'Pre_Tx_Ins'  when 'BONUS' then 'BON'  when 'MILEAGE_NONTAX' then 'MIL'  when 'CAN_TAX_DED' then 'CANADA'  when 'INSURANCE' then 'INS'  when 'AUTO_EXP' then 'AUT'  else '---' end as PayCategory4 "
++ "FROM timesheet t, weekly_time_card wtc where wtc.Prod_Id = t.Prod_Id and wtc.End_Date = t.End_Date and wtc.Status <> 'VOID' and t.Id =" + $P{timesheetId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timesheetDayIdList" class="java.util.List" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="workplace" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Pay_Category1" class="java.lang.String"/>
+	<parameter name="Pay_Category2" class="java.lang.String"/>
+	<parameter name="Pay_Category3" class="java.lang.String"/>
+	<parameter name="Pay_Category4" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="End_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Adjusted" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Htg_Locked" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Marked_For_Approval" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Hours_Differ" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Updated" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Time_Sent" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Time_Edit" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Time_Final" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Time_Paid" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Start_Form_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weekly_Batch_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Approver_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Is_Dept_Pool" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Locked_By" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Signed_Paper" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Paper_Image_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Corp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Co" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Department_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Dept_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Off_Production" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Under_Contract" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Allow_Worked" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Retirement_Plan" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occupation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occ_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ls_Occ_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Overtime_Rule" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Union_Number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ACA_End_Work_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ACA_Leave_Start" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ACA_Leave_End" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Rate_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Employee_Rate_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Hourly_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Daily_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weekly_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Guar_Hours" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_Worked" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="City_worked" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Zip" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fed_Corp_Id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_Corp_Id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Account_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Account_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Account_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Account_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Account_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Comments" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Private_Comments" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Prep" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Shoot" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Wrap" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Adj_Gtotal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Wages2" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Adv_Gtotal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Grand_Total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Hours" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Total_Paid_Hours" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Work_Day_Num" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ending_Day_Num" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Name" class="java.lang.String"/>
+	<field name="First_Name" class="java.lang.String"/>
+	<variable name="PAY_AMT_16" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_17" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_18" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_19" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_20" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_21" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_22" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_23" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_24" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_25" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_26" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_27" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_28" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_29" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_30" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PAY_AMT_31" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_WAGES2_SUM" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Total_Wages2}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_WAGES_SUM" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Adj_Gtotal}]]></variableExpression>
+	</variable>
+	<variable name="PE_TAX_AMT" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PE_NTAX_AMT" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PE_ADV_AMT" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="PE_REIMB_AMT" class="java.math.BigDecimal" resetType="Page" calculation="System">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="13" uuid="afc497ad-fbc3-4e7a-b486-186eef971239">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{First_Name} + " " + $F{Last_Name} + " "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" stretchType="RelativeToTallestObject" x="0" y="13" width="99" height="13" uuid="ffcf1460-2423-43de-8b86-00c7793b2068">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Occupation}.length() > 35 ? $F{Occupation}.substring(0,35) :$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,###.00" isBlankWhenNull="true">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="707" y="0" width="38" height="26" backcolor="#CCCCCC" uuid="8944ca11-d7c9-4f6e-aaeb-7a9b672f8f3c">
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 31]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Total_Wages2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="745" y="0" width="38" height="26" backcolor="#CCCCCC" uuid="8944ca11-d7c9-4f6e-aaeb-7a9b672f8f3c">
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 31]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Adj_Gtotal}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,###.00" isBlankWhenNull="true">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="669" y="0" width="57" height="26" backcolor="#CCCCCC" uuid="8944ca11-d7c9-4f6e-aaeb-7a9b672f8f3c">
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 30]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Total_Wages2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7" mode="Opaque" x="726" y="0" width="57" height="26" backcolor="#CCCCCC" uuid="8944ca11-d7c9-4f6e-aaeb-7a9b672f8f3c">
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 30]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Adj_Gtotal}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefBox" stretchType="RelativeToTallestObject" x="919" y="0" width="47" height="26" uuid="532ef5ee-73e6-4e76-8f0f-53dc4f59e6a1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Comments}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement style="tcDefBox" x="99" y="0" width="38" height="26" uuid="85effe23-1358-45d0-9040-be18d76885d8">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[16]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_16" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="137" y="0" width="38" height="26" uuid="9dc2719e-b40c-46e9-be93-fd9eeaf2d59c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[17]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_17" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="175" y="0" width="38" height="26" uuid="1b333d61-d8a6-4962-ba73-48bb3fa9f47c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[18]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_18" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="213" y="0" width="38" height="26" uuid="8cfe2030-7d0e-41b8-9f92-d4de1467138f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[19]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_19" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="251" y="0" width="38" height="26" uuid="dd06f002-9c6d-4a07-8544-3cc76f88a790">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[20]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_20" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="289" y="0" width="38" height="26" uuid="5e8950ca-bbe4-4e85-a518-a8256112a929">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[21]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_21" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="327" y="0" width="38" height="26" uuid="eec79582-72d3-4206-8401-b7345ac40510">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[22]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_22" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="365" y="0" width="38" height="26" uuid="85effe23-1358-45d0-9040-be18d76885d8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[23]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_23" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="403" y="0" width="38" height="26" uuid="9dc2719e-b40c-46e9-be93-fd9eeaf2d59c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[24]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_24" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="441" y="0" width="38" height="26" uuid="1b333d61-d8a6-4962-ba73-48bb3fa9f47c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[25]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_25" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="479" y="0" width="38" height="26" uuid="8cfe2030-7d0e-41b8-9f92-d4de1467138f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[26]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_26" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="517" y="0" width="38" height="26" uuid="dd06f002-9c6d-4a07-8544-3cc76f88a790">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[27]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_27" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="555" y="0" width="38" height="26" uuid="5e8950ca-bbe4-4e85-a518-a8256112a929">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[28]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_28" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="593" y="0" width="38" height="26" uuid="eec79582-72d3-4206-8401-b7345ac40510">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[29]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_29" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="631" y="0" width="38" height="26" uuid="eec79582-72d3-4206-8401-b7345ac40510"/>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[30]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_30" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="669" y="0" width="38" height="26" uuid="eec79582-72d3-4206-8401-b7345ac40510"/>
+				<subreportParameter name="dayNum">
+					<subreportParameterExpression><![CDATA[31]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_AMOUNT" toVariable="PAY_AMT_31" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayAmount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="783" y="0" width="34" height="26" uuid="63fe9302-eeb2-4c02-b508-a4c7464dfe15">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="category">
+					<subreportParameterExpression><![CDATA[$P{Pay_Category1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_EXP_AMT" toVariable="PE_TAX_AMT" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayExpense.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="817" y="0" width="34" height="26" uuid="f9057e64-71ee-4db2-b6ed-75f0b7e104db">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<subreportParameter name="category">
+					<subreportParameterExpression><![CDATA[$P{Pay_Category2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_EXP_AMT" toVariable="PE_NTAX_AMT" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayExpense.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="851" y="0" width="34" height="26" uuid="56d0b223-57b1-4e8c-b0f2-3f01774926ac"/>
+				<subreportParameter name="category">
+					<subreportParameterExpression><![CDATA[$P{Pay_Category3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_EXP_AMT" toVariable="PE_ADV_AMT" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayExpense.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="tcDefBox" x="885" y="0" width="34" height="26" uuid="8a39b4f7-35cf-4bbf-a2a0-75666800dc11">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="category">
+					<subreportParameterExpression><![CDATA[$P{Pay_Category4}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAY_EXP_AMT" toVariable="PE_REIMB_AMT" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tsheet/tsMonthlyPayExpense.jasper"]]></subreportExpression>
+			</subreport>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="965" height="26" uuid="4268997e-621e-4633-b146-4fa4b3825128"/>
+			</rectangle>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="13">
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="99" y="0" width="38" height="13" uuid="40946793-1a14-40ef-b51c-8d97ca2a0499">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph lineSpacingSize="1.0" rightIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_16}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="137" y="0" width="38" height="13" uuid="dc22e99e-3072-4005-90c9-a260c8fe7581"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_17}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="175" y="0" width="38" height="13" uuid="f2fb7956-394a-4f20-bb7a-3db011ff6f3b"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_18}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="213" y="0" width="38" height="13" uuid="419253eb-84e5-41cc-a3bd-bc30ceca3ab7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_19}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="251" y="0" width="38" height="13" uuid="3eff87dd-9944-4ba8-bd03-9bda52902b54"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_20}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="289" y="0" width="38" height="13" uuid="e0e8a36c-78bf-4f9f-8b45-4f3f4735bd63">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_21}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="327" y="0" width="38" height="13" uuid="3bb57cb9-10a8-4178-b0ed-3905e8994aee"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_22}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="365" y="0" width="38" height="13" uuid="40946793-1a14-40ef-b51c-8d97ca2a0499"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_23}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="403" y="0" width="38" height="13" uuid="dc22e99e-3072-4005-90c9-a260c8fe7581"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_24}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="441" y="0" width="38" height="13" uuid="f2fb7956-394a-4f20-bb7a-3db011ff6f3b"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_25}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="479" y="0" width="38" height="13" uuid="419253eb-84e5-41cc-a3bd-bc30ceca3ab7"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_26}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="517" y="0" width="38" height="13" uuid="3eff87dd-9944-4ba8-bd03-9bda52902b54"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_27}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="555" y="0" width="38" height="13" uuid="e0e8a36c-78bf-4f9f-8b45-4f3f4735bd63"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_28}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="593" y="0" width="38" height="13" uuid="3bb57cb9-10a8-4178-b0ed-3905e8994aee">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_29}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="631" y="0" width="38" height="13" uuid="3bb57cb9-10a8-4178-b0ed-3905e8994aee">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_30}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="669" y="0" width="38" height="13" uuid="3bb57cb9-10a8-4178-b0ed-3905e8994aee">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAY_AMT_31}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBoxBold" x="12" y="0" width="87" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="787474b3-688c-4fd8-98b9-123f79ac0ace">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Sub-Totals:]]></text>
+			</staticText>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="707" y="0" width="38" height="13" backcolor="#CCCCCC" uuid="e8fea240-b02c-400e-af29-bc8588187619">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 31]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_WAGES2_SUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="745" y="0" width="38" height="13" backcolor="#CCCCCC" uuid="e8fea240-b02c-400e-af29-bc8588187619">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 31]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_WAGES_SUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="669" y="0" width="57" height="13" backcolor="#CCCCCC" uuid="e8fea240-b02c-400e-af29-bc8588187619">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 30]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_WAGES2_SUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" mode="Opaque" x="726" y="0" width="57" height="13" backcolor="#CCCCCC" uuid="e8fea240-b02c-400e-af29-bc8588187619">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$P{timesheetDayIdList}.size() == 30]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_WAGES_SUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="783" y="0" width="34" height="13" uuid="a60e54cf-1e35-43d4-9d41-c3189eb9f8c2"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PE_TAX_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="817" y="0" width="34" height="13" uuid="9e3d9362-9bd1-4779-81d9-d3948d6290a5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PE_NTAX_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="851" y="0" width="34" height="13" uuid="21e965ce-b2d7-4825-a9c5-1f717f46453f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PE_ADV_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00">
+				<reportElement style="tcDefBox7Bold" x="885" y="0" width="34" height="13" uuid="36efa896-ca6e-4783-a52f-d4fb7585b474">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PE_REIMB_AMT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

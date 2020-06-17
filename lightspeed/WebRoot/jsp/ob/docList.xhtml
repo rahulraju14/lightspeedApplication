@@ -1,0 +1,192 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Documents list: left side of "Documents & Packets" mini-tab (packets.xhtml);
+		and most of Prod Admin "Standard Documents" mini-tab (standardDoc.xhtml) -->
+
+	<div style="padding-top:5px;">
+
+		<div class="pad15lt rowCont">
+
+			<div class="pad12tp pad5lt" >
+				<h:outputText escape="false"
+					value="Documents in the list below may be distributed to new employees. Please contact &lt;/br&gt;
+						#{headerViewBean.domainTabTitle} support if you have your own documents that you wish added to this list. ">
+				</h:outputText>
+			</div>
+
+			<!-- legend for documents list -->
+			<div class="blueLegendContWrap pad20tp">
+				<div class="blueLegendCont" style="width:96%;">
+					<!-- Blue content -->
+					<span class="legendHdg">
+						<h:outputText value="Documents"/>
+					</span>
+
+					<!-- legend buttons -->
+					<h:panelGroup rendered="#{(not empty authBean.pgFields['10.5,update_master'])}">
+
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<!-- LS-4600 order dialog -->
+								<ace:linkButton value="Arrange Docs"
+									title="Specify order of documents in packets"
+									action="#{documentListBean.actionOpenChangeOrder}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Load XFDF"
+									title="Load Master XFDF"
+									action="#{documentListBean.actionLoadXFDF}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend pad5rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Delete"
+									action="#{documentListBean.actionDelete}"
+									title="Delete the checked document."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend pad5rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Edit Info"
+									action="#{documentListBean.actionEditInfo}"
+									title="Edit information for the checked document."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend pad5rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Upload"
+									action="#{documentListBean.actionUpload}"
+									title="Upload pdf documents into the system."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- legend buttons end -->
+
+					<h:panelGroup styleClass="btn_legend LH18">
+						<!-- No legend buttons, so do this to align the table below with the one on the left -->
+					</h:panelGroup>
+
+					<div>
+						<ace:dataTable id="doctable#{tag}"
+							value="#{documentListBean.foldersData}" var="doc"
+							singleSort="true"
+							rowIndexVar="idx"
+							scrollable="true"
+							scrollHeight="310"
+							styleClass="bk_sl_grid">
+
+							<ace:column styleClass="CT" style="width:10%;">
+								<div>
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{doc.checked}"
+											valueChangeListener="#{documentListBean.listenSingleCheck}"
+											styleClass="iceSelBoolChkbx">
+											<f:attribute name="selectedRow" value="#{doc}"></f:attribute>
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</ace:column>
+
+							<!-- The Icons -->
+							<ace:column  styleClass="CT" style="width:10%;">
+								<div>
+									<div class="FL">
+
+										<!-- the following only renders in DocumentChain rows
+										<ace:expansionToggler id="expTogg#{tag}"/> -->
+
+										<!-- the following only renders in Document rows -->
+										<h:panelGroup rendered="#{doc.document ne null}">
+											<h:graphicImage rendered="#{!doc.document.oldest}"
+												value="../../i/tree_line_middle_node.gif" alt=""/>
+											<h:graphicImage rendered="#{doc.document.oldest}"
+												value="../../i/tree_line_last_node.gif" alt=""/>
+										</h:panelGroup>
+
+									</div>
+
+							  		<!-- <h:graphicImage rendered="#{doc.folder ne null}"
+											value="../../i/tree_folder_close.gif" alt=""/> -->
+
+									<!-- <div class="pad3rt">
+										<h:outputText rendered="#{doc.documentChain ne null}">
+											<h:graphicImage value="../../i/icon_pdf_18.png" alt=""/>
+										</h:outputText>
+									</div> -->
+
+									<!-- For document chain icon -->
+									<h:commandLink action="#{documentListBean.actionPreviewDocument}"
+											rendered="#{doc.documentChain.type ne 'LS_FORM'}">
+										<h:panelGroup rendered="#{doc.documentChain ne null}">
+											<h:graphicImage	value="../../i/icon_pdf_18.png" alt=""/>
+										</h:panelGroup>
+										<f:setPropertyActionListener target="#{documentListBean.documentChainId}"
+											 value="#{doc.documentChain.id}" />
+									</h:commandLink>
+
+									<!-- for document chain -->
+									<h:commandLink action="payrollStart" rendered="#{doc.documentChain.type eq 'LS_FORM'}" >
+										<h:panelGroup rendered="#{doc.documentChain ne null}">
+											<h:graphicImage	value="../../i/icon_pdf_18.png" alt=""/>
+										</h:panelGroup>
+										<f:setPropertyActionListener value="com.lightspeedeps.documentChainId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{doc.documentChain.id}" target="#{jumpBean.value}"/>
+										<!-- clear contactId to prevent the last-viewed Start document from displaying -->
+										<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+									</h:commandLink>
+
+								</div>
+							</ace:column>
+
+							<!-- Name -->
+							<ace:column  headerText="Name" styleClass="CT" style="width:50%;"
+									sortBy="#{doc.documentChain.normalizedName}" >
+								<h:outputText rendered="#{doc.documentChain ne null}"
+											title="#{doc.documentChain.displayName}"
+							                value="#{doc.documentChain.normalizedName}"
+							                styleClass="FL pad20lt" style="text-align:left;">
+								</h:outputText>
+							</ace:column>
+
+							<!-- Modified -->
+							<ace:column  headerText="Modified" styleClass="CT"  style="width:30%;"
+									sortBy="#{doc.documentChain.revised}">
+								<h:outputText rendered="#{doc.documentChain ne null}"
+									value="#{doc.documentChain.revised}">
+								<f:convertDateTime pattern="M/d/yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</ace:column>
+
+						</ace:dataTable>
+					</div>
+					<!-- end of dataTable wrapper -->
+				</div>
+				<!-- end of blue content -->
+			</div>
+
+		</div>
+
+		<!-- </div> -->
+		<!-- end of blue wrapper -->
+	</div>
+
+</ui:composition>

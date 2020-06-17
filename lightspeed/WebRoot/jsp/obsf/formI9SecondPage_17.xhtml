@@ -1,0 +1,766 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL">
+		<!-- Second page - Header image -->
+		<h:graphicImage alt="" value="" style="width:823px; margin-left:-5px; margin-top:15px;"
+			url="../../i/forms/formI9SecondPageHeader_17_without_logo.png">
+		</h:graphicImage>
+
+		<!-- common disable setting for most Section 2 fields -->
+		<c:set var="disSec2" value="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"/>
+
+		<div class="rowCont sfFormBorder2 pad-2tp" style="min-height:50px; overflow:hidden; width:810px; ">
+			<!-- first block-->
+			<div class="FL" style="width:192px; margin-bottom:-5px">
+				<!-- Employee Info from Section 1 Start-->
+				<div class="rowCont pad2lt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad10tp" style="width:174px;">
+						<h:outputText escape="false" value="Employee Info from Section 1" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s2_employeeInfo-11"
+						styleClass="FL i9InfoIcon pad12tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Employee Info from Section 1 - Click for more information">
+					</h:commandButton>
+				</div>
+				<!-- Employee Info from Section 1 End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block Start-->
+			<div class="W22percnt pad6lt FL" style="margin-bottom:-5px">
+				<!-- Last Name Start -->
+				<!-- Last Name (Family Name) -->
+						<div class="rowCont" style="height:50px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad4tp"> <h:outputText escape="false" value="Last Name &lt;em&gt; (Family Name) &lt;/em&gt;" /> </span>
+							<!-- Help Icon/Button -->
+							<h:commandButton value="" id="s2_lastName-11" tabindex="-1"
+								styleClass="FL i9InfoIcon pad2lt pad6tp"
+								actionListener="#{formI9Bean.listenShowHelp}"
+								title="Last Name (Family Name) - Click for more information">
+							</h:commandButton>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry style="width:93%;" maxlength="35"
+										disabled="true" id="SEC2_LAST_NAME_17"
+										value="#{formI9Bean.form.sec2LastName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}" />
+								</span>
+							</h:panelGroup>
+						</div>
+				<!--Last Name End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- third block-->
+			<div class="FL pad5lt W20percnt" style="margin-bottom:-5px">
+				<!-- First Name (Given Name) -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_wa pad4tp"> <h:outputText escape="false" value="First Name &lt;em&gt; (Given Name) &lt;/em&gt;" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s2_firstName-11"
+						styleClass="FL i9InfoIcon pad2lt pad6tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="First Name (Given Name) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry style="width:92%;" maxlength="35"
+								disabled="true" id="SEC2_FIRST_NAME_17"
+								value="#{formI9Bean.form.sec2FirstName}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- First Name End -->
+			</div>
+			<!-- third block End-->
+
+			<!-- Fourth block Start-->
+			<div class="FL pad5lt" style="width:6%; margin-bottom:-5px">
+				<!-- M.I. Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w pad5lt pad4tp" style="width:24px;"> <h:outputText value="M.I." /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s2_middleInitial-11"
+						styleClass="FL i9InfoIcon pad6tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Middle Initial - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry style="width:74%;" maxlength="35"
+								disabled="true" id="SEC2_MIDDLE_INITIAL_17"
+								value="#{formI9Bean.form.sec2MiddleInitial}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- M.I. End -->
+			</div>
+			<!-- Fourth block End-->
+
+			<!-- Fifth block Start-->
+			<div class="W26percnt FL" style="margin-bottom:-5px">
+				<!-- Citizenship/Immigration Status Start -->
+				<div class="rowCont pad6lt" style="height:50px;">
+					<span class="fdNm_wa pad4tp"> <h:outputText value="Citizenship/Immigration Status" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s2_citizenshipStatus-11"
+						styleClass="FL i9InfoIcon pad5lt pad6tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Citizenship/Immigration Status - Click for more information">
+					</h:commandButton>
+					<h:panelGroup styleClass="FL W100percnt">
+						<!-- Fed I9 only shows number; we show number and drop-down text -->
+						<h:outputText styleClass="FL pad10lt pad3tp W20" value="#{formI9Bean.form.sec2CitizenshipStatusNumber}"/>
+						<span class="FL fd_sm W80percnt">
+							<!-- id="SEC2_CITIZENSHIP_STATUS_17" -->
+							<h:selectOneMenu id="CITIZEN_STATUS"
+								styleClass="FL pad3lt"
+								value="#{formI9Bean.form.sec2CitizenshipStatus}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="true">
+								<f:selectItems value="#{formI9Bean.citizenshipTypeList}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Citizenship/Immigration Status End -->
+			</div>
+			<!-- Fifth block End-->
+
+			<!-- Help Text's Row 11 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '11'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont">
+			<span class="fdNm_w2 txt14" style="width:260px;">
+				<h:outputText value="List A" style="margin-left:110px" />
+			 </span>
+			 <span class="fdNm_w2 txt14" style="width:20px;">
+				<h:outputText value="OR" style="margin-left:2px"/>
+			 </span>
+			 <span class="fdNm_w2  txt14" style="width:230px;">
+				<h:outputText value="List B" style="margin-left:100px"/>
+			 </span>
+			  <span class="fdNm_w2 txt14" style="width:30px;">
+				<h:outputText value="AND" style="margin-left:15px"/>
+			 </span>
+			 <span class="fdNm_w2 txt14" style="width:200px;">
+				<h:outputText value="List C" style="margin-left:125px"/>
+			 </span>
+		</div>
+		<div class="rowCont pad-3tp">
+			<span class="fdNm_w2 txt13" style="width:300px;">
+				<h:outputText value="Identity and Employment Authorization" style="margin-left:10px" />
+			 </span>
+			 <span class="fdNm_w2  txt13" style="width:230px;">
+				<h:outputText value="Identity" style="margin-left:77px"/>
+			 </span>
+			 <span class="fdNm_w2 txt13" style="width:280px;">
+				<h:outputText value="Employment Authorization" style="margin-left:71px"/>
+			 </span>
+		</div>
+
+		<!-- Main div for two partition -->
+		<div class="rowCont sfFormBorder1" style="min-height:620px; overflow:hidden; width:810px; margin-top:4px;">
+
+			<!-- First block List A Start-->
+			<div class="W33percnt FL ">
+				<!-- List-A1 Start -->
+				<!-- A1-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:90px;">
+						<h:outputText value="Document Title" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a1DocTitle-12" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Title 1 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+							style="width:93%;" disabled="#{disSec2 or formI9Bean.disableListA}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							value="#{formI9Bean.form.a1DocTitle}" id="A1_DOC_TITLE_17">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Document Title field-1 End -->
+
+				<!-- A1-Issuing Authority field Start-->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:100px;">
+						<h:outputText value="Issuing Authority" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a1IssuingAuth-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Issuing Authority 1 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A1_ISSUING_AUTH_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA1DocTitle}"
+								value="#{formI9Bean.form.a1IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Issuing Authority field End -->
+
+				<!-- A1-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:112px;">
+						<h:outputText value="Document Number" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a1DocNumber-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Number 1 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A1_DOC_NUMBER_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA1DocTitle}"
+								value="#{formI9Bean.form.a1DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Document Number field End -->
+
+				<!-- A1-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w" style="width:212px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy)" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a1DocExpiration-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Expiration Date 1 (List A) - Click for more information">
+					</h:commandButton>
+					<ace:dateTimeEntry id="A1_DOC_EXPIRATION_17" tabindex="0" styleClass="fd_sm3"
+						style="min-width:80%; #{(disSec2 and empty formI9Bean.form.a1DocExpiration) ? 'display:none' : ''}"
+						disabled="#{disSec2 or formI9Bean.form.emptyA1DocTitle}"
+						value="#{formI9Bean.form.a1DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+					</ace:dateTimeEntry>
+					<h:panelGroup rendered="#{disSec2 and empty formI9Bean.form.a1DocExpiration}">
+						<span class="fd_sm2 pad1lt">
+							<ace:textEntry style="width:90%;" maxlength="35"
+								disabled="#{true}" value="N/A"/>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Expiration Date field End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-3px;margin-top:-2px;" />
+				</div>
+				<!-- List-A1 End -->
+
+				<!--List-A2 Start -->
+				<!-- A2-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:90px;">
+						<h:outputText value="Document Title" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a2DocTitle-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Title 2 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+							style="width:93%;" disabled="#{disSec2 or formI9Bean.disableListA}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							value="#{formI9Bean.form.a2DocTitle}" id="A2_DOC_TITLE_17">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Document Title field End -->
+
+				<!-- A2-Issuing Authority field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:100px;">
+						<h:outputText value="Issuing Authority" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a2IssuingAuth-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Issuing Authority 2 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A2_ISSUING_AUTH_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA2DocTitle}"
+								value="#{formI9Bean.form.a2IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Issuing Authority field End -->
+
+				<!-- A2-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:112px;">
+						<h:outputText value="Document Number" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a2DocNumber-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Number 2 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A2_DOC_NUMBER_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA2DocTitle}"
+								value="#{formI9Bean.form.a2DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Document Number field End -->
+
+				<!-- A2-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w" style="width:212px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy)" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a2DocExpiration-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Expiration Date 2 (List A) - Click for more information">
+					</h:commandButton>
+					<ace:dateTimeEntry id="A2_DOC_EXPIRATION_17"
+						styleClass="fd_sm3" tabindex="0"
+						disabled="#{disSec2 or formI9Bean.form.emptyA2DocTitle}"
+						value="#{formI9Bean.form.a2DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true"
+						style="#{(disSec2 and empty formI9Bean.form.a2DocExpiration) ? 'display:none' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+					</ace:dateTimeEntry>
+					<h:panelGroup rendered="#{disSec2 and empty formI9Bean.form.a2DocExpiration}">
+						<span class="fd_sm2 pad1lt">
+							<ace:textEntry style="width:90%;" maxlength="35"
+								disabled="#{true}" value="N/A" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Expiration Date field End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-3px;margin-top:-2px;" />
+				</div>
+				<!-- List-A2 End -->
+
+				<!-- List-A3 Start -->
+				<!-- A3-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:90px;">
+						<h:outputText value="Document Title" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a3DocTitle-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Title 3 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+								style="width:93%;" disabled="#{disSec2 or formI9Bean.disableListA}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								value="#{formI9Bean.form.a3DocTitle}" id="A3_DOC_TITLE_17">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Document Title field End -->
+
+				<!-- A3-Issuing Authority field Start 1-->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:100px;">
+						<h:outputText value="Issuing Authority" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a3IssuingAuth-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Issuing Authority 3 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A3_ISSUING_AUTH_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA3DocTitle}"
+								value="#{formI9Bean.form.a3IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Issuing Authority field End -->
+
+				<!-- A3-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm pad8lt" style="width:112px;">
+						<h:outputText value="Document Number" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a3DocNumber-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Document Number 3 (List A) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A3_DOC_NUMBER_17" maxlength="35"
+								disabled="#{disSec2 or formI9Bean.form.emptyA3DocTitle}"
+								value="#{formI9Bean.form.a3DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Document Number field End -->
+
+				<!-- A3-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w" style="width:212px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy)" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="a3DocExpiration-12"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Expiration Date 3 (List A) - Click for more information">
+					</h:commandButton>
+					<ace:dateTimeEntry id="A3_DOC_EXPIRATION_17"
+						styleClass="fd_sm3" tabindex="0"
+						disabled="#{disSec2 or formI9Bean.form.emptyA3DocTitle}"
+						value="#{formI9Bean.form.a3DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true"
+						style="#{(disSec2 and empty formI9Bean.form.a3DocExpiration) ? 'display:none' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+					</ace:dateTimeEntry>
+					<h:panelGroup rendered="#{disSec2 and empty formI9Bean.form.a3DocExpiration}">
+						<span class="fd_sm2 pad1lt">
+							<ace:textEntry style="width:90%;" maxlength="35"
+								disabled="#{true}" value="N/A" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Expiration Date field End -->
+				<!-- List A-3 End -->
+			</div>
+			<!-- first block List A End-->
+
+			<!-- Second Grey-line block Start -->
+			<div class="FL sfFormBorder1 pad-1tp BKgrey"
+				style="width:1%; height:628px;"></div>
+			<!-- Second Grey-line block End-->
+
+			<!-- Third block Start-->
+			<div class="W65percnt FL">
+
+				<!-- List B Start -->
+				<div class="W50percnt FL ">
+					<!--Document Title field-List B Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:90px;">
+							<h:outputText value="Document Title" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="bDocTitle-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Title (List B) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad8lt"
+									style="width:93%;" disabled="#{disSec2 or not formI9Bean.form.emptyA1DocTitle}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.BDocTitle}" id="B_DOC_TITLE_17">
+								<f:selectItems value="#{formI9Bean.i9DocListB}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Document Title field-List B  End -->
+
+					<!--Issuing Authority field-List B Start-->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:100px;">
+							<h:outputText value="Issuing Authority" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="bIssuingAuth-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Issuing Authority (List B) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="B_ISSUING_AUTH_17" maxlength="35"
+									disabled="#{disSec2 or formI9Bean.form.emptyBDocTitle}"
+									value="#{formI9Bean.form.BIssuingAuth}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Issuing Authority field-List B End -->
+
+					<!--Document Number field-List B Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:112px;">
+							<h:outputText value="Document Number" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="bDocNumber-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Number (List B) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="B_DOC_NUMBER_17" maxlength="35"
+									disabled="#{disSec2 or formI9Bean.form.emptyBDocTitle}"
+									value="#{formI9Bean.form.BDocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Document Number field-List B End -->
+
+					<!--Expiration Date field-List B Start -->
+					<div class="rowCont pad8lt" style="height:50px;">
+						<span class="fdNm_w" style="width:212px;">
+							<h:outputText value="Expiration Date (if any)(mm/dd/yyyy)" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="bDocExpiration-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Expiration Date (List B) - Click for more information">
+						</h:commandButton>
+						<ace:dateTimeEntry id="B_DOC_EXPIRATION_17"
+							styleClass="fd_sm3" tabindex="0"
+							disabled="#{disSec2 or formI9Bean.form.emptyBDocTitle}"
+							value="#{formI9Bean.form.BDocExpiration}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true"
+							style="#{(disSec2 and empty formI9Bean.form.BDocExpiration) ? 'display:none' : ''}">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+						</ace:dateTimeEntry>
+						<h:panelGroup rendered="#{disSec2 and empty formI9Bean.form.BDocExpiration}">
+							<span class="fd_sm2 pad1lt">
+								<ace:textEntry style="width:90%;" maxlength="35"
+									disabled="#{true}" value="N/A" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Expiration Date field-List B End -->
+				</div>
+				<!-- List B End -->
+
+				<!-- List C Start -->
+				<div class="W50percnt FL ">
+
+					<!--Document Title field-List C Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:90px;">
+							<h:outputText value="Document Title" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="cDocTitle-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Title (List C) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad8lt"
+									style="width:93%;" disabled="#{disSec2 or not formI9Bean.form.emptyA1DocTitle}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.CDocTitle}" id="C_DOC_TITLE_17">
+								<f:selectItems value="#{formI9Bean.i9DocListC}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Document Title field-List C End -->
+
+					<!--Issuing Authority field-List C Start-->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:100px;">
+							<h:outputText value="Issuing Authority" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="cIssuingAuth-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Issuing Authority (List C) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="C_ISSUING_AUTH_17" maxlength="35"
+									disabled="#{disSec2 or formI9Bean.form.emptyCDocTitle}"
+									value="#{formI9Bean.form.CIssuingAuth}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Issuing Authority field-List C End -->
+
+					<!--Document Number field-List C Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:112px;">
+							<h:outputText value="Document Number" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="cDocNumber-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Number (List C) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="C_DOC_NUMBER_17" maxlength="35"
+									disabled="#{disSec2 or formI9Bean.form.emptyCDocTitle}"
+									value="#{formI9Bean.form.CDocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Document Number field-List C End -->
+
+					<!--Expiration Date field-List C Start -->
+					<div class="rowCont pad8lt" style="height:50px;">
+						<span class="fdNm_w" style="width:212px;">
+							<h:outputText value="Expiration Date (if any)(mm/dd/yyyy)" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="cDocExpiration-12"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Expiration Date (List C) - Click for more information">
+						</h:commandButton>
+						<ace:dateTimeEntry id="C_DOC_EXPIRATION_17"
+							styleClass="fd_sm3" tabindex="0"
+							disabled="#{disSec2 or formI9Bean.form.emptyCDocTitle}"
+							value="#{formI9Bean.form.CDocExpiration}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true"
+							style="#{(disSec2 and empty formI9Bean.form.CDocExpiration) ? 'display:none' : ''}">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+						</ace:dateTimeEntry>
+						<h:panelGroup rendered="#{disSec2 and empty formI9Bean.form.CDocExpiration}">
+							<span class="fd_sm2 pad1lt">
+								<ace:textEntry style="width:90%;" maxlength="35"
+									disabled="#{true}" value="N/A" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Expiration Date field-List C End -->
+				</div>
+				<!--  List C End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-6px;margin-top:-2px;" />
+				</div>
+
+				<div class="rowCont" style="z-index:1;">
+					<!-- Text editor for Additional Information -->
+				    <h:panelGroup styleClass="FL pad8lt pad20tp" style="width:60%">
+				    	<h:outputText styleClass="FL pad10lt" value="Additional Information" />
+						<h:commandButton value="" id="addtlInformation-12"
+							styleClass="FL i9InfoIcon pad5lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Additional Information - Click for more information">
+						</h:commandButton>
+						<h:panelGroup styleClass="xfdfTxtCont" >
+							<ace:textAreaEntry disabled="#{disSec2}"
+								styleClass="stdTxt W98percnt"
+								style="height:100%; resize:none;"
+								language="en" saveOnSubmit="true" height="100%"
+								id="ADDITIONAL_INFORMATION_17"
+								value="#{formI9Bean.form.additionalInformation}"/>
+						</h:panelGroup>
+					</h:panelGroup>
+				    <!-- QR Code Box -->
+					<div class="FL sfFormBorder1 pad40tp" style="height:180px; width:197px;">
+						<h:outputText escape="false" styleClass="rowCont pad5tp pad40lt txt11" value="QR Code - Sections 2 &amp; 3" />
+						<h:outputText styleClass="rowCont pad3tp pad30lt txt11" value="Do Not Write In This Space" />
+					</div>
+				</div>
+
+				<!-- Help Text's Row 12 -->
+				<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '12'}">
+					<div class="i9HelpTextBox pad-1lt" style="width:523px;position: relative; z-index:2; margin-top:-75%">
+						<h:commandButton value="" styleClass="closeHelpText"
+							action="#{formI9Bean.actionCloseHelp}" />
+						<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+					</div>
+				</h:panelGroup>
+			</div>
+			<!-- Third block End -->
+
+		</div>
+		<!-- Main div for two partition End-->
+
+	</div>
+
+	<!-- formI9 Certification Page-->
+	<ui:include src="formI9Certification_17.xhtml"></ui:include>
+
+	<div class="FL">
+		<h:graphicImage value="" style="width:820px; margin-left:-5px;"
+			rendered="#{formI9Bean.i9Version eq 2}" alt=""
+			url="../../i/forms/formI9SecondPageFooter_17.png">
+		</h:graphicImage>
+		<h:graphicImage value="" style="width:820px; margin-left:-5px;"
+			rendered="#{formI9Bean.i9Version eq 3}" alt=""
+			url="../../i/forms/formI9SecondPageFooter_1707.png">
+		</h:graphicImage>
+	</div>
+
+</ui:composition>

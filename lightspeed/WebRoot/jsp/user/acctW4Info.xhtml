@@ -1,0 +1,256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+
+	<!-- My Account page: W-4 information section -->
+
+	<div class="rowCont pad15tp pad15lt">
+		<h:outputText styleClass="FL B txt13 W80percnt"
+			value="W-4 INFORMATION:" />
+	</div>
+
+	<div class="FL rowCont">
+		<div class="FL pad40lt pad15tp rowCont" style="width: 48%;">
+			<!-- EXEMPT -->
+			<div class="FL" style="width: 100%;">
+				<div class="rowCont fdNm_w2">
+					<h:outputText value="Exemption from Withholding:" />
+				</div>
+				<span class="FL pad20lt pad5tp"> <h:outputText>
+				I claim exemption from withholding and I certify that I meet both of the following conditions for exemption: Last year I had no federal income tax liability and I expect to have no federal income tax liability this year.
+<br />You had no federal income tax liability last year if (1) The total tax on line 16 of your Form 1040 or 1040-SR from last year is zero (or less than the sum of lines 18a, 18b and 18c, or (2) you were not required to file a return because your income was below the filing threshold for your correct filing status. If you claim exemption, you will have no income tax withheld from your paycheck and may owe taxes and penalties when you file your tax return.<br />
+					</h:outputText>
+				</span> 
+				<span class="FL pad20lt pad10tp W100percnt"> <h:outputText
+						escape="false"
+						value="If you meet both conditions, select &quot;Exempt&quot; here:" />
+					<h:selectOneMenu styleClass="W80percnt pad8lt"
+						style="width:100px;" id="w4Exempt"
+						disabled="#{not userViewBean.editMode}"
+						value="#{userViewBean.user.w4Exempt}">
+						<f:selectItems value="#{formW4Bean.exemptList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</span> <span class="FL pad20lt pad15tp W100percnt RED"> <h:outputText>
+					 If you select “Exempt,” you are not required to fill out the information in the remainder of this section
+					</h:outputText>
+				</span>
+			</div>
+			<!-- MARITAL STATUS -->
+			<div class="rowCont FL W100percnt pad18tp" style="width:;">
+				<span class="fdNm_w" style="width: 85px;"><h:outputText
+						value="Marital Status:" /></span>
+				<div class="FL" style="width: 72%;">
+					<h:selectOneRadio id="maritalStatus"
+						styleClass="h_radio radioTxtLbl fd_sm "
+						disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+						value="#{userViewBean.user.w4Marital}" layout="pageDirection">
+						<f:selectItem itemValue="s"
+							itemLabel="Single or Married filing separately" />
+						<f:selectItem itemValue="a"
+							itemLabel="Married filing jointly (or qualifying widow(er))" />
+						<f:selectItem itemValue="h" itemLabel="Head of household" />
+						<ace:ajax />
+					</h:selectOneRadio>
+				</div>
+			</div>
+		</div>
+		<div class="FL" style="width: 48%;">
+			<!-- MULTIPLE JOBS -->
+			<div class="FL pad200lt pad20tp" style="width: 50%;">
+				<div class="rowCont fdNm_w2">
+					<h:outputText value="Multiple Jobs:" />
+				</div>
+				<div class="FL rowCont" style="height: 20px;">
+					<h:selectBooleanCheckbox styleClass="ckbx" id="w4MultipleJobs"
+						value="#{userViewBean.user.multipleJobs}"
+						disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}">
+						<ace:ajax />
+					</h:selectBooleanCheckbox>
+					<h:outputText
+						value="Select if you are single and hold two jobs or married filing jointly and there are only two jobs total"></h:outputText>
+				</div>
+			</div>
+			<!-- CLAIM DEPENDENTS -->
+			<div class="rowCont fdNm_w2"
+				style="margin-left: 199px; margin-top: 26px;">
+				<h:outputText value="Claim Dependents:" />
+			</div>
+			<span class="FL pad20lt pad5tp" style="margin-left: 203px;">
+				<h:outputText
+					value="If income is $200,000 or less ($400,000 or less if married filing jointly):" /><br />
+				<br />
+				<div style="margin-top: -10px;" class="rowCont">
+					<ace:textEntry
+						disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+						maxlength="15" style="width: 90px;height:13px;margin-top: -5px;"
+						value="#{userViewBean.user.childDependencyAmt}">
+						<f:convertNumber pattern="###0" />
+						<ace:ajax />
+					</ace:textEntry>
+					<h:outputText
+						value="Multiply the # of children under age 17 by $2000: &#160;&#160;$"
+						class="FL" style="margin-left: 20px;" />
+				</div>
+
+				<div style="margin-top: 7px;" class="rowCont">
+					<ace:textEntry
+						disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+						style="width: 90px;height:13px;margin-top: -4px;" maxlength="15"
+						value="#{userViewBean.user.otherDependencyAmt}">
+						<f:convertNumber pattern="###0" />
+						<ace:ajax />
+					</ace:textEntry>
+					<h:outputText
+						value="Multiply the # of other dependents by $500:  &#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160; &#160;$ "
+						class="FL" style="margin-left: 20px;" />
+				</div>
+			</span>
+			<!-- OTHER ADJUSTMENTS -->
+			<div class="rowCont fdNm_w2" style="margin-left: 199px;">
+				<h:outputText value="Other Adjustments:" />
+			</div>
+			<span class="FL" style="margin-left: 203px;">
+				<div style="margin-top: 3px;" class="rowCont">
+					<div
+						style="margin-left: 210px; margin-top: 6px; margin-bottom: -18px;">
+						$
+						<ace:textEntry
+							disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+							style="width: 90px;height:13px;margin-top: -5px;margin-left: 2px;"
+							maxlength="15" value="#{userViewBean.user.otherIncomeAmt}">
+							<f:convertNumber pattern="###0" />
+							<ace:ajax />
+						</ace:textEntry>
+					</div>
+					<h:outputText value="Other income (not from jobs):" class="FL"
+						style="margin-left: 20px;" />
+				</div> <br />
+
+				<div style="margin-top: 3px;" class="rowCont">
+					<div style="margin-left: 210px; margin-top: 2px;">
+						$
+						<ace:textEntry
+							disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+							style="width: 90px;height:13px;margin-top: 2px;" maxlength="15"
+							value="#{userViewBean.user.deductionsAmt}">
+							<f:convertNumber pattern="###0" />
+							<ace:ajax />
+						</ace:textEntry>
+					</div>
+					<h:outputText value="Deductions: " class="FL"
+						style="margin-left: 20px;margin-top: -19px;" />
+				</div> <br />
+
+				<div style="margin-top: 8px; margin-left: 20px;" class="rowCont">
+					<ace:textEntry
+						disabled="#{! userViewBean.editMode or userViewBean.user.w4Exempt}"
+						style="width: 90px;height:13px;margin-top: -5px;" maxlength="15"
+						value="#{userViewBean.user.extraWithholdingAmt}">
+						<f:convertNumber pattern="###0" />
+						<ace:ajax />
+					</ace:textEntry>
+					<h:outputText value="Extra Withholding (per pay period): $ &#160;"
+						class="FL" />
+					&#160;
+				</div>
+			</span>
+		</div>
+<!--		
+		<c:if test="#{!isEnhancedW4Info}">
+			<div class="FL pad40lt pad15tp rowCont" style="width: 35%;">
+				<div class="rowCont FL W100percnt" style="width:;">
+					<span class="fdNm_w" style="width: 85px;"><h:outputText
+							value="Marital Status:" /></span>
+					<div class="FL" style="width: 72%;">
+						<h:selectOneRadio id="maritalStatus"
+							styleClass="h_radio radioTxtLbl fd_sm "
+							disabled="#{! userViewBean.editMode}"
+							value="#{userViewBean.user.w4Marital}" layout="pageDirection">
+							<f:selectItem itemValue="s" itemLabel="Single" />
+							<f:selectItem itemValue="m" itemLabel="Married" />
+							<f:selectItem itemValue="w"
+								itemLabel="Married, but withhold at higher Single rate." />
+						</h:selectOneRadio>
+					</div>
+				</div>
+
+				<div class="rowCont FL" style="width: 333px;">
+					<span class="fdNm_w2 pad30tp"><h:outputText
+							value="Additional Withholding:" /></span>
+					<div style="margin-top: 60px;">
+						<h:outputText styleClass="pad15lt" escape="false"
+							value="Additional amount, if any, you want &lt;/br&gt; &#160;&#160;&#160; withheld from each paycheck:" />
+						<ace:textEntry styleClass="fd_sm2 pad5lt"
+							style="min-width:80px;width:80px;" maxlength="25"
+							value="#{userViewBean.user.w4AddtlAmount}"
+							disabled="#{! userViewBean.editMode}" id="w4AddlWithHoldings">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</ace:textEntry>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="FL" style="width: 60%;">
+
+				<div class="FL pad10tp" style="width: 33%;">
+					<div class="rowCont fdNm_w2">
+						<h:outputText value="Social Security Card:" />
+					</div>
+					<div class="FL rowCont" style="height: 20px;">
+						<h:selectBooleanCheckbox styleClass="ckbx" id="w4DoesNameDiffer"
+							value="#{userViewBean.user.w4NameDiffers}"
+							disabled="#{! userViewBean.editMode}" />
+						<h:outputText value="My last name differs from that"></h:outputText>
+					</div>
+					<span class="pad5lt"><h:outputText
+							value="shown on my social security card." /></span>
+				</div>
+
+				<div class="FL pad60lt pad10tp" style="width: 55%;">
+					<div class="rowCont fdNm_w2">
+						<h:outputText value="Allowances:" />
+					</div>
+					<span class="FL pad20lt"> <h:outputText
+							value="Total number of allowances you are claiming:"></h:outputText>
+					</span>
+					<ace:textEntry styleClass="fd_sm2 pad5lt pad-3tp"
+						style="min-width:40px;width:40px;" maxlength="2"
+						value="#{userViewBean.user.w4Allowances}" id="w4TotalAllowances"
+						disabled="#{! userViewBean.editMode}" />
+				</div>
+			</div>
+
+			<div class="FL pad35tp" style="width: 60%;">
+				<div class="rowCont fdNm_w2">
+					<h:outputText value="Exemption from Withholding:" />
+				</div>
+				<span class="FL pad20lt pad5tp"> <h:outputText>
+				I claim exemption from withholding and I certify that I meet <strong>both</strong> of the following
+					conditions for exemption:
+				<br />&#149; Last year I had a right to a refund of <strong>all</strong>
+					federal income tax withheld because I had <strong>no</strong> tax liability,
+					<strong>and</strong>
+						<br />&#149; This year I expect a refund of all
+					federal income tax withheld because I expect to have no tax liability.
+			</h:outputText>
+				</span> <span class="FL pad20lt pad8tp W100percnt"> <h:outputText
+						escape="false"
+						value="If you meet both conditions, select &quot;Exempt&quot; here:" />
+					<h:selectOneMenu styleClass="W80percnt pad8lt" style="width:100px;"
+						id="w4Exempt" disabled="#{not userViewBean.editMode}"
+						value="#{userViewBean.user.w4Exempt}">
+						<f:selectItems value="#{formW4Bean.exemptList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</span>
+			</div>
+		</c:if>
+-->		
+	</div>
+</ui:composition>

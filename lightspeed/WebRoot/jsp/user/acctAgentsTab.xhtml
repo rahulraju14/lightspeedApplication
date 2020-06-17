@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- My Account page: Agency section; included by account.xhtml -->
+	<!-- Parameters:
+			showTab: true if the tab should be displayed.
+	 -->
+	<c:set var="bean" value="#{userViewBean}" />
+
+	<ace:tabPane label="#{showTab ? 'Agents' : ''}" disabled="#{not showTab}">
+		<div class="rowCont pad10lt pad-10tp">
+			<div class="W100percnt">
+				<!-- Row 1 -->
+				<div class="rowCont FL pad25tp">
+					<div class="W20percnt FL">
+						<span class="FL pad2tp B"> <h:outputText value="First Name:" /> </span>
+						<div class="FL pad5lt">
+							<ace:textEntry maxlength="30" tabIndex="0" rendered="#{bean.editMode}" id="agentFirstName"
+								value="#{bean.selectedAgent.firstName}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.firstName}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W20percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Last Name:" /> </span>
+						<div class="FL pad3lt">
+							<ace:textEntry maxlength="30" tabIndex="1" rendered="#{bean.editMode}" id="agentLastName"
+								value="#{bean.selectedAgent.lastName}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.lastName}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W22percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Email Address:" /> </span>
+						<div class="FL pad3lt">
+							<ace:textEntry maxlength="100" tabIndex="2" rendered="#{bean.editMode}" id="agentEmail"
+								value="#{bean.selectedAgent.emailAddress}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.emailAddress}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W15percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Phone:" /> </span>
+						<div class="FL pad3lt">
+							<ace:textEntry maxlength="25" tabIndex="3" rendered="#{bean.editMode}" id="agentPhone"
+								value="#{bean.selectedAgent.officePhone}" styleClass="W90"/>
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.officePhone}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W23percnt FL">
+						<span class="FL pad2tp B"> <h:outputText value="Agency Name:" /> </span>
+						<div class="FL pad5lt">
+							<ace:textEntry maxlength="50" tabIndex="4" rendered="#{bean.editMode}" id="agencyName"
+								value="#{bean.selectedAgent.agencyName}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyName}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+				</div>
+				<!-- Row 2 -->
+				<div class="rowCont FL pad20tp">
+					<div class="W25percnt FL">
+						<span class="FL pad2tp B"> <h:outputText value="Address:" /> </span>
+						<div class="FL pad3lt">
+							<ace:textEntry maxlength="100" tabIndex="5" rendered="#{bean.editMode}" id="agencyAddress1"
+								value="#{bean.selectedAgent.agencyAddress.addrLine1}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.addrLine1}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+						<div class="FL pad3lt">
+							<ace:textEntry maxlength="100" tabIndex="6" rendered="#{bean.editMode}" id="agencyAddress2"
+								value="#{bean.selectedAgent.agencyAddress.addrLine2}" styleClass="W75"/>
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.addrLine2}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W17percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="City:" /> </span>
+						<div class="FL pad2lt">
+							<ace:textEntry maxlength="50" tabIndex="7" rendered="#{bean.editMode}" id="agencyCity"
+								value="#{bean.selectedAgent.agencyAddress.city}" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.city}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W12percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Province/State:" /> </span>
+						<div class="FL pad3lt">
+							<h:selectOneMenu id="agencyState" styleClass="FL" style="width:45px;"
+								tabIndex="8" value="#{bean.selectedAgent.agencyAddress.state}"
+								rendered="#{bean.editMode}">
+								<f:selectItems value="#{userViewBean.agencyStateProvinceList}" />
+							</h:selectOneMenu>
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.state}" styleClass="pad3tp" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+					<div class="W17percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Postal Code/Zip:" /> </span>
+						<div class="FL pad2lt">
+							<ace:textEntry maxlength="10" tabIndex="9" rendered="#{bean.editMode}" id="agencyZip"
+								value="#{bean.selectedAgent.agencyAddress.zip}" styleClass="W80" />
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.zip}" rendered="#{not bean.editMode}"/> 
+							</span>
+						</div>	
+					</div>
+					<div class="W20percnt FL">
+						<span class="FL pad2tp pad10lt B"> <h:outputText value="Country:" /> </span>
+						<div class="FL pad3lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu id ="agencyCountryId" rendered="#{userViewBean.editMode}"
+									value="#{bean.selectedAgent.agencyAddress.country}" styleClass="country"
+									style="width:150px;" valueChangeListener="#{userViewBean.listenCountryChange}">
+									<f:selectItems value="#{applicationScopeBean.countryDL}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</icecore:setEventPhase>							
+							<span class="FL pad3tp">
+								<h:outputText value="#{bean.selectedAgent.agencyAddress.country}" rendered="#{not bean.editMode}"/>
+							</span>
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div class="rowCont"></div>
+
+			<!-- Agents table -->
+			<div class="rowCont pad25tp FL">
+				<div class="W99percnt">
+					<div class="blueLegendContWrap MA">
+						<div class="blueLegendCont FL" style="margin-top:12px;"><!-- Blue content -->
+							<div class="legendHdg">Agents</div>
+							<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+								<h:panelGroup styleClass="btn_legend" rendered="#{not bean.editMode}">
+									<span class="btnMiniLtHot" />
+										<h:commandLink value="Add Agent" id="addAgentBttn" styleClass="btnMiniCt" action="#{bean.actionAddAgent}"/>
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+							</div>					
+							<ace:dataTable id="agentsTable"  
+								value="#{bean.user.agentsList}" var="agent"
+								style="width:100%;max-width:100%;" 
+								rowSelectListener="#{bean.listenAgentRowClicked}"
+								selectionMode="single"
+								stateMap="#{bean.stateMap}"
+								styleClass="gradTbl2 txt11 CT">
+								
+								<!-- Delete button -->
+								<ace:column styleClass="W2percnt CT">
+									<h:commandButton id="deleteAgent"
+										value="" title="Delete this Agent"
+										image="../../i/icon_deleteX.gif"
+										actionListener="#{bean.actionDeleteAgent}"
+										rendered="#{not bean.editMode}">
+									</h:commandButton>							
+								</ace:column>
+								<ace:column styleClass="W2percnt CT">
+									<h:graphicImage value="" url="../../i/icon_check.gif" id="selectedAgentCheck"
+										style="border:none;" alt="" title="Selected Agent" rendered="#{agent.selected}" />					
+								</ace:column>
+								<!-- First Name -->
+								<ace:column styleClass="W14percnt" headerText="First Name" sortBy="#{agent.firstName}">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.firstName}" />
+									</span>
+								</ace:column>
+								<!-- Last Name -->
+								<ace:column styleClass="W14percnt" headerText="Last Name" sortBy="#{agent.lastName}">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.lastName}" />
+									</span>
+								</ace:column>
+								<!-- Phone -->
+								<ace:column styleClass="W10percnt" headerText="Phone">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.officePhone}" />
+									</span>
+								</ace:column>
+								<!-- Email Address -->
+								<ace:column styleClass="W20percnt" headerText="Email Address">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.emailAddress}" />
+									</span>
+								</ace:column>
+								<!-- Agency Name -->
+								<ace:column styleClass="W15percnt" headerText="Agency Name" sortBy="#{agent.agencyName}">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.agencyName}" />
+									</span>
+								</ace:column>
+								<!-- Address -->
+								<ace:column styleClass="W23percnt" headerText="Address">
+									<span class="pad3lt">
+										<h:outputText value="#{agent.agencyAddress.completeAddressCountry}" />
+									</span>
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ace:tabPane>
+</ui:composition>

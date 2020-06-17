@@ -1,0 +1,326 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- CONNECTION minitab of the Admin / Payroll Services page -->
+
+	<ace:tabPane label="Connection" id="conntab">
+
+		<div class="rowGradient">
+			<div class="rowCont pad20lt pad20tp">
+
+				<div class="rowCont FL">
+					<span class="fdNm_w">
+						Service Method:
+					</span>
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectOneMenu styleClass="txt11" disabled="#{not payrollServiceListBean.editMode}"
+								value="#{payrollServiceListBean.element.sendBatchMethod}"
+								valueChangeListener="#{payrollServiceListBean.listenServiceMethodChange}">
+							<f:selectItems value="#{payrollServiceListBean.serviceMethodList}"  />
+							<f:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+					</icecore:setEventPhase>
+				</div>
+
+				<!-- BATCH EMAIL ADDRESS -->
+				<div class="rowCont pad15tp FL">
+					<span class="fdNm_w">
+						<h:outputText value="Batch email:" />
+					</span>
+					<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<h:outputText value="#{payrollServiceListBean.element.batchEmailAddress}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="address"
+								maxlength="100" value="#{payrollServiceListBean.element.batchEmailAddress}" />
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- TOURS NOTIFICATION EMAIL ADDRESS -->
+				<div class="rowCont pad15tp FL">
+					<span class="B FL pad5rt">
+						<h:outputText value="Tours notification email:" />
+					</span>
+					<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<h:outputText value="#{payrollServiceListBean.element.toursNotificationEmail}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL" rendered="#{payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="address"
+								maxlength="100" value="#{payrollServiceListBean.element.toursNotificationEmail}" />
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont FL pad10tp">
+					<div class="FL W30percnt" >
+						<span class="fdNm_w">Send only changes:
+						</span>
+						<div class="unionCkBxs FL">
+							<span class="pad15rt FL">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.sendOnlyChanges}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>
+
+					<div class="FL W40percnt" >
+						<span class="fdNm_w3">Split Pay Breakdown by day:
+						</span>
+						<div class="unionCkBxs FL">
+							<span class="pad15rt FL">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.breakByDay}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>
+
+					<div class="FL W30percnt" >
+						<span class="fdNm_w">Split Files by EOR:
+						</span>
+						<div class="unionCkBxs FL">
+							<span class="pad15rt ">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.splitByEor}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="rowCont FL pad10tp" >
+					<div class="FL W30percnt" >
+						<span class="fdNm_w3" style="width:215px;">Only transfer completed timecards:
+						</span>
+						<div class="unionCkBxs FL">
+							<span class="pad15rt ">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.onlyTransferCompleted}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>
+					<div class="FL W40percnt" >
+						<span class="fdNm_w3">Team Payroll Service:
+						</span>
+						<div class="FL">
+							<span class="pad15rt FL">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.teamPayroll}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>
+					<div class="FL W30percnt" >
+						<span class="fdNm_w3">Disable PayBreakdown Lines:
+						</span>
+						<div class="FL">
+							<span class="pad15rt FL">
+								<h:selectBooleanCheckbox disabled="#{not payrollServiceListBean.editMode}"
+									value="#{payrollServiceListBean.element.disablePayBreakdownLines}" styleClass="ckbx" />
+								<span class="ckbxTxtLbl"></span>
+							</span>
+						</div>
+					</div>					
+				</div>
+				
+				<!-- LOGIN NAME -->
+				<h:panelGroup rendered="#{payrollServiceListBean.element.sendBatchMethod eq 'AUTH_POST' or
+						payrollServiceListBean.element.sendBatchMethod eq 'TEAM_FTP'}">
+					<div class="rowCont pad15tp FL">
+						<span class="fdNm_w">
+							<h:outputText value="Login Name:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.loginName}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="30" value="#{payrollServiceListBean.element.loginName}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- PASSWORD -->
+					<div class="rowCont FL">
+						<span class="fdNm_w">
+							<h:outputText value="Password:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd1">
+								<h:inputSecret styleClass="address" redisplay="true"
+									disabled="#{not payrollServiceListBean.editMode}"
+									maxlength="30" value="#{payrollServiceListBean.element.password}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- AUTH URL -->
+					<div class="rowCont pad15tp FL">
+						<span class="fdNm_w">
+							<h:outputText value="Auth URL:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.authUrl}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="100" value="#{payrollServiceListBean.element.authUrl}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- BATCH URL -->
+					<div class="rowCont FL">
+						<span class="fdNm_w">
+							<h:outputText value="Batch URL:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.batchUrl}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="100" value="#{payrollServiceListBean.element.batchUrl}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- STATUS URL -->
+					<div class="rowCont FL">
+						<span class="fdNm_w">
+							<h:outputText value="Status URL:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.statusUrl}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="100" value="#{payrollServiceListBean.element.statusUrl}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+
+
+				<!-- FTP FIELDS -->
+
+
+				<h:panelGroup rendered="#{payrollServiceListBean.element.sendBatchMethod eq 'AUTH_POST' or
+						payrollServiceListBean.element.sendBatchMethod eq 'TEAM_FTP'}">
+
+				<!-- FTP LOGIN NAME -->
+					<div class="rowCont pad15tp FL">
+						<span class="fdNm_w">
+							<h:outputText value="FTP User Name:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.ftpLoginName}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="30" value="#{payrollServiceListBean.element.ftpLoginName}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- FTP PASSWORD -->
+					<div class="rowCont FL">
+						<span class="fdNm_w">
+							<h:outputText value="FTP Password:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd1">
+								<h:inputSecret styleClass="address" redisplay="true"
+									disabled="#{not payrollServiceListBean.editMode}"
+									maxlength="30" value="#{payrollServiceListBean.element.ftpPassword}" />
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- FTP DOMAIN -->
+					<div class="rowCont pad15tp FL">
+						<div class="FL W60percnt">
+							<span class="fdNm_w">
+								<h:outputText value="FTP Domain:" />
+							</span>
+							<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+								<span class="fd1">
+									<h:outputText value="#{payrollServiceListBean.element.ftpDomain}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+								<span class="fd1">
+									<ace:textEntry styleClass="address"
+										maxlength="100" value="#{payrollServiceListBean.element.ftpDomain}" />
+								</span>
+							</h:panelGroup>
+						</div>
+						<div class="FL W30percnt">
+							<span class="fdNm_ea">
+								<h:outputText value="FTP Port:" />
+							</span>
+							<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+								<span class="fd_xsm22">
+									<h:outputText value="#{payrollServiceListBean.element.ftpPort}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+								<span class="fd_xsm22">
+									<ace:textEntry
+										maxlength="5" value="#{payrollServiceListBean.element.ftpPort}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- FTP DIRECTORY -->
+					<div class="rowCont FL">
+						<span class="fdNm_w">
+							<h:outputText value="FTP Directory:" />
+						</span>
+						<h:panelGroup rendered="#{not payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<h:outputText value="#{payrollServiceListBean.element.ftpDirectory}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+							<span class="fd1">
+								<ace:textEntry styleClass="address"
+									maxlength="100" value="#{payrollServiceListBean.element.ftpDirectory}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+
+			</div>
+		</div>
+
+	</ace:tabPane>
+
+</ui:composition>

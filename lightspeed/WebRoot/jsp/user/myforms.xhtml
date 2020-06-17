@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- MY Starts page (outside any production) -->
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Starts</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<!-- WebViewer js files: -->
+<script src="../../lib/webviewer.min.js" />
+
+<!-- js to set document class(es) based on browser agent string -->
+<h:outputScript name="css_browser_selector.js" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+
+	var element = document.getElementById('obsf:miniView');
+	resizeElement(element, 180, 390);
+
+	element = document.getElementById('viewer');
+	resizeElement(element, 260, 320);
+
+	element = document.getElementById('attachViewer');
+	resizeElement(element, 260, 320);
+
+	/* controls size of StartForms tab when history div for custom pdf appears */
+	element = document.getElementById('scrollStartForm'); // the scrollable div's id
+	resizeElement(element, 220, 390);
+
+	element = document.getElementById('obsf:formPane'); // ice4: the scrollable div's id
+	if (element != null) {
+		resizeElement(element, 220, 390);
+		element.style.overflowY = 'auto';
+		element.style.zIndex = '100';
+	}
+
+	// resize div for standard forms
+	element = document.getElementById('scrolldiv');
+	resizeElement(element, 260, 350);
+
+	// resize for outer left legend on start form
+	/* element = document.getElementById('formLegend');
+	resizeElement(element, 240, 360); */
+
+	//resize for startform's outer blue legend
+	element = document.getElementById('sfLegend');
+	resizeElement(element, 240, 340);
+
+	//resize for attachment list's outer blue legend
+	element = document.getElementById('attachment_formLegend');
+	resizeElement(element, 235, 340);
+
+	//resize for attachment's outer blue legend
+	element = document.getElementById('attachment_sfLegend');
+	resizeElement(element, 247, 340);
+
+	// resize for Document Events table
+	resizeScrollable('obsf:docEventsTable', 295, 275);
+
+	// resize for I-9 Instructions tab
+	element = document.getElementById('instScrolldiv');
+	resizeElement(element, 245, 360);
+
+	// resize for W-4 Worksheet tab
+	element = document.getElementById('w4WorkScrolldiv');
+	resizeElement(element, 245, 360);
+	
+	// resize for W-4 Instructions tab
+	element = document.getElementById('w4InstScrolldiv');
+	resizeElement(element, 245, 360);
+
+	resizeStarts();
+
+	if (scrollme > 0) { // scrollToPos was called...
+		scrollme = 0;
+		scrollToPos(); // re-do scroll after resize of div is done.
+	}
+
+	</c:if>
+}
+
+function resizeStarts() {
+	// resize left blue legend for "Other" type of documents.
+	var element = document.getElementById('formLegend'); // left wrapper's outer blue legend to resize
+	if (element != null) {
+		// Resize Legend
+		resizeElement(element, 240, 250);
+		var scroll = document.getElementById('scrollStartForm'); // Outer Scroll div
+		if (scroll != null) {
+			var scrollHt = scroll.scrollHeight; // Scroll height of Scroll div
+			var ht = scroll.clientHeight;
+			var diffHeight = scrollHt - ht;
+			var legendDiff = 240; // for standard documents
+
+			// If other document is selected, increase the height of left legend upto history div.
+			if (diffHeight > 0) {
+				legendDiff = legendDiff - diffHeight; // for other documents
+				console.log('new legendDiff = ' + legendDiff);
+				resizeElement(element, legendDiff, 360);
+			}
+		}
+	}
+}
+
+var formname = "obsf";
+var scrollme = 0;
+
+function setScrollPos(pos) {
+	// called via 'onscroll' tag
+	document.getElementById('obsf:scrollPos').value = pos;
+}
+
+function scrollToPos() {
+	scrollme = 1; // tell "resize" to call us again in case it executes after us.
+	var scrollable = document.getElementById('scrolldiv');
+	if (scrollable != null) {
+		var scrollposElem = document.getElementById('obsf:scrollPos');
+		pos = scrollposElem.value;
+		if (pos != null) {
+			scrollable.scrollTop = pos;
+		}
+	}
+}
+
+</script>
+
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	resize();
+});
+// Use ICE/jquery function to set observer on browser resize.
+ice.ace.jq( window ).resize(
+	function() {
+		resize();
+	}
+);
+</script>
+</c:if>
+	<h:form id="obsf">
+
+		<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden;">
+			<f:attribute name="tabid" value="myforms" />
+		</h:outputText>
+
+		<ui:include src="../obsf/formsPage.xhtml" >
+			<ui:param name="myStarts" value="true" />
+		</ui:include>
+
+		<ace:textEntry style="visibility:hidden" id="scrollPos" value="#{contactFormBean.scrollPos}" />
+
+	</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<h:panelGroup rendered="#{headerViewBean.miniTab eq 0}">
+	<ui:include src="../tcpopup/changePin.xhtml" />
+	<ui:include src="../tcpopup/pinPrompt.xhtml" />
+	<ui:include src="../sf/rateCalculator.xhtml" />
+</h:panelGroup>
+
+<h:panelGroup rendered="#{headerViewBean.miniTab eq 0 or headerViewBean.miniTab eq 3}">
+	<ui:include src="../ob/popupUpload.xhtml" />
+</h:panelGroup>
+
+<h:panelGroup rendered="#{(headerViewBean.miniTab eq 0) and (contactFormBean.pullAuth)}">
+	<ui:include src="../common/confirmpopupbig.xhtml" />
+</h:panelGroup>
+<h:panelGroup rendered="#{not ((headerViewBean.miniTab eq 0) and (contactFormBean.pullAuth))}">
+	<ui:include src="../common/confirmpopup.xhtml" />
+</h:panelGroup>
+<ui:include src="../common/popupinput.xhtml" />
+<ui:include src="../common/popupcheckboxBig.xhtml" />
+<ui:include src="../common/zipCitiesDialog.xhtml" /> <!-- used for City selection in case of multiple entries per zip code (LS-4592)-->
+
+</h:body>
+</html>

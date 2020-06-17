@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="filmColHead" pageWidth="45" pageHeight="50" whenNoDataType="BlankPage" columnWidth="45" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d39c5215-d2db-48df-8258-61e0022f2676">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="project" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="date" class="java.sql.Timestamp" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select material.type, film_measure.id, film_measure.gross, SUM(film_measure.print) as Print, SUM(film_measure.no_good) as No_Good, SUM(film_measure.waste) as Waste, SUM(film_measure.print)+SUM(film_measure.no_good)+SUM(film_measure.waste) as Total
+from material, film_stock, film_measure
+where film_stock.material_id = material.id
+and film_stock.used_prior_id = film_measure.id
+group by material.type
+limit 3, 3;]]>
+	</queryString>
+	<field name="type" class="java.lang.String"/>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Gross" class="java.lang.Integer"/>
+	<field name="Print" class="java.lang.Integer"/>
+	<field name="No_Good" class="java.lang.Integer"/>
+	<field name="Waste" class="java.lang.Integer"/>
+	<field name="Total" class="java.lang.Long"/>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="2508e557-7531-4913-924a-8bd1b7507c61" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="0" width="45" height="20" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Camera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="775cc337-0bf4-4c83-b7cc-0bf0dc579d43" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Previous]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2c7663a8-23e9-4132-8e9d-b51379b40602" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="40" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[To Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="93f61319-f491-463e-b4ea-8194b1b83ec9" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Today]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+</jasperReport>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- The main ("Detail") mini-tab for the Script Breakdown page -->
+
+<ace:tabPane label="Detail#{breakdownBean.dataChanged ? '*' : ''}"
+		id="detailtab">
+
+	<div class="rowCont rowGradient topsceneDetails">
+
+		<h:panelGroup styleClass="FL rowCont pad5lt">
+			<span class="fdNm">Merged with:</span>
+			<div class="fd">
+				<h:outputText value="#{breakdownBean.mergedSceneString}" />
+			</div>
+		</h:panelGroup>
+
+		<div class="rowCont pad5lt pad3bm">
+			<h:panelGroup styleClass="fd"
+			
+				rendered="#{not breakdownBean.editMode}">
+				<h:panelGroup>
+					<ace:linkButton styleClass="B"
+						value="#{breakdownBean.scene.heading}"
+						action="scriptelements">
+						<f:setPropertyActionListener
+							value="com.lightspeedeps.ScriptElementId"
+							target="#{jumpBean.attribute}" />
+						<f:setPropertyActionListener
+							value="#{breakdownBean.scene.scriptElement.id}"
+							target="#{jumpBean.value}" />
+					</ace:linkButton>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.editMode}">
+				<h:selectOneListbox styleClass="W95"
+						value="#{breakdownBean.scene.ieType}"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						disabled="#{breakdownBean.scene.omitted}" size="1">
+					<f:selectItems value="#{enumList.intExtList}" />
+					<ace:ajax />
+				</h:selectOneListbox>
+				<h:selectOneListbox styleClass="W330"
+						value="#{locationSelector.locationId}"
+						valueChangeListener="#{locationSelector.actionLocationSelected}"
+						disabled="#{breakdownBean.scene.omitted}" size="1">
+					<f:selectItems value="#{locationSelector.locationList}" />
+					<ace:ajax />
+				</h:selectOneListbox>
+				<h:selectOneListbox value="#{breakdownBean.scene.dnType}"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						disabled="#{breakdownBean.scene.omitted}" size="1">
+					<f:selectItems value="#{enumList.dayNightList}" />
+					<ace:ajax />
+				</h:selectOneListbox>
+			</h:panelGroup>
+		</div>
+		<!-- end 1st row group of details -->
+		<div class="rowCont pad5lt pad3bm">
+			<h:panelGroup styleClass="fdNm"
+					rendered="#{breakdownBean.editMode}">
+				<h:outputText value="Synopsis:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="bkdnSynopTxt"
+					rendered="#{not breakdownBean.editMode}">
+				<h:outputText value="#{breakdownBean.scene.synopsis}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+					rendered="#{breakdownBean.editMode}">
+				<ace:textEntry size="80" maxlength="190"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						value="#{breakdownBean.scene.synopsis}">
+					<ace:ajax />
+				</ace:textEntry>
+			</h:panelGroup>
+		</div>
+		<!-- end 2nd row group of details -->
+		<div class="rowCont pad5lt">
+			<h:panelGroup styleClass="fdNm">
+				<h:outputText value="Script Page:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+					rendered="#{not breakdownBean.editMode}">
+				<h:outputText value="#{breakdownBean.scene.pageNumStr}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.editMode}">
+				<ace:textEntry styleClass="W35" maxlength="4"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						value="#{breakdownBean.scene.pageNumStr}">
+					<ace:ajax />
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fdNm">
+				<h:outputText value="Page Length:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{not breakdownBean.editMode}">
+				<h:outputText value="#{breakdownBean.scene.length}">
+					<f:converter
+						converterId="lightspeed.PageLengthConverter" />
+				</h:outputText>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.editMode}">
+				<ace:textEntry styleClass="W35" maxlength="6"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						value="#{breakdownBean.scene.length}">
+					<f:converter
+						converterId="lightspeed.PageLengthConverter" />
+					<ace:ajax />
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fdNm_lg">
+				<h:outputText value="Estimated Time:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.editMode}">
+				<ace:textEntry styleClass="W35" maxlength="5"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						value="#{breakdownBean.strip.elapsedTime}">
+					<f:converter
+							converterId="lightspeed.ElapsedTimeConverter" />
+					<ace:ajax />
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd pad5lt"
+				rendered="#{not breakdownBean.editMode}">
+				<h:outputText value="#{breakdownBean.strip.elapsedTime}">
+					<f:converter
+						converterId="lightspeed.ElapsedTimeConverter" />
+				</h:outputText>
+			</h:panelGroup>
+		</div>
+		<!-- 3rd row group of details -->
+		<div class="rowCont FL pad5lt">
+			<h:panelGroup styleClass="fdNm">
+				<h:outputText value="Script Day:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd_xlg"
+				rendered="#{not breakdownBean.editMode}">
+				<h:outputText value=" #{breakdownBean.scene.scriptDay}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.editMode}">
+				<ace:textEntry styleClass="W90percnt" maxlength="20"
+						valueChangeListener="#{breakdownBean.listenDataChange}"
+						value="#{breakdownBean.scene.scriptDay}">
+					<ace:ajax />
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fdNm pad55lt"
+					rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}">
+				<h:outputText value="Shoot day:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+					rendered="#{(breakdownBean.shootDayNumber ne null) and (breakdownBean.strip.status ne 'OMITTED')}">
+				<h:commandLink value=""
+						rendered="#{not empty authBean.pgFields['6.0,link_stripboard']}"
+						action="#{breakdownBean.actionJumpStripboardView}"
+						title="View scene on stripboard">
+					<h:outputText value="#{breakdownBean.shootDayNumber}:" />
+					<h:outputText styleClass="pad5lt"
+						rendered="#{breakdownBean.shootDate ne null}"
+						value="#{breakdownBean.shootDate}">
+						<f:convertDateTime pattern="MMM d"
+							timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+					<f:setPropertyActionListener
+						value="com.lightspeedeps.stripboardId"
+						target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+						value="#{headerViewBean.project.stripboard.id}"
+						target="#{jumpBean.value}" />
+					<f:setPropertyActionListener
+						value="com.lightspeedeps.viewSceneNumber"
+						target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+						value="#{breakdownBean.scene.number}"
+						target="#{jumpBean.value}" />
+				</h:commandLink>
+			</h:panelGroup>
+		</div>
+		<!-- 4th row group of breakdown details -->
+		<div class="rowCont FL pad5lt">
+			<h:panelGroup styleClass="fdNm">
+				<h:outputText value="Location:" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.realLocation.name ne null}">
+				<ace:linkButton
+					value="#{breakdownBean.realLocation.name}"
+					action="realelements">
+					<f:setPropertyActionListener
+						value="com.lightspeedeps.RealWorldElementId"
+						target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+						value="#{breakdownBean.realLocation.id}"
+						target="#{jumpBean.value}" />
+				</ace:linkButton>
+			</h:panelGroup>
+			<h:panelGroup styleClass="fd"
+				rendered="#{breakdownBean.realLocation.name eq null}">
+				<h:outputText value="(Not selected)" />
+			</h:panelGroup>
+		</div>
+		<!-- 5th row group of breakdown details -->
+	</div>
+
+	<!-- script elements -->
+	<!-- The Enter and tab keys call a JavaScript function to check for auto-complete field entry. -->
+	<div class="elementContWrap MA">
+		<div id="elementCont" class="FL">
+			<div class="subSecHdg_elem_bkdn">Elements</div>
+
+			<div class="pad8tp pad5bm">
+				<h:outputText style="margin-left:-40px;"
+						value="Sort elements" />
+				<icecore:setEventPhase events="ValueChangeEvent"
+						phase="INVOKE_APPLICATION">
+					<h:selectOneListbox styleClass="pad3lt txt11"
+							value="#{breakdownBean.sortStyleValue}"
+							valueChangeListener="#{breakdownBean.listenSortStyle}"
+							size="1">
+						<f:selectItem itemLabel="by ID number" itemValue="id" />
+						<f:selectItem itemLabel="alphabetically"
+								itemValue="alpha" />
+						<ace:ajax />
+					</h:selectOneListbox>
+				</icecore:setEventPhase>
+			</div>
+
+			<h:panelGroup id="sceneelem"
+				scrollHeight="#{headerViewBean.mobile ? '' : '165px'}"
+				style="width:100%;overflow-x:hidden;float:left;">
+				<!-- float:left; is for MAC browsers -->
+
+				<!-- generate 5 rows of 4 columns each -->
+				<c:forEach begin="0" end="16" var="stNum" step="4">
+
+					<!-- generate the 4 column headings for one row -->
+					<h:panelGrid columns="4" styleClass="grid1e"
+						id="ehd#{stNum}"
+						columnClasses="bk_elem_col_header,bk_elem_col_header,bk_elem_col_header,bk_elem_col_header">
+						<c:forEach begin="#{stNum}" end="#{stNum+3}" var="num">
+							<!-- generate a row of 4 column headings -->
+							<ace:column>
+								<h:outputText value="#{breakdownBean.columns[num]}" />
+							</ace:column>
+						</c:forEach>
+					</h:panelGrid>
+
+					<!-- generate the 4 element lists for one row -->
+					<h:panelGrid columns="4" styleClass="grid1e"
+						id="ebdy#{stNum}"
+						columnClasses="bk_elem_col,bk_elem_col,bk_elem_col,bk_elem_col">
+						<c:forEach begin="#{stNum}" end="#{stNum+3}" var="num">
+
+							<ace:column>
+								<!-- generate one list of script elements -->
+								<ace:dataTable value="#{breakdownBean.elements[num]}"
+										var="elem" width="100%"
+										style="width:100%;max-width:100%;"
+										id="etbl#{num}">
+									<!-- The above id field value ('etbl<num>') is expected by the Java code!! -->
+
+									<!-- edit mode - show "X" control for all except auto-complete entry -->
+									<ace:column style="width:8%;"
+										rendered="#{(not (empty elem.name)) and (breakdownBean.editMode)}">
+										<h:commandButton value="" styleClass="deleteXbtn"
+												tabindex="-1"
+												action="#{breakdownBean.actionRemoveElementOk}">
+											<f:setPropertyActionListener value="#{elem.id}"
+													target="#{breakdownBean.removeElementId}" />
+										</h:commandButton>
+									</ace:column>
+
+									<!-- "normal" item display for view and edit modes -->
+									<ace:column
+										rendered="#{not (empty elem.name)}">
+										<h:outputText value="#{elem.name}" />
+									</ace:column>
+
+									<!-- edit mode - show "+" control for auto-complete entry -->
+									<ace:column style="width:8%;"
+										rendered="#{(empty elem.name) and (breakdownBean.editMode)}">
+										<h:commandButton value=""
+												id="add"
+												tabindex="-1" style="visibility:hidden;"
+												action="#{breakdownBean.actionAddElement}">
+												<!-- styleClass="icon_plusWhiteOnGry" -->
+											<f:setPropertyActionListener value="#{num}"
+													target="#{breakdownBean.typeIndex}" />
+											<ace:ajax />
+										</h:commandButton>
+									</ace:column>
+
+									<!-- edit mode - auto-complete input field -->
+									<ace:column
+										rendered="#{(empty elem.name) and (breakdownBean.editMode)}">
+										<div>
+											<ace:comboBox id="in" styleClass="bdCombo"
+														filterMatchMode="startsWith" 
+														value="#{breakdownBean.elementInput[num]}"
+														rows="10"
+														valueChangeListener="#{breakdownBean.listenElementSelected}">
+													<f:selectItems value="#{breakdownBean.elementList[num]}" />
+													<f:selectItem itemLabel="" itemValue="-1" />
+												<ace:ajax /><!-- seems to get Enter -->
+												<ace:ajax event="blur" execute="@this" render="@all" /><!-- catch loss of focus -->
+											</ace:comboBox>
+										</div>
+									</ace:column>
+
+								</ace:dataTable>
+							</ace:column>
+
+						</c:forEach>
+					</h:panelGrid>
+
+				</c:forEach>
+
+			</h:panelGroup>
+			<!-- end sceneelem -->
+		</div>
+		<!-- end elementCont -->
+	</div>
+	<!-- end elementContWrap -->
+</ace:tabPane>
+<!-- end details tab -->
+
+</ui:composition>

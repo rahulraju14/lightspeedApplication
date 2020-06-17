@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Large confirmation dialog (message + ok/cancel buttons) -->
+<!-- This is the same as confirmpopup, except that it is 50 pixels taller. -->
+
+<h:form>
+	<c:set var="bean" value="#{popupBean}"></c:set>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="false"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="confpopup2">
+
+		<!-- 6/7/18 We set closable=false, as this listener appeared to be triggered for no reason
+					when this dialog box's use followed a file upload action.
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/> 
+		-->
+
+		<div class="confPopBdy2">
+
+			<div class="confPopCont2">
+				<div class="popup_main stdTxt pad10tp">
+					<h:panelGroup rendered="#{bean.showWarningMessage}" styleClass="pad10bm">
+						<h:outputText value="#{bean.warningMessage}" escape="false" styleClass="loginErrMsgTxt"/>
+					</h:panelGroup>
+					<h:outputText escape="false" value="#{bean.message}" />
+				</div>
+			</div>
+
+			<div class="confpopBtnCont">
+				<h:panelGroup rendered="#{not empty bean.buttonCancelLabel}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="#{bean.buttonCancelLabel}"
+									action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+				</h:panelGroup>
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="#{bean.buttonOkLabel}"
+								onclick="override();"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

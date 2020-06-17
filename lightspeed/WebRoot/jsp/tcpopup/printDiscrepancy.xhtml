@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- DISCREPANCY REPORT CRITERIA for the Print Timecard dialog box -->
+
+		<!-- DETAIL/SUMMARY SELECTION -->
+		<div class="FL W25percnt pad30tp">
+			Report:
+		</div>
+		<div class="FL W60percnt pad30tp">
+			<h:selectOneRadio id="discGrp" styleClass="h_radio B_false"  value="#{printTimecardBean.discReportType}"
+				layout="pageDirection">
+				<f:selectItem itemValue="d" itemLabel="Weekly Discrepancy Report - Detail" />
+				<f:selectItem itemValue="s" itemLabel="Weekly Discrepancy Report - Summary" />
+			</h:selectOneRadio>
+		</div>
+
+		<!-- EXCLUSION SELECTIONS -->
+		<div class="rowCont pad30tp">
+
+			<div class="padPop3tp FL W25percnt">
+				<span class="B">Exclude:</span>
+			</div>
+
+			<div class="FL W75percnt">
+
+				<div>
+					<span class="pad4lt ckbxTxtLbl FL">
+						<h:selectBooleanCheckbox 
+								value="#{printTimecardBean.discExcludeOffProd}" styleClass="ckbx" />
+					</span>
+					<span class="ckbxTxtLbl FL pad5lt">Off-Production Employees</span>
+				</div>
+
+				<div class="rowCont pad10tp">
+					<span class="pad4lt ckbxTxtLbl FL">
+						<h:selectBooleanCheckbox 
+								value="#{printTimecardBean.discExcludeMpv}" styleClass="ckbx" />
+					</span>
+					<span class="ckbxTxtLbl FL pad5lt">MPV Discrepancies</span>
+				</div>
+
+				<div class="rowCont pad10tp">
+					<span class="pad4lt ckbxTxtLbl FL">
+						<h:selectBooleanCheckbox 
+								value="#{printTimecardBean.discExcludeNoPr}" styleClass="ckbx" />
+					</span>
+					<span class="ckbxTxtLbl FL pad5lt">Discrepancies on days where a PR does not exist</span>
+				</div>
+
+				<div class="rowCont pad10tp">
+					<span class="pad4lt ckbxTxtLbl FL">
+						<h:selectBooleanCheckbox 
+								value="#{printTimecardBean.discExcludeNonWork}" styleClass="ckbx" />
+					</span>
+					<span class="ckbxTxtLbl FL pad5lt">Discrepancies due to Sick Days, Bereavement, and</span>
+					<span class="ckbxTxtLbl FL pad30lt">other non-work Day Types</span>
+				</div>
+
+			</div>
+		</div>
+
+</ui:composition>

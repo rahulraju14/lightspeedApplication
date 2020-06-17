@@ -1,0 +1,392 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- The (consolidated) Timecard mini-tab of the Full Timecard page -->
+
+	<!-- Uses params:
+			"aicp" : true if AICP Timecard (for Commercial production); used by included pages
+			"projectActive": true if either non-Commercial, or the timecard being viewed belongs to an active project; LS-2849
+			"timezone" : application's default timezone
+	-->
+	<!-- Added ids for QA automation LS-2923 -->
+
+	<ace:tabPane label="Timecard">
+		<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id ne null}">
+			<c:set var="oncall" value="#{fullTimecardBean.weeklyTimecard.mayUseOnCall
+					and fullTimecardBean.payrollPref.showOnCallFields}" scope="request" />
+			<c:set var="tours" value="#{fullTimecardBean.production.type.tours}" scope="request" />
+			<!-- disablePayBreakdownLines: if true pay breakdown lines are disabled in edit mode. -->
+			<c:set var="disablePayBreakdownLines" value="#{fullTimecardBean.disablePayBreakdownLines}" />
+			<div id="scrolldiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+			<c:if test="#{not useModelRelease}">
+				<ui:include src="fulltcTop.xhtml"><!-- include top section -->
+					<ui:param name="idPrefix" value="fvTc" /> <!-- fvTc = full view timecard -->
+				</ui:include>
+			</c:if>
+			<c:if test="#{useModelRelease}">
+				<ui:include src="fulltcModelTop.xhtml"><!-- include top section -->
+					<ui:param name="idPrefix" value="fvTc" /> <!-- fvTc = full view timecard -->
+				</ui:include>
+			</c:if>
+				<!-- Time Card legend wrapper -->
+				<div class="blueLegendContWrap MA">
+					<div class="blueLegendCont FL" style="margin-top:12px;"><!-- Blue content -->
+						<div class="legendHdg">Timecard</div>
+						<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+
+							<!-- COPY PRIOR Legend button -->
+							<h:panelGroup styleClass="btn_legend_left"
+									rendered="#{fullTimecardBean.editRaw and fullTimecardBean.showCopyPrior}">
+								<span class="btnMiniLtHot"/>
+									<ace:linkButton value="Copy from Prior Week"
+											action="#{fullTimecardBean.actionCopyPrior}"
+											title="Copy the prior week's timecard hours into this one"
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+
+							<!-- VIEW BASIC Legend button -->
+							<h:panelGroup styleClass="btn_legend" rendered="#{(not fullTimecardBean.editMode) and
+									(fullTimecardBean.weeklyTimecard.id ne null)}">
+								<span class="btnMiniLtHot"/>
+								<ace:linkButton value="View Basic"
+										action="#{fullTimecardBean.actionViewBasic}" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+
+							<!-- AUTO ALL-HTG BUTTON -->
+							<h:panelGroup rendered="#{(fullTimecardBean.editHtg) and
+									(fullTimecardBean.weeklyTimecard.id ne null)}">
+								<h:panelGroup styleClass="btn_legend">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton value="Calc HTG"
+											onclick="queueClick(this,event);"
+											action="#{fullTimecardBean.actionCalculateAllHtg}" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+
+								<!-- CALCULATE MPVS BUTTON
+								<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.editMode) and
+										(fullTimecardBean.weeklyTimecard.id ne null)}">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton value="Calculate MPVs"
+											onclick="queueClick(this,event);"
+											action="#{fullTimecardBean.actionCalculateMpvs}" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+								-->
+
+							</h:panelGroup>
+						</div>
+						<div class="FL rowCont gradTbl2">
+							<!-- Note that 0% width entries are for columns that are not rendered in that particular version -->
+							<!-- DAILY timecard section: TV/FEATURE -->
+							<ace:dataTable styleClass="gradTbl2 txt11 CT" id="cday"
+									value="#{fullTimecardBean.weeklyTimecard.dailyTimes}"
+									var="dailyTime" rowStyleClass="CT txt11"
+									style="width:100%;max-width:100%;overflow-x:hidden;">
+								<c:if test="#{not useModelRelease}"> <!-- ** LS-4589 check for model timecard ** -->
+									<ui:include src="fulltcDaily.xhtml"><!-- ** all daily columns ** -->
+									</ui:include>
+								</c:if>
+								<c:if test="#{useModelRelease}">
+									<ui:include src="fulltcModelDaily.xhtml"><!-- ** all daily columns ** -->
+									</ui:include>
+								</c:if>
+
+							</ace:dataTable>
+
+							<div class="rowCont FL">
+								<div class="FL pad5tp pad5bm" style="min-width:250px;">
+									<h:outputText styleClass="pad10lt pad3bm txt11" rendered="#{not empty fullTimecardBean.submitMsg}"
+											value="#{fullTimecardBean.submitMsg}" />
+								</div>
+							</div>
+						</div><!-- End gradient table wrapper -->
+
+						<div class="W50percnt pad8tp pad20lt VAtop DIB">
+							<h:outputText styleClass="RED" rendered="#{not fullTimecardBean.editMode}"
+									value="#{fullTimecardBean.weeklyTimecard.jobHoursDiffer ? msg.Timecard_JobHoursMismatch : ''}"/>
+						</div>
+					</div><!-- End of Blue content -->
+				</div><!-- End of class="blueLegendContWrap" -->
+
+				<!-- end top half (header & full daily timecard) -->
+
+				<!-- job splits, public comments & History (lower left side) -->
+				<div class="FL" style="width:34%;">
+					<!-- include job split section -->
+					<ui:include src="fulltcSplit.xhtml" />
+
+					<!-- Public Comments wrapper -->
+					<h:panelGroup rendered="#{not tours}">
+						<div class="blueLegendContWrap MA">
+							<div class="blueLegendCont pad12tp FL">
+								<div class="legendHdg">Comments</div>
+								<table class="gridPlain W100percnt" style="overflow-x:hidden;">
+									<tr>
+										<td>
+											<ace:textAreaEntry styleClass="pad2lt stdTxtArea" value="#{fullTimecardBean.newComment}"
+												maxlength="2000" rendered="#{fullTimecardBean.editMode}"
+												style="height:30px;width:80%;font-size:11px;"/>
+											<h:panelGroup rendered="#{fullTimecardBean.editMode}">
+												<span class="pad5tp FR" style="margin-right:3%;">
+													<span class="btnPriEnbLt" />
+													<span>
+														<ace:linkButton title="#{msg.Timecard_Help_AddComment}" value="Add"
+																action="#{fullTimecardBean.actionAddComment}" styleClass="btnPriEnbCt"
+																onmouseup="showErrors();" onclick="queueClick(this,event);" />
+													</span>
+													<span class="btnPriEnbRt" />
+												</span>
+											</h:panelGroup>
+											<h:outputText rendered="#{not fullTimecardBean.editMode}"
+												styleClass="FL pad2lt pad1tp pad1bm txt11" value="#{fullTimecardBean.weeklyTimecard.comments}"
+												escape="false" style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+											<h:outputText rendered="#{fullTimecardBean.editMode}"
+												styleClass="FL pad2lt pad1tp pad1bm txt11" value="#{fullTimecardBean.weeklyTimecard.comments}"
+												escape="false" style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<!-- History wrapper -->
+					<div class="blueLegendContWrap MA">
+						<h:panelGroup styleClass="blueLegendCont pad12tp FR" rendered="true">
+							<div class="legendHdg">History</div>
+							<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+								<h:panelGroup styleClass="btn_legend" rendered="#{(not fullTimecardBean.showAllHistory) and
+										(fullTimecardBean.weeklyTimecard.id ne null)}">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton value="All entries"
+												action="#{fullTimecardBean.actionHistoryShowAll}" styleClass="btnMiniCt"
+												onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.showAllHistory) and
+										(fullTimecardBean.weeklyTimecard.id ne null)}">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton value="Signatures only"
+												action="#{fullTimecardBean.actionHistoryShowSignatures}" styleClass="btnMiniCt"
+												onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+							</div>
+							<table class="W100percnt BKwhite" style="border-collapse:collapse;"
+									 cellpadding="0" cellspacing="0">
+								<tr style="width: 100%;">
+									<td style="width:86%;">
+										<div class="FL W100percnt">
+											<ui:repeat style="width:99%;border:1px solid #ccc;"
+												value="#{fullTimecardBean.weeklyTimecard.timecardEvents}"
+												var="event" styleClass="pad2lt txt11">
+												<h:panelGroup rendered="#{(fullTimecardBean.showAllHistory eq true) or
+														(event.type.signed)}">
+													<div class="pad5lt pad10bm">
+														<h:panelGroup rendered="#{fullTimecardBean.showAllHistory}">
+															<h:outputText value="#{event.display}"/>
+															<br/>
+														</h:panelGroup>
+														<h:panelGroup styleClass="txt12 pad10lt" rendered="#{event.type.signed}">
+															<h:outputText value="Electronically signed by" styleClass="U" />
+															<h:outputText value=" #{event.name}" styleClass="U B txtBlue" />
+															<h:outputText value=" #{event.displayTime}" />
+															<br/>
+															<h:outputText value="# #{event.uuid}" styleClass="pad10lt" />
+														</h:panelGroup>
+													</div>
+												</h:panelGroup>
+											</ui:repeat>
+										</div>
+										<h:panelGroup rendered="#{(not empty authBean.pgFields['9.1,batch_info']) and (not tours)}">
+											<div class="FL W100percnt pad5tp pad5bm">
+												<h:outputText styleClass="pad10lt" rendered="#{fullTimecardBean.weeklyTimecard.timeSent eq null}"
+														value="Not yet transferred." />
+												<h:panelGroup styleClass="pad10lt" rendered="#{fullTimecardBean.weeklyTimecard.timeSent ne null}">
+													<h:outputText styleClass="B pad10lt" value="Transferred: " />
+													<h:outputText styleClass="pad5lt pad10rt" value="#{fullTimecardBean.weeklyTimecard.timeSent}">
+														<f:convertDateTime pattern="MM/dd/yy h:mm a" />
+													</h:outputText>
+												</h:panelGroup>
+												<h:panelGroup styleClass="pad20lt" rendered="#{fullTimecardBean.weeklyTimecard.weeklyBatch ne null}">
+													In batch:
+													<h:outputText value="#{fullTimecardBean.weeklyTimecard.weeklyBatch.name}, for W/E " />
+													<h:outputText value="#{fullTimecardBean.weeklyTimecard.weeklyBatch.endDate}">
+														<f:convertDateTime pattern="MM/dd/yyyy" />
+													</h:outputText>
+												</h:panelGroup>
+											</div>
+										</h:panelGroup>
+									</td>
+								</tr>
+							</table>
+							<h:outputText styleClass="pad5lt" value="Waiting for #{fullTimecardBean.approverName}"
+									title="#{fullTimecardBean.approverEmail}"
+									rendered="#{not empty fullTimecardBean.approverName}"/>
+						</h:panelGroup>
+					</div>
+
+					<!-- Signature wrapper -->
+					<div class="blueLegendContWrap MA">
+						<h:panelGroup styleClass="blueLegendCont pad12tp FR" rendered="true">
+							<div class="legendHdg">Paper Timecard Attachment</div>
+
+							<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+								<h:panelGroup styleClass="btn_legend" rendered="#{fullTimecardBean.editHtg}">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton
+												value="#{(fullTimecardBean.weeklyTimecard.paperImage eq null) ? 'Add Attachment' : 'Replace'}"
+												action="#{fullTimecardBean.actionOpenNewImage}" styleClass="btnMiniCt"
+												onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="btn_legend" rendered="#{fullTimecardBean.editHtg and (fullTimecardBean.weeklyTimecard.paperImage ne null)}">
+									<span class="btnMiniLtHot" />
+										<ace:linkButton value="Remove"
+												action="#{fullTimecardBean.actionDeleteImage}" styleClass="btnMiniCt"
+												onmouseup="showErrors();" onclick="queueClick(this,event);" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+							</div>
+
+							<table class="W100percnt BKwhite" style="border-collapse:collapse;"
+									 cellpadding="0" cellspacing="0">
+								<tr style="width: 100%;">
+									<td style="width:86%;border:1px solid #ccc;">
+										<div class="FL W100percnt" style=" ">
+											<div class="pad5lt pad10bm">
+												<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.paperImage ne null}">
+													<div class="FL W70percnt pad20lt">
+														<div class="rowCont">
+															<h:outputText styleClass="fdName  B" value="Filename:"/>
+															<h:outputText value="#{fullTimecardBean.weeklyTimecard.paperImage.title}" />
+														</div>
+														<div class="rowCont">
+															<h:outputText styleClass="fdName txt11 B" value="Uploaded:"/>
+															<h:outputText styleClass="txt11" value="#{fullTimecardBean.weeklyTimecard.paperImage.date}">
+																<f:converter converterId="lightspeed.DateTimeConverter"/>
+																<f:attribute name="pattern" value=" M/dd/yyyy HH:mm:ss"/>
+																<f:attribute name="timeZone" value="#{headerViewBean.production.timeZoneStr}" />
+															</h:outputText>
+														</div>
+														<div class="rowCont">
+															<h:outputText styleClass="fdName txt11 B" value="By:"/>
+															<h:outputText value="#{fullTimecardBean.weeklyTimecard.paperImage.artist}" />
+														</div>
+													</div>
+
+													<div class="FL pad10tp W20percnt">
+														<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.paperImage.type eq 'PDF'}">
+															<h:commandLink styleClass="icon_pdf"
+																	action="#{fullTimecardBean.actionOpenPdfImage}" >
+																<h:graphicImage value="" url="../../i/icon_pdf.jpg" alt="" />
+															</h:commandLink>
+														</h:panelGroup>
+
+														<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.paperImage.type ne 'PDF'}">
+															<h:commandLink styleClass="icon_image"
+																	action="#{imageViewerBean.actionShowImage}">
+																<h:graphicImage value="" url="../../i/icon_image.gif" alt="" />
+																<f:setPropertyActionListener value="#{fullTimecardBean.weeklyTimecard.paperImage.id}" target="#{imageViewerBean.imageId}"/>
+																<f:setPropertyActionListener value="Timecard image" target="#{imageViewerBean.title}"/>
+															</h:commandLink>
+														</h:panelGroup>
+													</div>
+												</h:panelGroup>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</div>
+
+					<!-- AUDIT TRAIL wrapper -->
+					<h:outputText rendered="#{not empty authBean.pgFields['9.1,audit']}">
+					<ui:include src="fulltcAudit.xhtml">
+					</ui:include>
+					</h:outputText>
+					<!-- -->
+
+				</div><!-- end split, comments & history (lower left side) -->
+
+				<!-- breakdown & totals (lower right area) -->
+				<div class="FR" style="width:66%;">
+					<!-- include Pay Jobs section -->
+					<ui:include src="fulltcPayJob.xhtml">
+						<ui:param name="bean" value="#{fullTimecardBean}" />
+					</ui:include>
+
+					<!-- include expenses/reimbursement section -->
+					<ui:include src="tcExpense.xhtml">
+						<ui:param name="timecardBean" value="#{fullTimecardBean}" />
+						<ui:param name="categoryDL" value="#{fullTimecardBean.expCategoryDL}" />
+						<ui:param name="isBasicView" value="#{false}" />
+						<ui:param name="projectActive" value="#{projectActive}" />
+					</ui:include>
+
+					<!-- include Pay Breakdown section -->
+					<ui:include src="fulltcPayBreakdown.xhtml">
+						<ui:param name="disablePayBreakdownLines" value="#{disablePayBreakdownLines}" />
+					</ui:include>
+
+					<!-- Private Comments wrapper -->
+					<div class="blueLegendContWrap MA">
+						<h:panelGroup rendered="#{(not empty authBean.pgFields['9.1,private_comments']) and (not tours)}">
+							<div class="blueLegendCont pad12tp FL">
+								<div class="legendHdg">Payroll Comments</div>
+
+								<table class="W100percnt BKwhite" cellpadding="1" cellspacing="0">
+									<tr>
+										<td>
+											<ace:textAreaEntry styleClass="pad2lt stdTxtArea" value="#{fullTimecardBean.newPrivateComment}"
+													maxlength="2000" rendered="#{fullTimecardBean.editMode}"
+													style="height:30px;width:86%;font-size:11px;"/>
+											<h:panelGroup rendered="#{fullTimecardBean.editMode}">
+												<span class="pad5tp FR" style="margin-right:3%;">
+													<span class="btnPriEnbLt" />
+													<span>
+														<ace:linkButton title="#{msg.Timecard_Help_AddPayrollComment}" value="Add"
+																action="#{fullTimecardBean.actionAddPrivateComment}" styleClass="btnPriEnbCt"
+																onmouseup="showErrors();" onclick="queueClick(this,event);" />
+													</span>
+													<span class="btnPriEnbRt" />
+												</span>
+											</h:panelGroup>
+											<h:outputText rendered="#{not fullTimecardBean.editMode}"
+													styleClass="FL pad2lt pad1tp pad1bm txt11" value="#{fullTimecardBean.weeklyTimecard.privateComments}"
+													escape="false" style="height:75px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;" />
+											<h:outputText rendered="#{fullTimecardBean.editMode}"
+													styleClass="FL pad2lt pad1tp pad1bm txt11" value="#{fullTimecardBean.weeklyTimecard.privateComments}"
+													escape="false" style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+										</td>
+									</tr>
+								</table>
+							</div><!-- end blueLegendCont -->
+						</h:panelGroup>
+					</div><!-- end blueLegendContWrap for payroll comments -->
+
+					<!-- include DAILY Pay Breakdown section, for ADMINs -->
+					<h:panelGroup rendered="#{not empty authBean.pgFields['9.1,view_daily_htg'] and
+							not empty fullTimecardBean.weeklyTimecard.payDailyLines}">
+						<ui:include src="fulltcPayBreakDaily.xhtml" />
+					</h:panelGroup>
+
+				</div><!-- end lower-right side (breakdown, comments, jobs) -->
+			</div><!-- end scroll div -->
+		</h:panelGroup><!-- timecard exists -->
+
+		<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id eq null}">
+			<br/>
+			<h:outputText styleClass="pad20lt txt14"  value="No timecard is currently available."/>
+		</h:panelGroup>
+	</ace:tabPane>
+	<!-- end worksheet tab -->
+</ui:composition>

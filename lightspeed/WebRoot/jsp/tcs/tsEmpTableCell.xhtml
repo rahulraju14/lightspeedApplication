@@ -1,0 +1,309 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- parameters:
+		item: entry to display (one of timesheetBean.timesheetEntryList)
+			(replaces 'entry': which entry # in timesheetEntryList, no longer needed)
+		showRows: true if data should be displayed; false to hide (used for +/- controls)
+		id: prefix to use to make some id's unique
+		size:  number of days to display (7 for weekly; other for biweekly & monthly)
+		offset: starting index of days to display; usually 0, but 15 for 2nd half of monthly)
+		showPayCategory: true if "pay category" columns should be displayed
+	 -->
+
+	<tr style="height: 25px;display:#{showRows ? '' : 'none'}">
+		<td>
+			<h:panelGroup style="width:2%">
+				<h:commandButton styleClass="deleteXbtn pad3tp pad5lt"
+					rendered="#{timesheetBean.editMode}" value=""
+					action="#{timesheetBean.actionDeleteWeeklyTimecard}"
+					title="Delete employee's timecard">
+					<f:setPropertyActionListener
+						value="#{item.weeklyTc}"
+						target="#{timesheetBean.weeklyTcToDelete}" />
+				</h:commandButton>
+
+				<h:commandButton action="#{jumpBean.actionJump}" value=""
+						title="#{item.weeklyTc.startForm.hasRequiredFields
+										? 'Form complete -- all required fields have data.'
+										: 'Form incomplete -- required field(s) missing!'}"
+						rendered="#{not timesheetBean.editMode}"
+						image="#{item.weeklyTc.startForm.hasRequiredToursFields
+										? '../../i/icon_tc_10_appr.png'
+										: '../../i/icon_tc_09_resub_ready.png'}">
+					<f:setPropertyActionListener
+							value="#{(headerViewBean.production.allowOnboarding ? 'payrollStart' : 'tcstarts')}"
+							target="#{jumpBean.jumpTo}" />
+					<f:setPropertyActionListener value="com.lightspeedeps.contactid"
+							target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+							value="#{item.weeklyTc.startForm.contact.id}"
+							target="#{jumpBean.value}" />
+					<!-- Next two entries are for Onboarding environment -->
+					<f:setPropertyActionListener value="com.lightspeedeps.employmentId"
+							target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+							value="#{item.weeklyTc.startForm.employment.id}"
+							target="#{jumpBean.value}" />
+					<!-- Next two entries are for NON-onboarding environment -->
+					<f:setPropertyActionListener value="com.lightspeedeps.StartFormId"
+							target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener
+							value="#{item.weeklyTc.startForm.id}"
+							target="#{jumpBean.value}" />
+					<f:setPropertyActionListener
+							value="com.lightspeedeps.contactDocumentId"
+							target="#{jumpBean.attribute}" />
+					<f:setPropertyActionListener value="0" target="#{jumpBean.value}" />
+				</h:commandButton>
+
+			</h:panelGroup>
+		</td>
+		<!-- NAME -->
+		<td>
+			<h:panelGroup id="name" styleClass=" "
+					style="width:12%;text-align:left;">
+				<h:outputText styleClass="FL pad5lt"
+						value="#{item.name}" />
+			</h:panelGroup>
+		</td>
+		<!-- POSITION / OCCUPATION -->
+		<td>
+			<h:panelGroup id="occupation" styleClass=" "
+					style="width:8%;text-align:left;">
+				<h:outputText styleClass="FL pad5lt"
+						value="#{item.occupation}" />
+			</h:panelGroup>
+		</td>
+		<!-- DEPARTMENT -->
+		<td>
+			<h:panelGroup id="department" styleClass=" "
+					style="width:12%;text-align:left;">
+				<f:facet name="header">
+					<h:outputText value="&#160;" />
+					<div class="pad10lt">
+						<h:outputText value="Department" />
+					</div>
+				</f:facet>
+				<h:outputText styleClass="FL pad5lt"
+						value="#{item.weeklyTc.department.name}" />
+			</h:panelGroup>
+		</td>
+		<!-- DAYs  -->
+		<ui:repeat id="dailyAmounts" var="dailyAmt" value="#{item.weeklyTc.dailyAmounts}" varStatus="days" size="#{size}" offset="#{offset}">
+			<td>
+				<h:panelGroup id="days" style="width:4%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry id="payAmount" maxlength="10"
+								styleClass="RT W80percnt pad-2tp" style="height:12px"
+								value="#{item.weeklyTc.dailyAmounts[days.index]}"
+								valueChangeListener="#{timesheetBean.listenValueChange}"
+								disabled="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="##0.00" />
+							<ace:ajax/>
+						</ace:textEntry>
+					</h:panelGroup>
+					<div class="RT pad5rt">
+						<h:outputText styleClass="RT pad5lt" value="#{item.weeklyTc.dailyAmounts[days.index]}"
+								rendered="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+		</ui:repeat>
+		<!-- TOTAL WAGES FOR WEEKLY/BI-WEEKLY/SEMIMONTHLY-->
+		<h:panelGroup rendered="#{timesheetBean.timesheet.payPeriodType ne 'M'}">
+			<td>
+				<h:panelGroup id="totalWagesColumn" style="width:6%;"
+						styleClass="pad-1lt">
+					<div class="RT pad5rt">
+						<h:outputText value="#{item.weeklyTc.adjGtotal}" id="totalWages"
+							rendered="#{true or not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+		</h:panelGroup>
+		<!-- TOTAL WAGES FOR MONTHLY TIMESHEET-->
+		<h:panelGroup rendered="#{timesheetBean.timesheet.payPeriodType eq 'M'}">
+			<td>
+				<h:panelGroup rendered="#{offset == 0}" id="totalWagesFirst" style="width:6%;"
+						styleClass="pad-1lt">
+					<div class="RT pad5rt">
+						<h:outputText value="#{item.weeklyTc.totalWages1}" id="totalWages1"
+								rendered="#{true or not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{offset == 15}"  id="totalWagesSecond" style="width:6%;"
+						styleClass="pad-1lt">
+					<div class="RT pad5rt">
+						<h:outputText value="#{item.weeklyTc.totalWages2}" id="totalWages2"
+								rendered="#{true or not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+		</h:panelGroup>
+		<!-- Grand Total -->
+		<h:panelGroup rendered="#{timesheetBean.timesheet.payPeriodType eq 'M' and showPayCategory}">
+			<td>
+				<h:panelGroup id="grandTotalColumn" style="width:6%;"
+						styleClass="pad-1lt">
+					<div class="RT pad5rt">
+						<h:outputText
+							value="#{item.weeklyTc.adjGtotal}"
+							id="grandTotal" rendered="#{true or not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+		</h:panelGroup>
+		<!-- PAYCATEGORY1 -->
+		<h:panelGroup rendered="#{showPayCategory}">
+			<td>
+				<h:panelGroup id="firstPayCategory" style="width:7%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry id="#{id}payCategory1Amount" maxlength="10"
+								styleClass="RT W80percnt pad-2tp" style="height:12px"
+								value="#{item.payCategory1Amount}"
+								valueChangeListener="#{timesheetBean.listenValueChange}"
+								disabled="#{not timesheetBean.editMode}">
+							<ace:ajax render="@this tsheet:tstable:totalPayCategory1"
+									execute="@form" />
+							<f:convertNumber type="number" pattern="#,##0.00##" />
+						</ace:textEntry>
+					</h:panelGroup>
+					<div class="RT pad5rt">
+						<h:outputText
+								value="#{item.payCategory1Amount}"
+								rendered="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00##" />
+						</h:outputText>
+					</div>
+			</h:panelGroup>
+			</td>
+			<!-- PAYCATEGORY 2 -->
+			<td>
+				<h:panelGroup id="secondPayCategory" style="width:7%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry id="#{id}payCategory2Amount" maxlength="10"
+								styleClass="RT W80percnt pad-2tp" style="height:12px"
+								value="#{item.payCategory2Amount}"
+								valueChangeListener="#{timesheetBean.listenValueChange}"
+								disabled="#{not timesheetBean.editMode}">
+							<ace:ajax render="@this tsheet:tstable:totalPayCategory2"
+								execute="@form" />
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</ace:textEntry>
+					</h:panelGroup>
+					<div class="RT pad5rt">
+						<h:outputText
+								value="#{item.payCategory2Amount}"
+								rendered="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+			<!-- PAYCATEGORY 3  -->
+			<td>
+				<h:panelGroup id="thirdPayCategory" style="width:7%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry id="#{id}payCategory3Amount" maxlength="10"
+								styleClass="RT W80percnt pad-2tp" style="height:12px"
+								value="#{item.payCategory3Amount}"
+								valueChangeListener="#{timesheetBean.listenValueChange}"
+								disabled="#{not timesheetBean.editMode}">
+							<ace:ajax render="@this tsheet:tstable:totalPayCategory3"
+								execute="@form" />
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</ace:textEntry>
+					</h:panelGroup>
+					<div class="RT pad5rt">
+						<h:outputText
+								value="#{item.payCategory3Amount}"
+								rendered="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+			<!-- PAYCATEGORY 4  -->
+			<td>
+				<h:panelGroup id="fourthPayCategory" style="width:7%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry id="#{id}payCategory4Amount" maxlength="10"
+								styleClass="RT W80percnt pad-2tp" style="height:12px"
+								value="#{item.payCategory4Amount}"
+								valueChangeListener="#{timesheetBean.listenValueChange}"
+								disabled="#{not timesheetBean.editMode}">
+							<ace:ajax render="@this tsheet:tstable:totalPayCategory4"
+								execute="@form" />
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</ace:textEntry>
+					</h:panelGroup>
+					<div class="RT pad5rt">
+						<h:outputText
+								value="#{item.payCategory4Amount}"
+								rendered="#{not timesheetBean.editMode}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+			<!-- COMMENTS -->
+			<td>
+				<h:panelGroup id="comments"
+						style="text-align:left; width:12%">
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<ace:textEntry maxlength="100" styleClass="W94percnt pad-2tp"
+								style="height:12px"
+								value="#{item.weeklyTc.comments}"
+								disabled="#{not timesheetBean.editMode}">
+							<ace:ajax />
+						</ace:textEntry>
+					</h:panelGroup>
+					<h:outputText styleClass="FL pad5lt"
+							value="#{item.weeklyTc.comments}"
+							rendered="#{not timesheetBean.editMode}" />
+				</h:panelGroup>
+			</td>
+			<!-- SENT -->
+			<td>
+				<h:panelGroup id="sent" style="text-align:left; width:2%">
+					<h:outputText title="A Void timecard may not be transmitted"
+							rendered="#{not item.weeklyTc.startForm.hasRequiredToursFields and (item.weeklyTc.status eq 'VOID')}">
+						<div class="tcXferVoid" />
+					</h:outputText>
+					<h:outputText title="The timecard is missing required fields"
+							rendered="#{not item.weeklyTc.startForm.hasRequiredToursFields and (item.weeklyTc.status ne 'VOID')}">
+						<div class="tcMissReq" />
+					</h:outputText>
+					<h:outputText
+							title="Sent #{item.weeklyTc.timeSentFmtd}"
+							rendered="#{(not empty item.weeklyTc.timeSent) and
+										item.weeklyTc.updated le item.weeklyTc.timeSent}">
+						<div class="tcXferDone" />
+					</h:outputText>
+					<h:outputText
+							title="Last changed #{item.weeklyTc.updatedFmtd}"
+							rendered="#{(not empty item.weeklyTc.timeSent) and
+										item.weeklyTc.updated gt item.weeklyTc.timeSent}">
+						<div class="tcXferOld" />
+					</h:outputText>
+				</h:panelGroup>
+			</td>
+		</h:panelGroup>
+	</tr>
+</ui:composition>

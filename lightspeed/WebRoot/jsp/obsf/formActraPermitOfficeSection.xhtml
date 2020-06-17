@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- OFFICE DETAILS -->
+
+	<div class="BKwhite" style="width:820px;">
+	
+		<div class="FL W99percnt sfFormBorder1 BKgrey" style="padding-bottom:5px;">
+			<div class="FL rowCont pad8lt">
+				<h:outputText styleClass="FL B pad10tp" value="For Office Use:" />
+			</div>
+		</div>
+	
+		<!-- Main Form Start -->
+		<div class="FL W99percnt sfFormBorder1 pad2tp" style="padding-bottom:5px;background-color:#f0f1f0">
+			<div class="FL rowCont pad8lt">
+				
+				<!-- ROW 1 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Engager ID# -->
+					<div class="W50percnt FL">
+						<span style="width:69px; font-weight:normal;" class="fdNm">
+							<h:outputText styleClass="FL" value="Engager ID#" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="permitEngagerId" maxlength="30" styleClass="FL" 
+									value="#{form.engagerId}"
+									disabled="#{not editable}"
+									style="width:80%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- Commercial ID # -->
+					<div class="W50percnt FL">
+						<span  class="pad10lt FL fdNm" style="width:95px; font-weight:normal;">
+							<h:outputText styleClass="FL" value="Commercial ID #" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm">
+								<ace:textEntry id="permitComId" maxlength="30" styleClass="FL" 
+									value="#{form.comId}"
+									disabled="#{not editable}"
+									style="width:68%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				<!-- ROW 2 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Date Approved -->
+					<div class="W50percnt FL">
+						<span style="width:85px;font-weight:normal;" class="fdNm">
+							<h:outputText styleClass="FL" value="Date Approved" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 FL">
+								<ace:dateTimeEntry
+								    id="permitDateApproved"
+									tabindex="0"
+									renderAsPopup="true"
+									styleClass="fd_sm2"
+									disabled="#{not editable}"
+									value="#{form.dateApproved}"
+									style="min-width:315px; border-bottom:solid 1px; display:grid;">
+									<f:converter converterId="lightspeed.MultiDateConverter" />
+								</ace:dateTimeEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- Date Processed -->
+					<div class="W50percnt FL">
+						<span  class="pad10lt FL fdNm" style="width:95px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="Date Processed" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 FL">
+								<ace:dateTimeEntry
+								    id="permitDateProcessed"
+									tabindex="0"
+									renderAsPopup="true"
+									styleClass="fd_sm2"
+									disabled="#{not editable}"
+									value="#{form.dateProcessed}"
+									style="min-width:280px; border-bottom:solid 1px;display: grid;">
+									<f:converter converterId="lightspeed.MultiDateConverter" />
+								</ace:dateTimeEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				<!-- ROW 3 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Approved/Denied By -->
+					<div class="W50percnt FL">
+						<span style="width:112px;font-weight:normal;" class="FL fdNm">
+							<h:outputText styleClass="FL" value="Approved/Denied By" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="permitApprovedDeniedBy" maxlength="100" styleClass="FL" 
+									value="#{form.approvedDeniedBy}"
+									disabled="#{not editable}"
+									style="width:69%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- Qualifying: -->
+					<div class="W50percnt FL pad3tp">
+						<span  class="pad10lt FL fdNm" style="width:65px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="Qualifying:" />
+						</span>
+						<span class="FL pad25lt pad4tp">
+							<h:selectOneRadio id="permitQualifying"
+								styleClass="h_radio"
+								disabled="#{not editable}"
+								value="#{form.qualifying}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="Yes" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+							</h:selectOneRadio>
+						</span>
+					</div>
+				</div>
+				
+				<!-- ROW 4 -->
+				<div class="rowCont FL pad1tp">
+					<div class="W50percnt FL">
+					<h:outputText value="&#160;"/> 
+					</div>
+
+					<!-- Work Permit # -->
+					<div class="W50percnt FL">
+						<span  class="pad10lt FL fdNm" style="width:95px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="Work Permit #" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm">
+								<ace:textEntry id="permitWorkPermitNum" maxlength="45" styleClass="FL" 
+									value="#{form.workPermitNum}"
+									disabled="#{not editable}"
+									style="width:68%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				<!-- ROW 5 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Reason For Denial -->
+					<div class="W98percnt FL">
+						<span style="width:110px;font-weight:normal;" class="FL fdNm">
+							<h:outputText styleClass="FL" value="Reason For Denial" />
+						</span>
+						<h:panelGroup>
+							<span class="FL fd_sm2" style="min-width:85%;">
+								<ace:textEntry id="permitDenialReason" maxlength="150" styleClass="FL" 
+									value="#{form.denialReason}"
+									disabled="#{not editable}"
+									style="width:99%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!--  -->
+				
+			</div>
+		</div>
+	</div>
+</ui:composition>

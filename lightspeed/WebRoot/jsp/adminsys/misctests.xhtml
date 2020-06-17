@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Miscellaneous mini-tab -->
+  <ace:tabPane label="Miscellaneous" id="misctab">
+
+		<div class="rowCont pad20tp pad20lt">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Reload log4j settings"
+					action="#{productionAdminBean.changeLogLevel}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</div>
+
+		<table style="width:98%;" class="MA" >
+			<tr>
+				<td>
+					<ace:messages style="color:red;"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table class="W100percnt">
+						<tr style="height:40px;">
+							<td style="width:5%;">&#160; </td>
+							<td>Input 1:&#160; &#160;
+								<ace:textEntry id="input1"
+								size="50" maxlength="100"
+								value="#{messageTestBean.input}">
+								</ace:textEntry>
+							</td>
+							<td>Output 1: &#160;
+								<h:outputText value="#{messageTestBean.output}"/>
+							</td>
+						</tr>
+						<tr style="height:40px;">
+							<td>&#160;</td>
+							<td class="W40percnt">Input 2:&#160; &#160;
+								<ace:textEntry id="input2"
+								size="50" maxlength="200"
+								value="#{messageTestBean.input2}">
+								</ace:textEntry>
+							</td>
+							<td>Output 2: &#160;
+								<h:outputText value="#{messageTestBean.output2}"/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr height="30px">
+				<td>
+					<h:commandButton id="test1" styleClass="btn"
+						style="margin:10px;" value="Send SMS"
+						action="#{messageTestBean.actionSend}" />
+					Input1 = phone #, input2 = text message
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h:commandButton id="test2" styleClass="btn"
+						style="margin:10px;" value="test checksum"
+						action="#{messageTestBean.actionChecksum}" />
+					<h:commandButton id="test3" styleClass="btn"
+						style="margin:10px;" value="test encode"
+						action="#{messageTestBean.actionEncode}" />
+					<h:commandButton id="test4" styleClass="btn"
+						style="margin:10px;" value="test decode"
+						action="#{messageTestBean.actionDecode}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="W20percnt RT">
+				<!--
+					<h:selectBooleanCheckbox id="includeSceneElements"
+							required="false"
+						value="#{messageTestBean.check1}"/>
+				 -->
+				</td>
+			</tr>
+
+		</table>
+
+		<div class="rowCont pad10tp pad20lt">
+			<div class="">
+				<span class="btnPriHotLt"/>
+				<ace:linkButton value="Force Ajax error page"
+								action="#{messageTestBean.causesDeliberateMethodNotFoundException}" styleClass="btnPriHotCt" />
+				<span class="btnPriHotRt"/>
+			</div>
+
+			<div class="DIB pad20lt">
+				<h:commandButton value="Force non-Ajax error page"
+						action="#{messageTestBean.causesDeliberateMethodNotFoundException}" styleClass="btnPriHotCt" >
+					<f:ajax disabled="true"/>
+				</h:commandButton>
+			</div>
+
+			<div class="DIB pad20lt">
+				<span class="btnPriHotLt"/>
+				<ace:linkButton value="Force null pointer exception"
+								action="#{messageTestBean.actionNullPointer}" styleClass="btnPriHotCt" />
+				<span class="btnPriHotRt"/>
+			</div>
+
+			<div class="DIB pad20lt">
+				<span class="btnPriHotLt"/>
+				<ace:linkButton value="Force session expiration"
+								action="#{messageTestBean.actionExpire}" styleClass="btnPriHotCt" />
+				<span class="btnPriHotRt"/>
+			</div>
+		</div>
+
+		<!-- SCRIPT RE-FORMATTING -->
+        <div class="rowCont pad20tp pad20lt">
+					<span class="btnPriHotLt"/>
+        	<ace:linkButton value="Run script pagination"
+                  action="#{messageTestBean.actionUpdateScriptPagination}" styleClass="btnPriHotCt" />
+					<span class="btnPriHotRt"/>
+        </div>
+
+				<!-- Re-queue message for sending -->
+        <div class="rowCont pad20tp pad20lt">
+					<span class="btnPriHotLt"/>
+        	<ace:linkButton value="Re-Queue Message"
+                  action="#{messageTestBean.actionResendMessage}" styleClass="btnPriHotCt" />
+					<span class="btnPriHotRt"/>
+        </div>
+
+        <div class="rowCont pad20tp pad20lt">
+        	ProductionDood units:
+        	<h:outputText value="#{doodViewBean.prodDoodSize}"/>
+        	<br/>
+        	ProductionDood size (elementDood's):
+        	<h:outputText value="#{doodViewBean.prodDoodElems}"/>
+        	<br/>
+        	<!--
+        	ProductionDood stream size (bytes):
+        	<h:outputText value="#{doodViewBean.prodDoodStreamsize}"/>
+        	 -->
+        </div>
+
+			<!--
+        <div class="rowCont pad20tp pad20lt">
+        	<ace:linkButton value="Update Page.hash values for all Scripts"
+                  action="#{messageTestBean.actionUpdatePageHash}" styleClass="btnPriHotCt" />
+        </div>
+			 -->
+</ace:tabPane>
+
+</ui:composition>

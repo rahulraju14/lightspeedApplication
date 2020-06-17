@@ -1,0 +1,303 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- SIGNATURE & PAYMENT DETAILS -->
+
+	<div class="BKwhite" style="width:820px;">
+	
+		<div class="FL W99percnt sfFormBorder1">
+			<div class="FL rowCont pad8lt">
+				<h:outputText styleClass="FL B fdNm_w" value="3. SIGNATURE" />
+				
+				<!-- ROW 1 -->
+				<!-- Applicant/Engager/Representative SIGNATURE START -->
+				<div class="rowCont FL pad5tp">
+				
+					<!-- SIGNATURE LABEL -->
+					<div class="W23percnt FL pad15tp" style="height: 27px;">
+						<h:outputText styleClass="FL" value="Applicant/Engager/Representative"/>
+					</div>
+
+					<!-- SIGNATURE VALUE -->
+					<div class="W75percnt FL pad5tp" style="height: 27px; border-bottom: solid 1px;" >
+						<div class="rowCont">
+							<!-- Sign Button  -->
+							<!-- Allow user regardless if approver or employee and regardless of the form status to sign.
+								The Work permit is never finalized so after signing is will always be in and 'unsubmitted' state
+								LS-2320 
+								LS-2364 The sign button on the Work Permit should not be enabled until manadatory fields are filled in -->
+							<h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;">
+								<h:panelGroup
+									rendered="#{(bean.contactDoc.employerSignature eq null)}">
+									<span class="btnMiniLtHot" />
+									<ace:linkButton id="permitActionEmployerSign" value="Sign &amp; Submit"
+										action="#{contactFormBean.actionEmployerSign}"
+										title="Signature field" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- Sign Button End -->
+							<span>
+								<h:outputText escape="false" styleClass="txt12"
+									rendered="#{(bean.contactDoc.employerSignature ne null)}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{bean.contactDoc.employerSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{bean.contactDoc.employerSignature.uuid}"/>
+								</h:outputText>
+							</span>
+						</div>
+					</div>
+				</div>
+				<!-- Applicant/Engager/Representative SIGNATURE END -->
+			</div>
+		</div>
+		
+		<div class="FL W99percnt sfFormBorder1 BKgrey pad8tp" style="padding-bottom:5px;">
+			<div class="FL rowCont pad8lt">
+				<h:outputText styleClass="FL B pad5tp" value="Permit applications are NOT processed without payment." />
+			</div>
+		</div>
+	
+		<!-- Main Form Start -->
+		<div class="FL W99percnt sfFormBorder1 pad8tp" style="padding-bottom:5px;">
+			<div class="FL rowCont pad8lt">
+				<h:outputText styleClass="FL B fdNm_w" value="4. PAYMENT" />
+				
+				<!-- ROW 1 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Work Permit Fee -->
+					<div class="W45percnt FL">
+						<span style="width:100px;font-weight:normal;" class="fdNm">
+							<h:outputText styleClass="FL" value="Work Permit Fee" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 FL" style="min-width:70%;">
+								<ace:textEntry id="permitWorkPermitFee" maxlength="7" styleClass="FL" 
+										value="#{form.workPermitFee}"
+										disabled="#{not editable}"
+										style="width:93%;border-bottom:solid 1px;">
+									<f:convertNumber pattern="#,##0.##" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					
+					<div class="W55percnt FL">
+						<span style="width:70px;font-weight:normal;" class="FL pad20lt fdNm">
+							<h:outputText styleClass="FL" value="Paid By:" />
+						</span>
+						<span class="FL pad5lt pad5tp ">
+							<h:selectOneRadio id="permitPaidBy" styleClass="h_radio"
+								value="#{form.paidBy}"
+								disabled="#{not editable}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="Performer" itemValue="P" />
+								<f:selectItem itemLabel="Agent" itemValue="A" />
+								<f:selectItem itemLabel="Production" itemValue="D" />
+								<f:selectItem itemLabel="Other" itemValue="O" />
+								<ace:ajax />
+							</h:selectOneRadio>
+						</span>
+					</div>
+				</div>
+				
+				<!-- ROW 2 -->
+				<div class="rowCont FL pad2tp">
+					<div class="W99percnt FL">
+						<span style="width:110px;font-weight:normal;" class="FL fdNm">
+							<h:outputText styleClass="FL" value="Method of Payment:" />
+						</span>
+						<span class="FL pad15lt pad5tp">
+							<h:selectOneRadio id="permitPaymentMethod" styleClass="h_radio"
+								value="#{form.paymentMethod}"
+								disabled="#{not editable}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="Visa" itemValue="V" />
+								<f:selectItem itemLabel="Mastercard"  itemValue="M"/>
+								<f:selectItem itemLabel="Interac " itemValue="I" />
+								<f:selectItem itemLabel="Cheque" itemValue="Q" />
+								<f:selectItem itemLabel="Cash" itemValue="C" />
+								<ace:ajax />
+							</h:selectOneRadio>
+						</span>
+					</div>
+				</div>
+				
+				<!-- ROW 2 -->
+				<div class="rowCont FL pad2tp">
+					<div class="W30percnt FL" style="width:31%">
+						<span style="width:90px;font-weight:normal;" class="FL fdNm">
+							<h:outputText styleClass="FL" value="Provide receipt:" />
+						</span>
+						<span class="FL pad5tp">
+							<h:selectOneRadio id="permitReceiptByEmail"
+								styleClass="h_radio"
+								disabled="#{not editable}"
+								value="#{form.receiptByEmail}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="by email" itemValue="false" />
+								<f:selectItem itemLabel="by mail" itemValue="true" />
+							</h:selectOneRadio>
+						</span>
+					</div>
+					
+					<!-- TO -->
+					<div class="FL W70percnt" style="width:69%">
+						<span  class="pad6lt FL fdNm" style="width:20px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="to :" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="permitReceiptTo" maxlength="500" styleClass="FL" 
+									value="#{form.receiptTo}"
+									disabled="#{not editable}"
+									style="width:90%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				
+				<!-- ROW 4 -->
+				<div class="rowCont FL pad2tp">
+					<!-- Name of Credit Card Holder -->
+					<div class="W98percnt FL">
+						<span style="width:155px;font-weight:normal;" class="FL fdNm">
+							<h:outputText styleClass="FL" value="Name of Credit Card Holder" />
+						</span>
+						<h:panelGroup>
+							<span class="FL fd_sm2" style="min-width:79%;">
+								<ace:textEntry id="permitCcHolderName" maxlength="100" styleClass="FL" 
+									value="#{form.ccHolderName}"
+									disabled="#{not editable}"
+									style="width:99%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				<!-- ROW 5 -->
+				<div class="rowCont FL pad5tp">
+					<!-- Credit Card # -->
+					<div class="W65percnt FL">
+						<span class="FL fdNm" style="width:85px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="Credit Card #" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="permitCcNum" maxlength="45" styleClass="FL" 
+									value="#{form.ccNum}" disabled="#{not editable}"
+									style="width:79%;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<!-- <h:panelGroup>
+							<span class="fd_sm pad5lt">
+								<ace:textEntry maxlength="60" styleClass="FL" 
+									value="#{form.comDate}"
+									style="width:18%;margin-left:5px;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup>
+							<span class="fd_sm pad5lt">
+								<ace:textEntry maxlength="60" styleClass="FL" 
+									value="#{form.comDate}"
+									style="width:18%;margin-left:5px;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup>
+							<span class="fd_sm pad5lt">
+								<ace:textEntry maxlength="60" styleClass="FL" 
+									value="#{form.comDate}"
+									style="width:18%;margin-left:5px;border-bottom:solid 1px;">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup> -->
+					</div>
+					
+					<!-- Expiry Date -->
+					<div class="W35percnt FL">
+						<span  class="FL pad-5lt fdNm" style="width:70px;font-weight:normal;">
+							<h:outputText styleClass="FL" value="Expiry Date" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 FL">
+								<ace:dateTimeEntry
+								    id="permitCcExpirationDate"
+									tabindex="0"
+									renderAsPopup="true"
+									styleClass="fd_sm2 FL"
+									disabled="#{not editable}"
+									value="#{form.ccExpirationDate}"
+									style="min-width:192px; border-bottom:solid 1px; display:grid;">
+									<f:converter converterId="lightspeed.MultiDateConverter" />
+								</ace:dateTimeEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				
+				<!-- ROW 6 -->
+				<!-- CARDHOLDER'S SIGNATURE START -->
+				<div class="rowCont FL pad10tp">
+				
+					<!-- SIGNATURE LABEL -->
+					<div class="W17percnt FL pad15tp" style="height: 27px;">
+						<h:outputText styleClass="FL" value="Signature of Cardholder"/>
+					</div>
+
+					<!-- SIGNATURE VALUE -->
+					<div class="W80percnt FL pad5tp" style="height: 27px; border-bottom: solid 1px;" >
+						<div class="rowCont">
+							<!-- Sign Button  -->
+							<!-- <h:panelGroup rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+						
+								<h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;">
+									<h:panelGroup rendered="#{false}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{true}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</h:panelGroup>
+							Sign Button End
+							<span>
+								<h:outputText escape="false" styleClass="txt12"
+									rendered="#{(bean.contactDoc.empSignature ne null)}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}"/>
+								</h:outputText>
+							</span> -->
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN FORM -->
+				
+			</div>
+		</div>
+	</div>
+</ui:composition>

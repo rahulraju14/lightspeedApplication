@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+
+<!--
+	Ant macros for use in LightSpeed builds.
+  -->
+
+<project>
+	<macrodef name="yui-compress">
+		<attribute name="todir"/>
+		<attribute name="yui-switches" default="-v --type js"/>
+		<element name="files" implicit="yes"/>
+		<sequential>
+			<apply executable="java">
+				<arg value="-jar"/>
+				<arg value="${build.jar}"/>
+				<arg line="@{yui-switches}"/>
+				<arg value="-o"/>
+				<targetfile/>
+				<compositemapper>
+					<mapper type="glob" from="*.uc.js" to="@{todir}/*.js"/>
+					<mapper type="glob" from="*.uc.css" to="@{todir}/*.css"/>
+				</compositemapper>
+				<files/>
+			</apply>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echoTS">
+		<attribute name="message"/>
+		<sequential>
+			<tstamp>
+				<format property="currentTime" pattern="yyyy-MM-dd HH:mm:ss" />
+			</tstamp>
+			<echo message="${currentTime}> @{message}" />
+		</sequential> 
+	</macrodef>
+</project>

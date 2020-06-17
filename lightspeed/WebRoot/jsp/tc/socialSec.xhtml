@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The Social Security number edit/display area, used on both
+			the Basic and Full timecard pages. -->
+
+	<!-- Uses params:  -->
+	<!--   "bean" : the web bean used to reference the timecard; this should be
+					a subclass of TimecardBase. -->
+	<!-- Added ids for QA automation LS-2923 -->
+	
+	<h:panelGroup rendered="#{bean.showPrivate}">
+		<h:panelGroup rendered="#{empty bean.weeklyTimecard.viewSSN}">
+			<h:panelGroup rendered="#{bean.editRaw or bean.editHtg}">
+				<span class="fd_xsm" style="left:0px;">
+					<ace:textEntry maxlength="11" id="#{idPrefix}Ssn"
+						styleClass="#{(bean.editMode and (bean.weeklyTimecard.socialSecurity eq null or empty bean.weeklyTimecard.socialSecurity.trim())) ? 'requiredDiv' : ''}"
+							value="#{bean.weeklyTimecard.socialSecurity}" >
+						<f:converter converterId="lightspeed.SSNConverter" />
+						<ace:ajax/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{! (bean.editRaw or bean.editHtg)}">
+				<h:outputText value="###-##-????" />
+			</h:panelGroup>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{not empty bean.weeklyTimecard.viewSSN}">
+			<h:outputText value=" #{bean.weeklyTimecard.viewSSN}"/>
+		</h:panelGroup>
+	</h:panelGroup>
+	<h:outputText rendered="#{! bean.showPrivate}" value="###-##-####" />
+</ui:composition>

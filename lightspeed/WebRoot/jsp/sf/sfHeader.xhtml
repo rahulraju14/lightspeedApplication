@@ -1,0 +1,437 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"	
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- Header portion of Start Payroll form - production info, dates, batch -->
+<!-- LS-2723 Mandatory labels will always be red for Team clients. Highlight mandatory fields when empty and in edit mode.-->
+
+<!-- Uses params:
+		aicp			: true if AICP Start Form / Commercial production
+		v30				: true if this is the 3.0 (Non-On-Boarding) style page
+		isEnhancedLoanOut : FF4J setting of TTCO_ENHANCED_LOAN_OUT 
+		isTeamPayroll	: true if this production is processed by Team
+		done			: true if this form has been 'finalized'
+-->
+
+	<!-- Top left side: production info -->
+	<div style="height:10px;">
+		<hr style="height:2px;background:black;border:0;margin-top: 30px;"/>
+	</div>
+	<div class="W41percnt FL pad10lt">
+		<c:set var="empEdit" value="#{startFormBean.empEdit}" scope="request" />
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" scope="request" />
+		<c:set var="edit" value="#{startFormBean.editMode}" scope="request" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted}" scope="request" />
+
+		<!-- PRODUCTION COMPANY -->
+		<div class="rowCont FL">
+			<span class="fdNm_ps1">
+				<h:outputText value="Prod. Co:"
+						styleClass="#{empty startFormBean.form.prodCompany ? 'mandatory' : ''}" />
+				<span class="mandatory">*</span>
+			</span>
+			<h:panelGroup rendered="#{not startFormBean.editMode}">
+				<span class="fd_sm">
+					<h:outputText value="#{startFormBean.form.prodCompany}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{startFormBean.editMode}">
+				<span class="fd_sm2">
+					<ace:textEntry maxlength="35" id="sfProdCompany"
+						disabled="#{done or not appEdit}"
+						value="#{startFormBean.form.prodCompany}"
+						styleClass="#{empty (startFormBean.form.prodCompany) ? 'requiredDiv' : ''}">
+						<ace:ajax/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- PRODUCTION TITLE -->
+		<div class="rowCont FL">
+			<span class="fdNm_ps1">
+				<h:panelGroup rendered="#{! aicp}">
+					<h:outputText value="Prod. Title:"
+							styleClass="#{empty startFormBean.form.prodTitle ? 'mandatory' : ''}" />
+					<span class="mandatory">*</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{aicp}">
+					<h:outputText value="Job#/Name:" />
+				</h:panelGroup>
+			</span>
+			<h:panelGroup rendered="#{not aicp}">
+				<h:panelGroup rendered="#{not startFormBean.editMode}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.prodTitle}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{startFormBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="35" id="sfProdTitle"
+							disabled="#{done or not appEdit}"
+							value="#{startFormBean.form.prodTitle}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{aicp}">
+				<h:panelGroup rendered="#{not startFormBean.editMode}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.jobNumber} / #{startFormBean.form.jobName}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{startFormBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="15" style="margin-left:2px;min-width:22%;width:22%;"
+								value="#{startFormBean.form.jobNumber}" id="sfJobNum"
+								disabled="#{done or not appEdit}">
+							<ace:ajax/>
+						</ace:textEntry>
+						&#160;/&#160;
+						<ace:textEntry maxlength="35" style="min-width:30%;width:30%;"
+								value="#{startFormBean.form.jobName}" id="sfJobName"
+								disabled="#{done or not appEdit}">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</h:panelGroup>
+		</div>
+
+		<!-- NAME -->
+		<div class="rowCont FL">
+			<span class="fdNm_ps1">
+				<h:outputText value="Legal Name:"
+						styleClass="#{((empty startFormBean.form.firstName) or (empty startFormBean.form.lastName)) ? 'mandatory' : ''}"/>
+				<span class="mandatory">*</span>
+			</span>
+			<h:panelGroup rendered="#{not startFormBean.editMode}">
+				<span class="fd_sm">
+					<h:outputText
+							value="#{startFormBean.form.firstName} #{startFormBean.form.middleName} #{startFormBean.form.lastName}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{startFormBean.editMode}">
+				<span class="fd_sm2">
+					<ace:textEntry maxlength="30" style="margin-left:2px;min-width:20%;width:24%;"
+							value="#{startFormBean.form.firstName}" id="sfFirstName"
+							disabled="#{done or nonTeamEmp or not edit}"
+							styleClass="#{empty (startFormBean.form.firstName) ? 'requiredDiv' : ''}">
+						<ace:ajax/>
+					</ace:textEntry>
+					<ace:textEntry maxlength="1" style="margin-left:2%;min-width:2%;width:5%;"
+							value="#{startFormBean.form.middleName}" id="sfMiddleName"
+							disabled="#{done or nonTeamEmp or not edit}">
+					</ace:textEntry>
+					<ace:textEntry maxlength="30" style="min-width:22%;width:26%;margin-left:3%;"
+							value="#{startFormBean.form.lastName}" id="sfLastName"
+							disabled="#{done or nonTeamEmp or not edit}"
+							styleClass="#{empty (startFormBean.form.lastName) ? 'requiredDiv' : ''}" >
+						<ace:ajax/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<h:panelGroup rendered="#{not startFormBean.production.type.tours}">
+			<!-- WORK CITY AND STATE -->
+			<div class="rowCont FL"> 
+				<span class="fdNm_ps1"><h:outputText value="Work City:"
+						styleClass="#{empty startFormBean.form.workCity ? 'mandatory' : ''}" />
+				<span class="mandatory">*</span>
+				</span>
+				<h:panelGroup rendered="#{not startFormBean.editMode}">
+					<span  style="float: left;margin-top: 4px;min-width:80px;">
+						<h:outputText value="#{startFormBean.form.workCity}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{startFormBean.editMode}">
+					<span class="fd_xsm" style="width:130px;">
+						<ace:textEntry style="width:130px;" maxlength="100"
+							value="#{startFormBean.form.workCity}" id="sfWorkCity1"
+							disabled="#{done or nonTeamEmp or not edit}"
+							styleClass="#{empty (startFormBean.form.workCity) ? 'requiredDiv' : ''}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+
+				<span class="fdNm pad20lt pad8rt" style="width:auto;">
+					<h:outputText value="State:"
+							styleClass="#{startFormBean.form.workState eq null or empty startFormBean.form.workState.trim() ? 'mandatory' : ''}" />
+				<span class="mandatory">*</span>
+				</span>
+				<h:selectOneMenu disabled="#{done or nonTeamEmp or not edit}" style="max-width:50px;"
+						value="#{startFormBean.form.workState}" id="sfWorkState1"
+						styleClass="FL #{((startFormBean.form.workState eq null or empty startFormBean.form.workState.trim()) and edit) ? 'requiredDiv' : ''}">
+					<f:selectItems value="#{startFormBean.countryStateCodeSF}" />
+					<ace:ajax/>
+				</h:selectOneMenu>
+			</div>
+
+			<!-- WORK ZIP AND COUNTRY-->
+			<div class="rowCont FL">
+				<h:panelGroup styleClass="FL">
+					<span class="fdNm_ps1">
+						<h:outputText value="Work Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not startFormBean.editMode}">
+						<span style="float:left;margin-top: 4px;min-width:80px;">
+							<h:outputText value="#{startFormBean.form.workZip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{startFormBean.editMode}">
+						<span class="fd_xsm" style="width:auto;">
+							<ace:textEntry maxlength="10" id="sfWorkZip1"
+									value="#{startFormBean.form.workZip}"
+									disabled="#{done or nonTeamEmp or not edit}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{startFormBean.production.payrollPref.includeTouring}">
+					<span class="fdNm pad20lt pad8rt" style="width:auto;">
+						<h:outputText value="Country:"/>
+					</span>
+					<h:selectOneMenu disabled="#{done or not edit}" style="max-width: 54px;"
+							value="#{startFormBean.form.workCountry}" id="sfWorkCountry1">
+						<f:selectItems value="#{applicationScopeBean.countryCodeDL}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+
+		</h:panelGroup>
+	</div><!-- end top left -->
+
+	<div class="W55percnt FL pad5lt">
+		<h:panelGroup rendered="#{not startFormBean.production.type.tours}">
+		<div class="W75percnt FL" style="margin-top:-5px; margin-left:9px;">
+			<!-- ACCOUNT CODE TITLES AND FIELDS -->
+			<ui:include src="../tc/accountCodesHdr.xhtml">
+				<ui:param name="bean" value="#{startFormBean}" />
+				<ui:param name="item" value="#{startFormBean.form}" />
+				<ui:param name="appEdit" value="#{appEdit}" />
+			</ui:include>
+		</div>
+		</h:panelGroup>
+
+		<!-- top Middle -->
+		<div class="rowCont">
+			<div class="W50percnt FL pad10lt">
+				<!-- <div class="rowCont FL" style="margin-top:-5px;">
+					ACCOUNT CODE TITLES AND FIELDS
+					<ui:include src="../tc/accountCodesHdr.xhtml">
+						<ui:param name="bean" value="#{startFormBean}" />
+						<ui:param name="item" value="#{startFormBean.form}" />
+					</ui:include>
+				</div> -->
+
+				<!-- HIRE DATE -->
+				<div class="rowCont FL LH22">
+					<span class="fdNm">
+						<h:outputText value="Hire Date:"
+								styleClass="#{startFormBean.form.hireDate eq null ? 'mandatory' : ''}"/>
+						<span class="mandatory">*</span>
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="LH22" value="#{startFormBean.form.hireDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.hireDate}" id="sfHireDate"
+							styleClass="#{startFormBean.editMode and (startFormBean.form.hireDate eq null) ? 'required' : ''}"
+							disabled="#{done or not appEdit}" renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+
+				<!-- START DATE -->
+				<div class="rowCont FL LH22">
+					<span class="fdNm">
+						<h:outputText value="Start Date:"
+								styleClass="#{startFormBean.form.workStartDate eq null ? 'mandatory' : ''}"/>
+						<span class="mandatory">*</span>
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="LH22" value="#{startFormBean.form.workStartDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.workStartDate}" id="sfStartDate"
+							title="The earliest date the employee may work"
+							renderAsPopup="true" disabled="#{done or not appEdit}"
+							styleClass="#{startFormBean.editMode and (startFormBean.form.workStartDate eq null) ? 'required' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+
+				<!-- END DATE -->
+				<div class="rowCont FL LH22">
+					<span class="fdNm"><h:outputText value="End Date:" />
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="LH22" value="#{startFormBean.form.workEndDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.workEndDate}" id="sfEndDate"
+							title="The last date the employee may work"
+							renderAsPopup="true" disabled="#{not appEdit}">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+			</div>
+
+			<!-- top right side: Id & dates -->
+			<div class="W50percnt FR " style="margin-left: -30px;">
+
+				<!-- <div class="rowCont FL">
+					<h:outputText styleClass="LH16" value="&#160;" />
+				</div>
+
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH16" value="&#160;" />
+				</div> -->
+
+				<!-- <div class="rowCont FL" style="margin-top:-5px;">
+					ACCOUNT CODE TITLES AND FIELDS
+					<ui:include src="../tc/accountCodesHdr.xhtml">
+						<ui:param name="bean" value="#{startFormBean}" />
+						<ui:param name="item" value="#{startFormBean.form}" />
+					</ui:include>
+				</div> -->
+				<!--
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH22" value="&#160;" />
+				</div> -->
+				<!-- DOC ID
+				<div class="rowCont FL">
+					<span class="fdNm_w">
+						<h:outputText value="Document ID#:"></h:outputText>
+					</span>
+					<h:panelGroup rendered="true">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.formNumber}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="false">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="10" value="#{startFormBean.form.formNumber}" />
+						</span>
+					</h:panelGroup>
+				</div> -->
+
+				<!-- CREATED DATE
+				<div class="rowCont FL LH22">
+					<span class="fdNm_w">
+						<h:outputText value="Created:"
+								styleClass="#{(empty startFormBean.form.creationDate) ? 'mandatory' : ''}" />
+						<span class="mandatory">*</span>
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="fd_sm" value="#{startFormBean.form.creationDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.creationDate}" title="Start Form creation date"
+							renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+					</ace:dateTimeEntry>
+				</div> -->
+
+				<!-- EFFECTIVE-->
+				<div class="rowCont FL LH20 pad15lt">
+					<span class="fdNm_w">
+						<h:outputText value="Effective:"/>
+					</span>
+				</div>
+
+				<!-- From -->
+				<div class="rowCont FL pad15lt LH22">
+					<span class="fdNm_sm pad20lt">
+						<h:outputText value="From:"
+								styleClass="#{(startFormBean.form.effectiveStartDate eq null
+								and startFormBean.form.formType eq 'C') ? 'mandatory' : ''} "/>
+						<h:outputText value="*" styleClass="mandatory"
+								rendered="#{startFormBean.form.formType eq 'C'}" />
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="fm_sm" value="#{startFormBean.form.effectiveStartDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry style="z-index: 450;" id="sfEffectiveStartDate"
+							rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.effectiveStartDate}"
+							title="This Start Form's first effective date"
+							renderAsPopup="true" disabled="#{done or not appEdit}"
+							styleClass="#{startFormBean.editMode and
+								(startFormBean.form.effectiveStartDate eq null) and
+								(startFormBean.form.formType eq 'C') ? 'required' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+
+				<!-- EFFECTIVE END DATE -->
+				<div class="rowCont FL pad15lt LH22">
+					<span class="fdNm_sm pad20lt"><h:outputText value="To:" />
+					</span>
+					<h:outputText rendered="#{not startFormBean.editMode}"
+							styleClass="fm_sm" value="#{startFormBean.form.effectiveEndDate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry style="z-index: 400;" id="effectiveEndDate"
+							rendered="#{startFormBean.editMode}" tabindex="0"
+							value="#{startFormBean.form.effectiveEndDate}" title="This Start Form's last effective date"
+							renderAsPopup="true" disabled="#{not appEdit}">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+
+				<!-- BATCH
+				<div class="rowCont FL">
+					<span class="fdNm_w"><h:outputText value="Batch:" />
+					</span>
+					<h:selectOneMenu styleClass="FL" disabled="#{not startFormBean.editMode}"
+							valueChangeListener="#{startFormBean.listenBatchChange}"
+							value="#{startFormBean.batchId}">
+						<f:selectItems value="#{startFormBean.prodBatchList}" />
+					</h:selectOneMenu>
+				</div> -->
+
+			</div><!-- end top right -->
+		</div>
+	</div>
+	<h:panelGroup rendered="#{isTeamPayroll and not startFormBean.production.type.tours and isEnhancedLoanOut}">
+		<!-- How employee is going to be paid as individual or loan-out. LS-2562 -->
+		<div class="FL pad10lt W95percnt">
+			<div class="FL B pad4tp" >
+				<h:outputText styleClass="mandatory" value="The employee is requesting to get paid as"/>
+				<span class="mandatory">*</span>
+			</div>
+			<div class="">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectOneMenu styleClass="pad5lt #{(startFormBean.editMode and empty startFormBean.form.paidAs) ? 'requiredDiv' : ''} FL" disabled="#{done or not edit}" 
+							value="#{startFormBean.form.paidAs}" valueChangeListener="#{startFormBean.listenPaidAsChange}" 
+							style="width:90px;#{(startFormBean.editMode) and
+									empty startFormBean.form.paidAs ? 'background-color: rgb(255,255,170)' : ''};" id="sfPaidAs">
+						<f:converter converterId="lightspeed.PaidAsConverter" />
+						<f:selectItems value="#{startFormBean.paidAsDL}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+			</div>
+		</div>
+	</h:panelGroup>	
+</ui:composition>

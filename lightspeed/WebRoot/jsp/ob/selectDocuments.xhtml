@@ -1,0 +1,185 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+<h:form>
+	<c:set var="bean" value="#{popupSelectDocumentsBean}"></c:set>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+	<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+	<div class="popupBdyAW">
+
+		<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+			<ui:include src="../common/errorsPopup.xhtml" />
+		</div>
+
+		<div class="popCont80">
+			<div class="popup_main">
+				<div class="rowCont">
+					<!-- SELECT DOCUMENTS START -->
+					<h:panelGroup style="text-align:left;" rendered="#{! popupSelectDocumentsBean.isInclude}">
+						<div class="pad15tp">
+							<h:outputText style="font-weight:normal" value="#{popupSelectDocumentsBean.message}" />
+						</div>
+						<div class="pad15tp">
+							<h:outputText escape="false" style="font-weight:normal"
+								value="Use the checkboxes below to select which version(s) to include in the transfer to &lt;/br&gt; the Payroll Service." />
+						</div>
+						<div class="pad25tp pad20lt W90percnt">
+							<ace:dataTable
+								value="#{popupSelectDocumentsBean.contactDocumentList}"
+								var="doc"
+								styleClass="bk_sl_grid CT"
+								rowStyleClass="CT"
+								scrollable="true"
+								scrollHeight="310">
+
+							<ace:column style="width:20%">
+								<f:facet name="header">
+									<div class="CT">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx"
+												valueChangeListener="#{popupSelectDocumentsBean.listenCheckedForAll}"
+												value="#{popupSelectDocumentsBean.checkedForAll}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+									</div>
+								</f:facet>
+								<div>
+								<h:panelGroup rendered="#{not doc.disabled}">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{popupSelectDocumentsBean.contactDocumentInfoMap[doc]}"
+												valueChangeListener="#{popupSelectDocumentsBean.listenSingleCheck}"
+												styleClass="iceSelBoolChkbx">
+											<ace:ajax />
+											<f:attribute name="selectedRow" value="#{doc}" />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</h:panelGroup>
+								</div>
+							</ace:column>
+
+							<!-- STATUS -->
+							<ace:column headerText="Status" style="width:20%">
+								<div style="background-repeat: no-repeat;"
+									class="docIcon#{doc.status}#{(doc.timeSent ne null) and
+											(doc.status.finalized or doc.status.sealed) ? '_XF' : ''}"
+									title="#{doc.status.iconTitle}">
+									<h:outputText value="&#160;" />
+								</div>
+								
+								<h:panelGroup class="FL" style="margin-left: 30px;" >
+									<h:graphicImage url="../../i/icon_doc_sent_to_performer.png" alt="" rendered="#{doc.sentPerformer}" />
+									<h:graphicImage url="../../i/icon_doc_sent_to_union.png" alt=""  style="margin-left: 3px;" rendered="#{doc.sentUnion}"/>
+									<h:graphicImage url="../../i/icon_doc_sent_to_tps.png" alt="" style="margin-left: 3px;" rendered="#{doc.sentTPS}"/>
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- TRANSFERRED -->
+							<ace:column headerText="Transferred"  style="width:30%">
+								<h:outputText value="#{doc.timeSent}">
+									<f:convertDateTime pattern="MM/dd/yy h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- LAST UPPDATED -->
+							<ace:column headerText="Last Updated" style="width:30%">
+								<h:outputText value="#{doc.lastUpdated}" >
+									<f:convertDateTime pattern="MM/dd/yy h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</ace:column>
+						</ace:dataTable>
+						</div>
+					</h:panelGroup>
+					<!-- SELECT DOCUMENTS END -->
+
+					<!-- INCLUDE DOCS START -->
+					<h:panelGroup style="text-align:left;" rendered="#{popupSelectDocumentsBean.isInclude}">
+						<div class="pad15tp" style="font-weight:normal">
+							Select which documents, out of all of your Onboarding document types, you would like
+							to include in the transfer to your Payroll Service.
+						</div>
+						<div class="pad15tp" style="font-weight:normal">
+							Select applicable documents from the list below. These documents will then appear on
+								the Document Transfer and be eligible for transfer.
+						</div>
+						<div class="pad25tp pad20lt W80percnt">
+						<ace:dataTable
+							value="#{popupSelectDocumentsBean.formTypeList}"
+							var="type"
+							styleClass="bk_sl_grid"
+							scrollable="true"
+							scrollHeight="200"
+							singleSort="true">
+
+							<ace:column style="width:20%">
+								<div class="CT">
+								<h:panelGroup>
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{popupSelectDocumentsBean.formTypeMap[type]}"
+												styleClass="iceSelBoolChkbx">
+											<ace:ajax />
+											<!-- <f:attribute name="selectedRow" value="#{type}" /> -->
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</h:panelGroup>
+								</div>
+							</ace:column>
+
+							<!-- Form type -->
+							<ace:column  style="width:80%">
+								<h:outputText value="#{(type.name ne null) ? type.name : 'Other'}">
+								</h:outputText>
+							</ace:column>
+
+						</ace:dataTable>
+						</div>
+
+						<div class="pad30tp">
+							<h:outputText escape="false"  style="font-weight:normal"
+								value="Select  &lt;strong&gt;OK &lt;/strong&gt; to include the above selected documents." />
+						</div>
+					</h:panelGroup>
+					<!-- INCLUDE DOCS END -->
+				</div>
+			</div>
+		</div>
+
+		<div class="popBtnCont4">
+			<span class="FR padPop25rt">
+				<span class="btnPriEnbLt" />
+				<span>
+					<ace:linkButton value="#{popupSelectDocumentsBean.buttonCancelLabel}"
+						action="#{popupSelectDocumentsBean.actionCancel}" styleClass="btnPriEnbCt" />
+				</span>
+				<span class="btnPriEnbRt" />
+			</span>
+			<span class="FR pad5rt">
+				<span class="btnSecHotLt" />
+				<span>
+					<ace:linkButton value="#{popupSelectDocumentsBean.buttonOkLabel}"
+						action="#{popupSelectDocumentsBean.actionOk}" styleClass="btnSecHotCt" />
+				</span>
+				<span class="btnSecHotRt" />
+			</span>
+		</div>
+	</div>
+	
+	</ace:dialog>
+</h:form>
+</ui:composition>

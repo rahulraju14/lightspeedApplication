@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="Minor Trust Account Form">
+		<div class="miniTab pad15lt" style="width:825px;">
+
+			<!-- scrolling container -->
+			<div class="scrollPnlTab BKwhite sfFormBorder1">
+				<div class="pad10lt pad10rt" style="width:820px;">
+					<div class="rowCont FL" style="margin-left:235px">
+						<h:outputText styleClass="FL B pad30tp txt22" value="MINOR TRUST ACCOUNT FORM" />
+					</div>
+					<span class="rowCont FL pad3tp" style="margin-left:200px">
+						<h:outputText styleClass="FL B I pad5tp" value="This form is mandatory for any minor subject to Minor Trust withholding." />
+					</span>
+					<div class="rowCont FL" style="margin-left:76px">
+						<h:outputText styleClass="FL B pad20tp txt13" escape="false" style="color:red;"
+							value="You must attach a true and accurate copy of proof of
+							Minor Trust Account from the Financial Institution" />
+					</div>
+					<div class="rowCont F pad5tp" style="margin-left:100px;">
+						<span>
+							<h:outputText styleClass="FL B I pad5tp" value="Indicate if minor lives in:" />
+						</span>
+
+						<!-- Lives in California -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="Ca"
+								styleClass="iceSelBoolChkbx FL pad15lt"
+								value="#{formMtaBean.nativeCa}"
+								valueChangeListener="#{formMtaBean.listenChangeNativeState}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<h:outputText styleClass="FL B I pad5tp" value="California" />
+
+						<!-- Lives in New York -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="Ny"
+								styleClass="iceSelBoolChkbx FL pad15lt"
+								value="#{formMtaBean.nativeNy}"
+								valueChangeListener="#{formMtaBean.listenChangeNativeState}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<h:outputText escape="false" styleClass="FL B I pad5tp" value="New York &#160; &#160; - or - &#160; Worked in" />
+
+						<!-- Worked in California -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad15lt"
+								value="#{formMtaBean.form.workedCa}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<h:outputText styleClass="FL B I pad5tp" value="California" />
+
+						<!-- Worked in New York -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad15lt"
+								value="#{formMtaBean.form.workedNy}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<h:outputText styleClass="FL B I pad5tp" value="New York" />
+					</div>
+					<div class="rowCont FL" style="margin-left:50px;">
+						<span>
+							<h:outputText styleClass="FL B I fdNm"  style="width:170px;" value="Or worked in (and if required):" />
+						</span>
+
+						<!-- Worked in Louisiana -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad10lt"
+								value="#{formMtaBean.form.workedLa}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL B I fdNm" style="width:70px"> Louisiana </span>
+
+						<!-- Worked in New Mexico -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL"
+								value="#{formMtaBean.form.workedNm}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL B I fdNm" style="width:85px"> New Mexico </span>
+
+						<!-- Worked in North Carolina -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL"
+								value="#{formMtaBean.form.workedNc}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL B I fdNm_w" style="width:97px"> North Carolina </span>
+
+						<!-- Worked in Pennsylvania -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad5lt"
+								value="#{formMtaBean.form.workedPn}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL B I fdNm" style="width:90px"> Pennsylvania </span>
+
+						<!-- Worked in Tennessee -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad5lt"
+								value="#{formMtaBean.form.workedTn}"
+								disabled="#{not formMtaBean.empEdit}">
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL B I fdNm"> Tennessee </span>
+					</div>
+					<div class="FL pad10lt W95percnt BKgrey sfFormBorder2" style="padding-bottom:4px;">
+						<h:outputText styleClass="FL B pad4tp txt13" escape="false" style="margin-left:87px;"
+							value="CA, LA, NM, NC, PA, TN: The Minor Trust Account &lt;em&gt; &lt;u&gt;MUST&lt;/u&gt; &lt;/em&gt;  BE a Blocked Trust or &quot;Coogan&quot; Account." />
+						<h:outputText styleClass="FL B pad35lt txt13"
+							value="ONLY NY ACCEPTS: UTMA, UGMA, locked &quot;Child Performer Trust Account,&quot; or &quot;Coogan&quot; Blocked Trust Account." />
+					</div>
+
+					<!-- Minor's Detail Section-->
+					<ui:include src="minorsDetail.xhtml"></ui:include>
+
+					<!-- Minor's Bank Detail Section-->
+					<ui:include src="mtaAccountInfo.xhtml"></ui:include>
+
+					<!-- Declaration Section-->
+					<ui:include src="mtaDeclaration.xhtml"></ui:include>
+
+				</div>
+			</div><!-- scrolling container End-->
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:823px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formMtaBean}" />
+						<ui:param name="events" value="#{formMtaBean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+<!-- TODO: if the pop is resized maybe we can make it draggable again -->
+<h:form>
+	<ace:dialog visible="#{realElementBean.showAdd}"
+			header="Add Production Element"
+			closable="true"
+			draggable="false"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{realElementBean.actionCancelAdd}"/>
+
+		<div class="popupBdyAN">
+
+			<div class="popCont90">
+				<div class="infoTxtnopad padPop40tp pad30lt">
+					<span class="FL">
+					Please select the category of Production Element to create:
+					</span>
+				</div>
+				<div class="poprowCont padPop15tp padPop30lt">
+						<h:selectOneMenu
+							value="#{realElementBean.addCategory}">
+							<f:selectItems value="#{realElementBean.allowedNewTypeDL}" />
+						</h:selectOneMenu>
+				</div>
+			</div>
+			<div class="popBtnCont4">
+				<span class="FR pad15rt">
+					<span class="btnPriEnbLt" />
+					<span>
+					<ace:linkButton value="Cancel"
+						action="#{realElementBean.actionCancelAdd}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+					<ace:linkButton value="Add"
+						action="#{realElementBean.actionSetupAdd}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+</ui:composition>

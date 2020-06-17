@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="pad5tp FL ltMar" style="width:24%;">
+		<div>
+			<h:panelGroup rendered="#{(headerViewBean.backAction.value ne null) and
+					(headerViewBean.backAction.value gt ' ')}">
+				<span class="FL btnPriHotSmLt" />
+				<span>
+					<h:commandLink value="Back" onclick="queueClick(this,event);"
+							action="#{mobileTimecardBean.actionBackMileageForm}" styleClass="btnPriHotSmCt" />
+				</span>
+				<span class="FL btnPriHotSmRt" />
+			</h:panelGroup>
+		</div>
+	</div>
+
+	<div class="CT inBlock pad2tp" style="width:47%;">
+		<h:panelGroup rendered="#{headerViewBean.branded}">
+			<ace:graphicImage value="#{headerViewBean.brandMobileLogo.content}" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{! headerViewBean.branded}">
+			<a href="../../m/u/home.jsf" class="CT">
+				<img alt="#{headerViewBean.domainTabTitle}" src="../../i/logolseps.gif" />
+			</a>
+		</h:panelGroup>
+	</div>
+
+	<div class="pad5tp FR rtMar" style="width:22%;">
+		<span class="btnPriHotSmRt" />
+		<span class="FR">
+			<h:commandLink value="Logout" onclick="queueClick(this,event);"
+					actionListener="#{mobileTimecardBean.actionLogoutMileageForm}"
+					styleClass="btnPriHotSmCt" />
+		</span>
+		<span class="btnPriHotSmLt" />
+	</div>
+
+	<div class="CB"></div>
+
+</ui:composition>

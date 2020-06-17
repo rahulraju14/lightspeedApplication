@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Admin mini-tab of the Prod Admin / Users page -->
+
+	<ace:tabPane label="Admin">
+
+		<div id="personalCont" class="rowGradient">
+
+			<!-- Additional settings -->
+			<div class="rowCont FL pad5tp">
+				<div class="subSecHdgpersonal pad5lt">Account #:</div>
+				<div class="pad4tp">
+					<h:outputText styleClass="B" value="#{userListBean.user.accountNumber}"/>
+				</div>
+			</div>
+			<div class="rowCont FL pad5tp">
+				<div class="subSecHdgpersonal pad5lt">Student</div>
+				<div class="unionCkBxs FL">
+					<span class="pad15rt FL">
+						<h:selectBooleanCheckbox disabled="#{not userListBean.editMode}"
+							rendered="#{not empty authBean.pgFields['0.1,account']}"
+							value="#{userListBean.user.student}" styleClass="ckbx" />
+						<span class="ckbxTxtLbl"></span>
+					</span>
+				</div>
+			</div>
+			<div class="rowCont FL pad5tp">
+				<div class="subSecHdgpersonal pad5lt">Created</div>
+					<div class="pad4tp">
+					<h:outputText
+						value="#{userListBean.user.created}">
+						<f:convertDateTime pattern="M/d/yyyy, h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<h:outputText styleClass="pad15lt B" value="By:"/>
+					<h:outputText styleClass="pad5lt" value="#{userListBean.user.createdBy}"/>
+					<h:outputText styleClass="pad15lt B" value="Referred by:"/>
+					<h:outputText styleClass="pad5lt" rendered="#{not empty userListBean.user.referredBy}"
+						value="#{userListBean.user.referredBy}"/>
+					<h:outputText styleClass="pad5lt" rendered="#{empty userListBean.user.referredBy}"
+						value="(none)"/>
+				</div>
+			</div>
+		</div>
+
+	</ace:tabPane><!--  End Admin mini-Tab   -->
+
+</ui:composition>

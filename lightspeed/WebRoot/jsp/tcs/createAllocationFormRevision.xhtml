@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Popup for adding allocation form contacts -->
+	<c:set var="bean" value="#{createAllocationFormRevisionBean}" />
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	
+	<h:form>
+		<ace:dialog visible="#{bean.visible}"
+				header="#{bean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>	
+			
+			<div class="popupBdyAW">
+				<div class="popupCont90">
+
+						<div class="MA W95percnt pad15tp">
+							<div id="rowCont">&#160;</div>
+							<!-- Revision Text -->
+							<h:panelGroup>
+								<h:outputText value="#{msg.Tours_Allocation_Select} " />
+								<h:outputText styleClass="B" value="#{msg.Tours_Allocation_CreateRevision_Ok} " />
+								<h:outputText value="#{bean.txt1}" />
+							</h:panelGroup>
+							<div id="rowCont">&#160;</div>
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="#{msg.Tours_Allocation_Revision_Txt2}" />
+							</h:panelGroup>
+							<div id="rowCont">&#160;</div>
+							<!-- Revision dropdown -->
+							<h:panelGroup styleClass="txt12 W100percnt">
+								<h:panelGroup styleClass="FL pad3tp B W30percnt">
+									<h:outputText value="#{msg.Tours_Allocation_RevisionList_Title}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL W65percnt">
+									<h:selectOneMenu styleClass="W50percnt" value="#{bean.selectedFormId}"
+										tabindex="1" id="revisions">
+										<f:selectItems value="#{bean.revisionsDL}" />
+										<ace:ajax/>
+									</h:selectOneMenu>
+								</h:panelGroup>
+							</h:panelGroup>
+						</div> <!-- End of MA -->
+
+				</div> <!-- End of popupCont4W -->
+
+				<div class="popBtnCont4 padPop50rt pad10tp">
+					<h:panelGroup rendered="true">
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{bean.actionCancel}" styleClass="btnPriEnbCt" tabindex="3"/>
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="Add" id="revision_focus" styleClass="btnSecHotCt" action="#{bean.actionOk}" tabindex="2"/>
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div> <!-- End popBtnCont -->
+
+			</div> <!-- End popupBdy4W -->
+		</ace:dialog>
+	</h:form>
+</ui:composition>

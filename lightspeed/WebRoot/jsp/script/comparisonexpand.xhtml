@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:panelGroup draggable="false" dropTarget="false"
+		id="sceneData" rendered="#{pair.showData}">
+
+		<c:forEach begin="0" end="18" var="stNum" step="2">
+
+			<h:panelGrid width="945" columns="4"
+				columnClasses="elem_col_header,elem_col_header,elem_col_header,elem_col_header"
+				styleClass="grid1r" rendered="#{pair.columns[stNum] ne null}">
+				<ace:column headerText="">
+					<h:outputText value="#{pair.columns[stNum]}" />
+				</ace:column>
+				<ace:column headerText="">
+					<h:outputText value="#{pair.columns[stNum+1]}" />
+				</ace:column>
+				<ace:column headerText="">
+					<h:outputText value="#{pair.columns[stNum]}" />
+				</ace:column>
+				<ace:column headerText="">
+					<h:outputText value="#{pair.columns[stNum+1]}" />
+				</ace:column>
+			</h:panelGrid>
+
+			<h:panelGrid  width="945" columns="4" styleClass="grid1r"
+				columnClasses="elem_col,elem_col,elem_col,elem_col"
+				rendered="#{pair.columns[stNum] ne null}">
+				<c:forEach begin="#{stNum}" end="#{stNum+1}" var="num">
+					<ace:column headerText="">
+						<ui:repeat var="item" value="#{pair.leftElems[num]}">
+							<div>
+								<h:outputText value="#{item}" />
+							</div>
+						</ui:repeat>
+					</ace:column>
+				</c:forEach>
+				<c:forEach begin="#{stNum}" end="#{stNum+1}" var="num">
+					<ace:column headerText="">
+						<ui:repeat var="item" value="#{pair.rightElems[num]}">
+							<div>
+								<h:outputText value="#{item}" />
+							</div>
+						</ui:repeat>
+					</ace:column>
+				</c:forEach>
+			</h:panelGrid>
+
+		</c:forEach>
+
+	</h:panelGroup>
+
+</ui:composition>

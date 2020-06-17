@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The "Reassign timecard" dialog for the Transfer to Payroll page that is used only when the
+	  week-ending filter on the page is set to "All". -->
+	<!-- This is the similar to popupSelect.xhtml with the addition of a second drop-down field. -->
+	<h:form>
+		<ace:dialog visible="#{reassignPopupBean.visible}"
+				header="#{reassignPopupBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{reassignPopupBean.actionCancel}"/>		
+
+			<div class="popupBdyA">
+				<div class="popCont80">
+					<div class="popup_main">
+						<p class="stdTxt">
+							Select the week-ending date containing the desired target batch.
+							Then select the desired batch.
+						</p>
+						<p class="stdTxt">
+							Click <b>Reassign</b> to move the checked timecards to the selected batch.
+						</p>
+
+						<div class="rowCont pad15lt pad10tp txt12">
+							<h:outputText styleClass="B" value="W/E:" />
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu immediate="true" styleClass="pad20lt" id="popReassign_focus"
+										value="#{reassignPopupBean.selectedWeek}" style="width:100px;"
+										valueChangeListener="#{reassignPopupBean.listenWeekEndChange}" >
+									<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+									<f:selectItems value="#{reassignPopupBean.weekEndingList}"/>
+									<f:ajax execute="@this" render="@all"/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</div>
+
+						<div class="rowCont pad15lt pad10tp txt12">
+							<h:outputText styleClass="B" value="Batch:" />
+							<h:selectOneMenu styleClass="pad10lt" 
+									value="#{reassignPopupBean.selectedObject}" style="width:200px;">
+								<f:selectItems value="#{reassignPopupBean.selectList}"/>
+								<f:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+							<br /><br />
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="popBtnCont4 pad20rt">
+					<h:outputText rendered="#{not empty reassignPopupBean.buttonCancelLabel}">
+						<span class="FR">
+							<span class="btnPriEnbLt" />
+							<span>
+								<ace:linkButton value="#{reassignPopupBean.buttonCancelLabel}"
+									action="#{reassignPopupBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+					</h:outputText>
+					<h:panelGroup styleClass="FR pad10rt" rendered="#{reassignPopupBean.selectedObject ne null}">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="#{reassignPopupBean.buttonOkLabel}"
+								onclick="override();"
+								action="#{reassignPopupBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR pad10rt" rendered="#{reassignPopupBean.selectedObject eq null}">
+						<span class="btnPriDisLt"/>
+						<span>
+							<ace:linkButton value="Reassign" styleClass="btnPriDisCt" onclick="return false;"/>
+						</span>
+						<span class="btnPriDisRt"/>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

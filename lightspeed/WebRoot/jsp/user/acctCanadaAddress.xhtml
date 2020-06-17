@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page, for Canadian users: Home address and Agency section -->
+	<!--LS-2074 My Account Empty Space removed top padding line:11 pad40tp line:16 pad30tp line:17 changed pad25tp-->
+	<div class="rowCont pad40lt">
+		<!-- LEFT portion -->
+		<!-- HOME ADDRESS -->
+		<c:set var="homeAddr" value="#{userViewBean.user.homeAddress}"/>
+	
+		<div class="W37percnt FL">
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm_w"> <h:outputText value="Home Address:" /> </span>
+			</div>
+
+			<!-- MAILING ADDRESS LINE 1 -->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Address:" />
+					<span class="mandatory"> </span>
+				 </span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp">
+						<h:outputText value="#{homeAddr.addrLine1}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry id="addrLine1" maxlength="50" style="width:69%;"
+							value="#{homeAddr.addrLine1}">
+							<ace:ajax execute="@this" render="@all"/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- MAILING ADDRESS LINE 2 -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value=" " /> </span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp">
+						<h:outputText value="#{homeAddr.addrLine2}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry id="addrLine2" maxlength="50" style="width:69%;"
+							value="#{homeAddr.addrLine2}">
+							<ace:ajax execute="@this" render="@all"/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- MAILING CITY -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="City:" />
+					<span class="mandatory"></span>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp">
+						<h:outputText value="#{homeAddr.city}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry id="city" maxlength="35" style="width:69%;"
+							value="#{homeAddr.city}">
+							<ace:ajax execute="@this" render="@all"/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- MAILING STATE + ZIP -->
+			<div class="rowCont FL" style="margin-top: 4px;">
+				<h:panelGroup styleClass="FL">
+					<span class="fdNm" style="margin-top: -4px;"> Province/State:
+						<span class="mandatory"> </span>
+					</span>
+					<h:panelGroup rendered="#{not userViewBean.editMode}" >
+						<span class="fd_sm pad20lt">
+							<h:outputText value="#{homeAddr.state}"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<h:selectOneMenu id="userStateId" styleClass="FL" style="margin-left: 15px; width: 105px;"
+							value="#{homeAddr.state}">
+							<ace:ajax execute="@this" render="@all"/>
+							<f:selectItems value="#{userViewBean.userStateProvinceList}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="FL">
+					<span class="fdNm_sm pad25lt" style="width:105px;margin-top:-4px;">
+						<h:outputText styleClass="pad1rt" value="Postal Code/Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText styleClass="pad1tp" value="#{homeAddr.zip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_xsm" >
+							<ace:textEntry id="zip" maxlength="10" style="width:63px;"
+								value="#{homeAddr.zip}">
+								<ace:ajax execute="@this" render="@all"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+
+			<!-- MAILING COUNTRY -->
+			<div class="rowCont FL pad8tp">
+				<span class="fdNm" style="margin-top: -4px;"><h:outputText value="Country:" /> </span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm">
+						<h:outputText value="#{homeAddr.country}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectOneMenu id="userCountryId"
+							value="#{homeAddr.country}" styleClass="country"
+							style="width:326px;" valueChangeListener="#{userViewBean.listenCountryChange}">
+							<f:selectItems value="#{applicationScopeBean.countryDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+		<!-- LEFT portion END-->
+	</div>
+
+</ui:composition>

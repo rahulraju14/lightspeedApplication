@@ -1,0 +1,332 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+<c:set var="canada" value="#{headerViewBean.production.type.canadaTalent}" />	
+
+<h:form id="addForm">
+	<ace:dialog 
+			visible="#{addContactBean.visible}"
+			header="#{contactViewBean.addPopupTitle}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popupAddNewContact">
+	<!-- TODO do we need both visible flags somehow? must be "settable" for ace:dialog
+	ice version: visible="#{addContactBean.visible and contactViewBean.showAddContact}"
+	 -->
+
+		<ace:ajax event="close" execute="@this" listener="#{contactViewBean.actionCancelAdd}"/>
+
+		<div class="popNewContactBdy" id="addDiv">
+
+			<div class="rowCont">
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</div>
+
+			<div id="addcontactCont">
+				<div id="qcform" class="popup_main pad15tp">
+
+						<div class="FL rowCont W100percnt">
+							<h:panelGroup rendered="#{(! (headerViewBean.production.type.tours and addContactBean.noEmailClicked))}">
+							<div class="popup_inner"
+									style="margin-top:3px;#{headerViewBean.project.hasUnits ? '' : 'margin-top:20px;'}">
+								<span class="popup_inner_leg">
+									Search for Account
+								</span>
+
+								<div class="pad30lt">
+									<span class="rowCont pad5tp">
+										<span class="txt12 B_false">
+											Enter the e-mail address of the person you wish to add to the  #{addContactBean.productionTitle}.<br/>
+											Click<b> Search</b> to find their account in #{headerViewBean.domainTabTitle}.<br/>
+										</span>
+									</span>
+
+									<span class="rowCont pad12tp">
+										<span class="FL">
+											<h:outputText styleClass="B" value="E-Mail:" />
+										</span>
+										<span class="FL pad5lt">
+											<ace:textEntry id="addContact_focus" maxlength="100" tabindex="1"
+													style="width:260px;"
+													disabled="#{addContactBean.newAccount}"
+													action="#{addContactBean.actionSearch}"
+													value="#{addContactBean.contact.emailAddress}" />
+										</span>
+
+										<span class="FL pad10lt">
+											<span class="btnSecHotLt"/>
+											<ace:linkButton id="searchEmailButton" value="Search" tabindex="2"
+													action="#{addContactBean.actionSearch}" styleClass="btnSecHotCt" >
+												<f:setPropertyActionListener target="#{addContactBean.noEmailClicked}" value="#{false}" />
+											</ace:linkButton>
+											<span class="btnSecHotRt"/>
+										</span>
+										<span class="FL pad10lt">
+											<span class="btnPriEnbLt"/>
+											<ace:linkButton id="addEmailCancelButton" value="Cancel" tabindex="3"
+													action="#{contactViewBean.actionCancelAdd}" styleClass="btnPriEnbCt" />
+											<span class="btnPriEnbRt"/>
+										</span>
+									</span>
+
+									<span class="rowCont">
+
+										<h:outputText styleClass="FL pad6tp pad5bm W60percnt B errors"
+												rendered="#{addContactBean.enableNewAccount}"
+												value="#{addContactBean.searchMessage}" />
+										<h:outputText styleClass="FL pad6tp pad5bm pad10rt B errors"
+												rendered="#{! addContactBean.enableNewAccount}"
+												value="#{addContactBean.searchMessage}" />
+
+										<h:panelGroup rendered="#{addContactBean.enableNewAccount}" styleClass="FL pad30lt pad12tp W30percnt">
+											<h:panelGroup styleClass="FR pad10rt">
+												<span class="btnSecHotLt"/>
+												<span>
+												<ace:linkButton value="New Account" tabindex="4" id="newAcct_focus"
+														action="#{addContactBean.actionNewAccount}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt"/>
+											</h:panelGroup>
+										</h:panelGroup>
+
+									</span>
+
+								</div>
+							</div>
+							</h:panelGroup>
+							
+							<!-- NO EMAIL TEXT -->
+							<h:panelGroup rendered="#{headerViewBean.production.type.tours and
+														addContactBean.showNames and
+														addContactBean.noEmailClicked}">
+								<div class="popup_inner" style="padding-bottom:10px;">
+									<div class="pad10lt">
+										<span class="rowCont pad12tp">
+												<span class="txt12 B_false">
+													This person will be added to the production without an email address, and will not be<br/>
+													able to login to #{headerViewBean.domainTabTitle} to sign or view their documents.<br/>
+												</span>
+										</span>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<!-- NO EMAIL -->
+							<h:panelGroup rendered="#{headerViewBean.production.type.tours and (! addContactBean.noEmailClicked)}">
+								<div class="popup_inner" style="margin-top:3px;padding-bottom:10px;">
+									<div class="pad30lt">
+										<span class="rowCont pad18tp">
+											<span class="FL">
+												<h:outputText styleClass="B" value="Or:" />
+											</span>
+											<span class="FL pad-8tp pad10lt">
+												<span class="btnSecHotLt"/>
+												<ace:linkButton id="noEmailButton" value="No Email" tabindex="2"
+														action="#{addContactBean.actionNewAccount}" styleClass="btnSecHotCt">
+													<f:setPropertyActionListener target="#{addContactBean.noEmailClicked}" value="#{true}" />
+												</ace:linkButton>
+												<span class="btnSecHotRt"/>
+											</span>
+											<span class="txt12 B_false pad15lt">
+												Click to add a person without an email address.
+											</span>
+										</span>
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- NAME -->
+							<h:panelGroup rendered="#{addContactBean.showNames}">
+								<div class="popup_inner">
+									<span class="popup_inner_leg">
+										User's name
+									</span>
+									<span class="rowCont pad6bm">
+										<h:outputText styleClass="FL pad30lt pad2tp" value="First name:" />
+										<span class="FL pad5lt">
+											<ace:textEntry disabled="#{addContactBean.searchMatched}" maxlength="30"
+													style="width:140px;" id="name_focus" tabindex="5"
+													value="#{addContactBean.user.firstName}">
+												<ace:ajax execute="@this" render="@all"/>
+											</ace:textEntry>
+										</span>
+										<h:outputText styleClass="FL pad10lt pad2tp" value="Last name:" />
+										<span class="FL pad5lt">
+											<ace:textEntry id="lastName" disabled="#{addContactBean.searchMatched}" maxlength="30"
+													style="width:140px;" tabindex="6"
+													value="#{addContactBean.user.lastName}">
+												<ace:ajax execute="@this" render="@all"/>
+											</ace:textEntry>
+										</span>
+									</span>
+								</div>
+								<script type="text/javascript">focusOn('name');</script><!-- this works -->
+							</h:panelGroup>
+
+							<!-- UNIT / DEPARTMENT / ROLE -->
+							<h:panelGroup rendered="#{addContactBean.showRoles}">
+								<div class="popup_inner">
+									<span class="popup_inner_leg">
+										Occupation
+									</span>
+									<span class="rowCont">
+										<span class="FL infoTxtnopad pad5lt" style="top:-5px;">
+											<h:outputText rendered="#{not addContactBean.adminDept}"
+												value="within '#{headerViewBean.project.title}'" />
+											<h:outputText rendered="#{addContactBean.adminDept}"
+												value="for ALL projects" />
+										</span>
+									</span>
+									<span class="rowCont pad40lt pad5tp txt12 B_false">
+										Select the occupation that this person will hold on the  #{addContactBean.productionTitle}.
+									</span>
+									<h:panelGroup styleClass="rowCont pad20tp" rendered="#{headerViewBean.project.hasUnits}">
+											<h:outputText styleClass="FL fdNm" value="Unit:" />
+										<span class="FL">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu id="occupationList" style="width:200px;" tabindex="7"
+												value="#{addContactBean.unitId}">
+												<f:selectItems value="#{addContactBean.unitDL}" />
+												<ace:ajax render="@all"/>
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										</span>
+									</h:panelGroup>
+									<span class="rowCont">
+										<span class="FL">
+											<h:outputText styleClass="fdNm" value="Department:" />
+										</span>
+										<span class="FL">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu style="width:200px;" id="deptList"
+													tabindex="8"
+													valueChangeListener="#{addContactBean.changeDepartment}"
+													value="#{addContactBean.departmentId}">
+												<f:selectItems value="#{addContactBean.departmentDL}" />
+												<ace:ajax render="@all"/>
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										</span>
+									</span>
+									<span class="rowCont">
+										<span class="FL">
+											<h:outputText styleClass="fdNm" value="Occupation:" />
+										</span>
+										<span class="FL">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu tabindex="9" id="addRole_focus"
+													valueChangeListener="#{addContactBean.changeRole}"
+													value="#{addContactBean.role}" styleClass="selRole W200">
+												<f:converter converterId="lightspeed.RoleConverter" />
+												<f:selectItems value="#{addContactBean.roleDL}" />
+												<ace:ajax render="@all"/>
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										</span>
+									</span>
+									<h:panelGroup rendered="#{addContactBean.showRoleName}">
+										<span class="rowCont">
+											<span class="FL">
+												 <h:outputText styleClass="fdNm" value="New Role:" />
+											</span>
+											<span class="fd FL">
+												<ace:textEntry styleClass="W200" maxlength="50" tabindex="10"
+														id="addNewRole_focus" value="#{addContactBean.roleName}"/>
+											</span>
+										</span>
+									</h:panelGroup>
+									<div class="pad10bm">
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- PRODUCTION ACCESS -->
+							<!--LS-1959 & LS-1960-->
+							<c:if test="${canada == false}">
+							  <h:panelGroup rendered="#{addContactBean.showRoles and
+													(! (headerViewBean.production.type.tours and addContactBean.noEmailClicked))}">
+								<div class="popup_inner">
+									<span class="popup_inner_leg">
+										Production Access
+									</span>
+									<div class="pad30lt pad10bm">
+										<span class="rowCont pad5tp pad2bm">
+											<span class="ckbxTxtLbl FL">
+												<h:selectBooleanCheckbox id="allowProdAccessCheckbox" tabindex="11"
+													value="#{addContactBean.accessAllowed}" styleClass="ckbx">
+													<ace:ajax />
+												</h:selectBooleanCheckbox>	
+											</span>
+											<span class="ckbxTxtLbl FL pad5lt">
+												Allow this person to access the  #{addContactBean.productionTitle} online.
+											</span>
+										</span>
+										<span class="rowCont pad5tp pad2bm">
+											<span class="ckbxTxtLbl FL">
+												<h:selectBooleanCheckbox id="sendInvitationCheckbox" tabindex="12"
+													value="#{addContactBean.sendInvitation}" styleClass="ckbx">
+													<ace:ajax />
+												</h:selectBooleanCheckbox>	
+											</span>
+											<span class="ckbxTxtLbl FL pad5lt">
+												Send this person a  #{addContactBean.productionTitle} Invitation.
+											</span>
+										</span>
+									</div>
+								</div>
+							  </h:panelGroup>
+                            </c:if>
+						 </div>
+
+				</div>
+			</div>
+
+		<!-- ADD/INVITE AND CANCEL BUTTONS -->
+		<h:panelGroup rendered="#{addContactBean.showRoles}">
+			<div class="popBtnCont4 pad20rt">
+				<span class="FR pad5rt">
+					<span class="btnPriEnbLt"/>
+					<span>
+					<ace:linkButton id="cancelButton" value="Cancel" tabindex="13" onclick="queueClick(this,event);"
+						action="#{contactViewBean.actionCancelAdd}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt"/>
+				</span>
+				<h:panelGroup styleClass="FR pad5rt" rendered="#{not ((addContactBean.role eq null) or
+						(empty addContactBean.user.firstName) or
+						(empty addContactBean.user.lastName))}">
+					<span class="btnSecHotLt"/>
+					<span>
+					<ace:linkButton value="#{addContactBean.inviteButton}" tabindex="12" id="addButton"
+						action="#{contactViewBean.actionAddOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt"/>
+				</h:panelGroup>
+				<h:panelGroup styleClass="FR pad5rt" rendered="#{(addContactBean.role eq null) or
+						(empty addContactBean.user.firstName) or
+						(empty addContactBean.user.lastName)}">
+					<span class="btnPriDisLt" />
+					<span>
+						<ace:linkButton id="inviteButton"
+							value="#{addContactBean.inviteButton}"
+							styleClass="btnPriDisCt" type="text" onclick="return false;" />
+					</span>
+					<span class="btnPriDisRt" />
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
+
+		</div>
+
+	</ace:dialog>
+</h:form>
+</ui:composition>

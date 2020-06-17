@@ -1,0 +1,315 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Employee information -->
+
+	<div class="BKwhite">
+		<hr class="rowCont FL"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Employee's Name Start -->
+		<div>
+			<!-- LEFT portion Start-->
+			<div class="W75percnt FL" style="margin-bottom:-2px;">
+				<!-- left border Start -->
+				<div class="rowCont pad-1lt"
+					style="height:54px;border-right:solid 1px;">
+
+					<!-- first block Start -->
+					<div class="W42percnt FL pad4tp">
+						<!-- Last Name (Family Name) -->
+						<div class="rowCont pad5lt">
+							<span class="fdNm_w2"> <h:outputText value="Last Name (Family Name)" /> </span>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formI9Bean.form.lastName) ? 'requiredField' : ''}">
+									<ace:textEntry id="USER_LAST_NAME"
+										maxlength="30" style="width:96%;"
+										disabled="#{not formI9Bean.empEdit}"
+										value="#{formI9Bean.form.lastName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}">
+										<ace:ajax render="@this FULL_NAME" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- first block End -->
+
+					<!-- Second block Start -->
+					<div class="W42percnt FL pad4tp">
+						<!-- First Name (Given Name) -->
+						<div class="rowCont pad10lt">
+							<span class="fdNm_w2"> <h:outputText value="First Name (Given Name)" /> </span>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formI9Bean.form.firstName) ? 'requiredField' : ''}">
+									<ace:textEntry id="USER_FIRST_NAME"
+										maxlength="30" style="width:95%;"
+										disabled="#{not formI9Bean.empEdit}"
+										value="#{formI9Bean.form.firstName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}" >
+										<ace:ajax render="@this FULL_NAME" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- Second block End -->
+
+					<!-- Third block Start -->
+					<div class="W14percnt FR pad4tp">
+						<!-- Middle Initial -->
+						<div class="rowCont">
+							<span class="fdNm_w2"> <h:outputText value="Middle Initial" /> </span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry id="USER_MIDDLE_NAME"
+										maxlength="2" style="width:85%;"
+										disabled="#{not formI9Bean.empEdit}"
+										value="#{formI9Bean.form.middleName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}">
+										<ace:ajax render="@this FULL_NAME" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- Third block End-->
+				</div>
+				<!-- left border End -->
+			</div>
+			<!-- LEFT portion End -->
+
+			<!-- RIGHT portion Start-->
+			<div class="W25percnt pad4tp FL">
+				<!-- Fourth block Start -->
+				<div class="rowCont pad20lt">
+					<!--Other Names Used (if any)-->
+					<span class="fdNm_w2"> <h:outputText value="Other Names Used (if any)" /> </span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry id="OTHER_NAME"
+								maxlength="200" style="width:83%;"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.otherName}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- RIGHT portion End-->
+
+		</div>
+		<!-- Employee's Name end -->
+
+		<hr class="rowCont FL pad-1tp"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Employee's Address start -->
+		<div class="FL" style="margin-bottom:-2px;">
+			<!-- first block-->
+			<div class="W35percnt FL">
+				<!-- Address field Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt pad3tp" style="width:220px;">
+						<h:outputText value="Address (Street Number And Name)" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt #{empty (formI9Bean.form.address.addrLine1) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:94%;"
+								id="HOME_ADDR_STREET" maxlength="100"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.addrLine1}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Address field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block Start-->
+			<div class="W13percnt FL">
+				<!-- Apt. number Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad5lt pad3tp"> <h:outputText value="Apt. Number" /> </span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt">
+							<ace:textEntry id="HOME_APT_NUMBER"
+								maxlength="15" style="width:84%;"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.aptNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!--Apt. Number End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- third block-->
+			<div class="W25percnt FL">
+				<!-- City or Town field Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad8lt pad3tp" style="width:220px;">
+						<h:outputText value="City or Town" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.address.city) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:90%;"
+								id="HOME_ADDR_CITY_ONLY" maxlength="50"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.city}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- City or Town field End -->
+			</div>
+			<!-- third block End-->
+
+			<!-- Fourth block Start-->
+			<div class="W10percnt FL">
+				<!-- State Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad8lt pad3tp"> <h:outputText value="State" /> </span>
+					<h:selectOneMenu id="HOME_ADDR_STATE"
+						styleClass="FL W80percnt pad8lt"
+						disabled="#{not formI9Bean.empEdit}"
+						value="#{formI9Bean.form.address.state}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						style="#{formI9Bean.form.address.state eq null  ? 'background-color: rgb(255,255,170)' : ''};">
+						<f:selectItems value="#{formI9Bean.stateCodeDL}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</div>
+				<!--State End -->
+			</div>
+			<!-- Fourth block End-->
+
+			<!-- Fifth block Start-->
+			<div class="W15percnt FL">
+				<!-- Zip Code Start -->
+				<div class="rowCont" style="height:54px;">
+					<span class="fdNm_w pad8lt pad3tp"> <h:outputText value="Zip Code" /> </span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.address.zip) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:96%;"
+								id="HOME_ADDR_ZIP" maxlength="10"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.zip}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!--Zip Code End -->
+			</div>
+			<!-- Fifth block End-->
+
+		</div>
+		<!-- Employee's Address end -->
+		<hr class="rowCont FL pad-1tp"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Employee Information Start -->
+		<div style="margin-bottom:-2px;">
+			<!-- first block-->
+			<div class="W22percnt FL">
+				<!-- Date of Birth Start-->
+				<div class="rowCont pad5lt"
+					style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad3tp"> <h:outputText value="Date of Birth:" /> </span>
+					<ace:dateTimeEntry id="USER_DOB_MDY"
+						tabindex="0" value="#{formI9Bean.form.dateOfBirth}"
+						renderAsPopup="true" disabled="#{not formI9Bean.empEdit}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						style="min-width:92%; width:92%"
+						styleClass="fd_sm3 #{empty (formI9Bean.form.dateOfBirth) ? 'requiredField' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+						<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+					</ace:dateTimeEntry>
+				</div>
+				<!-- Date of Birth End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block Start-->
+			<div class="W25percnt FL">
+				<!-- Social Security Number Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad10lt pad3tp" style="width: 170px;">
+						<h:outputText value="U.S. Social Security Number"/>
+					</span>
+					<h:panelGroup rendered="#{not formI9Bean.empEdit}">
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry value="#{formI9Bean.form.viewSSN}" disabled="true" style="width:91%">
+								<f:converter converterId="lightspeed.SSNFormatter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{formI9Bean.empEdit}">
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry style="min-width:88%; width:88%;"
+									id="SOCIAL_SECURITY" maxlength="11"
+									disabled="#{not formI9Bean.empEdit}"
+									value="#{formI9Bean.form.socialSecurity}"
+									valueChangeListener="#{formI9Bean.listenValueChange}">
+								<f:converter converterId="lightspeed.SSNFormatter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!--Social Security Number End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- third block-->
+			<div class="W33percnt FL">
+				<!-- Email Address Start -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad8lt pad3tp" style="width:220px;">
+						<h:outputText value="E-mail Address" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:92%;"
+								id="USER_EMAIL_ADDRESS" maxlength="100"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.emailAddress}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Email Address End -->
+			</div>
+			<!-- third block End-->
+
+			<!-- Fourth block Start-->
+			<div class="W18percnt FL">
+				<!-- Telephone Number Start -->
+				<div class="rowCont" style="height:54px;">
+					<span class="fdNm_w pad8lt pad3tp"> <h:outputText value="Telephone Number" /> </span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:96%;"
+								id="TELEPHONE_NUMBER" maxlength="30"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.telephoneNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!--Telephone Number End -->
+			</div>
+			<!-- Fourth block End-->
+
+		</div>
+		<!-- Employee Information End -->
+	</div>
+</ui:composition>

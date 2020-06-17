@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Script Elements</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('elem:mainlist', 208, 368);
+
+	resizeScrollable('elem:scriptelem', 525, 60); /* 'appears in scenes' list */
+	resizeScrollable('elem:playedby', 320, 255);
+
+	element = document.getElementById('elem:miniView');
+	resizeElement(element, 181, 345);
+	</c:if>
+
+	//clearOnScroll('elem:linkedelems');
+	//clearOnScroll('elem:scriptelem');
+
+}
+
+var formname = "elem";
+var mainListId = "elem:mainlist"; // used by main list scrolling functions
+</script>
+</h:head>
+<h:body onkeyup="if(event.keyCode==27){lSubmit(event,'elem:escapekey');};">
+
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+
+<h:form id="elem">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="scriptelements" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Element List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="contactHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Script Elements</span>
+						<h:panelGroup styleClass="FR pad5rt" rendered="#{(scriptElementBean.hasScript) and not empty authBean.pgFields['5.0,add_script']}">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton
+								 value="Add" title="Add a new Script Element to the breakdown"
+								 action="#{scriptElementBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ltrtBdr BKwhite LH24">
+						<div class="ckbxTxtLbl_rw">
+							<h:selectBooleanCheckbox styleClass="FL ckbx"
+								value="#{scriptElementBean.showOrphans}"
+								valueChangeListener="#{scriptElementBean.changeShowOrphans}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+							<span class="FL ckbxTxtLbl txt11">Include Orphaned Elements</span>
+						</div>
+						<span class="FR pad2tp">
+							<h:selectOneMenu
+								value="#{scriptElementBean.category}"
+								valueChangeListener="#{scriptElementBean.selectedCategory}"
+								styleClass="W100percnt txt11">
+								<f:selectItems value="#{scriptElementBean.scriptElementTypeDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</div>
+
+					<!-- data list container for Element Script List -->
+					<div id="scriptElemListCont" class="ltrtBdr">
+						<div class="rowCont FL">
+							<ace:dataTable id="mainlist"
+									selectionMode="single" singleSort="true"
+									style="width:100%;max-width:100%;"
+									styleClass="bk_sl_grid"
+									value="#{scriptElementBean.sortedItemList}" var="element"
+									scrollHeight="#{headerViewBean.mobile ? '' : '368'}"
+									scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+									stateMap="#{scriptElementBean.stateMap}"
+									rowSelectListener="#{scriptElementBean.listenRowClicked}">
+
+								<ace:column style="width:12%" headerText="ID" sortBy="#{element.elementIdStr}">
+									<h:outputText value="#{element.elementIdStr}" style="width:36px;" />
+								</ace:column>
+								<ace:column style="width:48%" headerText="Name" sortBy="#{element.name}">
+									<span class="FL txt11 pad3lt"><h:outputText value="#{element.name}" /></span>
+								</ace:column>
+								<ace:column style="width:13%" headerText="Xs" sortBy="#{element.elementDood.scriptOccurs}">
+									<span class="txt11 pad8lt" >
+										<h:outputText
+											value="#{element.elementDood.scriptOccurs}" />
+									</span>
+								</ace:column>
+								<ace:column style="width:13%" headerText=" " sortBy="#{element.requirementSatisfied}">
+									<h:panelGroup styleClass="pad12lt" rendered="#{element.realElementRequired and element.requirementSatisfied}" >
+										<h:graphicImage alt="" value="" url="../../i/icon_check.gif"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="pad12lt" rendered="#{element.realElementRequired and (not element.requirementSatisfied)}" >
+										<h:graphicImage value="" url="../../i/icon_flagRed.png" alt=""/>
+									</h:panelGroup>
+									<h:outputText value="- -" styleClass="pad12lt"
+										rendered="#{not element.realElementRequired}" />
+								</ace:column>
+								<ace:column headerText="Type" style="width:14%;padding-right:17px;" sortBy="#{element.type.label}">
+									<h:outputText styleClass="txt11" value="#{element.type.label}" />
+								</ace:column>
+
+							</ace:dataTable>
+						</div>
+					</div><!-- end scriptElemListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- End Element List - pnlLt -->
+
+				<!--  Begin Element Details - pnlRt -->
+				<div id="pnlRt">
+
+					<h:panelGroup styleClass="errMsgCont">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont FL ltrtBdr BKwhite">
+						<span class="FL pnlHdrTxtElemCont">
+							<h:outputText
+								rendered="#{scriptElementBean.element.name ne null}"
+								value="#{scriptElementBean.element.name}"/>&#160;
+						</span>
+
+						<div class="rowBtn4RtTpPnlElem">
+							<h:panelGroup rendered="#{scriptElementBean.editMode and
+									(scriptElementBean.element.id ne null) and
+									(scriptElementBean.element.okToDelete) and
+									(not empty authBean.pgFields['5.0,delete'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton
+											value="Delete" action="#{scriptElementBean.actionDelete}"
+											title="Delete this Script Element from the breakdown"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{scriptElementBean.editMode}">
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton
+											value="Edit"
+											styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not scriptElementBean.editMode) and
+									(scriptElementBean.element ne null) and
+									(scriptElementBean.element.okToDelete) and
+									(not empty authBean.pgFields['5.0,delete'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton
+											value="Delete" action="#{scriptElementBean.actionDelete}"
+											title="Delete this Script Element from the breakdown"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not scriptElementBean.editMode) and
+									(scriptElementBean.element ne null) and
+									((not empty authBean.pgFields['5.0,edit']) or
+										(scriptElementBean.scriptElement.type eq 'CHARACTER' and not empty authBean.pgFields['5.0,edit_cast']) or
+										(scriptElementBean.scriptElement.type eq 'LOCATION' and not empty authBean.pgFields['5.0,edit_loc']) or
+										(scriptElementBean.scriptElement.type ne 'LOCATION' and scriptElementBean.scriptElement.type ne 'CHARACTER' and not empty authBean.pgFields['5.0,edit_other'])
+									)}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{scriptElementBean.actionEdit}"
+										title="Edit this element's attributes"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div id="scriptElemDetailCont" class="ltrtBdr BKwhite">
+
+						<h:panelGrid id="miniView" styleClass="miniPanel">
+
+							<!-- Tabs for script element Details -->
+							<ace:tabSet id="tabs" selectedIndex="#{scriptElementBean.selectedTab}">
+
+								<!--  script element details tab  -->
+								<ace:tabPane label="Details" id="detailtab">
+
+									<div id="scriptElemDetailTab" class="rowGradient pad15tp">
+
+										<div class="rowCont FL">
+											<div class="FL W240">
+												<h:outputText styleClass="fdNm_sm FL" value="Category:" />
+												<h:outputText styleClass="LH18 FL pad2tp" value="#{scriptElementBean.scriptElement.type.label}"
+														rendered="#{not scriptElementBean.editMode}" />
+					 							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+													<h:selectOneMenu style="width:150px;line-height:14px;height:20px;" styleClass="FL pad2tp"
+															value="#{scriptElementBean.type}"
+															valueChangeListener="#{scriptElementBean.changeEditCategory}"
+															disabled="#{(not scriptElementBean.newEntry)
+															or (empty authBean.pgFields['5.0,edit_all'])
+															or (not empty scriptElementBean.scriptElement.realLinkList)}"
+															rendered="#{scriptElementBean.editMode}">
+														<f:selectItems
+																value="#{enumList.scriptElementTypes}" />
+																<ace:ajax />
+													</h:selectOneMenu>
+												</icecore:setEventPhase>
+											</div>
+											<h:panelGroup styleClass="FL pad5lt pad2tp"
+												rendered="#{(not scriptElementBean.editMode)}">
+												<h:outputText styleClass="fdNm_xsm RT pad5rt" value="ID #:" />
+												<h:outputText styleClass="LH18 W25 pad2tp pad5lt" value="#{scriptElementBean.scriptElement.elementIdStr}" />
+											</h:panelGroup>
+											<h:panelGroup styleClass="FL pad5lt"
+												rendered="#{(scriptElementBean.editMode)}">
+												<h:outputText styleClass="fdNm_xsm RT pad5rt pad2tp" value="ID #:" />
+												<ace:textEntry maxlength="7" styleClass="LH18 W35 pad3lt"
+													value="#{scriptElementBean.scriptElement.elementIds}" >
+												</ace:textEntry>
+											</h:panelGroup>
+											<div class="FR pad15rt">
+												<span class="FL">
+													<h:selectBooleanCheckbox styleClass="ckbx"
+														value="#{scriptElementBean.element.realElementRequired}"
+														disabled="#{(not scriptElementBean.editMode)
+															or (empty authBean.pgFields['5.0,edit_all']) or (scriptElementBean.element eq null)}">
+														<ace:ajax />
+													</h:selectBooleanCheckbox>
+													<h:outputText styleClass="ckbxTxtLbl pad4tp" value="Production Element Required" />
+												</span>
+											</div>
+										</div><!-- end top section -->
+
+										<div class="scriptElemDetailsLeft FL">
+											<h:panelGroup styleClass="rowCont FL pad5tp"
+												rendered="#{scriptElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Name:" />
+													<span class="mandatory">*</span>
+												</span>
+												<ace:textEntry maxlength="45" style="float:left;width:195px;"
+													disabled="#{(empty authBean.pgFields['5.0,edit_all'])}"
+													value="#{scriptElementBean.element.name}" />
+											</h:panelGroup>
+
+											<!-- DESCRIPTION -->
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{scriptElementBean.editMode}">
+												<div style="height:56px;overflow:hidden;">
+													<span class="fdNm_sm FL">
+														<h:outputText value="Description:" />
+													</span>
+													<ace:textAreaEntry maxlength="1000" styleClass="scriptDescTxtArea"
+														value="#{scriptElementBean.element.description}" />
+												</div>
+											</h:panelGroup>
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{not scriptElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Description:" />
+												</span>
+												<h:outputText styleClass="scriptElemDescCont FL pad3tp" value="#{scriptElementBean.element.description}"/>
+											</h:panelGroup><!-- end Description -->
+
+											<!-- INCLUDE ON CALLSHEET -->
+											<h:panelGroup styleClass="rowCont FL"
+													rendered="#{scriptElementBean.scriptElement.type eq 'CHARACTER'}">
+												<span class="FL pad10lt pad5tp">
+													<h:selectBooleanCheckbox styleClass="FL"
+															disabled="#{not scriptElementBean.editMode}"
+															value="#{scriptElementBean.scriptElement.includeOnCallsheet}" >
+															<ace:ajax />
+													</h:selectBooleanCheckbox>
+													<h:panelGroup styleClass="FL B pad2tp">
+														Include on all Call Sheets
+													</h:panelGroup>
+												</span>
+											</h:panelGroup>
+
+											<!-- RESPONSIBLE PARTY -->
+											<h:panelGroup styleClass="rowCont FL pad10tp"
+												rendered="#{not scriptElementBean.editMode}">
+												<span class="fdNm_sm FL pad5tp" style="left:-5px;text-align:right;line-height:14px;">
+													<h:outputText
+														value="Responsible Party:" />
+												</span>
+												<h:panelGroup
+													rendered="#{scriptElementBean.element.contact ne null}">
+													<span class="fd_sm pad18tp">
+														<ace:linkButton
+															rendered="#{not empty authBean.pgFields['5.2,link_contact']}"
+															value="#{scriptElementBean.element.contact.user.displayName}"
+															action="contactview" >
+															<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+															<f:setPropertyActionListener value="#{scriptElementBean.element.contact.id}" target="#{jumpBean.value}"/>
+														</ace:linkButton>
+														<h:outputText value="#{scriptElementBean.element.contact.user.displayName}"
+															rendered="#{empty authBean.pgFields['5.2,link_contact']}" />
+													</span>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{scriptElementBean.element.contact eq null}">
+													<span class="fd_sm pad16tp">
+													<h:outputText
+														value="None Assigned" />
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="scriptElemRespPtyContWrap MA pad5tp"
+												rendered="#{scriptElementBean.editMode}">
+												<div id="scriptElemRespPtyCont" class="FL">
+													<div class="subSecHdg_scriptElemRespPty">Responsible Party</div>
+
+													<h:panelGroup style="height:25px;padding-left:10px;" styleClass="FL"
+														rendered="#{scriptElementBean.editMode}">
+														<h:selectOneMenu style="width:267px;"
+															disabled="#{empty authBean.pgFields['5.0,edit_all']}"
+															valueChangeListener="#{scriptElementBean.changeContact}"
+															value="#{scriptElementBean.contactId}">
+															<f:selectItems value="#{scriptElementBean.contactDL}" />
+																<ace:ajax />
+														</h:selectOneMenu>
+													</h:panelGroup>
+												</div>
+											</h:panelGroup><!-- end responsible party -->
+										</div><!-- end script Element Details Left -->
+
+										<div class="scriptElemDetailsRight FR">
+
+											<!-- Linked to legend wrapper -->
+											<div class="scriptElemLinkedToContWrap MA">
+												<div id="scriptElemLinkedToCont" class="FL pad2tp">
+													<div class="legendHdg">Linked Script Elements*</div>
+
+													<h:panelGroup styleClass="btn_legend"
+														rendered="#{scriptElementBean.editMode}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Add"
+															action="#{scriptElementBean.actionOpenChild}"
+															title="Link other elements to this element"
+															styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+
+													<h:panelGroup styleClass="btn_legend"
+														style="#{scriptElementBean.editMode ? '' : 'padding-right:50px;'}"
+														rendered="#{(scriptElementBean.editMode) or
+															((not scriptElementBean.editMode) and
+															(scriptElementBean.element ne null) and
+															((not empty authBean.pgFields['5.0,edit']) or
+															(scriptElementBean.scriptElement.type eq 'CHARACTER' and not empty authBean.pgFields['5.0,edit_cast']) or
+															(scriptElementBean.scriptElement.type eq 'LOCATION' and not empty authBean.pgFields['5.0,edit_loc']) or
+															(scriptElementBean.scriptElement.type ne 'LOCATION' and scriptElementBean.scriptElement.type ne 'CHARACTER' and not empty authBean.pgFields['5.0,edit_other'])
+														))}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Retro"
+															action="#{scriptElementBean.actionOpenRetro}"
+															title="Add linked elements to all matching scenes"
+															styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+
+													<ace:dataTable
+															styleClass="bk_sl_grid"
+															value="#{scriptElementBean.scriptElement.childElementList}"
+															var="item" id="linkedelems"
+															style="width:100%;max-width:100%;overflow-x:hidden;float:left;"
+															scrollHeight="#{headerViewBean.mobile ? '' : '85'}"
+															scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+														<ace:column style="width:5%;">
+															<h:commandButton value=""
+																	rendered="#{scriptElementBean.editMode}"
+																	image="../../i/icon_deleteX.gif" style="padding-right:5px;"
+																	action="#{scriptElementBean.actionRemoveChild}" title="Remove">
+																<f:setPropertyActionListener value="#{item.id}" target="#{scriptElementBean.removeLinkId}" />
+																<f:setPropertyActionListener value="#{item.name}" target="#{scriptElementBean.removeName}" />
+															</h:commandButton>
+														</ace:column>
+
+														<ace:column headerText="Name" styleClass="txt11" style="width:65%;">
+															<ace:linkButton styleClass="FL"
+																	value="#{item.name}"
+																	action="#{scriptElementBean.actionJumpToChild}">
+																<f:setPropertyActionListener value="#{item.id}" target="#{scriptElementBean.removeLinkId}" />
+															</ace:linkButton>
+														</ace:column>
+
+														<ace:column headerText="Category" styleClass="txt11" style="width:30%;">
+															<h:outputText styleClass="txt11" value="#{item.type.label}" />
+														</ace:column>
+
+													</ace:dataTable>
+												</div>
+												<h:panelGroup styleClass="FL legend pad5lt">
+													<span class="legendTxt">* - included on breakdown with this element</span>
+												</h:panelGroup>
+											</div>
+
+										</div><!-- end script Element Details Right -->
+
+									</div><!-- end scriptElemDetailTab -->
+
+									<!--  DooD settings -->
+									<h:panelGroup styleClass="rowCont rowGradient" rendered="#{scriptElementBean.scriptElement.type eq 'CHARACTER'}">
+										<span class="subSecHdg_se pad5lt pad8tp">
+											DooD:
+										</span>
+										<span class="FL pad10lt pad5tp">
+											<h:selectBooleanCheckbox styleClass="FL"
+												disabled="#{not scriptElementBean.editMode}"
+												valueChangeListener="#{scriptElementBean.changeDropPickup}"
+												value="#{scriptElementBean.scriptElement.dropPickupAllowed}" >
+													<ace:ajax />
+											</h:selectBooleanCheckbox>
+											<h:panelGroup styleClass="FL B pad2tp">
+												Allow Drops &amp; Pickups
+											</h:panelGroup>
+										</span>
+										<span class="FL B pad20lt pad5tp">
+											<ace:textEntry
+												disabled="#{not scriptElementBean.editMode}"
+												styleClass="FL pad5lt" style="width:25px;" maxlength="2"
+												valueChangeListener="#{scriptElementBean.changeHoldDays}"
+												value="#{scriptElementBean.scriptElement.daysHeldBeforeDrop}" >
+												<f:validateLongRange minimum="0" maximum="99"/>
+											</ace:textEntry>
+											<h:outputText styleClass="FL pad2tp pad5lt" value="# of Hold Days" />
+										</span>
+										<span class="FL pad20lt" style="margin-top:-10px;display:block;height:38px;">
+											<h:panelGroup styleClass="B pad2tp pad10rt">
+												Time Period used for Drop:
+											</h:panelGroup>
+											<h:selectOneMenu styleClass="txt11"
+													disabled="#{not scriptElementBean.editMode}"
+													value="#{scriptElementBean.scriptElement.dropToUse}"
+													style="width:200px;display:block;">
+												<f:selectItems value="#{scriptElementBean.dropDateDL}" />
+												<f:convertDateTime type="date" dateStyle="short"
+													timeZone="#{applicationScopeBean.timeZone}" />
+													<ace:ajax />
+											</h:selectOneMenu>
+										</span>
+									</h:panelGroup>
+
+									<!-- Appears in Scenes legend wrapper -->
+									<div class="scriptElemAprsContWrap MA">
+										<div id="scriptElemAprsCont" class="FL">
+											<div class="legendHdg">Appears in Scenes</div>
+											<h:panelGroup styleClass="btn_legend"
+												rendered="#{scriptElementBean.editMode and not empty authBean.pgFields['5.0,edit_all']}">
+												<span class="btnMiniLtHot" />
+													<ace:linkButton value="Add Scene"
+														action="#{scriptElementBean.actionOpenAddScene}"
+														title="Add more scenes that this element appears in"
+														styleClass="btnMiniCt" />
+												<span class="btnMiniRtHot" />
+											</h:panelGroup>
+
+											<ace:dataTable id="scriptelem" styleClass="bk_sl_grid"
+												selectionMode="single"
+												value="#{scriptElementBean.linkedScenes}"
+												scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+												scrollHeight="#{headerViewBean.mobile ? '' : '77'}"
+												var="scene" style="width:100%;max-width:100%;overflow-x:hidden;">
+
+												<ace:column headerText="" style="width:5%;">
+													<h:commandButton
+														rendered="#{scriptElementBean.editMode and scriptElementBean.scriptElement.type ne 'LOCATION'
+																and (not empty authBean.pgFields['5.0,edit_all'])}"
+														value="" image="../../i/icon_deleteX.gif"
+														action="#{scriptElementBean.actionRemoveScene}" title="Remove">
+														<f:setPropertyActionListener value="#{scene.id}" target="#{scriptElementBean.removeSceneId}"/>
+													</h:commandButton>
+												</ace:column>
+
+												<ace:column headerText="#" style="width:10%;"
+													rendered="#{not empty authBean.pgFields['5.2,link_scene']}">
+													<ace:linkButton action="breakdown"
+														actionListener="#{breakdownBean.openSheet}" value="#{scene.number}">
+															<f:attribute name="sceneNo" value="#{scene.number}" />
+													</ace:linkButton>
+												</ace:column>
+
+												<ace:column headerText="Heading" style="width:100%;text-align:left;margin-right:12px;font-size:11px;height:22px;">
+													<h:outputText styleClass="FL pad5lt" value="#{scene.heading}" />
+												</ace:column>
+											</ace:dataTable>
+										</div>
+									</div>
+								</ace:tabPane><!--  end script element detail   -->
+
+								<!--  Images Tab   -->
+								<ace:tabPane label="Images" id="imagetab"
+									rendered="#{not empty authBean.pgFields['5.2,all']}">
+
+									<div id="imagesCont">
+
+										<!-- Paginator with page controls -->
+										<!-- <h:panelGroup styleClass="MA pager"
+											rendered="#{not empty scriptElementBean.element.images}">
+
+										</h:panelGroup> -->
+
+										<h:panelGroup styleClass="LH29"
+											rendered="#{empty scriptElementBean.element.images}">
+											&#160;
+										</h:panelGroup>
+
+										<div class="rowCont FL">
+											<div id="imgPreviewCont">
+
+											<div class="subSecHdg_images FL LH20">&#160;</div><!-- keeps legend in right spot since there is no legend title -->
+
+												<h:panelGroup
+													rendered="#{scriptElementBean.editMode and scriptElementBean.selectedTab eq 1 and (not empty scriptElementBean.element.images) and (not empty authBean.pgFields['5.0,edit_all'])}"
+													styleClass="btn_delImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="Delete Image"
+															action="#{imagePaginatorBean.actionDeleteImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<h:panelGroup
+													rendered="#{scriptElementBean.editMode and scriptElementBean.selectedTab eq 1 and (not empty authBean.pgFields['5.0,edit_all'])}"
+													styleClass="btn_newImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="New Image"
+															action="#{scriptElementBean.actionOpenNewImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<ui:include src="../common/imageTable.xhtml">
+													<ui:param name="list" value="#{scriptElementBean.element.imageResources}" />
+													<ui:param name="imageTitle" value="Script Element Image" />
+												</ui:include>
+
+											</div>
+										</div><!-- end imagesCont -->
+									</div>
+								</ace:tabPane><!--  End Images Tab    -->
+
+								<!--  Played By Tab   -->
+								<ace:tabPane label="Played By" id="playtab"
+									rendered="#{not empty authBean.pgFields['5.2,all']}">
+
+									<div id="imagesCont">
+
+										<div class="rowCont FL">
+
+											<!-- Linked to/played by legend wrapper -->
+											<div class="scriptElemLinkedToContWrap MA">
+												<div id="scriptElemLinkedToCont" class="FL">
+													<div class="legendHdg">Played by</div>
+													<h:panelGroup styleClass="btn_legend"
+														rendered="#{scriptElementBean.editMode and (not empty authBean.pgFields['5.2.1,add_link'])}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Add"
+															action="#{scriptElementBean.actionOpenRWLink}"
+															styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+
+													<ace:dataTable
+														styleClass="bk_sl_grid"
+														value="#{scriptElementBean.scriptElement.realLinkList}"
+														var="realLink" id="playedby"
+														style="width:100%;max-width:100%;overflow-x:hidden;float:left;"
+														scrollHeight="#{headerViewBean.mobile ? '' : '85'}"
+														scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+														<!-- float:left; is for MAC browsers -->
+
+														<ace:column style="width:7%;">
+															<h:commandButton
+																	rendered="#{scriptElementBean.editMode and (not empty authBean.pgFields['5.2.1,remove_link'])}"
+																	value="" image="../../i/icon_deleteX.gif" style="padding-right:5px;"
+																	action="#{scriptElementBean.actionRemoveRealLink}" title="Remove">
+																<f:setPropertyActionListener value="#{realLink.id}" target="#{scriptElementBean.removeLinkId}" />
+																<f:setPropertyActionListener value="#{realLink.realWorldElement.name}" target="#{scriptElementBean.removeName}" />
+															</h:commandButton>
+														</ace:column>
+
+														<ace:column headerText="Name" style="width:80%;padding-left:2px;">
+															<ace:linkButton styleClass="txt11"
+																	rendered="#{(scriptElementBean.scriptElement.type ne 'CHARACTER') or
+																 		(not empty authBean.pgFields['5.2,link_cast'])}"
+																	value="#{realLink.realWorldElement.name}"
+																	action="realelements">
+																<f:setPropertyActionListener value="com.lightspeedeps.RealWorldElementId" target="#{jumpBean.attribute}"/>
+																<f:setPropertyActionListener value="#{realLink.realWorldElement.id}" target="#{jumpBean.value}"/>
+															</ace:linkButton>
+															<h:outputText styleClass="txt11" rendered="#{(scriptElementBean.scriptElement.type eq 'CHARACTER') and
+															 		(empty authBean.pgFields['5.2,link_cast'])}"
+																	value="#{realLink.realWorldElement.name}" />
+														</ace:column>
+
+														<ace:column headerText="Status" style="width:13%;height:22px;">
+															<h:selectOneMenu
+																	rendered="#{scriptElementBean.editMode}"
+																	value="#{realLink.status}"
+																	disabled="#{not scriptElementBean.editMode}"
+																	style="width:95px;font-size:11px;">
+																<f:selectItems value="#{enumList.realLinkStatusList}"/>
+																<ace:ajax />
+															</h:selectOneMenu>
+															<h:panelGroup styleClass="pad10lt" rendered="#{(realLink.status eq 'SELECTED') and (not scriptElementBean.editMode)}" >
+																<h:graphicImage alt="" value="" url="../../i/icon_check.gif"/>
+															</h:panelGroup>
+															<h:panelGroup styleClass="pad10lt" rendered="#{(realLink.status eq 'UNDER_REVIEW') and (not scriptElementBean.editMode)}" >
+																<h:graphicImage alt="" value="" url="../../i/icon_qstMrk.gif"/>
+															</h:panelGroup>
+															<h:panelGroup styleClass="pad10lt" rendered="#{(realLink.status eq 'REJECTED') and (not scriptElementBean.editMode)}" >
+																<h:graphicImage alt="" value="" url="../../i/icon_notSel.gif"/>
+															</h:panelGroup>
+														</ace:column>
+													</ace:dataTable>
+												</div>
+												<h:panelGroup styleClass="FL legend"
+														rendered="#{not scriptElementBean.editMode}">
+													<span class="FL pad2tp pad3rt">
+														<h:graphicImage alt="" value="" url="../../i/icon_check.gif"/>
+													</span>
+													<span class="legendTxt">- Selected</span>
+
+													<span class="FL pad2tp pad10lt pad3rt">
+														<h:graphicImage alt="" value="" url="../../i/icon_qstMrk.gif"/>
+													</span>
+													<span class="legendTxt">- Candidate</span>
+
+													<span class="FL pad2tp pad10lt pad3rt">
+														<h:graphicImage alt="" value="" url="../../i/icon_notSel.gif"/>
+													</span>
+													<span class="legendTxt">- Not Selected</span>
+												</h:panelGroup>
+											</div>
+
+										</div><!-- end imagesCont -->
+									</div>
+								</ace:tabPane><!--  End Played By Tab    -->
+
+							</ace:tabSet><!--  END TAB set  -->
+						</h:panelGrid><!-- end miniView -->
+
+						<!-- secondary buttons -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<!-- Cancel btn -->
+							<h:panelGroup rendered="#{scriptElementBean.editMode}">
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton styleClass="btnPriEnbCt"
+											onmouseup="showErrors();"
+											title="Do NOT save changes to this Script Element"
+											value="Cancel" action="#{scriptElementBean.actionCancel}" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<!-- end Cancel btn -->
+							<!-- Save btn -->
+							<h:panelGroup rendered="#{scriptElementBean.editMode}">
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+										<ace:linkButton value="Save"
+										onmouseup="showErrors();"
+										title="Save changes to this Script Element"
+										action="#{scriptElementBean.actionSave}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+									</span>
+							</h:panelGroup>
+						</div><!-- end secondary buttons -->
+
+					</div><!-- end scriptElemDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlRt -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	<h:commandButton id="escapekey" value="escape" style="visibility:hidden" action="#{scriptElementBean.actionEscape}"/>
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+<ui:include src="addscenepopup.xhtml" />
+<ui:include src="addrwlink.xhtml" />
+<ui:include src="addchildelem.xhtml" />
+<ui:include src="retroactive.xhtml" />
+
+</h:body>
+</html>

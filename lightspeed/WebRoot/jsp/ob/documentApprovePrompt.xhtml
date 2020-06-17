@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Password/PIN confirmation dialog for approval of documents.(message + pw entry + PIN entry + ok/cancel buttons) -->
+<!-- This is based on the confirmpopupbig class (size). -->
+
+<h:form>
+	<c:set var="bean" value="#{documentApprovePromptBean}" />
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+		<h:panelGroup rendered="true">
+			<div class="popupBdyA">
+
+				<div class="popCont80 stdTxt">
+
+					<h:outputText styleClass="RED" value="#{documentApprovePromptBean.alertMessage}"
+							rendered="#{(not documentApprovePromptBean.pinError) and (not empty documentApprovePromptBean.alertMessage)}">
+					</h:outputText>
+
+					<h:outputText rendered="#{documentApprovePromptBean.pinError}" styleClass="RED"
+							 escape="false" value="#{documentApprovePromptBean.errorMsg}">
+					</h:outputText>
+
+					<h:outputText escape="false" value="#{documentApprovePromptBean.message}" />
+
+					<div>
+						<span class="rowCont">
+							<h:panelGroup>
+								<span class="fdNm FL pad3tp">
+									<h:outputText value="Password:" />
+								</span>
+								<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+									<ace:textEntry secret="true"
+										tabindex="1" maxlength="20" id="documentApprove_focus"
+										action="#{documentApprovePromptBean.actionOk}"
+										redisplay="true" value="#{documentApprovePromptBean.password}" />
+								</span>
+							</h:panelGroup>
+					 	</span>
+
+					 	<span class="rowCont pad10tp">
+							<span class="fdNm FL pad3tp">
+								<h:outputText value="PIN:" />
+							</span>
+							<span class="fd FL">
+								<ace:textEntry secret="true" tabindex="2" 
+									maxlength="4" id="DocApprovePin" action="#{documentApprovePromptBean.actionOk}"
+									redisplay="true" value="#{documentApprovePromptBean.pin}" />
+							</span>
+						</span>
+
+						<!-- <h:panelGroup styleClass="rowCont pad10tp" rendered="#{(contactFormBean.isPool) and
+								(contactFormBean.useFinalApprover) and
+								(not documentApprovePromptBean.multipleApprovers)}">
+							<span class="fdNm FL">
+								<h:outputText value="Forward to:" />
+							</span>
+							<span class="fd FL">
+								<h:selectOneMenu partialSubmit="false" tabindex="3"
+										style="min-width:130px;" value="#{documentApprovePromptBean.approverContactId}">
+									<f:selectItems value="#{contactFormBean.poolApproverList}" />
+								</h:selectOneMenu>
+							</span>
+						</h:panelGroup> -->
+
+						<h:panelGroup styleClass="rowCont pad10tp B" rendered="#{(! contactFormBean.useFinalApprover) and (contactFormBean.isPool)}">
+								This is the FINAL approval for this document.
+						</h:panelGroup>
+				 	</div>
+
+				</div>
+
+				<div class="popBtnCont4">
+					<h:panelGroup rendered="#{not empty documentApprovePromptBean.buttonCancelLabel}">
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+								<ace:linkButton value="#{documentApprovePromptBean.buttonCancelLabel}" tabindex="6"
+									action="#{documentApprovePromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+					</h:panelGroup>
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt"/>
+						<span>
+							<ace:linkButton value="#{documentApprovePromptBean.buttonOkLabel}" tabindex="5"
+								action="#{documentApprovePromptBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt"/>
+					</span>
+				</div>
+
+			</div> <!-- confPopBdy3 -->
+		</h:panelGroup>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

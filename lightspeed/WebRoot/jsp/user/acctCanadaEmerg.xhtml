@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: Emergency contact section -->
+
+	<div class="rowCont pad18tp pad10lt FL">
+
+		<!-- EMERGENCY CONTACT -->
+		<div class="FL" style="width:345px;" >
+			<span class="fdNm_w" style="margin-top:-3px;">
+				<h:outputText value="Emergency Contact:" />
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<span class="fd_sm FL pad5lt pad1tp" style="width:135px;">
+					<h:outputText value="#{userViewBean.user.emergencyName}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry id="emergencyName" maxlength="30" style="width:205px;margin-top:-3px;"
+						value="#{userViewBean.user.emergencyName}" >
+						<ace:ajax execute="@this" render="@all"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- EMERGENCY PHONE -->
+		<div class="FL pad5tp" style="width:345px;">
+			<span class="fdNm_w" style="margin-top: -3px;">
+				<h:outputText value="Emergency Phone:"></h:outputText>
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<span class="fd_sm FL pad5lt pad1tp">
+					<h:outputText value="#{userViewBean.user.emergencyPhone}" >
+						<f:converter converterId="lightspeed.PhoneNumberConverter" />
+					</h:outputText>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry id="emergencyPhone" maxlength="25" style="width:205px;margin-top: -3px;"
+							value="#{userViewBean.user.emergencyPhone}">
+						<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						<ace:ajax />
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- EMERGENCY RELATIONSHIP -->
+		<!-- <div class="W34percnt FL">
+			<span class="fdNm_w" style="margin-top: -3px;"><h:outputText value="Emer. Relationship:" />
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<span class="fd_sm" style="width:135px;">
+					<h:outputText value="#{userViewBean.user.emergencyRelation}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry id="emergencyRelation" maxlength="30" style="width:220px;margin-top: -3px;"
+						value="#{userViewBean.user.emergencyRelation}" />
+				</span>
+			</h:panelGroup>
+		</div> -->
+
+	</div>
+
+</ui:composition>

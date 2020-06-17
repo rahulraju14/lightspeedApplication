@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tcA2Expenses" pageWidth="213" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="213" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="63a600b8-be72-4247-b5af-623188145b94">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tcMajor6" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcDetail6" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcSet5" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Set}.length() > 4)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="weeklyId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[24]]></defaultValueExpression>
+	</parameter>
+	<parameter name="expenseQuery" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select *, false as fillFlag from pay_expense where weekly_id =  " + $P{weeklyId} +
+" union all (SELECT *, true FROM pay_expense where weekly_id = -1 limit 7) " +
+" order by line_number asc;"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{expenseQuery}]]>
+	</queryString>
+	<field name="Weekly_Id" class="java.lang.Integer"/>
+	<field name="Line_Number" class="java.lang.Integer"/>
+	<field name="Prod_Episode" class="java.lang.String"/>
+	<field name="Account_Major" class="java.lang.String"/>
+	<field name="Account_Dtl" class="java.lang.String"/>
+	<field name="Account_Set" class="java.lang.String"/>
+	<field name="Free" class="java.lang.String"/>
+	<field name="Category" class="java.lang.String"/>
+	<field name="Quantity" class="java.math.BigDecimal"/>
+	<field name="Rate" class="java.math.BigDecimal"/>
+	<field name="Total" class="java.math.BigDecimal"/>
+	<field name="fillFlag" class="java.lang.Boolean"/>
+	<variable name="grandTotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Total}]]></variableExpression>
+	</variable>
+	<variable name="lineCount" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[($F{Line_Number} < 900 ? 1 : null)]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="0" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Acct]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="25" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Free]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="50" y="0" width="70" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="145" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="170" y="0" width="43" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="120" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="29dd85a3-f226-49e9-9146-62f1c808e3a6" x="0" y="12" width="213" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<printWhenExpression><![CDATA[(! $F{fillFlag}) || $V{REPORT_COUNT} < 8]]></printWhenExpression>
+			<textField>
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcSet5" x="0" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Account_Major}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="50" y="0" width="70" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Category}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="120" y="0" width="25" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="170" y="0" width="43" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{Total}==null ?
+    null
+    : $F{Total}.setScale(2, RoundingMode.HALF_UP))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="25" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Free}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0000">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="145" y="0" width="25" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Rate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

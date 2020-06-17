@@ -1,0 +1,375 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- All the columns of the timecard "daily hours" table for the Full Timecard page -->
+	<!-- model full timecard  -->
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+	<!--   "tours" : true if this is a Tours production type -->
+
+	<c:set var="banner" value="#{dailyTime.showBanner}" />
+	<!-- depends on various 'dailyTime's, don't use request scope -->
+	<c:set var="bannerText" value="#{dailyTime.banner}" />
+	<c:set var="isHybrid" value="#{fullTimecardBean.hybridProduction}" scope="request" />
+
+	<ace:columnGroup type="header">
+		<ace:row>
+			<ace:column style="width:6%"></ace:column>
+			<ace:column style="width:5%">Day</ace:column>
+			<ace:column style="width:2.8%"></ace:column><!-- Weather  -->
+			<ace:column style="width:2.8%">Intimate/</ace:column><!-- Intimate/Swimwear -->
+			<ace:column style="width:2.8%"></ace:column><!-- Call -->
+			<ace:column style="width:5.6%" colspan="2">Meal 1</ace:column>
+			<ace:column style="width:5.6%" colspan="2">Meal 2</ace:column>
+			<ace:column style="width:2.8%"></ace:column><!-- wrap -->
+			<ace:column style="width:2.8%"></ace:column><!-- hours -->
+			<ace:column style="width:2.8%">MPV</ace:column><!-- MPV 1 -->
+			<ace:column style="width:2.8%">MPV</ace:column><!-- MPV 1 -->
+			<ace:column style="width:3.75%"></ace:column><!-- state -->
+			<ace:column style="width:12%"></ace:column><!-- city -->
+			<ace:column style="width:42%"></ace:column><!-- Comments -->
+		</ace:row>
+		<ace:row>
+			<ace:column style="width:6%">Date</ace:column>
+			<ace:column style="width:5%">Type</ace:column>
+			<ace:column style="width:5%">Weather</ace:column><!-- Weather -->
+			<ace:column style="width:5%">Swimwear</ace:column><!-- Intimate/Swimwear -->
+			<ace:column style="width:2.8%">Call</ace:column>
+			<ace:column style="width:2.8%">Out</ace:column>
+			<ace:column style="width:2.8%">In</ace:column>
+			<ace:column style="width:2.8%">Out</ace:column>
+			<ace:column style="width:2.8%">In</ace:column>
+			<ace:column style="width:2.8%">Wrap</ace:column>
+			<ace:column style="width:2.8%">Hrs</ace:column>
+			<ace:column style="width:2.8%">1</ace:column><!-- MPV 1 -->
+			<ace:column style="width:2.8%">2</ace:column><!-- MPV 2 -->
+			<ace:column style="width:3.75%">State</ace:column><!-- state -->
+			<ace:column style="width:12%">City</ace:column><!-- city -->
+			<ace:column style="width:42%">Comments</ace:column><!-- Comments -->
+		</ace:row>
+	</ace:columnGroup>
+
+	<ace:columnGroup type="footer">
+		<ace:row>
+			<ace:column colspan="9"></ace:column>
+			<ace:column>
+				<h:outputText styleClass="B txt12" value="Total:" />
+			</ace:column>
+			<ace:column>
+				<div class="ftrBorder">
+					<h:outputText styleClass="tcTotHr"
+						rendered="#{! fullTimecardBean.weeklyTimecard.allExempt}"
+						value="#{fullTimecardBean.weeklyTimecard.totalHours}">
+						<f:convertNumber type="number" pattern="#0.0#" />
+					</h:outputText>
+				</div>
+			</ace:column>
+			<ace:column>
+				<div class="ftrBorder">
+					<h:outputText styleClass="tcTotHr"
+						value="#{fullTimecardBean.weeklyTimecard.totalMpv1}">
+						<f:convertNumber type="number" pattern="##0" />
+					</h:outputText>
+				</div>
+			</ace:column>
+			<ace:column>
+				<div class="ftrBorder">
+					<h:outputText styleClass="tcTotHr"
+						value="#{fullTimecardBean.weeklyTimecard.totalMpv2}">
+						<f:convertNumber type="number" pattern="##0" />
+					</h:outputText>
+					<h:outputText styleClass="tcTotHr"
+						value="#{fullTimecardBean.weeklyTimecard.totalMpv3}"
+						rendered="#{fullTimecardBean.weeklyTimecard.totalMpv3 gt 0}">
+						<f:convertNumber type="number" pattern="/##0" />
+					</h:outputText>
+				</div>
+			</ace:column>
+			<ace:column>
+				<div class="ftrBorder">&#160;</div>
+			</ace:column>
+			<ace:column></ace:column>
+			<ace:column></ace:column>
+		</ace:row>
+	</ace:columnGroup>
+
+	<!-- Day & Date -->
+	<ace:column>
+		<h:outputText styleClass="FL pad2lt txt12" value="#{dailyTime.date}"
+			style="font-weight: bold;">
+			<f:convertDateTime pattern="EE" timeZone="#{timezone}" />
+		</h:outputText>
+		<h:outputText styleClass="FR pad2rt txt12" value="#{dailyTime.date}">
+			<f:convertDateTime pattern="MM/dd" timeZone="#{timezone}" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- DAY TYPE -->
+	<ace:column>
+		<c:set var="travWork" value="#{dailyTime.dayType eq 'TW'}" />
+		<c:set var="workTrav" value="#{dailyTime.dayType eq 'WT'}" />
+		<c:set var="normal" value="#{not (travWork or workTrav)}" />
+
+		<h:panelGroup>
+			<h:selectOneMenu id="DT_DAY_TYPE" style="width:90%;"
+				title="#{dailyTime.dayType.label}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}"
+				value="#{dailyTime.dayType}"
+				rendered="#{(!dailyTime.noStartForm) and
+					(fullTimecardBean.editRaw or (fullTimecardBean.editMode and fullTimecardBean.mayApprove))}">
+				<f:selectItems value="#{fullTimecardBean.dayTypeDL}" />
+				<f:ajax execute="@this" render="@all" />
+			</h:selectOneMenu>
+			<h:outputText value="#{dailyTime.dayType.shortLabel}"
+				title="#{dailyTime.dayType.label}"
+				rendered="#{dailyTime.noStartForm or
+					(! (fullTimecardBean.editRaw or (fullTimecardBean.editMode and fullTimecardBean.mayApprove)))}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- Weather -->
+	<ace:column styleClass="LT">
+		<h:selectBooleanCheckbox value="#{dailyTime.weatherDay}"
+			disabled="#{not fullTimecardBean.editMode or not dailyTime.allowWeather}">
+			<ace:ajax />
+		</h:selectBooleanCheckbox>
+		<h:outputText rendered="#{dailyTime.weatherDay}"
+				value="#{fullTimecardBean.modelRelease.weatherPerDay}">
+			<f:convertNumber type="number" pattern="$#0" />
+		</h:outputText>
+	</ace:column>
+	
+	<!-- Intemate Swimwear  -->
+	<ace:column styleClass="LT">
+		<h:selectBooleanCheckbox value="#{dailyTime.intimatesDay}"
+			disabled="#{not fullTimecardBean.editMode or not dailyTime.allowIntimates}">
+			<ace:ajax />
+		</h:selectBooleanCheckbox>
+		<h:outputText rendered="#{dailyTime.intimatesDay}"
+				value="#{fullTimecardBean.modelRelease.intimatesPerDay}">
+			<f:convertNumber type="number" pattern="$#0" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- CALL TIME -->
+	<ace:column>
+		<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+			<ace:textEntry id="DT_CALL" maxlength="6"
+				styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+				value="#{dailyTime.callTime}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.callTime}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[0]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MEAL 1 Start/Out -->
+	<ace:column>
+		<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+			<ace:textEntry id="DT_MEAL1_OUT" maxlength="6"
+				styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+				value="#{dailyTime.m1Out}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.m1Out}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[1]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MEAL 1 End/In -->
+	<ace:column>
+		<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+			<ace:textEntry id="DT_MEAL1_IN" maxlength="6"
+				styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+				value="#{dailyTime.m1In}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.m1In}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[2]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MEAL 2 Start/Out -->
+	<ace:column>
+		<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+			<ace:textEntry id="DT_MEAL2_OUT" maxlength="6"
+				styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+				value="#{dailyTime.m2Out}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.m2Out}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[3]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MEAL 2 End/In -->
+	<ace:column>
+		<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+			<ace:textEntry id="DT_MEAL2_IN" maxlength="6"
+				styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+				value="#{dailyTime.m2In}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<ace:ajax />
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.m2In}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[4]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- WRAP -->
+	<ace:column>
+		<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+			<ace:textEntry id="DT_WRAP" maxlength="6"
+				styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+				value="#{dailyTime.wrap}"
+				rendered="#{(fullTimecardBean.editRaw eq true) and !dailyTime.noStartForm and !banner}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<ace:ajax />
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.wrap}"
+				rendered="#{((! fullTimecardBean.editRaw) or dailyTime.noStartForm) and !banner}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<h:outputText value="#{bannerText[5]}" rendered="#{banner}" />
+		</h:panelGroup>
+	</ace:column>
+	
+	<!-- HOURS Worked (calculated) -->
+	<ace:column>
+		<h:outputText styleClass="tcTotHr"
+			rendered="#{! fullTimecardBean.weeklyTimecard.allExempt}"
+			value="#{dailyTime.hours}">
+			<f:convertNumber type="number" pattern="#0.0#" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- MPV-1 (AM) -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry id="DT_MPV_1" styleClass="tcEdHr"
+				value="#{dailyTime.mpv1Payroll}" maxlength="2"
+				rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.mpv1Payroll}"
+				rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}" />
+		</h:panelGroup>
+	</ace:column>
+	
+	<!-- MPV-2 (PM) -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry id="DT_MPV_2" styleClass="tcEdHr"
+				style="width:80%; text-align: center;"
+				value="#{dailyTime.mpv2Payroll}" maxlength="2"
+				rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}"
+				valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<ace:ajax />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.mpv2Payroll}"
+				rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}">
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- If this is a hybrid production, disable the city/state based on the day type and/or country from latest requirements. LS-2313 -->
+	<c:set var="disableCityState"
+		value="#{isHybrid and ((not dailyTime.dayType.usCityStateRequired) 
+			or (dailyTime.dayType.usCityStateRequired and dailyTime.country ne 'US'))}" />
+	<c:set var="enableCity"
+		value="#{dailyTime.dayType.cityRequiredStateHM}" />
+	<!-- STATE -->
+	<ace:column>
+		<h:panelGroup>
+			<icecore:setEventPhase events="ValueChangeEvent"
+				phase="INVOKE_APPLICATION">
+				<h:selectOneMenu style="width:90%;" id="DT_WORK_STATE"
+					value="#{dailyTime.state}" disabled="#{disableCityState}"
+					valueChangeListener="#{fullTimecardBean.listenDailyStateChange}"
+					rendered="#{(!dailyTime.noStartForm) and
+						(fullTimecardBean.editRaw or (fullTimecardBean.editMode and fullTimecardBean.mayApprove))}">
+					<f:selectItems
+						value="#{fullTimecardBean.stateCodeTypeDL(dailyTime)}" />
+					<f:ajax execute="@this" render="@all" />
+					<f:attribute name="stateRow" value="#{dailyTime}"></f:attribute>
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+			<h:outputText value="#{dailyTime.state}"
+				rendered="#{dailyTime.noStartForm or
+					(! (fullTimecardBean.editRaw or (fullTimecardBean.editMode and fullTimecardBean.mayApprove)))}" />
+		</h:panelGroup>
+	</ace:column>
+	
+	<!-- CITY -->
+	<ace:column>
+		<h:panelGroup>
+			<h:panelGroup
+				rendered="#{fullTimecardBean.displayCities and fullTimecardBean.editMode and not empty dailyTime.cities and (enableCity or not disableCityState)}">
+				<icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<ace:comboBox id="dailyWorkCity" styleClass="tcEdHr ddcombo"
+						value="#{dailyTime.city}" width="140"
+						valueChangeListener="#{fullTimecardBean.listenDailyCityChange}"
+						filterMatchMode="#{dailyTime.city}" rows="10">
+						<f:selectItems value="#{dailyTime.cities}" />
+						<ace:ajax render="@all" />
+						<f:attribute name="cityRow" value="#{dailyTime}"></f:attribute>
+					</ace:comboBox>
+				</icecore:setEventPhase>
+			</h:panelGroup>
+			<ace:comboBox id="dailyWorkCityDefault" styleClass="tcEdHr"
+				value="#{dailyTime.city}" width="140"
+				rendered="#{!fullTimecardBean.editMode or (not enableCity and disableCityState)}"
+				disabled="#{!fullTimecardBean.displayCities}">
+				<f:selectItem itemValue="" itemLabel="" />
+			</ace:comboBox>
+		</h:panelGroup>
+	</ace:column>
+	
+	<!-- Comments -->
+	<ace:column>
+		<ace:textEntry id="newComments" styleClass="tcEdHr" maxlength="105"
+			style="width:99%" rendered="#{fullTimecardBean.editMode}"
+			value="#{dailyTime.comments}" />
+		<h:outputText value="#{dailyTime.comments}" styleClass="txt12"
+			rendered="#{! fullTimecardBean.editMode}" />
+	</ace:column>
+
+</ui:composition>

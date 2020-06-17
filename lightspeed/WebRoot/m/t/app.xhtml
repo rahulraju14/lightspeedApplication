@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Confirm Approval</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('submit:password').focus();
+}
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form id="submit">
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.approveBackPage" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad10tp">
+
+				<!-- call "getLoadApprove()" to setup page; always returns false. -->
+				<h:outputText style="visibility:hidden;" value="#{mobileApproverBean.loadApprove}" />
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle pad20tp">
+						e-Signature Required
+				</div>
+
+				<h:panelGroup rendered="#{(not approvePromptBean.pinError) and (not empty approvePromptBean.alertMessage)}">
+					<div class="infoText">
+						<h:outputText styleClass="errorMsgTxt" value="#{approvePromptBean.alertMessage}" />
+					</div>
+				</h:panelGroup>
+
+				<div class="MA" style="width:80%;">
+					<div class="infoText pad10tp CT">
+						Please enter your password and PIN to&#160;
+						<h:outputText rendered="#{mobileApproverBean.checkedItemCount le 1}"
+								value="confirm your approval of this timecard." />
+						<h:panelGroup rendered="#{mobileApproverBean.checkedItemCount gt 1}">
+							confirm your approval of the selected timecards.<br/><br/>
+							Timecards selected: <h:outputText styleClass="B" value="#{mobileApproverBean.checkedItemCount}" />
+						</h:panelGroup>
+					</div>
+				</div>
+
+<!--
+				<div class="prodTitle pad10tp">
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.lastNameFirstName}" />
+				</div>
+				<div class="infoText">
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.occupation}" />
+				</div>
+ -->
+
+				<div class="pad15tp">
+					<div>
+						<h:outputText value="Password" styleClass="txtL3" />
+					</div>
+					<h:inputSecret id="password" styleClass="fdPass"
+						value="#{approvePromptBean.password}" redisplay="true"
+						tabindex="1" maxlength="20">
+					</h:inputSecret>
+				</div>
+
+				<div class="pad10tp">
+					<div>
+						<h:outputText value="PIN" styleClass="txtL3" />
+					</div>
+					<h:inputSecret styleClass="fdPin"
+						value="#{approvePromptBean.pin}" redisplay="true"
+						tabindex="2" maxlength="4">
+					</h:inputSecret>
+				</div>
+
+				<div class="MA" style="width:90%;">
+					<div class="infoText LT pad10tp">
+						After approval, the
+						timecard<h:outputText value="s" rendered="#{mobileApproverBean.checkedItemCount gt 1}" />
+						will be sent to&#160;
+						<h:panelGroup rendered="#{approvePromptBean.multipleApprovers}">
+							multiple approvers.
+						</h:panelGroup>
+					</div>
+
+					<div class="infoText pad10tp">
+						<h:panelGroup styleClass="pad10tp"
+								rendered="#{not approvePromptBean.multipleApprovers}">
+							<span class="LT">
+								<h:outputText value="#{approvePromptBean.approverName}" style="min-width:130px;"
+										styleClass="B" rendered="#{not approvePromptBean.showSelect}"/>
+								<h:selectOneMenu rendered="#{approvePromptBean.showSelect}"
+										style="min-width:130px;" value="#{approvePromptBean.approverContactId}" >
+									<f:selectItems value="#{approvePromptBean.approverContactDL}" />
+									<f:ajax execute="@this" render="@all"/>
+								</h:selectOneMenu>
+							</span>
+						</h:panelGroup>
+					</div>
+					<div class="CB"/>
+					<div class="infoText pad10tp">
+						<h:panelGroup styleClass=" "
+								rendered="#{not approvePromptBean.multipleApprovers}">
+							<span class="ckbxTxtLbl FL">
+								<h:selectBooleanCheckbox
+									value="#{approvePromptBean.showSelect}" styleClass="ckbx">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</span>
+							<span class="ckbxTxtLbl FL pad5lt">Change approver</span>
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<div class="CB"/>
+
+				<ui:include src="../common/errors.xhtml" />
+				<h:panelGroup rendered="#{approvePromptBean.pinError}" styleClass="errorMsgTxt">
+					The password and PIN entered do not match the information we have on file.
+				</h:panelGroup>
+
+				<div class="pad30tp twoBtnRow">
+					<span class="inBlock FL">
+						<span class="FL btnSecHotLt"></span>
+						<span>
+							<h:commandLink value="E-Sign"
+								tabindex="4" action="#{approvePromptBean.actionOk}"
+								styleClass="btnSecHotCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnSecHotRt"></span>
+					</span>
+
+					<span class="inBlock FR">
+						<span class="FL btnPriEnbLt"></span>
+						<span>
+							<h:commandLink value="Cancel"
+								tabindex="4" action="#{approvePromptBean.actionCancel}"
+								styleClass="btnPriEnbCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnPriEnbRt"></span>
+					</span>
+				</div>
+
+				<div class="pad10tp" ></div>
+			</div>
+
+	</h:form>
+
+	<div class="CB pad20tp"/>
+
+ 	<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

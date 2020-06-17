@@ -1,0 +1,247 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Admin mini-tab of the Prod Admin / Productions page -->
+
+		<!-- Admin tab -->
+		<ace:tabPane label="Admin">
+			<div id="projectTopCont" class="rowGradient">
+					<h:panelGroup styleClass="projectSubCont prodDetailsTopLt FL">
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="fdNm_sm FL" value="Type:" />
+							<h:outputText styleClass="FL pad5tp" value="#{productionAdminBean.element.type}"
+								rendered="#{not productionAdminBean.editMode}" />
+							<h:panelGroup styleClass="FL" rendered="#{productionAdminBean.editMode}">
+								<h:selectOneMenu style="width:120px;"
+									value="#{productionAdminBean.element.type}">
+									<f:selectItems
+										value="#{productionAdminBean.productionSetTypeDL}" />
+										<ace:ajax />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</div>
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="fdNm_sm" value="Status:"/>
+							<h:outputText styleClass="FL pad5tp" value="#{productionAdminBean.element.status.label}"
+								rendered="#{not productionAdminBean.editMode}" />
+							<h:selectOneMenu style="width:95px;"
+								id="projstatus"
+								rendered="#{productionAdminBean.editMode}"
+								value="#{productionAdminBean.element.status}">
+								<f:selectItems
+										value="#{enumList.accessStatusTypes}" />
+							</h:selectOneMenu>
+							<h:panelGroup styleClass="FL pad15lt" rendered="#{not productionAdminBean.editMode}">
+								<h:graphicImage value="" styleClass="pad10tp" url="../../i/icon_readOnly.gif"
+									rendered="#{productionAdminBean.element.status eq 'READ_ONLY'}"/>
+								<h:graphicImage value="" url="../../i/icon_lockArchive.png"
+									rendered="#{productionAdminBean.element.status eq 'OFFLINE'}"/>
+							</h:panelGroup>
+						</div>
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="fdNm_sm FL" value="Order:" />
+							<h:outputText styleClass="FL pad5tp" value="#{productionAdminBean.element.orderStatus.label}"
+								rendered="#{not productionAdminBean.editMode}" />
+							<h:panelGroup styleClass="FL" rendered="#{productionAdminBean.editMode}">
+								<h:selectOneMenu style="width:120px;"
+									value="#{productionAdminBean.element.orderStatus}">
+									<f:selectItems
+										value="#{enumList.orderStatusTypes}" />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</div>
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="fdNm_sm FL" value="SKU:" />
+							<h:outputText styleClass="FL pad5tp" value="#{productionAdminBean.element.sku}"
+								rendered="#{not productionAdminBean.editMode}" />
+							<h:panelGroup styleClass="FL" rendered="#{productionAdminBean.editMode}">
+								<ace:textEntry maxlength="20"
+									value="#{productionAdminBean.element.sku}" />
+							</h:panelGroup>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<h:outputText styleClass="fdNm_sm" value="Start Date:"/>
+							<span class="FL pad4tp">
+								<h:outputText
+									styleClass="W80" value="#{productionAdminBean.element.startDate}"
+									rendered="#{not productionAdminBean.editMode}">
+									<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+								<ace:dateTimeEntry required="true" tabindex="0"
+										rendered="#{productionAdminBean.editMode}"
+										value="#{productionAdminBean.element.startDate}"
+										renderAsPopup="true">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+								</ace:dateTimeEntry>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<h:outputText styleClass="fdNm_sm" value="End Date:"/>
+							<span class="FL pad4tp">
+								<h:outputText
+									styleClass="W80" value="#{productionAdminBean.element.endDate}"
+									rendered="#{not productionAdminBean.editMode}">
+									<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+								<ace:dateTimeEntry title="Production expiration date" tabindex="0"
+									rendered="#{productionAdminBean.editMode}"
+									value="#{productionAdminBean.element.endDate}"
+									renderAsPopup="true">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+								</ace:dateTimeEntry>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<h:outputText styleClass="fdNm_sm" value="Bill Date:"/>
+							<span class="FL pad4tp">
+								<h:outputText
+									styleClass="W80" value="#{productionAdminBean.element.nextBillDate}"
+									rendered="#{not productionAdminBean.editMode}">
+									<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+								<ace:dateTimeEntry title="Next date when a payment is due" tabindex="0"
+									rendered="#{productionAdminBean.editMode}"
+									value="#{productionAdminBean.element.nextBillDate}"
+									renderAsPopup="true">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+								</ace:dateTimeEntry>
+							</span>
+						</div>
+
+						<div class="rowCont pad5tp">
+							<h:outputText styleClass="ckbxTxtLbl_B fdNm_sm" value="Allow SMS:"  />
+							<h:selectBooleanCheckbox styleClass="ckbx"
+								value="#{productionAdminBean.element.smsEnabled}"
+								disabled="#{not productionAdminBean.editMode}" />
+						</div>
+
+					</h:panelGroup><!-- admin tab, top left -->
+
+					<!-- admin tab, top right -->
+					<h:panelGroup styleClass="prodDetailsTopRt FL">
+
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm_stk">
+								<h:outputText value="Max # of Users:" />
+							</span>
+							<span>
+								<h:panelGroup
+									rendered="#{not productionAdminBean.editMode}">
+									<h:outputText
+										value="#{productionAdminBean.element.maxUsers}" />
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{productionAdminBean.editMode}">
+									<ace:textEntry maxlength="6"
+										value="#{productionAdminBean.element.maxUsers}">
+										<f:validateLongRange minimum="1" maximum="999999"/>
+									</ace:textEntry>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm_stk">
+								<h:outputText value="Max # of Projects:" />
+							</span>
+							<span>
+								<h:panelGroup
+									rendered="#{not productionAdminBean.editMode or not productionAdminBean.element.type.episodic}">
+									<h:outputText
+										rendered="#{productionAdminBean.element.type.episodic}"
+										value="#{productionAdminBean.element.maxProjects}" />
+									<h:outputText
+										rendered="#{not productionAdminBean.element.type.episodic}"
+										value="1" />
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{productionAdminBean.editMode and productionAdminBean.element.type.episodic}">
+									<ace:textEntry maxlength="4"
+										value="#{productionAdminBean.element.maxProjects}">
+										<f:validateLongRange minimum="1" maximum="9999"/>
+									</ace:textEntry>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm_stk">
+								<h:outputText value="Owning Account:" />
+							</span>
+							<span>
+								<h:panelGroup rendered="#{not productionAdminBean.editMode
+										and (not empty productionAdminBean.element)}">
+									<ace:linkButton value="#{productionAdminBean.element.owningAccount}"
+											action="adminusers">
+										<f:setPropertyActionListener value="com.lightspeedeps.userListId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{productionAdminBean.owner.id}" target="#{jumpBean.value}"/>
+									</ace:linkButton>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{productionAdminBean.editMode}">
+									<ace:textEntry maxlength="20"
+										value="#{productionAdminBean.element.owningAccount}"/>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm_sm" style="width:60px;">
+								<h:outputText value="Owner:" />
+							</span>
+							<span>
+								<h:panelGroup styleClass="pad5tp">
+									<h:outputText
+										value="#{productionAdminBean.owner.lastNameFirstName}" />
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm_sm" style="width:60px;">
+								<h:outputText value="Prod. ID:" />
+							</span>
+							<span>
+								<h:panelGroup styleClass="pad5tp">
+									<h:outputText
+										value="#{productionAdminBean.element.prodId}" />
+								</h:panelGroup>
+							</span>
+						</div>
+
+					</h:panelGroup><!-- admin tab, top right -->
+
+					<div class="rowCont projectSubCont FL pad5tp">
+						<span class="fdNm_sm" style="width:13%">
+							<h:outputText value="Timezone:" />
+						</span>
+						<span>
+							<h:panelGroup styleClass="LH20"
+								rendered="#{not productionAdminBean.editMode}">
+								<h:outputText
+									value="#{productionAdminBean.element.timeZoneName}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{productionAdminBean.editMode}">
+								<h:selectOneMenu value="#{productionAdminBean.element.timeZoneStr}"
+										style="font-size:11px;">
+									<f:selectItems value="#{timeZoneUtils.timeZoneDL}" />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</span>
+					</div>
+
+			</div>
+		</ace:tabPane><!-- end Admin tab -->
+
+</ui:composition>

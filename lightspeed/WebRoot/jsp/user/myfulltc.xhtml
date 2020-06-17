@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- MY full timecard page -->
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Full Timecard</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<!-- WebViewer js files: -->
+		<script src="../../lib/webviewer.min.js" />
+
+		<script language="javascript">
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+
+				/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+				INCREASE first parameter to decrease the size of the area! */
+				element = document.getElementById('time:miniView');
+				resizeElement(element, 180, 400);
+
+				element = document.getElementById('scrolldiv');
+				resizeElement(element, 223, 360);
+
+				element = document.getElementById('scrollBoxRental');
+				resizeElement(element, 223, 360);
+
+				element = document.getElementById('scrollMiles');
+				resizeElement(element, 223, 360);
+
+				//resize for attachment list's outer blue legend
+				element = document.getElementById('attachment_formLegend');
+				resizeElement(element, 242, 340);
+
+				//resize for attachment's outer blue legend
+				element = document.getElementById('attachment_sfLegend');
+				resizeElement(element, 242, 340);
+
+				element = document.getElementById('attachViewer');
+				resizeElement(element, 260, 320);
+
+				if (scrollme > 0) { // scrollToPos was called...
+					scrollme = 0;
+					scrollToPos(); // re-do scroll after resize of div is done.
+				}
+				</c:if>
+			}
+
+			var formname = "time";
+			var scrollme = 0;
+
+			function setScrollPos(pos) {
+				// called via 'onscroll' tag
+				document.getElementById('time:scrollPos').value = pos;
+			}
+
+			function scrollToPos() {
+				scrollme = 1; // tell "resize" to call us again in case it executes after us.
+				var scrollable = document.getElementById('scrolldiv');
+				if (scrollable != null) {
+					var scrollposElem = document.getElementById('time:scrollPos');
+					pos = scrollposElem.value;
+					if (pos != null) {
+						scrollable.scrollTop = pos;
+					}
+				}
+			}
+
+/*
+ * The webviewAttach function is called by JavaScript code constructed in AttachmentBean.
+ *   fileName: the URL that WebViewer will request from the server, expecting to get
+ *				back the document to be displayed.
+ *	 contactDocId: included by WebViewer in all server requests as the "did" parameter;
+ *				the value will be used by LsFacesServlet to find the XFDF content.
+ *   docType: should be "xod"; this invokes the "Universal Web Viewer" functionality, which
+ *				supports mobile and desktop.  "pdf" may be used for testing in desktop
+ *				environment. This parameter determines the type of data that WebViewer expects
+ *				to be returned when it requests the file body (using the fileName URL).
+ */
+var myWebViewerAttach = null;
+function webviewAttach(fileName, contactDocId, docType) {
+	var viewerElement = document.getElementById("attachViewer");
+	console.log('creating WebViewer for attachment');
+
+	PDFTron.WebViewer.prototype.isMobileDevice = function() {
+		console.log("isMobileDevice: LS forcing mobile=false");
+		return false;
+	};
+
+	myWebViewerAttach = new PDFTron.WebViewer({
+		path: "../../lib",
+		type: "html5",
+		mobileRedirect: true,
+		/*l: "4adxxx...xxxxx", *wrong key; this hangs webViewer */
+		enableAnnotations: false,
+		enableReadOnlyMode: true, /* prevent user from changing or adding annotations */
+		streaming: true,
+		initialDoc: fileName,
+		documentType: docType, /* "pdf" or "xod" */
+		serverUrl: "../../_db_annotations/pws",
+		config: "../../js/webViewConfig.js",
+		documentId: contactDocId /* included in server requests as "did" parameter */
+	}, viewerElement);
+}
+
+		</script>
+	</h:head>
+	<h:body>
+		<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+		<c:set var="aicp" value="#{fullTimecardBean.production.type.aicp}" scope="request" />
+
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+		<h:form id="time">
+			<h:outputText binding="#{headerRequestBean.tabName}"
+					value="#{headerViewBean.tabValue}" style="visibility:hidden">
+				<f:attribute name="tabid" value="mytimecards" /><!-- highlight the "Timecards" header menu sub-tab -->
+			</h:outputText>
+
+			<ui:include src="../tc/fulltcPage.xhtml" >
+				<ui:param name="mytc" value="true" />
+			</ui:include>
+
+			<ace:textEntry style="visibility:hidden" id="scrollPos" value="#{fullTimecardBean.scrollPos}" />
+
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+		<ui:include src="../tcpopup/changePin.xhtml" />
+		<ui:include src="../tcpopup/pinPrompt.xhtml" /><!-- used for submit of own timecard -->
+		<ui:include src="../tcpopup/addPayLine.xhtml" />
+		<ui:include src="../tcpopup/printTimecard.xhtml" />
+		<ui:include src="../tcpopup/setMultiplier.xhtml" />
+		<ui:include src="../common/confirmpopupbig.xhtml" />
+		<ui:include src="../common/addimage.xhtml" />
+		<ui:include src="../common/viewimage.xhtml" />
+		<ui:include src="../ob/popupUpload.xhtml">
+			<ui:param name="isTcAttachment" value="#{true}" />
+		</ui:include>
+
+	</h:body>
+</html>

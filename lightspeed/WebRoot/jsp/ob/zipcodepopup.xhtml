@@ -1,0 +1,62 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	
+<h:form>
+	<c:set var="bean" value="#{zipCodeBean}"></c:set>
+	<h:panelGroup>
+		<ace:dialog id="dialog" visible="#{bean.visible}"
+			header="#{bean.title}" widgetVar="sampleDialog"
+			closable="true" modal="true" draggable="false" showEffect="fade"
+			hideEffect="fade" width="420" height="250" resizable="false" 
+			style="margin-top: -319px;">
+			<ace:ajax event="close" execute="@this"
+				listener="#{bean.actionClose}" />
+				
+		
+			<ace:dataTable var="f" value="#{zipCodeBean.theCountry}" scrollable="#{!(bean.theCountry.size() le 5) }">
+
+				<ace:column>
+					<h:panelGroup>
+					<ace:radioButton value="#{f.selected}"
+						valueChangeListener="#{bean.listenSelectedRowChange}">
+						<f:attribute name="currentRow" value="#{f}"/>
+					<ace:ajax render="@all"/>
+				</ace:radioButton>
+				</h:panelGroup>
+				</ace:column>
+				
+				<ace:column headerText="Zip Code" styleClass="CT" style="width:50%;">
+					<h:outputText value="#{f.zipCode}"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="City Name" styleClass="CT" style="width:50%;">
+					<h:outputText value="#{f.city}"></h:outputText>
+				</ace:column>
+
+
+
+			</ace:dataTable>
+			
+			<div class="popBtnCont" style="position: static; margin-left: 18px; margin-top: 10px;">
+				<span class="FR padPop25rt"> <span class="btnPriEnbLt" /> <span>
+						<ace:linkButton value="#{zipCodeBean.buttonCancelLabel}" action="#{zipCodeBean.actionCancel}"
+							styleClass="btnPriEnbCt" />
+				</span> <span class="btnPriEnbRt" />
+				</span> <span class="FR pad5rt"> <span class="btnSecHotLt" /> <span>
+						<ace:linkButton value="#{zipCodeBean.buttonOkLabel}" action="#{zipCodeBean.actionOk}"
+							styleClass="btnSecHotCt" />
+				</span> <span class="btnSecHotRt" />
+				</span>
+			</div>
+		</ace:dialog>
+	</h:panelGroup>
+
+</h:form>
+</ui:composition>

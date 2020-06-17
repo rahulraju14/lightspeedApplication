@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timesheetDay" pageWidth="56" pageHeight="67" whenNoDataType="AllSectionsNoDetail" columnWidth="56" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="3.1384283767210035"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timesheetDayId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="workplace" class="java.lang.String"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select td.*, " +
+" CASE td.Touring_Day_Type " +
+    " when 'TSH' then 'Show' " +
+    " when 'TPR' then 'Prep' " +
+    " when 'TPO' then 'Post' " +
+    " when 'TTR' then 'Travel' " +
+    " when 'TDO' then 'Down' " +
+    " when 'HOW' then 'Work' " +
+    " when 'HOO' then 'Off' " +
+    " else '' " +
+    " end as Touring_DayType " +
+" from timesheet_day td" +
+" where id = " + $P{timesheetDayId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Timesheet_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Touring_City" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Touring_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Touring_Country_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Touring_Day_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Home_City" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Home_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Home_Country_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Home_Day_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Touring_DayType" class="java.lang.String"/>
+	<detail>
+		<band height="67" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefault8" stretchType="RelativeToTallestObject" x="0" y="53" width="56" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="a5d4aa17-23ac-4441-a6f2-4f3d21cbff65">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Touring_DayType}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault8" stretchType="RelativeToTallestObject" x="0" y="13" width="42" height="26" forecolor="#000000" backcolor="#FFFFFF" uuid="eae333c2-5156-4933-baad-ebe4f93f2c91">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{workplace}.equals("DL") ? $F{Touring_City} : $F{Home_City}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/dd" isBlankWhenNull="true">
+				<reportElement style="tcDefBold" stretchType="RelativeToTallestObject" mode="Opaque" x="30" y="0" width="26" height="13" forecolor="#000000" backcolor="#CCCCCC" uuid="c71ab1cb-66ad-45d0-af45-7a92784b1c3a"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="EEE" isBlankWhenNull="true">
+				<reportElement style="tcDefBold" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="30" height="13" forecolor="#000000" backcolor="#CCCCCC" uuid="b9d79d2c-fa6e-418e-8f21-e71f09136283"/>
+				<textElement textAlignment="Left">
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefault8" stretchType="RelativeToTallestObject" x="42" y="13" width="14" height="26" forecolor="#000000" backcolor="#FFFFFF" uuid="1cc14d8a-c4ea-4fda-b2b1-4f94a9dc9369">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{workplace}.equals("DL") ? $F{Touring_State} : $F{Home_State}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault8" x="0" y="41" width="56" height="13" uuid="205d8503-22bb-4e39-ae41-231e45a7285f">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Touring_Country_Code}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement style="border" mode="Transparent" x="0" y="0" width="56" height="65" uuid="18b37da8-459e-420f-ae02-bd4f269b60ee">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement x="41" y="13" width="1" height="26" uuid="47096976-2da8-4f2d-947c-195164f2059e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="12" width="56" height="1" uuid="deaa52e0-da71-40de-972e-a689321b5e58">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="39" width="56" height="1" uuid="17fd146e-7928-4915-b744-bfc1fe30952d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="52" width="56" height="1" uuid="17fd146e-7928-4915-b744-bfc1fe30952d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

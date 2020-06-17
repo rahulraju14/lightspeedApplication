@@ -1,0 +1,511 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<c:set var="dataBean" value="#{hotCostsDataEntryBean}" />
+	<c:set var="editable" value="#{hotCostsDataEntryBean.editMode}" />
+
+	<div class="W100percnt rowGradient">
+		<!-- Hours Entry Table -->
+		<div class="FL pad8lt" style="width:45%;">
+			<div class="blueLegendContWrap MA">
+				<div class="blueLegendCont FL" style="margin-top:12px;">
+					<!-- Blue content -->
+					<div class="legendHdg"></div>
+					<div style="min-height:19px;">
+						<!-- keeps size even if btn is hidden -->
+						<!-- Update Legend button -->
+						<h:panelGroup styleClass="btn_legend" rendered="#{editable}">
+							<span class="btnMiniLtHot" />
+							<h:commandLink value="Update" 
+								action="#{dataBean.actionUpdateDailyTimes}" onclick="queueClick(this,event);"
+								title="Update the Daily Time Entries Below" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+<!--						
+						<h:panelGroup styleClass="btn_legend" rendered="#{editable}">
+							<span class="btnMiniDisLt" />
+							<h:commandLink value="Update" style="font-size:10px;"
+								onClick="return false;" 
+								title="Update the Hours Entries Below" styleClass="btnMiniDisCt" />
+							<span class="btnMiniDisRt" />
+						</h:panelGroup>
+-->						
+					</div>
+					<!-- Timecard push values -->
+					<ace:dataTable id="hostCostsHours" rendered="true" row="1"
+						style="width:100%;max-width:100%;overflow-x:hidden;"
+						rowStyleClass="CT txt9"
+						styleClass="gradTbl2 txt8 CT" value="">
+						<ace:columnGroup>
+							<ace:row>
+								<ace:column style="font-size:8pt;width:15%;"></ace:column>
+								<ace:column style="font-size:8pt;width:6%;"></ace:column>
+								<ace:column style="font-size:8pt;width:12%;" colspan="2">Meal 1</ace:column>
+								<ace:column style="font-size:8pt;width:12%;" colspan="2">Meal 2</ace:column>
+								<ace:column style="font-size:8pt;width:6%;"></ace:column>
+								<ace:column style="font-size:8pt;width:15%;"></ace:column>
+								<ace:column style="font-size:8pt;width:2%;">Off</ace:column>
+								<ace:column style="font-size:8pt;width:2%;">Frcd</ace:column>
+							</ace:row>
+							<ace:row>
+								<ace:column style="font-size:8pt;width:15%;">Day Type</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">Call</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">Out</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">In</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">Out</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">In</ace:column>
+								<ace:column style="font-size:8pt;width:6%;">Wrap</ace:column>
+								<ace:column style="font-size:8pt;width:15%;">Work Zone</ace:column>
+								<ace:column style="font-size:8pt;width:2%;">Prod</ace:column>
+								<ace:column style="font-size:8pt;width:2%;">Call</ace:column>
+							</ace:row>
+						</ace:columnGroup>
+						<!-- Day Type -->
+						<ace:column>
+							<div class="W95percnt LT pad2rt pad2lt CT txt9" >
+								<h:selectOneMenu
+									styleClass="pad2lt pad2tp pad2rt pad2bm "
+									value="#{dataBean.hotCostsInput.dayType}"
+									 style="max-width:95%;"
+									rendered="#{editable}" >
+									<f:selectItems value="#{hotCostsBean.dayTypeDL}" />
+								</h:selectOneMenu>
+								<h:outputText value="#{dataBean.hotCostsInput.dayType.shortLabel}" rendered="#{!editable}"/>
+							</div>
+						</ace:column>
+						<!-- Call -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.callTime}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.callTime}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- M1 Out -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.m1Out}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.m1Out}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- M1 In -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.m1In}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.m1In}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- M2 Out -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.m2Out}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.m2Out}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- M2 In -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.m2In}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.m2In}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- Wrap -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" 
+									value="#{dataBean.hotCostsInput.wrap}"
+									valueChangeListener="#{dataBean.listenDailyHotCostChange}"
+									rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+									<ace:ajax execute="@this" render="@all"/>
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.wrap}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- Work Zone -->
+						<ace:column>
+							<div class="W95percnt LT pad2rt pad2lt txt9" >
+								<h:selectOneMenu
+									styleClass="pad2lt pad2tp pad2rt pad2bm"
+									value="#{dataBean.hotCostsInput.workZone}"
+									 style="max-width:95%;"
+									rendered="#{editable}" >
+									<f:selectItems value="#{hotCostsBean.workZoneDL}" />
+								</h:selectOneMenu>
+								<h:outputText value="#{dataBean.hotCostsInput.workZone.shortLabel}" rendered="#{!editable}"/>
+							</div>
+						</ace:column>
+						<!-- Off Production -->
+						<ace:column>
+							<div class="W95percnt CT pad2rt pad2lt txt9" >
+								<h:selectBooleanCheckbox styleClass="ckbx pad5lt" disabled="#{!editable}" 
+									value="#{dataBean.hotCostsInput.offProduction}"	
+								/>
+							</div>
+						</ace:column>
+						<!-- Forced Call -->
+						<ace:column>
+							<div class="W95percnt CT pad2rt pad2lt txt9" >
+								<h:selectBooleanCheckbox styleClass="ckbx pad5lt" disabled="#{!editable}" 
+									value="#{dataBean.hotCostsInput.forcedCall}"	
+								/>
+							</div>
+						</ace:column>
+					</ace:dataTable>
+
+					<!-- End gradient table wrapper -->
+				</div>
+				<!-- End of blue content -->
+			</div>
+			<!-- End of blueLegendContWrap -->
+		</div>
+		<!-- End of Hours Table Panel -->
+		<div class="FL" style="width:40%;">
+			<!-- MVP Calc Table -->
+			<div class="blueLegendContWrap MA">
+				<div class="blueLegendCont FL" style="margin-top:12px;">
+					<!-- Blue content -->
+					<div class="legendHdg"></div>
+					<div style="min-height:19px;">
+						<!-- keeps size even if btn is hidden -->
+						<!-- Update Legend button -->
+						<h:panelGroup styleClass="btn_legend" rendered="#{editable}">
+							<span class="btnMiniLtHot" />
+							<h:commandLink value="Update" 
+								action="#{dataBean.actionUpdateMPV}" onclick="queueClick(this,event);"
+								title="Update the MPV Entries Below" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+<!--						
+						<h:panelGroup styleClass="btn_legend"
+							rendered="#{!editable}">
+							<span class="btnMiniDisLt" />
+							<h:commandLink value="Update" style="font-size:10px;"
+								onClick="return false;"
+								title="Update the MPV Entries Below" styleClass="btnMiniDisCt" />
+							<span class="btnMiniDisRt" />
+						</h:panelGroup>
+-->						
+					</div>
+					<!-- MPV Push Values -->
+					<ace:dataTable id="hostCostsMVPCalc" 
+						style="width:100%;max-width:100%;overflow-x:hidden;"
+						rowStyleClass="CT txt9"
+						styleClass="gradTbl2 txt8 CT" value="" >
+						<ace:columnGroup>
+							<ace:row>
+								<ace:column style="font-size:8pt;width:12%;">NDB</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">Grc</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">MPV</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">NDM</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">NDM</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">Last</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">Grc</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">MPV</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">Cam</ace:column>
+<!--									
+								<ace:column style="width:10%">Frn</ace:column>
+-->									
+							</ace:row>
+							<ace:row>
+								<ace:column style="font-size:8pt;width:12%;">End</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">1</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">1</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">Start</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">End</ace:column>
+								<ace:column style="font-size:8pt;width:12%;">Man</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">2</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">2</ace:column>
+								<ace:column style="font-size:8pt;width:10%;">Wrap</ace:column>
+<!--									
+								<ace:column style="width:10%">Hrs</ace:column>
+-->									
+							</ace:row>
+						</ace:columnGroup>
+						<!-- NDB End -->
+						<ace:column>
+							<div class="W95percnt pad5rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt" rendered="#{editable}"
+									value="#{dataBean.hotCostsInput.ndbEnd}"
+									 disabled="#{!editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.ndbEnd}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>
+							</div>
+						</ace:column>
+						<!-- Grace 1 -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.grace1}" rendered="#{editable}" >
+										<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.grace1}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>
+							</div>
+						</ace:column>
+						<!-- MPV 1 -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.mpv1Payroll}" rendered="#{editable}" />
+								<h:outputText value="#{dataBean.hotCostsInput.mpv1Payroll}" rendered="#{!editable}" styleClass="txt10"/>
+							</div>
+						</ace:column>
+						<!-- NDM Start -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="CT txt10 W80percnt" value="#{dataBean.hotCostsInput.ndmStart}"
+									rendered="#{editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.ndmStart}" rendered="#{!editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- NDM End -->
+						<ace:column>
+							<div class="W90percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.ndmEnd}" rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.ndmEnd}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- Last Man In -->
+						<ace:column>
+							<div class="W90percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.lastManIn}" rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />								
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.lastManIn}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- Grace 2 -->
+						<ace:column>
+							<div class="W90percnt pad2rt pad2lt CT txt9">								
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.grace2}" rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+								<h:outputText value="#{dataBean.hotCostsInput.grace2}" rendered="#{!editable}">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							</div>
+						</ace:column>
+						<!-- MPV 2 -->
+						<ace:column styleClass="CT">
+							<div class="W90percnt pad2rt pad2lt CT txt9" >
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.mpv2Payroll}"
+									rendered="#{editable}" />
+								<h:outputText value="#{dataBean.hotCostsInput.mpv2Payroll}" rendered="#{!editable}" styleClass="CT txt10"/>
+							</div>
+						</ace:column>
+						<!-- Camera Wrap -->
+						<ace:column>
+							<div class="W95percnt pad2rt pad2lt CT txt9" >
+								<h:selectBooleanCheckbox styleClass="ckbx pad10lt" disabled="#{!editable}" 
+									value="#{dataBean.hotCostsInput.cameraWrap}"	
+								/>
+							</div>
+						</ace:column>
+						<!-- French Hours - ->
+						<ace:column styleClass="CT">
+							<div class="W95percnt pad2rt pad2lt txt10" >
+								<h:selectBooleanCheckbox styleClass="ckbx pad10lt" disabled="#{!editable}" 
+									value="#{dataBean.hotCostsInput.frenchHours}"	
+								/>
+							</div>
+						</ace:column>
+-->						
+					</ace:dataTable>
+					<!-- End gradient table wrapper -->
+				</div>
+				<!-- End of blue content -->
+			</div>
+			<!-- End of blueLegendContWrap -->
+		</div>
+		<!-- End of MPV Calc Table Panel -->	
+		<div class="FR pad12rt" style="width:13%;">
+			<!-- Budgeted Table -->
+			<div class="blueLegendContWrap MA">
+				<div class="blueLegendCont FL" style="margin-top:12px;">
+					<!-- Blue content -->
+					<div class="legendHdg"></div>
+					<div style="min-height:19px;">
+						<!-- keeps size even if btn is hidden -->
+						<!-- Update Legend button -->
+						<h:panelGroup styleClass="btn_legend" rendered="#{editable}">
+							<span class="btnMiniLtHot" />
+							<h:commandLink value="Update"
+								action="#{dataBean.actionUpdateBudgetedValues}"
+								title="Update the Budgeted Entries Below" styleClass="btnMiniCt" 
+								onclick="queueClick(this,event);"/>
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+<!--						
+						<h:panelGroup styleClass="btn_legend" rendered="#{!editable}">
+							<span class="btnMiniDisLt" />
+							<h:commandLink value="Update" style="font-size:10px;"
+								onClick="return false;"
+								title="Update the Budgeted Entries Below" styleClass="btnMiniDisCt" />
+							<span class="btnMiniDisRt" />
+						</h:panelGroup>
+-->						
+					</div>
+					<!-- Budgeted Push Values -->
+					<ace:dataTable id="hostCostsBudgetVal" rendered="true"
+						style="width:100%;max-width:100%;overflow-x:hidden;"
+						rowStyleClass="CT txt10"
+						styleClass="gradTbl2 txt9" value="" >
+						<ace:columnGroup>
+							<ace:row>
+								<ace:column styleClass="W100percnt" style="font-size:8pt;width:100%;" colspan="4">Budgeted</ace:column>
+							</ace:row>
+							<ace:row>
+								<ace:column styleClass="W23percnt" style="font-size:8pt;width:23%;" >
+									<h:outputText value="Hrs" />
+								</ace:column>
+								<ace:column styleClass="W32percnt" style="font-size:8pt;width:32%;" >
+									<h:outputText value="Hrs $" />
+								</ace:column>
+								<ace:column styleClass="W13percnt" style="font-size:8pt;width:13%;" >
+									<h:outputText value="MPV" />
+								</ace:column>
+								<ace:column styleClass="W32percnt" style="font-size:8pt;width:32%;" >
+									<h:outputText value="MPV $" />
+								</ace:column>
+							</ace:row>
+						</ace:columnGroup>
+
+						<!-- Budegeted Hours -->
+						<ace:column>
+							<div class="W90percnt pad2lt pad2rt CT" >
+								<h:outputText value="#{dataBean.hotCostsInput.budgetedHours}" rendered="#{!editable}" styleClass="CT txt10">
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</h:outputText>								
+							
+								<ace:textEntry styleClass="CT W80percnt txt10"
+									value="#{dataBean.hotCostsInput.budgetedHours}"
+									rendered="#{editable}" >
+									<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+								</ace:textEntry>
+							</div>
+						</ace:column>
+						<!-- Budgeted Hours $ -->
+						<ace:column styleClass="RT">
+							<div class="W90percnt pad2lt pad2rt" >
+								<h:outputText value="#{dataBean.hotCostsInput.budgetedCost}" styleClass="RT txt10">
+									<f:convertNumber maxFractionDigits="2"
+													 groupingUsed="false"
+													 maxIntegerDigits="7"
+													 type="number"/>
+								 </h:outputText>								
+<!--							
+								<ace:textEntry styleClass="W80percnt RT" 
+									value="#{dataBean.hotCostsInput.budgetedCost}"
+									rendered="#{editable}">
+									<f:convertNumber maxFractionDigits="2"
+													 groupingUsed="false"
+													 maxIntegerDigits="7"
+													 type="number"/>
+								</ace:textEntry>
+-->								
+							</div>
+						</ace:column>
+						<!-- MPV -->
+						<ace:column>
+							<div class="W90percnt pad2lt pad2rt" >
+								<h:outputText value="#{dataBean.hotCostsInput.budgetedMpv}" rendered="#{!editable}"/>
+							
+								<ace:textEntry styleClass="CT W70percnt txt10" 
+									value="#{dataBean.hotCostsInput.budgetedMpv}"
+									rendered="#{editable}" />
+							</div>
+						</ace:column>
+						<!-- MPV $ -->
+						<ace:column styleClass="RT">
+							<div class="W90percnt pad2lt pad2rt" >
+								<h:outputText value="#{dataBean.hotCostsInput.budgetedCost}" rendered="#{!editable}" >
+									<f:convertNumber maxFractionDigits="2"
+													 groupingUsed="false"
+													 maxIntegerDigits="7"
+													 type="number"/>
+								 </h:outputText>								
+								<ace:textEntry styleClass="W80percnt"
+									value="#{dataBean.hotCostsInput.budgetedMpvCost}"
+									rendered="#{editable}" >
+									<f:convertNumber maxFractionDigits="2"
+													 groupingUsed="false"
+													 maxIntegerDigits="7"
+													 type="number"/>
+								</ace:textEntry>											
+							</div>											
+						</ace:column>
+					</ace:dataTable>
+					<!-- End gradient table wrapper -->
+				</div>
+				<!-- End of blue content -->
+			</div>
+			<!-- End of blueLegendContWrap -->
+		</div>
+		<!-- End of MPV Calc Table Panel -->	
+		<div class="rowCont">&#160;</div>
+	</div>
+</ui:composition>

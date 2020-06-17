@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Confirm Submit</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('submit:password').focus();
+}
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form id="submit">
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.submitBackPage" />
+
+		<ui:include src="../common/header.xhtml" />
+			<!-- calls 'getLockIt()' to lock the timecard; always returns false -->
+			<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+
+			<div class="CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle">
+						e-Signature Required
+				</div>
+
+				<div class="infoText pad10tp">
+					<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+						Please enter your password and PIN to<br/>
+						confirm the submission of this timecard.
+					</h:panelGroup>
+					<h:panelGroup styleClass="errorMsgTxt" rendered="#{! mobileTimecardBean.locked}">
+						This timecard is being updated by another user, and may not
+						be submitted at this time.  Please try again later.
+					</h:panelGroup>
+				</div>
+
+				<div class="prodTitle pad10tp">
+						<h:outputText value="#{mobileTimecardBean.tcUser.lastNameFirstName}" />
+				</div>
+				<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+				</div>
+
+				<div class="pad10tp">
+					<span class="weekEndTextMed">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad5lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<div class="weekEndText pad5tp">
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.totalHours}" />
+						<h:outputText value=" Hours" />
+				</div>
+
+				<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+					<h:panelGroup rendered="#{headerViewBean.user.id ne mobileTimecardBean.tcUser.id}">
+						<div class="infoText LT pad5tp pad30lt pad30rt">
+							By entering your e-signature below, you acknowledge that you are submitting
+							this timecard on behalf of the employee for the following reason:
+
+							<div class="pad5tp">
+								<span class="fd">
+									<h:selectOneMenu
+										style="min-width:130px;" value="#{mobileTimecardBean.submitType}" >
+										<f:selectItems value="#{mobileTimecardBean.submitTypeDL}" />
+										<f:ajax execute="@this" render="@all"/>
+									</h:selectOneMenu>
+								</span>
+							</div>
+							<h:panelGroup rendered="#{mobileTimecardBean.submitType eq 'OTHER'}">
+								<div class="pad10tp">
+									<ace:textAreaEntry styleClass="stdTxtArea" value="#{mobileTimecardBean.submitComment}"
+									maxlength="1000" style="height:50px;width:100%;"/>
+								</div>
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+
+					<div class="pad10tp">
+						<div>
+							<h:outputText value="Password" styleClass="txtL3" />
+						</div>
+						<h:inputSecret id="password" styleClass="fdPass"
+							value="#{mobileTimecardBean.password}" redisplay="true"
+							tabindex="1" maxlength="20">
+						</h:inputSecret>
+					</div>
+
+					<div class="pad10tp">
+						<div>
+							<h:outputText value="PIN" styleClass="txtL3" />
+						</div>
+						<h:inputSecret styleClass="fdPin"
+							value="#{mobileTimecardBean.pin}" redisplay="true"
+							tabindex="2" maxlength="4">
+						</h:inputSecret>
+					</div>
+				</h:panelGroup>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="twoBtnRow">
+					<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+					<span class="inBlock FL">
+						<span class="FL btnSecHotLt"></span>
+						<span>
+							<h:commandLink value="E-Sign"
+								tabindex="4" action="#{mobileTimecardBean.actionConfirmSubmit}"
+								styleClass="btnSecHotCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnSecHotRt"></span>
+					</span>
+					</h:panelGroup>
+
+					<span class="inBlock FR">
+						<span class="FL btnPriEnbLt"></span>
+						<span>
+							<h:commandLink value="Cancel"
+								tabindex="4" action="#{mobileTimecardBean.actionCancelSubmit}"
+								styleClass="btnPriEnbCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnPriEnbRt"></span>
+					</span>
+				</div>
+
+			</div>
+
+	</h:form>
+
+	<div class="CB pad30tp"/>
+
+ 	<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

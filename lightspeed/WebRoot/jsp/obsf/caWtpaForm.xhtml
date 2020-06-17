@@ -1,0 +1,1103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="CA WTPA FORM"
+		rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+		<div class="miniTab pad15lt" style="width:840px;">
+
+			<c:set var="appSigned" value="#{formWtpaBean.contactDoc.employerSignature ne null}" />
+
+			<div class="BKwhite sfFormBorder1" >
+				<div class="pad9lt pad10rt pad10tp" style="width:820px;">
+
+					<div class=" ">
+						<h:graphicImage alt="" value="" styleClass="FR" style="width:700px;" url="../../i/forms/ca_wtpa_header1.png"/>
+					</div>
+					<h:graphicImage alt="" value="" style="width:815px;" url="../../i/forms/ca_wtpa_header2.png"/>
+
+					<!-- HORIZONTAL RULE -->
+					<div class="rowCont FL" style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:3px;" />
+					</div>
+
+					<!-- INFORMATION BLOCK START -->
+					<div class="rowCont pad6tp">
+
+						<!-- EMPLOYEE INFORMATION START -->
+						<div class="W50percnt FL">
+
+							<!-- HEADING -->
+							<div class="rowCont FL pad5lt">
+								<span>
+									<h:outputText styleClass="FL B txt14 W80percnt" value="EMPLOYEE INFORMATION:" />
+								</span>
+							</div>
+
+							<!-- NAME START -->
+							<div class="rowCont FL pad20lt pad10tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Name:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.name) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="50"
+											immediate="true" value="#{formWtpaBean.form.name}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}">
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- NAME END -->
+
+							<!-- WORK START DATE START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Work Start Date:" />
+								 </span>
+								<ace:dateTimeEntry tabindex="0"
+										styleClass="fd_sm2 #{empty (formWtpaBean.form.startDate) ? 'requiredField' : ''}"
+										value="#{formWtpaBean.form.startDate}" renderAsPopup="true"
+										disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+									<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+								</ace:dateTimeEntry>
+							</div>
+							<!-- WORK START DATE END -->
+
+							<!-- EMAIL START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Email:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="100"
+											value="#{formWtpaBean.form.email}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}"/>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- EMAIL END -->
+
+							<!-- PHONE START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Phone:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="25"
+											value="#{formWtpaBean.form.phone}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}">
+											<f:converter converterId="lightspeed.PhoneNumberConverter" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- PHONE END -->
+
+							<!-- JOB/OCCUPATION START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Job/Occupation:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.occupation) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="50"
+											value="#{formWtpaBean.form.occupation}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- JOB/OCCUPATION END -->
+
+							<!-- PROJECT NAME START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Project Name:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.projectName) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="35"
+											value="#{formWtpaBean.form.projectName}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- PROJECT NAME END -->
+
+							<!-- PROJECT NUMBER START -->
+							<div class="rowCont FL pad20lt pad2tp">
+								<span class="fdNm" style="width:100px;">
+									<h:outputText value="Project Number:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="20"
+											value="#{formWtpaBean.form.projectNumber}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- PROJECT NUMBER END -->
+
+						</div>
+						<!-- EMPLOYEE INFORMATION END -->
+
+						<!-- EMPLOYER INFORMATION START -->
+						<div class="W50percnt FL">
+							<div class="rowCont FL">
+								<span class="pad20lt">
+									<h:outputText styleClass="FL B txt14 W80percnt" value="EMPLOYER INFORMATION:" />
+								</span>
+							</div>
+
+							<!-- EMPLOYER / PRODUCTION CO. START -->
+							<div class="rowCont FL pad10tp">
+								<span class="fdNm_w2 pad35lt" style="width:153px;">
+									<h:outputText value="Employer / Production Co:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.employerName) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="50" style="min-width:47%;"
+											value="#{formWtpaBean.form.employerName}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- EMPLOYER / PRODUCTION CO. END -->
+
+							<!-- DBA AND FEIN START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:73px;">
+									<h:outputText value="DBA (if any):" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry styleClass="FL" maxlength="50"
+											style="min-width:132px;width:132px;"
+											value="#{formWtpaBean.form.dba}"
+										 	disabled="#{! formWtpaBean.appEdit or
+										 		formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										 		appSigned}" />
+									</span>
+								</h:panelGroup>
+								<span class="fdNm pad8lt" style="width:34px">
+									<h:outputText value="FEIN:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="10" immediate="true"
+											value="#{formWtpaBean.form.fedidNumber}"
+											style="min-width:80px; width:90px;"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- DBA AND FEIN END -->
+
+							<!-- STREET ADDRESS START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:100px;">
+									<h:outputText value="Street Address:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.address.addrLine1) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="50"
+											value="#{formWtpaBean.form.address.addrLine1}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- STREET ADDRESS END -->
+
+							<!-- CITY, STATE, ZIP START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:26px;">
+									<h:outputText value="City:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.address.city) ? 'requiredField' : ''}">
+										<ace:textEntry styleClass="FL" maxlength="50"
+											style="min-width:132px;width:132px;"
+											value="#{formWtpaBean.form.address.city}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+								<span class="fdNm pad8lt" style="width:30px;">
+									<h:outputText value="State:" />
+								 </span>
+
+								<h:selectOneMenu value="#{formWtpaBean.form.address.state}"
+										styleClass="FL W10percnt pad8lt"
+										style="#{formWtpaBean.form.address.state eq null ? 'background-color: rgb(255,255,170)' : ''};"
+										disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}" >
+									<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+								<span class="fdNm pad5lt" style="width:20px">
+									<h:outputText value="Zip:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 pad3lt #{empty (formWtpaBean.form.address.zip) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="10" style="min-width:65px; width:65px;"
+											value="#{formWtpaBean.form.address.zip}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!--  CITY, STATE, ZIP END -->
+
+							<!-- MAILING ADDRESS START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:100px;">
+									<h:outputText value="Mailing Address:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="50"
+										value="#{formWtpaBean.form.mailingAddress.addrLine1}"
+										disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+											appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- MAILING ADDRESS END -->
+
+							<!--  CITY, STATE, ZIP START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:26px;">
+									<h:outputText value="City:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry styleClass="FL"
+											maxlength="50" style="min-width:132px;width:132px;"
+											value="#{formWtpaBean.form.mailingAddress.city}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+								<span class="fdNm pad8lt" style="width:30px;">
+									<h:outputText value="State:" />
+								 </span>
+								<h:selectOneMenu value="#{formWtpaBean.form.mailingAddress.state}"
+										styleClass="FL W10percnt pad8lt"
+										disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+											appSigned}" >
+									<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+								<span class="fdNm pad5lt" style="width:20px">
+									<h:outputText value="Zip:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 pad3lt">
+										<ace:textEntry maxlength="10" style="min-width:65px; width:65px;"
+											value="#{formWtpaBean.form.mailingAddress.zip}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<!--  CITY, STATE, ZIP END -->
+
+							<!-- PHONE START -->
+							<div class="rowCont FL pad2tp">
+								<span class="fdNm pad35lt" style="width:100px;">
+									<h:outputText value="Phone:" />
+								 </span>
+								<h:panelGroup>
+									<span class="fd_sm2 #{empty (formWtpaBean.form.employerPhone) ? 'requiredField' : ''}">
+										<ace:textEntry maxlength="25"
+											value="#{formWtpaBean.form.employerPhone}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												appSigned}" >
+											<f:converter converterId="lightspeed.PhoneNumberConverter" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- PHONE END -->
+
+						</div>
+						<!-- EMPLOYER INFORMATION END -->
+
+						<h:outputText styleClass="CT rowCont pad10tp B" escape="false"
+							value="#{formWtpaBean.payrollInfo}" />
+
+						<!-- <h:outputText styleClass="FL rowCont pad50lt pad10tp B" escape="false"
+							value="Payroll Company: The TEAM Companies, Inc.&amp;#9632; 901 W. Alameda Ave., Ste 100,
+							 Burbank, CA 91506 &amp;#9632;Tel: 818.558.3261" />
+						<h:outputText styleClass="FL rowCont pad30lt pad2tp B" escape="false"
+							value="Worker's Compensation Insurance Carrier:  &#160; CHARTIS CLAIMS, INC. &amp;#9632; P.O.
+							 Box 25977, Shawnee Mission, KS 66225 &amp;#9632; 800.736.6671 " /> -->
+
+					</div>
+					<!-- INFORMATION BLOCK END -->
+
+					<!-- HORIZONTAL RULE -->
+					<div class="rowCont FL" style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:5px;" />
+					</div>
+
+					<!-- EMPLOYEE PAY RATES START -->
+					<div class="rowCont pad6tp">
+						<span class="pad5lt"> <h:outputText styleClass="FL B txt14 W80percnt" value="EMPLOYEE PAY RATES:" /> </span>
+					</div>
+
+					<!-- REGULAR RATE OF PAY START -->
+					<div class="rowCont FL pad10tp">
+						<span class="fdNm_w pad20lt">
+							<h:outputText styleClass="FL" value="Regular rate of pay:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{empty (formWtpaBean.form.regularRate) ? 'requiredField' : ''}">
+								<ace:textEntry maxlength="50"
+									style="min-width:80px; width:90px;" styleClass="FL"
+									value="#{formWtpaBean.form.regularRate}"
+									valueChangeListener="#{formWtpaBean.listenChangeRegularRate}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}" >
+									<ace:ajax execute="@this" render="@this caOvertimeRate"/>
+									<f:convertNumber type="number" pattern="#,##0.00##" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<span class="FL fdNm pad10lt" style="width:10px;font-weight:normal"> per </span>
+
+						<!-- RATE TYPE -->
+						<div class="W65percnt FL pad2tp">
+							<div class="rowCont FL pad10lt #{(formWtpaBean.form.regularFreq eq null) ? 'requiredDiv' : ''}">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:buttonGroup id="regPayRate"
+									layout="spread" mutuallyExclusive="true">
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayRate" id="H_reg"
+											label="hour" labelPosition="right"
+											value="#{formWtpaBean.caRegularFreq[0]}"
+											valueChangeListener="#{formWtpaBean.listenChangeRegularFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+											appSigned}">
+											<ace:ajax execute="regPayRate" event="activate" render="regPayRate"/>
+										</ace:radioButton>
+									</span>
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayRate" id="D_reg"
+											label="day (8 hours)" labelPosition="right"
+											value="#{formWtpaBean.caRegularFreq[1]}"
+											valueChangeListener="#{formWtpaBean.listenChangeRegularFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+											appSigned}">
+											<ace:ajax execute="regPayRate" event="activate" render="regPayRate"/>
+										</ace:radioButton>
+									</span>
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayRate" id="O_reg"
+											label="other (explain):" labelPosition="right"
+											value="#{formWtpaBean.caRegularFreq[2]}"
+											valueChangeListener="#{formWtpaBean.listenChangeRegularFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+											appSigned}">
+											<ace:ajax execute="regPayRate" event="activate" render="regPayRate"/>
+										</ace:radioButton>
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm2
+											#{((formWtpaBean.form.regularFreq eq 'O') and
+											empty (formWtpaBean.form.regularFreqOther)) ? 'requiredField' : ''}">
+											<ace:textEntry styleClass="FL pad3lt"
+												maxlength="50" style="min-width:49%;"
+												value="#{formWtpaBean.form.regularFreqOther}"
+												disabled="#{! formWtpaBean.appEdit or
+													formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+													formWtpaBean.form.regularFreq ne 'O' or
+													appSigned}" />
+										</span>
+									</h:panelGroup>
+								</ace:buttonGroup>
+							</icecore:setEventPhase>
+							</div>
+						</div>
+					</div>
+					<!-- REGULAR RATE OF PAY END -->
+
+					<!-- OVERTIME RATE OF PAY START -->
+					<div class="rowCont FL pad2tp">
+						<span  class="fdNm_w2 pad20lt" style="width:121px">
+							<h:outputText styleClass="FL" value="Overtime rate of pay:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{(not formWtpaBean.form.exempt) and empty (formWtpaBean.form.overtimeRate) ? 'requiredField' : ''}">
+								<ace:textEntry id="caOvertimeRate"
+									maxlength="50" styleClass="FL"
+									style="min-width:80px; width:90px;"
+									value="#{formWtpaBean.form.overtimeRate}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<f:convertNumber type="number" pattern="#,##0.00##" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<span class="FL fdNm pad10lt" style="width:10px;font-weight:normal"> per </span>
+
+						<!-- RATE TYPE -->
+						<div class="W65percnt FL pad2tp">
+							<div class="rowCont FL pad10lt #{(formWtpaBean.form.overtimeFreq eq null) ? 'requiredDiv' : ''}">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:buttonGroup id="overPayRate"
+									layout="spread" mutuallyExclusive="true">
+									<span class="pad5lt FL I">
+										<ace:radioButton group="overPayRate" id="H_over"
+											label="hour" labelPosition="right"
+											value="#{formWtpaBean.overtimeFreq[0]}"
+											disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}"
+											valueChangeListener="#{formWtpaBean.listenChangOvertimeFrequency}">
+												<ace:ajax execute="overPayRate" event="activate" render="overPayRate"/>
+										</ace:radioButton>
+									</span>
+									<span class="pad5lt FL I">
+										<ace:radioButton group="overPayRate" id="O_over"
+											label="other (explain):" labelPosition="right"
+											value="#{formWtpaBean.overtimeFreq[1]}"
+											disabled="#{! formWtpaBean.appEdit or
+											formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}"
+											valueChangeListener="#{formWtpaBean.listenChangOvertimeFrequency}">
+												<ace:ajax execute="overPayRate" event="activate" render="overPayRate"/>
+										</ace:radioButton>
+									</span>
+								
+									<h:panelGroup>
+										<span class="fd_sm2
+											#{((formWtpaBean.form.overtimeFreq eq 'O') and
+											empty (formWtpaBean.form.overtimeFreqOther)) ? 'requiredField' : ''}">
+											<ace:textEntry styleClass="FL"
+												maxlength="50" style="min-width:68%;"
+												value="#{formWtpaBean.form.overtimeFreqOther}"
+												disabled="#{! formWtpaBean.appEdit or
+													formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+													formWtpaBean.form.overtimeFreq ne 'O' or
+													appSigned}"/>
+										</span>
+									</h:panelGroup>
+								</ace:buttonGroup>
+							</icecore:setEventPhase>
+							</div>
+						</div>
+					</div>
+					<!-- OVERTIME RATE OF PAY END -->
+
+					<div class="rowCont FL pad2tp">
+						<span class="pad20lt FL"> 
+							<h:outputText
+								value="(Overtime rate must be at least 1 1/2 times the worker's regular rate, to be paid
+								after 8 regular hours per day.)" />
+						</span> 
+					</div>
+
+					<!-- ALLOWANCES TAKEN START -->
+					<div class="rowCont FL pad5tp">
+						<span  class="fdNm_w2 pad20lt" style="width:121px">
+							<h:outputText styleClass="FL" value="Allowances Taken:" />
+						</span>
+
+						<!-- NONE -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL"
+								value="#{formWtpaBean.form.allowNone}"
+								disabled="#{! formWtpaBean.appEdit or
+									formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+									appSigned}" >
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="width:20px;font-weight:normal"> None </span>
+
+						<!-- TIPS -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL pad15lt"
+								value="#{formWtpaBean.form.allowTips}"
+								disabled="#{! formWtpaBean.appEdit or
+									formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+									appSigned}" >
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="width:23px;font-weight:normal"> Tips </span>
+
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" styleClass="FL"
+									style="min-width:50px; width:55px;"
+									value="#{formWtpaBean.form.allowTipsAmt}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<span class="FL fdNm pad5lt I" style="width:50px;font-weight:normal"> per hour, </span>
+
+						<!-- MEALS -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL pad7lt"
+								value="#{formWtpaBean.form.allowMeal}"
+								disabled="#{! formWtpaBean.appEdit or
+									formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+									appSigned}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="width:33px;font-weight:normal"> Meals </span>
+
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" styleClass="FL"
+									style="min-width:50px; width:55px;"
+									value="#{formWtpaBean.form.allowMealAmt}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<span class="FL fdNm pad5lt I" style="width:52px;font-weight:normal"> per meal, </span>
+
+						<!-- LODGING -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL pad10lt"
+								value="#{formWtpaBean.form.allowLodging}"
+								disabled="#{! formWtpaBean.appEdit or
+									formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+									appSigned}" >
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="width:45px;font-weight:normal"> Lodging </span>
+
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" styleClass="FL"
+									style="min-width:50px; width:55px;"
+									value="#{formWtpaBean.form.allowLodgingAmt}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+
+						<!-- OTHER -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL pad17lt"
+								value="#{formWtpaBean.form.allowOther}"
+								disabled="#{! formWtpaBean.appEdit or
+									formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+									appSigned}" >
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="width:32px;font-weight:normal"> Other </span>
+
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" styleClass="FL"
+									style="min-width:50px; width:60px;"
+									value="#{formWtpaBean.form.allowOtherAmt}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- ALLOWANCES TAKEN END -->
+
+					<!-- REGULAR PAYDAY START -->
+					<div class="rowCont FL pad2tp">
+						<span  class="fdNm_w pad20lt">
+							<h:outputText styleClass="FL" escape="false" value="Regular Payday:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:selectOneMenu styleClass="FL"
+									style="width:120px; #{formWtpaBean.form.regularPayDay eq 0 ? 'background-color: rgb(255,255,170)' : ''};"
+									value="#{formWtpaBean.form.regularPayDay}"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+										appSigned}" >
+									<ace:ajax />
+									<f:selectItems value="#{formWtpaBean.regularPayDayWeekDayList}" />
+								</h:selectOneMenu>
+							</span>
+						</h:panelGroup>
+
+						<!-- RATE TYPE -->
+						<div class="W65percnt FL pad2tp">
+							<div class="rowCont FL pad10lt #{(formWtpaBean.form.paydayFreq eq null) ? 'requiredDiv' : ''}">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:buttonGroup id="regPayDayRate"
+										mutuallyExclusive="true"
+										layout="spread">
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayDayRate" id="W"
+											labelPosition="right" label="Weekly"
+											value="#{formWtpaBean.regularPayday[0]}"
+											valueChangeListener="#{formWtpaBean.listenPaydayFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}">
+												<ace:ajax execute="regPayDayRate" event="activate" render="regPayDayRate"/>
+										</ace:radioButton>
+									</span>
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayDayRate" id="B"
+											labelPosition="right" label="Bi-Weekly"
+											value="#{formWtpaBean.regularPayday[1]}"
+											valueChangeListener="#{formWtpaBean.listenPaydayFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}">
+												<ace:ajax execute="regPayDayRate" event="activate" render="regPayDayRate"/>
+										</ace:radioButton>
+									</span>
+									<span class="pad5lt FL I">
+										<ace:radioButton group="regPayDayRate" id="O"
+											value="#{formWtpaBean.regularPayday[2]}"
+											labelPosition="right" label="other (if more frequent):"
+											valueChangeListener="#{formWtpaBean.listenPaydayFrequency}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}">
+												<ace:ajax execute="regPayDayRate" event="activate" render="regPayDayRate freqOther"/>
+										</ace:radioButton>
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm2
+												#{((formWtpaBean.form.paydayFreq eq 'O') and
+												empty (formWtpaBean.form.paydayFreqOther)) ? 'requiredField' : ''}">
+											<ace:textEntry styleClass="FL pad3lt" maxlength="30" id="freqOther"
+												style="min-width:41%;"
+												value="#{formWtpaBean.form.paydayFreqOther}"
+												disabled="#{! formWtpaBean.appEdit or
+													formWtpaBean.contactDoc.status eq 'SUBMITTED'or
+													formWtpaBean.form.paydayFreq ne 'O' or
+													appSigned}"/>
+										</span>
+									</h:panelGroup>
+								</ace:buttonGroup>
+							</icecore:setEventPhase>
+							</div>
+						</div>
+					</div>
+					<!-- REGULAR PAYDAY END -->
+
+					<!-- NOTICE GIVEN START -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm pad20lt FL" style="width:79px">
+							<h:outputText value="Notice Given:" />
+						</span>
+
+						<div class="W85percnt FL pad2tp">
+							<div class="rowCont FL #{(formWtpaBean.form.noticeGivenAtHire eq null) ? 'requiredDiv' : ''}">
+								<!-- <span class="pad5lt FL I"><ice:radio for="notice" index="0" /></span>
+								<span class="pad5lt FL I"><ice:radio for="notice" index="1" /></span> -->
+								<h:selectOneRadio id="notice" styleClass="h_radio fd_sm"
+									value="#{formWtpaBean.form.noticeGivenAtHire}" layout="lineDirection"
+									disabled="#{! formWtpaBean.appEdit or
+										formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}" >
+									<f:selectItem itemLabel="At time of hire" itemValue="true" />
+									<f:selectItem itemValue="false"
+									itemLabel="Within 7 days of any change to the above information that is not shown on
+										employee wage statement."  />
+									<ace:ajax />
+								</h:selectOneRadio>
+							</div>
+						</div>
+					</div>
+					<!-- NOTICE GIVEN END -->
+					<!-- EMPLOYEE PAY RATES END -->
+
+					<!-- HORIZONTAL RULE -->
+					<div class="rowCont FL" style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:5px;" />
+					</div>
+
+					<!-- PAID SICK LEAVE START -->
+					<div class="rowCont pad6tp">
+						<h:outputText styleClass="FL B txt14 W80percnt pad5lt" value="PAID SICK LEAVE:" />
+					</div>
+
+					<span class="FL pad15lt">
+						<h:outputText styleClass="rowCont pad10tp txt11"
+							value="Unless exempt, the employee identified on this notice is entitled to minimum
+								requirements for paid sick leave under state law which provides that an employee:" />
+					</span>
+					<span class="FL pad20lt">
+						<h:outputText styleClass="rowCont txt11 pad2tp"
+							value="a. May accrue paid sick leave and may request and use up to 3 days or 24 hours of
+								accrued paid sick leave per year;" />
+						<h:outputText styleClass="rowCont txt11"
+							value="b. May not be terminated or retaliated against for using or requesting the use of
+							 	accrued paid sick leave; and" />
+						<h:outputText styleClass="rowCont txt11"
+							value="c. Has the right to file a complaint against an employer who retaliates or
+								discriminates against an employee for"/>
+					</span>
+					<span class="FL pad25lt">
+						<h:outputText styleClass="rowCont txt11 pad2tp" value=" 1. requesting or using accrued sick days;"/>
+					
+						<h:outputText styleClass="rowCont txt11"
+							value=" 2. attempting to exercise the right to use accrued sick days;" />
+						<h:outputText styleClass="rowCont txt11"
+							value=" 3. filing a complaint or alleging a violation or Article 1.5 section
+								245 et seq. of the California Labor Code;"/>
+						<h:outputText styleClass="rowCont txt11" escape="false"
+							value="4. cooperating in an investigation or prosecution of an
+							 alleged violation of this Article or opposing any policy or practice or act that is prohibited
+							 by Article 1.5 &lt;/br&gt; &#160; &#160; section 245 et seq. of the California Labor Code."/>
+					</span>
+					<span class="FL pad15lt"> <h:outputText styleClass="rowCont pad12tp"
+						value="The following applies to the employee identified on this notice: (Select one);"/>
+					</span>	
+
+					<!-- EMPLOYEE NOTICE START -->
+					<div class="rowCont FL">
+						<div class="pad20lt">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<ace:buttonGroup id="empNotice"
+								layout="spread" mutuallyExclusive="true">
+								<span class="pad5lt pad10tp FL #{(formWtpaBean.form.sickLeaveType eq null) ? 'requiredDiv' : ''}">
+								<!-- previous check, disabled="#{! formWtpaBean.appEdit or formWtpaBean.contactDoc.status eq 'SUBMITTED' or appSigned}" -->
+									<ace:radioButton labelPosition="right"
+										group="empNotice" id="CA"
+										value="#{formWtpaBean.caSickLeaveType[0]}"
+										valueChangeListener="#{formWtpaBean.listenChangSickLeaveType}"
+										disabled="#{true}"
+										label="1. Accrues paid sick leave persuant to the requirements of CA Labor Code &#167;245.">
+											<ace:ajax execute="empNotice" event="activate" render="empNotice"/>
+										</ace:radioButton>
+								</span>
+								<span class="pad5lt pad10tp FL #{(formWtpaBean.form.sickLeaveType eq null) ? 'requiredDiv' : ''}">
+									<ace:radioButton labelPosition="right"
+										group="empNotice" id="POLICY"
+										value="#{formWtpaBean.caSickLeaveType[1]}"
+										valueChangeListener="#{formWtpaBean.listenChangSickLeaveType}"
+										disabled="#{true}"
+										label="2. Accrues paid sick leave persuant to the employer's policy which satisfies or
+										exceeds the requirements of CA Labor Code &#167;246.">
+											<ace:ajax execute="empNotice" event="activate" render="empNotice"/>
+									</ace:radioButton>
+								</span>
+								<span class="pad5lt pad10tp FL #{(formWtpaBean.form.sickLeaveType eq null) ? 'requiredDiv' : ''}">
+									<ace:radioButton labelPosition="right"
+										group="empNotice" id="PLUS_24"
+										value="#{formWtpaBean.caSickLeaveType[2]}"
+										valueChangeListener="#{formWtpaBean.listenChangSickLeaveType}"
+										disabled="#{true}"
+										label="3. Employer provides no less than 24 hours (or 3 days) of paid sick leave at the
+										 beginning of each 12-month period.">
+										 	<ace:ajax execute="empNotice" event="activate" render="empNotice"/>
+									</ace:radioButton>
+								</span>
+								<span class="pad5lt pad10tp FL #{(formWtpaBean.form.sickLeaveType eq null) ? 'requiredDiv' : ''}">
+									<ace:radioButton labelPosition="right"
+										group="empNotice" id="EXEMPT"
+										value="#{formWtpaBean.caSickLeaveType[3]}"
+										valueChangeListener="#{formWtpaBean.listenChangSickLeaveType}"
+										disabled="#{true}"
+										label="4. Is exempt from paid sick leave under CA Labor Code &#167;245.5. because:">
+											<ace:ajax execute="empNotice" event="activate" render="empNotice"/>
+									</ace:radioButton>
+								</span>
+								<h:panelGroup>
+									<span class="fd_sm2
+											#{((formWtpaBean.form.sickLeaveType eq 'EXEMPT') and
+											empty (formWtpaBean.form.sickLeaveReason)) ? 'requiredField' : ''}">
+										<ace:textEntry styleClass="FL pad8tp" maxlength="50" style="min-width:43%;"
+											value="#{formWtpaBean.form.sickLeaveReason}"
+											disabled="#{! formWtpaBean.appEdit or
+												formWtpaBean.contactDoc.status eq 'SUBMITTED' or
+												formWtpaBean.form.sickLeaveType ne 'EXEMPT' or
+												appSigned}"/>
+									</span>
+								</h:panelGroup>
+							</ace:buttonGroup>
+						</icecore:setEventPhase>
+						</div>
+					</div>
+					<!-- EMPLOYEE NOTICE END -->
+					<!-- PAID SICK LEAVE END -->
+
+					<!-- HORIZONTAL RULE -->
+					<div class="rowCont FL" style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:5px;" />
+					</div>
+
+					<!-- EMPLOYEE ACKNOWLEDGEMENT OF RECEIPT START -->
+					<div class="rowCont pad6tp">
+						<h:outputText styleClass="FL B txt14 pad5lt"
+							value="Employee Acknowledgement of Receipt:" />
+						<h:outputText styleClass="FR pad40rt "
+							value="Employee's signature below constitutes acknowledgement of receipt of this form." />
+					</div>
+
+					<!-- EMPLOYEE SIGNATURE START -->
+					<!-- SIGNATURE LABEL -->
+					<div class="W15percnt FL pad20lt pad20tp" style="height: 27px;">
+						<h:outputText styleClass="txt12 fdNm_w" value="Employee Signature:"/>
+					</div>
+
+					<!-- SIGNATURE VALUE -->
+					<div class="W48percnt FL pad10tp pad5lt" style="height: 27px; border-bottom: solid 1px;" >
+						<div class="rowCont">
+							<!-- Sign Button  -->
+							<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+								<h:panelGroup rendered="#{(formWtpaBean.contactDoc.submitable) and
+										(formWtpaBean.contactDoc.status ne 'PENDING') and (formWtpaBean.empEdit or
+										(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+										and (not formWtpaBean.form.employeeDeclinesSign)}">
+									<span class="btnMiniLtHot" />
+									<ace:linkButton value="Sign"
+										action="#{contactFormBean.actionSubmit}"
+										title="Signature field" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{((not (formWtpaBean.empEdit or
+										(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)))
+										and (formWtpaBean.contactDoc.submitable or formWtpaBean.contactDoc.status eq 'PENDING'))
+										or (formWtpaBean.form.employeeDeclinesSign)}">
+									<span class="btnMiniLt"/>
+									<span>
+										<h:commandLink value="Sign" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+									</span>
+									<span class="btnMiniRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- Sign Button End -->
+							<span>
+								<h:outputText escape="false" styleClass="txt12" rendered="#{formWtpaBean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{formWtpaBean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{formWtpaBean.contactDoc.empSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{formWtpaBean.contactDoc.empSignature.uuid}"/>
+								</h:outputText>
+							</span>
+						</div>
+					</div>
+
+					<!-- SIGNATURE DATE -->
+					<div class="W30percnt FL pad10lt pad25tp">
+						<h:outputText styleClass="B txt12" value="Date: "/>
+						<h:outputText value="#{formWtpaBean.contactDoc.empSignature.date}">
+							<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+						</h:outputText>
+					</div>
+					<!-- EMPLOYEE SIGNATURE END -->
+
+					<!-- EMPLOYEE DECLINE SIGN -->
+					<div class="rowCont FL pad-5tp">
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL pad25lt"
+								value="#{formWtpaBean.form.employeeDeclinesSign}"
+								disabled="#{(! formWtpaBean.empEdit and ! (contactFormBean.isApprover and formWtpaBean.editMode and formWtpaBean.contactDoc.empSignature eq null))
+											or (not formWtpaBean.contactDoc.submitable)}" >
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm I" style="font-weight:normal; width:200px"> Check if employee declines to sign </span>
+					</div>
+
+					<!-- EMPLOYER'S REPRESENTATIVE'S SIGNATURE BUTTON / VALUE -->
+					<div class="W42percnt FL pad10tp pad20lt" style="height: 27px; border-bottom: solid 1px;" >
+						<div class="rowCont">
+							<h:panelGroup rendered="#{(formWtpaBean.contactDoc.employerSignature.type eq null)}">
+							<!-- Sign Button  -->
+							<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+								<h:panelGroup rendered="#{(contactFormBean.appSign)}">
+									<span class="btnMiniLtHot" />
+									<ace:linkButton value="Sign"
+										action="#{contactFormBean.actionEmployerSign}"
+										title="Signature field" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{(not contactFormBean.appSign)}">
+									<span class="btnMiniLt"/>
+									<span>
+										<h:commandLink value="Sign" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+									</span>
+									<span class="btnMiniRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- Sign Button End -->
+							</h:panelGroup>
+							<span>
+								<h:outputText escape="false" styleClass="txt12"
+									rendered="#{appSigned}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{formWtpaBean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{formWtpaBean.contactDoc.employerSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{formWtpaBean.contactDoc.employerSignature.uuid}"/>
+								</h:outputText>
+							</span>
+						</div>
+						<h:outputText value="Employer's Representative's Signature" styleClass="I FL pad40lt"/>
+					</div>
+
+					<!-- REPRESENTATIVE'S PHONE -->
+					<div class="W20percnt FL pad10lt pad20tp">
+						<h:panelGroup>
+							<span class="fd_sm2 #{((contactFormBean.isApprover)
+								and empty (formWtpaBean.form.employeeRepPhone)) ? 'requiredField' : ''}">
+								<ace:textEntry maxlength="50" styleClass="FL"
+									style="min-width:80px; width:150px;"
+									disabled="#{! formWtpaBean.appEdit and ! (contactFormBean.appSign and formWtpaBean.editMode)}"
+									value="#{formWtpaBean.form.employeeRepPhone}">
+									<f:converter converterId="lightspeed.PhoneNumberConverter" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:outputText value="Representative's Phone" styleClass="I FL pad15lt"/>
+					</div>
+
+					<!-- SIGNATURE DATE -->
+					<div class="W28percnt FL pad15lt pad25tp">
+						<h:outputText styleClass="B txt12" value="Date: "/>
+						<h:outputText value="#{formWtpaBean.contactDoc.employerSignature.date}">
+							<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+						</h:outputText>
+					</div>
+
+					<div class="rowCont pad13tp"> &#160; </div>
+
+					<!-- AUTO-FILL BUTTON -->
+					<div class="rowCont pad-10tp">
+						<h:panelGroup styleClass="pad5lt FL" rendered="#{(formWtpaBean.contactDoc.employerSignature eq null)}">
+							<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+								<h:panelGroup rendered="#{(contactFormBean.appSign)}">
+									<span class="btnMiniLtHot" />
+									<ace:linkButton value="Auto-fill"
+										action="#{formWtpaBean.actionAutoFillRepresentativeFields}"
+										title="Signature field" styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+					<!-- AUTO-FILL BUTTON End -->
+
+					<div class="rowCont pad-5tp">
+						<!-- PRINT NAME OF REPRESENTATIVE-->
+						<div class="W35percnt FL pad10lt">
+							<h:panelGroup>
+								<span class="fd_sm2
+									#{((contactFormBean.isApprover) and
+										empty (formWtpaBean.form.employeeRepName)) ? 'requiredField' : ''}">
+									<ace:textEntry maxlength="50"
+										disabled="#{! formWtpaBean.appEdit and ! (contactFormBean.appSign and formWtpaBean.editMode)}"
+										value="#{formWtpaBean.form.employeeRepName}"
+										style="min-width:90%" styleClass="FL"/>
+								</span>
+							</h:panelGroup>
+							<h:outputText value="Print Name of Employer's Representative" styleClass="I FL pad25lt"/>
+						</div>
+
+						<!-- Representative's Title -->
+						<div class="W30percnt FL pad10lt">
+							<h:panelGroup>
+								<span class="fd_sm2
+									#{((contactFormBean.isApprover) and
+										empty (formWtpaBean.form.employeeRepTitle)) ? 'requiredField' : ''}">
+									<ace:textEntry maxlength="50"
+										disabled="#{! formWtpaBean.appEdit and ! (contactFormBean.appSign and formWtpaBean.editMode)}"
+										value="#{formWtpaBean.form.employeeRepTitle}"
+										style="min-width:90%" styleClass="FL"/>
+								</span>
+							</h:panelGroup>
+							<h:outputText value="Representative's Title" styleClass="I FL" style="margin-left:60px;"/>
+						</div>
+
+						<!-- Representative's Email -->
+						<div class="W30percnt FL pad10lt">
+							<h:panelGroup>
+								<span class="fd_sm2
+									#{((contactFormBean.isApprover) and
+										empty (formWtpaBean.form.employeeRepEmail)) ? 'requiredField' : ''}">
+									<ace:textEntry maxlength="100"
+										disabled="#{! formWtpaBean.appEdit and ! (contactFormBean.appSign and formWtpaBean.editMode)}"
+										value="#{formWtpaBean.form.employeeRepEmail}"
+										style="min-width:90%" styleClass="FL"/>
+								</span>
+							</h:panelGroup>
+							<h:outputText value="Representative's Email" styleClass="I FL pad50lt"/>
+						</div>
+					</div>
+
+					<h:graphicImage alt="" value="" style="width:820px;margin-top:15px;" url="../../i/forms/ca_wtpa_footer.png"/>
+					<!-- EMPLOYEE ACKNOWLEDGEMENT OF RECEIPT END -->
+
+				</div> <!-- 820px form -->
+			</div> <!-- scrolldiv2 -->
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formWtpaBean}" />
+						<ui:param name="events" value="#{formWtpaBean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

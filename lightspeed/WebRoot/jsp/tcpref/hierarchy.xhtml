@@ -1,0 +1,307 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- TC Hierarchy tab of the TC Preferences page (screen number 9.7) -->
+
+<ace:tabPane label="Approver Hierarchy" id="hier"
+		rendered="#{(not empty authBean.pgFields['9.7,view'])
+				and ((not headerViewBean.production.type.tours) or (not empty authBean.pgFields['2.0,write_any']))}">
+
+	<div id="gscrolldiv" class="scrollPnlTab">
+
+		<div class="rowCont"></div>
+
+		<div class="MA">
+			<!-- adjustable left-hand margin -->
+			<div class="FL W5percnt">&#160;
+			</div>
+
+			<!-- Department selection column -->
+			<div class="FL W20percnt pad20tp">
+				<h:panelGroup>
+				<div class="blueLegendContWrap MA">
+					<div class="blueLegendCont FL pad2tp">
+						<div class="legendHdg">Select Department</div>
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneListbox
+									id="memDeptList"
+									styleClass="FL W100percnt"
+									value="#{approverHierarchyBean.departmentId}"
+									valueChangeListener="#{approverHierarchyBean.listenDeptChange}">
+								 <f:selectItems value="#{approverHierarchyBean.departmentItems}" itemLabelEscaped="false" var="dept"/>
+								<ace:ajax />
+							</h:selectOneListbox>
+						</icecore:setEventPhase>
+					</div>
+				</div>
+				</h:panelGroup>
+			</div>
+
+			<!-- column for up/down arrow controls -->
+			<h:panelGroup styleClass="FL W5percnt">
+				<h:panelGroup
+						rendered="#{headerViewBean.production.status.allowsWrite and (not empty authBean.pgFields['9.7,edit'])}">
+					<div style="margin-top:50px;height:30px;text-align:right;">
+						<h:commandButton action="#{approverHierarchyBean.actionMoveApproverLater}" value=""
+							disabled="#{approverHierarchyBean.productionApproverId eq null}"
+							title="Move the selected production approver up in the list"
+							styleClass="Btn btnArrowUpCircle" style="visibility:#{approverHierarchyBean.productionSelected ? 'visible' : 'hidden'}" />
+					</div>
+					<div style="height:30px;text-align:right;">
+						<h:commandButton action="#{approverHierarchyBean.actionMoveApproverEarlier}" value=""
+							disabled="#{approverHierarchyBean.productionApproverId eq null}"
+							title="Move the selected production approver down in the list"
+							styleClass="Btn btnArrowDownCircle" style="visibility:#{approverHierarchyBean.productionSelected ? 'visible' : 'hidden'}"/>
+					</div>
+
+					<h:panelGroup rendered="#{approverHierarchyBean.showProjectApprovers and (not headerViewBean.production.type.tours)}">
+						<div style="margin-top:50px;height:30px;text-align:right;">
+							<h:commandButton action="#{approverHierarchyBean.actionMoveApproverLater}" value=""
+								disabled="#{approverHierarchyBean.projectApproverId eq null}"
+								title="Move the selected production approver up in the list"
+								styleClass="Btn btnArrowUpCircle" style="visibility:#{approverHierarchyBean.projectSelected ? 'visible' : 'hidden'}"
+								 />
+						</div>
+						<div style="height:30px;text-align:right;">
+							<h:commandButton action="#{approverHierarchyBean.actionMoveApproverEarlier}" value=""
+								disabled="#{approverHierarchyBean.projectApproverId eq null}"
+								title="Move the selected production approver down in the list"
+								styleClass="Btn btnArrowDownCircle" style="visibility:#{approverHierarchyBean.projectSelected ? 'visible' : 'hidden'}"/>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<div style="margin-top:60px;height:30px;text-align:right;">
+							<h:commandButton action="#{approverHierarchyBean.actionMoveApproverLater}" value=""
+								disabled="#{approverHierarchyBean.deptApproverId eq null}"
+								title="Move the selected department approver up in the list"
+								styleClass="Btn btnArrowUpCircle" style="width:23px;visibility:#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}"
+								 />
+						</div>
+						<div style="height:30px;text-align:right;">
+							<h:commandButton action="#{approverHierarchyBean.actionMoveApproverEarlier}" value=""
+								disabled="#{approverHierarchyBean.deptApproverId eq null}"
+								title="Move the selected department approver down in the list"
+								styleClass="Btn btnArrowDownCircle" style="visibility:#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}"/>
+						</div>
+					</h:panelGroup>
+				</h:panelGroup>&#160;
+			</h:panelGroup>
+			<h:panelGroup styleClass="FL W5percnt" rendered="#{! headerViewBean.production.status.allowsWrite}">
+				&#160;
+			</h:panelGroup>
+
+			<!-- center column (approvers) div -->
+			<div class="W30percnt FL" style="padding-left:10px;overflow-x:hidden;">
+
+				<!-- PRODUCTION APPROVERS -->
+				<h:panelGroup rendered="#{approverHierarchyBean.showProductionApprovers}">
+					<div class="rowCont pad20tp">
+							<div class="blueLegendCont">
+								<div class="legendHdg">
+									<h:outputText value="#{aicp ? 'Production Company Approvers' : 'Production Approvers'}" />
+								</div>
+								<h:selectOneListbox
+									size="8"
+									id="prodApprover"
+									style="position:relative;width:100%;height:80px;"
+									value="#{approverHierarchyBean.productionApproverId}" disabled="#{! approverHierarchyBean.productionSelected}">
+									<f:selectItems value="#{approverHierarchyBean.productionApproverItems}" />
+										<ace:ajax />
+								</h:selectOneListbox>
+						 </div>
+			 		</div>
+		 		</h:panelGroup>
+
+				<!-- PROJECT APPROVERS -->
+				<h:panelGroup rendered="#{approverHierarchyBean.showProjectApprovers and (not headerViewBean.production.type.tours)}">
+					<div class="rowCont pad20tp">
+							<div class="blueLegendCont">
+								<div class="legendHdg">Project Approvers</div>
+								<h:selectOneListbox
+									size="8"
+									style="position:relative;width:100%;height:80px;"
+									value="#{approverHierarchyBean.projectApproverId}" disabled="#{! approverHierarchyBean.projectSelected}">
+									<f:selectItems value="#{approverHierarchyBean.projectApproverItems}" />
+									<ace:ajax />
+								</h:selectOneListbox>
+						 </div>
+			 		</div>
+		 		</h:panelGroup>
+
+				<h:panelGroup>
+				<!-- DEPARTMENT APPROVERS -->
+				<div class="rowCont">
+						<div class="blueLegendCont pad20tp">
+							<div class="legendHdg">
+								<h:outputText rendered="#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected)}"
+										value=" Department Approvers: #{approverHierarchyBean.department.name}" />
+								<h:outputText rendered="#{(approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected)}"
+										value="&#160;" />
+							</div>
+							<h:selectOneListbox
+								size="8"
+								id="deptApprover"
+								style="width:100%;height:80px;"
+								value="#{approverHierarchyBean.deptApproverId}" disabled="#{approverHierarchyBean.productionSelected}">
+								<f:selectItems value="#{approverHierarchyBean.deptApproverItems}" />
+									<ace:ajax />
+							</h:selectOneListbox>
+					 </div>
+					 <br/><br/>
+				</div>
+
+				<div class="rowCont pad10tp" style="z-index:10;">
+					<span>
+						<h:panelGroup styleClass="pad5lt txt12 B">
+								<h:outputText rendered="#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected)}"
+										value=" Dept. Time Entry (#{approverHierarchyBean.department.name}):" />
+								<h:outputText rendered="#{(approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected)}"
+										value=" Dept. Time Entry" styleClass="disTxt" />
+						</h:panelGroup>
+					</span>
+					<br/>
+					<span>
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="pad5lt txt11"
+									value="#{approverHierarchyBean.deptTimeEntryId}"
+									disabled="#{approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected or
+											(! headerViewBean.production.status.allowsWrite) or
+											(empty authBean.pgFields['9.7,edit'])}"
+									valueChangeListener="#{approverHierarchyBean.listenTimeEntryChange}">
+								<f:selectItems value="#{approverHierarchyBean.deptTimeEntry}" />
+									<ace:ajax />
+				 			</h:selectOneMenu>
+			 			</icecore:setEventPhase>
+		 			</span>
+				</div>
+
+				<div class="B pad10tp">
+					Place timecard approvers in the lists above. Department Approvers
+					on the bottom, Production Approvers (Payroll, Accounting, UPM) on
+					the top.
+					<h:panelGroup rendered="#{approverHierarchyBean.showProjectApprovers}">
+						Project Approvers appear in the center box.
+					</h:panelGroup>
+					Your Final Approver should be at the top of the list.
+				</div>
+				</h:panelGroup>
+
+			</div><!-- end center column (approvers) div -->
+
+			<!-- column for left/right arrow controls -->
+			<h:panelGroup styleClass="FL W5percnt">
+				<h:panelGroup
+						rendered="#{headerViewBean.production.status.allowsWrite and (not empty authBean.pgFields['9.7,edit'])}">
+					<div style="margin-top:50px;height:30px;text-align:center;">
+						<h:commandButton value=""
+							action="#{approverHierarchyBean.actionRemoveApprover}" styleClass="Btn btnArrowRightCircle"
+							title="Remove the selected person from the list of production approvers"
+							disabled="#{approverHierarchyBean.productionApproverId eq null}"
+							style="visibility:#{approverHierarchyBean.productionSelected ? 'visible' : 'hidden'}" />
+					</div>
+					<div style="height:30px;text-align:center;">
+						<h:commandButton value=""
+							action="#{approverHierarchyBean.actionAddApprover}" styleClass="Btn btnArrowLeftCircle"
+							title="Add the selected person to the list of production approvers"
+							disabled="#{approverHierarchyBean.memberId eq null}"
+							style="visibility:#{approverHierarchyBean.productionSelected ? 'visible' : 'hidden'}" />
+					</div>
+
+					<h:panelGroup rendered="#{approverHierarchyBean.showProjectApprovers and (not headerViewBean.production.type.tours)}">
+						<div style="margin-top:50px;height:30px;text-align:center;">
+							<h:commandButton value=""
+								action="#{approverHierarchyBean.actionRemoveApprover}" styleClass="Btn btnArrowRightCircle"
+								title="Remove the selected person from the list of project approvers"
+								disabled="#{approverHierarchyBean.projectApproverId eq null}"
+								style="visibility:#{approverHierarchyBean.projectSelected ? 'visible' : 'hidden'}" />
+						</div>
+						<div style="height:30px;text-align:center;">
+							<h:commandButton value=""
+								action="#{approverHierarchyBean.actionAddApprover}" styleClass="Btn btnArrowLeftCircle"
+								title="Add the selected person to the list of project approvers"
+								disabled="#{approverHierarchyBean.memberId eq null}"
+								style="visibility:#{approverHierarchyBean.projectSelected ? 'visible' : 'hidden'}" />
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<div style="margin-top:60px;height:30px;text-align:center;">
+							<h:commandButton value=""
+								action="#{approverHierarchyBean.actionRemoveApprover}" styleClass="Btn btnArrowRightCircle"
+								title="Remove the selected person from the list of department approvers"
+								disabled="#{approverHierarchyBean.deptApproverId eq null}"
+								style="visibility:#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}" />
+						</div>
+						<div style="height:30px;text-align:center;">
+							<h:commandButton value=""
+								action="#{approverHierarchyBean.actionAddApprover}" styleClass="Btn btnArrowLeftCircle"
+								title="Add the selected person to the list of department approvers"
+								disabled="#{approverHierarchyBean.memberId eq null}"
+								style="visibility:#{! (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}"
+								/>
+						</div>
+					</h:panelGroup>
+				</h:panelGroup>&#160;
+			</h:panelGroup>
+			<h:panelGroup styleClass="FL W5percnt" rendered="#{! headerViewBean.production.status.allowsWrite}">
+				&#160;
+			</h:panelGroup>
+
+			<!-- right-hand column - production members -->
+			<div class="W30percnt FL pad20tp">
+				<div class="LH22">
+					<div class="W20percnt FL LH22">
+						<h:outputText styleClass="B" style="visibility:#{not (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}"
+								value="Display:" />
+					</div>
+					<div class="W50percnt LH22 FL">
+						 <h:selectOneMenu styleClass="txt11 W100percnt"
+								value="#{approverHierarchyBean.displayItemId}"
+								valueChangeListener="#{approverHierarchyBean.listenDisplayChange}"
+								style="visibility:#{not (approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected) ? 'visible' : 'hidden'}"
+								disabled="#{approverHierarchyBean.productionSelected or approverHierarchyBean.projectSelected}">
+								<f:selectItems value="#{approverHierarchyBean.displayItems}"  />
+									<ace:ajax />
+						 </h:selectOneMenu>&#160;
+			 		</div>
+				</div>
+
+				<div class="blueLegendContWrap MA pad10tp">
+					<div class="blueLegendCont FL pad2tp">
+						<div class="legendHdg">
+							<h:outputText rendered="#{approverHierarchyBean.productionSelected or
+									(approverHierarchyBean.displayItemId eq 0 and (! approverHierarchyBean.projectSelected))}"
+								value="#{aicp ? 'Production Company Members' : 'Production Members'}"/>
+							<h:outputText rendered="#{approverHierarchyBean.projectSelected}"
+								value="Project Members"/>
+							<h:outputText rendered="#{(approverHierarchyBean.displayItemId ne 0 and
+									not approverHierarchyBean.productionSelected and not approverHierarchyBean.projectSelected)}"
+								value="Department Members"/>
+						</div>
+						<h:selectOneListbox immediate="true"
+							id="prodMembers"
+							styleClass=""
+							style="width:100%;height:400px;"
+							value="#{approverHierarchyBean.memberId}">
+							<f:selectItems value="#{approverHierarchyBean.memberItems}" />
+								<ace:ajax />
+						</h:selectOneListbox>
+					</div>
+				</div>
+			</div>
+			<!-- End right-hand column - production members -->
+
+			<div class="CB" style="height:20px;">
+			</div>
+
+		</div><!-- ctr list cont -->
+
+	</div><!-- end outer scrollable cont -->
+
+</ace:tabPane><!--  End Stripboard List Tab -->
+</ui:composition>

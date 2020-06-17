@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Section / Materials -->
+	<h:panelGroup
+		rendered="#{not empty messageCenterBean.filmStockList and not empty authBean.pgFields['1.0,materials']}">
+		<div id="sub_homeMatTab">
+			<div class="sub_homeMat">
+				<div class="homeMatContWrap MA">
+					<div id="homeMatCont">
+						<span class="subSecHdg_homeMat FL">Materials</span>
+						<ace:dataTable
+							styleClass="bk_sl_grid"
+							id="filmStockTable"
+							style="width:100%;max-width:100%;"
+							value="#{messageCenterBean.filmStockList}"
+							var="filmStock">
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										value="Media Type" />
+								</f:facet>
+								<h:outputText
+									value="#{filmStock.material.type}" />
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										styleClass="FR pad10rt"
+										value="Received" />
+								</f:facet>
+								<h:outputText
+									styleClass="FR pad10rt"
+									value="#{filmStock.usedTotal.gross + filmStock.inventoryTotal}" />
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										styleClass="FR pad10rt"
+										value="Print" />
+								</f:facet>
+								<h:outputText
+									styleClass="FR pad10rt"
+									value="#{filmStock.usedTotal.print}" />
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										styleClass="FR pad10rt"
+										value="No Good" />
+								</f:facet>
+								<h:outputText
+									styleClass="FR pad10rt"
+									value="#{filmStock.usedTotal.noGood}" />
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										styleClass="FR pad10rt"
+										value="Waste" />
+								</f:facet>
+								<h:outputText
+									styleClass="FR pad10rt"
+									value="#{filmStock.usedTotal.waste}" />
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<h:outputText
+										styleClass="FR pad10rt"
+										value="Remaining" />
+								</f:facet>
+								<h:outputText
+									styleClass="FR pad10rt"
+									value="#{filmStock.inventoryTotal}" />
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup><!-- end Status Section / Materials -->
+
+</ui:composition>

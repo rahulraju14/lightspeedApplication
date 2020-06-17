@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+<h:form>
+	<c:set var="bean" value="#{popupDeliverBean}"></c:set>
+	<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" />
+	<c:set var="canada" value="#{headerViewBean.production.type.canadaTalent}"/>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popup5W">
+
+	<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+	<div class="popupBdy5W">
+		
+		<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+			<ui:include src="../common/errorsPopup.xhtml" />
+		</div>
+
+		<div class="popupCont5W">
+			<div class="popup_main">
+				<div class="rowCont">
+					<h:panelGroup
+						style="text-align: left; overflow-y:auto;height: 315px " >
+
+						<div class="pad10tp">
+							<h:outputText value="#{popupDeliverBean.message}" />
+						</div>
+
+						<div class="FL pad30tp W30percnt">
+							<h:selectOneRadio styleClass="FL radioTxtLbl sp_radio" id="selectType"
+									valueChangeListener="#{popupDeliverBean.listenSelectType}"
+									value="#{popupDeliverBean.selectType}" layout="pageDirection"
+									disabled="#{popupDeliverBean.packetList eq null or
+										(empty popupDeliverBean.packetList)}"
+									style="line:height:25px">
+								<div class="FL pad-5tp"> 
+									<f:selectItem itemValue="p" itemLabel="Start Packet" />
+								</div>
+								<span class="pad-5tp">
+									<f:selectItem itemValue="d" itemLabel="Document" />
+								</span>
+								<ace:ajax execute="@form"/>
+							</h:selectOneRadio>
+						</div>
+						<div class="FL pad35tp" style="width:69%">
+							<div class="rowCont">
+								 <h:selectOneMenu disabled="#{popupDeliverBean.selectType ne 'p'}"
+										styleClass="W90percnt pad10lt"
+										value="#{popupDeliverBean.selectedPacket}">
+									<f:selectItems value="#{popupDeliverBean.packetList}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</div>
+							<div class="rowCont pad10tp">
+								<h:selectOneMenu disabled="#{popupDeliverBean.selectType ne 'd'}"
+										styleClass="W90percnt pad10lt"
+										value="#{popupDeliverBean.selectedDocument}">
+									<f:selectItems value="#{popupDeliverBean.documentList}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="FL pad50tp">
+							<h:outputText escape="false" style="font-weight:normal;"
+								value="Documents that you issue may either be held or distributed immediately to the
+									&lt;/br&gt; employee. Holding a document allows you to edit the document before it is given
+									&lt;/br&gt; to the employee.&lt;/br&gt; " />
+						</div>
+						<div class="FL pad15tp">
+							<h:outputText styleClass="pad15tp" style="font-weight:normal;"
+								value="Please note that some documents, such as WTPA Forms, require the employer to
+									complete them prior to distributing them to the employee." />
+						</div>
+						<div class="FL pad15tp" >
+						<c:if test="${canada == false}">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{popupDeliverBean.pending}"
+										styleClass="iceSelBoolChkbx">
+										<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span style="font-weight:normal;"> Distribute documents immediately to the employee </span>
+							</icecore:setEventPhase>
+							</c:if>
+						</div>
+					</h:panelGroup>
+				</div>
+			</div>
+		</div>
+
+		<div class="popBtnCont">
+			<span class="FR padPop25rt">
+				<span class="btnPriEnbLt" />
+				<span>
+					<ace:linkButton value="#{popupDeliverBean.buttonCancelLabel}"
+						action="#{popupDeliverBean.actionCancel}" styleClass="btnPriEnbCt" />
+				</span>
+				<span class="btnPriEnbRt" />
+			</span>
+			<span class="FR pad5rt">
+				<span class="btnSecHotLt" />
+				<span>
+					<ace:linkButton value="#{popupDeliverBean.buttonOkLabel}"
+						action="#{popupDeliverBean.actionOk}" styleClass="btnSecHotCt" />
+				</span>
+				<span class="btnSecHotRt" />
+			</span>
+		</div>
+	</div>
+	
+	</ace:dialog>
+</h:form>
+</ui:composition>

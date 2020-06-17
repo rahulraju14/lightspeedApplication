@@ -1,0 +1,246 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Project Preferences Tab -->
+	<!-- Parameters: -->
+	<!--   showScriptTabs: true if production is using scripts/scheduling features -->
+
+	<ace:tabPane label="Preferences" id="preftab"
+		rendered="#{((not projectViewBean.styleTVProduction) and (projectViewBean.permViewPref))
+			or ((projectViewBean.styleTVProduction) and (not empty authBean.pgFields['2.0,prod_prefs']))}">
+
+		<div class="rowCont FL rowGradient">
+			<div class="FL pad3lt pad10tp">
+			
+				<!-- Allow production Access Check box start-->
+				<h:panelGroup rendered="#{not projectViewBean.styleTVProject}">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+						disabled="#{(not projectViewBean.editMode) or (not projectViewBean.permEditPref)}"
+						value="#{projectViewBean.production.defaultAccess}" >
+					</h:selectBooleanCheckbox>
+					<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp">
+						When adding new crew, Allow '#{projectViewBean.productionLbl}' by default
+					</h:panelGroup>
+					<div class="rowCont" />
+				</h:panelGroup>
+				<!-- Allow production Access Check box End-->
+			
+				<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp"
+					rendered="#{(projectViewBean.styleTVProject and (not projectViewBean.production.notify))
+						or ((not projectViewBean.styleTVProject) and (not projectViewBean.editMode))}">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+						disabled="true"
+						value="#{projectViewBean.production.notify}" >
+					</h:selectBooleanCheckbox>
+				</h:panelGroup>
+				<!-- Only show the below preferences if not Tours -->
+				<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp"
+						rendered="#{(not projectViewBean.styleTVProject) and projectViewBean.editMode}">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+							disabled="#{(projectViewBean.styleTVProduction and (empty authBean.pgFields['2.0,edit_prod_prefs']))
+								or (projectViewBean.styleFilm and (not projectViewBean.permEditPref))}"
+							value="#{projectViewBean.production.notify}" >
+					</h:selectBooleanCheckbox>
+				</h:panelGroup>
+				<h:selectBooleanCheckbox styleClass="ckbx"
+						rendered="#{(projectViewBean.styleTVProject) and projectViewBean.production.notify}"
+						disabled="#{(not projectViewBean.editMode) or (not projectViewBean.permEditPref)}"
+						value="#{projectViewBean.project.notifying}" >
+				</h:selectBooleanCheckbox>
+				<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp">
+					Use Automatic Notifications
+				</h:panelGroup>
+			</div>
+
+			<!-- Scripting preferences - script access and watermarking -->
+			<h:panelGroup rendered="#{showScriptTabs}">
+				<div class="FL pad20lt pad10tp">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+							rendered="#{(not projectViewBean.styleTVProduction)}"
+							disabled="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+							value="#{projectViewBean.project.scriptTextAccessible}">
+					</h:selectBooleanCheckbox>
+					<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp"
+							rendered="#{(not projectViewBean.styleTVProduction)}">
+						Allow users to view script pages
+					</h:panelGroup>
+				</div>
+
+				<!-- Watermarking - production-wide setting -->
+				<h:panelGroup rendered="#{(not projectViewBean.styleTVProject)}">
+					<div class="rowCont FL B pad5tp pad10lt">
+							Document Watermarking
+					</div>
+					<div class="rowCont FL pad5tp">
+						<div class="FL pad15lt pad4tp">
+							Script Page Distribution
+						</div>
+						<div class="FL pad10lt">
+							<h:selectOneMenu value="#{projectViewBean.production.watermark}"
+									disabled="#{(not projectViewBean.editMode) or
+									(projectViewBean.styleTVProduction and (empty authBean.pgFields['2.0,edit_prod_prefs'])) or
+									(projectViewBean.styleFilm and (not projectViewBean.permEditPref))}">
+								<f:selectItems value="#{enumList.watermarkPreferenceTypes}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</div>
+						<div class="FL pad20lt">
+						<h:selectBooleanCheckbox styleClass="ckbx"
+							rendered="#{(projectViewBean.production.watermark eq 'REQUIRED')}"
+							disabled="#{(not projectViewBean.editMode) or
+									(projectViewBean.styleTVProduction and (empty authBean.pgFields['2.0,edit_prod_prefs'])) or
+									(projectViewBean.styleFilm and (not projectViewBean.permEditPref))}"
+							value="#{projectViewBean.production.enforceWatermarkSides}" >
+						</h:selectBooleanCheckbox>
+						<h:selectBooleanCheckbox styleClass="ckbx"
+							rendered="#{(projectViewBean.production.watermark ne 'REQUIRED')}"
+							disabled="true"
+							value="#{applicationScopeBean.unchecked}" >
+						</h:selectBooleanCheckbox>
+						<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp">
+							Enforce watermarks on Sides
+						</h:panelGroup>
+						</div>
+					</div>
+					<div class="rowCont FL LH10">&#160;
+					</div>
+				</h:panelGroup>
+			</h:panelGroup> <!-- End of non-tours section -->
+		</div>
+
+		<h:panelGroup rendered="#{!projectViewBean.production.type.tours}">
+	<!-- File repository currently unused
+									<div class="projectPrefTopRight FL pad15tp">
+										<span class="rowCont B">
+											<h:selectBooleanCheckbox styleClass="FL"
+												rendered="#{(not projectViewBean.styleTVProject) and (not empty authBean.pgFields['x,file_edit'])}"
+												disabled="#{not projectViewBean.editMode}"
+												value="#{projectViewBean.project.fileRepositoryEnabled}" >
+											</h:selectBooleanCheckbox>
+											<h:panelGroup styleClass="FL pad2tp"
+												rendered="#{(not projectViewBean.styleTVProject) and (not empty authBean.pgFields['x,file_edit'])}">
+												Use the File Repository
+											</h:panelGroup>
+										</span>
+									</div>
+		-->
+			<!--  DOOD SETTINGS - only if Scripting in use -->
+			<h:panelGroup
+					styleClass="rowCont FL rowGradient"
+					rendered="#{(projectViewBean.styleTVProject or projectViewBean.styleFilm) and showScriptTabs}">
+				<div class="pad5lt pad15tp FL subSecHdg">
+					DooD Settings:
+				</div>
+				<div class="pad15lt pad15tp FL B LH29">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+							disabled="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+							value="#{projectViewBean.project.useHoldDrop}" >
+					</h:selectBooleanCheckbox>
+					<h:panelGroup styleClass="ckbxTxtLbl_B pad2tp">
+						Use Holds &amp; Drops
+					</h:panelGroup>
+				</div>
+				<div class="pad15lt pad15tp FL B">
+					<ace:textEntry 
+							disabled="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+							style="width:25px" maxlength="2" styleClass="pad5rt pad5lt"
+							value="#{projectViewBean.project.daysHeldBeforeDrop}" >
+						<f:validateLongRange minimum="0" maximum="99"/>
+					</ace:textEntry>
+					<h:panelGroup styleClass="pad2tp">
+						Default No. of Hold Days
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+
+			<!--  Units -->
+			<h:panelGroup
+				styleClass="rowCont FL rowGradient H35 pad12tp"
+				rendered="#{(not projectViewBean.styleTVProduction)}">
+				<div class="projectUnitListContWrap MA">
+					<div id="projectUnitListCont">
+						<div class="subSecHdg_projUnits">Units</div>
+						<h:panelGroup
+							styleClass="btn_addUnit"
+							rendered="#{(projectViewBean.editMode and projectViewBean.permEditPref)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Add Unit"
+								action="#{projectViewBean.actionAddUnit}"
+								styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<ace:dataTable id="unitlist"
+							styleClass="bk_sl_grid"
+							scrollHeight="#{headerViewBean.mobile ? '' : '60'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							rendered="#{(projectViewBean.project.unitCount gt 1)}"
+							value="#{projectViewBean.project.units}" var="unit" rowIndexVar="listStatus"
+							style="width:100%;max-width:100%;overflow-x:hidden;">
+							<ace:column style="width:10%;" headerText="Delete">
+								<h:commandButton
+									value="" image="../../i/icon_deleteX.gif"
+									rendered="#{(listStatus ne 0) and projectViewBean.editMode and projectViewBean.permEditPref}"
+									action="#{projectViewBean.actionDeleteUnit}" title="Delete this unit">
+									<f:setPropertyActionListener value="#{unit.id}"
+										target="#{projectViewBean.removeUnitId}"/>
+								</h:commandButton>
+							</ace:column>
+							<ace:column style="width:10%;" headerText="#">
+								<h:outputText
+									value="#{unit.number}" />
+							</ace:column>
+							<ace:column style="width:10%;" headerText="Active">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+									disabled="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+									value="#{unit.active}">
+								</h:selectBooleanCheckbox>
+							</ace:column>
+							<ace:column style="width:70%;" headerText="Unit Name">
+								<h:outputText rendered="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+									value="#{unit.name}" />
+								<ace:textEntry rendered="#{projectViewBean.editMode and projectViewBean.permEditPref}"
+									maxlength="9" value="#{unit.name}" />
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</h:panelGroup>
+
+
+			<!-- Project Task List -->
+			<div id="projectTaskListCont" class="rowCont FL">
+				<ace:dataTable id="tasklist"
+						rendered="#{not projectViewBean.styleTVProduction and
+							not headerViewBean.offline}"
+						styleClass="bk_sl_grid"
+						scrollHeight="#{headerViewBean.mobile ? '' : '123'}"
+						scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+						style="width:100%;max-width:100%;overflow-x:hidden;"						
+						value="#{projectViewBean.project.reportRequirements}" var="task">
+					<ace:column style="width:50%;" headerText="Task Assignment">
+						<h:panelGroup rendered="#{task.unitNumber gt 1}"
+							styleClass="smUnitIcon pad5rt">
+							<h:outputText
+								styleClass="FL NW txtBrtBlue txt12 B pad5lt pad2tp"
+								value="#{task.unitNumber}" />
+						</h:panelGroup>
+						<h:outputText
+							value="#{task.type.label}" />
+					</ace:column>
+					<ace:column headerText="Person Responsible" style="width:50%;">
+						<h:selectOneMenu disabled="#{not (projectViewBean.editMode and projectViewBean.permEditPref)}"
+							value="#{task.contact}">
+							<f:converter converterId="lightspeed.ContactConverter" />
+							<f:selectItems
+								value="#{projectViewBean.contactDL}" />
+						</h:selectOneMenu>
+					</ace:column>
+				</ace:dataTable>
+			</div><!-- end Project Task List -->
+		</h:panelGroup> <!-- End of non-tours section -->
+	</ace:tabPane><!--  End Preferences Tab  -->
+
+</ui:composition>

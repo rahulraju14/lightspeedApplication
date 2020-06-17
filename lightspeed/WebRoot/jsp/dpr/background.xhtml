@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- standin and background tables, side by side to match printed report -->
+	<div class="FL W49percnt">
+		<div class="B">Background</div>
+		<h:panelGroup rendered="#{not empty dprViewBean.dpr.backgrounds}">
+			<ace:dataTable
+				style="width:100%;max-width:100%;"
+				value="#{dprViewBean.dpr.backgrounds}" rowClassStyle="CT"
+				var="extraTime" styleClass="bk_sl_grid CT" >
+				<ui:include src="backgroundRow.xhtml" />
+			</ace:dataTable>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{empty dprViewBean.dpr.backgrounds}">
+			(None)
+		</h:panelGroup>
+
+		<div class="rowCont">
+			<div class="FL W50percnt">
+				<table cellspacing="0" class="W100percnt gradTbl2">
+					<tr>
+						<td>
+							<h:outputText rendered="#{not dprViewBean.editMode}" styleClass="FL pad3lt" escape="false"
+									value="#{dprViewBean.dpr.backgroundSummary1}" />
+							<ace:textEntry rendered="#{dprViewBean.editMode}" value="#{dprViewBean.dpr.backgroundSummary1}"
+									maxlength="50" styleClass="W98percnt pad3lt" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="FL W50percnt">
+				<table cellspacing="0" class="W100percnt gradTbl2">
+					<tr>
+						<td>
+							<h:outputText rendered="#{not dprViewBean.editMode}" styleClass="FL pad3lt" escape="false"
+									value="#{dprViewBean.dpr.backgroundSummary2}" />
+							<ace:textEntry rendered="#{dprViewBean.editMode}" value="#{dprViewBean.dpr.backgroundSummary2}"
+									maxlength="50" styleClass="W98percnt pad3lt" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="FL W49percnt">
+	&#160;
+	<!--
+		<div class="B">Background</div>
+		<h:outputText rendered="#{not empty dprViewBean.dpr.backgrounds}">
+			<ace:dataTable
+				selectionMode="single" singleSort="true"
+		style="width:100%;max-width:100%;"
+					value="#{dprViewBean.dpr.backgrounds}"
+					var="extraTime" styleClass="bk_sl_grid CT" border="0"
+					columnWidths="7%,10%,13%,10%,20%,10%,10%,13%,7%">
+				<ui:include src="backgroundRow.xhtml" />
+			</ace:dataTable>
+		</h:outputText>
+		<h:outputText rendered="#{empty dprViewBean.dpr.backgrounds}">
+			(None)
+		</h:outputText>
+	 -->
+	</div>
+
+</ui:composition>

@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">	
+
+<!-- LOCATION / DAY TYPE -->
+	<div class="blueLegendContWrap MA">
+		<div class="blueLegendCont pad20tp FL" style="width:180%;">
+				<div class="legendHdg">Location / Day Type</div>
+					<table class="gradTbl2 BKwhite" style="width:100%;">
+					<!-- HEADER LINE -->
+						<thead class="gradTbl2ScrlHdrTbl CT txt11">
+							<tr style="height:25px">
+								<th style="width:5%;">
+									<h:outputText style="margin-left:-25px" value="" />
+								</th>
+								<ui:repeat id="bwHeaderItem" var="headerItem"
+										value="#{timesheetBean.shortDayNames}" varStatus="myVarStatus">
+									<th style="width: 5%"><h:outputText
+												styleClass="FL pad5lt"
+												value="#{timesheetBean.shortDayNames[myVarStatus.index]}" />
+											<h:outputText styleClass="FL pad5lt"
+												value="#{timesheetBean.timesheet.timesheetDays[myVarStatus.index].date}">
+												<f:convertDateTime pattern="MM/dd"
+													timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+									</th>
+								</ui:repeat>
+							</tr>
+						</thead>
+						<!-- CITY AND STATE -->
+						<!-- If international, do not show state -->
+						<tr class="iceDatTblRow1">
+							<td>
+								<h:outputText escape="false" styleClass="stwklab pad17lt" value="City &amp; State"/>
+							</td>
+							<ui:include src="tsLocTableRow.xhtml">
+								<ui:param name="aicp" value="#{aicp}" />
+								<ui:param name="rowType" value="city" />
+							</ui:include>
+						</tr>
+						<!-- COUNTRY -->
+						<tr class="iceDatTblRow1">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<td>
+								<h:outputText escape="false" styleClass="stwklab pad17lt" value="Country"/>
+							</td>
+							<ui:include src="tsLocTableRow.xhtml">
+								<ui:param name="aicp" value="#{aicp}" />
+								<ui:param name="rowType" value="country" />
+							</ui:include>
+							</icecore:setEventPhase>
+						</tr>
+						<!-- DAY TYPE -->
+						<tr class="iceDatTblRow1">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<td>
+								<h:outputText escape="false" styleClass="stwklab pad17lt" value="Day Type"/>
+							</td>
+							<ui:include src="tsLocTableRow.xhtml">
+								<ui:param name="aicp" value="#{aicp}" />
+								<ui:param name="rowType" value="dayType" />
+							</ui:include>
+
+							</icecore:setEventPhase>
+						</tr>
+					</table>
+				</div>
+			</div><!-- End Location / Day Type wrapper -->
+			<div>
+				<div class="CB"></div>
+			</div>
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad30tp">
+			<div class="blueLegendCont" style="width: 130%;">
+				<!-- Blue content -->
+				<span class="legendHdg"> <span> Timesheet</span>
+				</span>
+				<!-- legend buttons -->
+				<h:panelGroup
+					rendered="#{(not (timesheetBean.timesheet.status.finalized or
+				timesheetBean.timesheet.status.sealed)) and
+				(timesheetBean.isProdApprover or timesheetBean.isDeptApprover)}"
+					styleClass="btn_legend pad10rt">
+					<h:panelGroup rendered="#{not timesheetBean.editMode}">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton value="Add"
+							action="#{timesheetBean.actionAddTimecard}"
+							title="Add new Timecard." styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{timesheetBean.editMode}">
+						<span class="btnMiniLt" />
+						<span> <ace:linkButton value="Add" onclick="return false;"
+								styleClass="btnMiniDisCt dislink" />
+						</span>
+						<span class="btnMiniRt" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<div id="biWeeklytimesheetTable" class="FL rowCont">
+					<table class="gradTbl2 BKwhite" style="width: 100%;">
+						<!-- HEADER LINE -->
+						<thead class="gradTbl2ScrlHdrTbl CT txt11">
+							<tr style="height: 28px">
+								<th style="width: 2%;">
+									<h:outputText
+										style="margin-left:-25px" value="" />
+								</th>
+								<th style="width: 10%; text-align: left;">
+									<h:outputText
+										value="&#160;" />
+									<div class="pad10lt">
+										<h:outputText value="Name">
+										</h:outputText>
+									</div>
+								</th>
+								<th style="width: 8%; text-align: left;">
+									<div class="pad3lt">
+										<h:outputText value="&#160;" />
+									</div> <h:outputText style="margin-left: 18px;" value="Occupation"></h:outputText>
+								</th>
+								<th style="width: 10%; text-align: left;">
+									<h:outputText
+										value="&#160;" />
+									<div class="pad10lt">
+										<h:outputText value="Department"></h:outputText>
+									</div>
+								</th>
+								<ui:repeat var="headerItem" 
+									value="#{timesheetBean.shortDayNames}" varStatus="myVarStatus">
+									<th style="width: 3%">
+										<h:outputText
+											styleClass="FL W100percnt CT pad3lt pad-3tp"
+											value="#{timesheetBean.shortDayNames[myVarStatus.index]}" />
+										<h:outputText styleClass="FL W100percnt CT pad3lt"
+											value="#{timesheetBean.timesheet.timesheetDays[myVarStatus.index].date}">
+											<f:convertDateTime pattern="MM/dd"
+												timeZone="#{applicationScopeBean.timeZone}" />
+										</h:outputText>
+									</th>
+								</ui:repeat>
+								<th style="width: 4%; text-align: left;">
+									<div class="pad2lt">
+										<h:outputText style="margin-left: 19px;" value="Total" />
+									</div> <h:outputText style="margin-left: 16px;" value="Wages" />
+								</th>
+								<ui:include src="payCategory.xhtml">
+									<ui:param name="id" value="bw" />
+								</ui:include>
+								<th style="width: 5%; text-align: left;">
+									<h:outputText value="&#160;" />
+									<div class="pad10lt">
+										<h:outputText style="margin-right: 44px;" value="Comments" />
+									</div>
+								</th>
+								<th>
+									<div class="pad3lt">
+										<h:outputText value="&#160;" />
+									</div> 
+									<h:outputText style="margin-left: 3px; margin-right: 20px; width:50px;" value="Sent" />
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<ui:repeat id="wtimeSheetEntry" var="timesheetEntry"
+								value="#{timesheetBean.timesheetEntryList}" varStatus="entryList">
+								<ui:include src="tsEmpTableCell.xhtml">
+									<ui:param name="item" value="#{timesheetEntry}" />
+									<ui:param name="showRows" value="true" />
+									<ui:param name="id" value="bw" />
+									<ui:param name="size" value="#{timesheetBean.shortDayNames.size()}" />
+									<ui:param name="offset" value="0" />
+									<ui:param name="showPayCategory" value="true" />
+								</ui:include>
+							</ui:repeat>
+						</tbody>
+					</table>
+				</div>
+				<!-- end of dataTable wrapper -->
+			</div>
+			<!-- end of blue content -->
+		</div>
+		<!-- end of Timesheet blue wrapper -->
+ </ui:composition>

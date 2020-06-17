@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hotCostsDailyDetailByDeptXls" pageWidth="1008" pageHeight="572" orientation="Landscape" columnWidth="1008" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="6a793dff-facd-4ea8-a31c-6fd203cb28f7">
+	<property name="ireport.zoom" value="1.4641000000000028"/>
+	<property name="ireport.x" value="419"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="deptId" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="prodId" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dayDate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT dtc.*, emp.occupation, ct.display_name FROM daily_hot_cost dtc, weekly_hot_costs whc, "
++ " Employment emp, Contact ct where dtc.date='" + $P{dayDate} + "' and whc.id=dtc.weekly_id "
++ "and whc.department_id=" + $P{deptId} + " and whc.prod_id='" + $P{prodId} + "' "
++ "and emp.id=whc.employment_id and ct.id = emp.contact_id"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="deptName" class="java.lang.String" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Re_Rate" class="java.lang.Boolean"/>
+	<field name="Occupation" class="java.lang.String"/>
+	<field name="Display_Name" class="java.lang.String"/>
+	<field name="Call_Time" class="java.lang.Double"/>
+	<field name="M1_Out" class="java.lang.Double"/>
+	<field name="M1_In" class="java.lang.Double"/>
+	<field name="M2_Out" class="java.lang.Double"/>
+	<field name="M2_In" class="java.lang.Double"/>
+	<field name="Wrap" class="java.lang.Double"/>
+	<field name="Hours" class="java.lang.Double"/>
+	<field name="Day_Type" class="java.lang.String"/>
+	<field name="Acct_Set" class="java.lang.String"/>
+	<field name="Acct_Free" class="java.lang.String"/>
+	<field name="Location_Code" class="java.lang.String"/>
+	<field name="Prod_Episode" class="java.lang.String"/>
+	<field name="Actual_Cost" class="java.lang.Double"/>
+	<field name="Work_Zone" class="java.lang.String"/>
+	<field name="Off_Production" class="java.lang.Boolean"/>
+	<field name="Ndb_End" class="java.lang.Double"/>
+	<field name="Ndm_Start" class="java.lang.Double"/>
+	<field name="Ndm_End" class="java.lang.Double"/>
+	<field name="Grace1" class="java.lang.Number"/>
+	<field name="Grace2" class="java.lang.Number"/>
+	<field name="Mpv1_Payroll" class="java.lang.Number"/>
+	<field name="Mpv2_Payroll" class="java.lang.Number"/>
+	<field name="Camera_Wrap" class="java.lang.Boolean"/>
+	<field name="French_Hours" class="java.lang.Boolean"/>
+	<field name="Forced_Call" class="java.lang.Boolean"/>
+	<field name="Budgeted_Hours" class="java.lang.Double"/>
+	<field name="Budgeted_Cost" class="java.lang.Double"/>
+	<field name="Budgeted_Mpv" class="java.lang.Integer"/>
+	<field name="Budgeted_Mpv_Cost" class="java.lang.Double"/>
+	<field name="Acct_Detail" class="java.lang.String"/>
+	<field name="Last_Man_In" class="java.lang.Boolean"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{REPORT_COUNT} > 0]]></printWhenExpression>
+			<textField>
+				<reportElement uuid="acbf5a28-dd6f-4b0d-9a90-b8d2030b8937" style="tcDefBox" x="1" y="1" width="84" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Display_Name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7a75fa6e-d3fc-40bd-ad8a-8c81434efcae" style="tcDefBox" x="85" y="1" width="75" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d57896df-472f-4f5a-90d0-fe074d2a6ea8" style="tcDefBox" x="160" y="1" width="25" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Re_Rate}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b9c8f0d1-889a-480d-b965-450242ee1a5c" style="tcDefBox" x="185" y="1" width="35" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Prod_Episode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b3856bdd-9876-4ef8-95e1-37467a02fe21" style="tcDefBox" x="220" y="1" width="34" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Acct_Set}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9fb892b3-9e60-4c94-bae1-fff9a81b801f" style="tcDefBox" x="254" y="1" width="34" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Acct_Detail}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0f7549a8-6b16-4776-a5ea-66f31c6a77a0" style="tcDefBox" x="737" y="1" width="26" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Camera_Wrap}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="99f4ef60-abd7-496c-ac19-ee10381feb71" style="tcDefBox" x="288" y="1" width="45" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Day_Type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="ea3ebd9d-4a08-4e3f-8718-7565ea4c216d" style="tcDefBox" x="333" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="0c8ff546-9f6c-473d-add0-4dd6d1587bb2" style="tcDefBox" x="362" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{M1_Out}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="f7e2706a-ac50-42e6-aa5f-4c80319a8d21" style="tcDefBox" x="391" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{M1_In}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="a3c77ccf-339f-4120-9e12-e40e9a26e96c" style="tcDefBox" x="420" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{M2_Out}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="959a92fb-3511-4994-937b-d198de378ee5" style="tcDefBox" x="449" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{M2_In}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="86708a02-86b2-4144-a441-6d5358f7ebc4" style="tcDefBox" x="478" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Wrap}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="d2a8a10f-ad58-4e16-99ec-62ccb75c43cf" style="tcDefBox" x="507" y="1" width="29" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Hours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6845a86b-86da-4fda-8fce-e9206b7e422d" style="tcDefBox" x="536" y="1" width="40" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Work_Zone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d286c45b-9163-46d1-9922-a14deb60c157" style="tcDefBox" x="576" y="1" width="27" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Off_Production}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="611f7fb6-85f3-4e5f-a32e-a6e101de8548" style="tcDefBox" x="603" y="1" width="13" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Ndb_End} != null ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#">
+				<reportElement uuid="e7d696b1-385c-4754-a167-6b0470b9b473" style="tcDefBox" x="629" y="1" width="30" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Grace1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="68be7514-dc28-40ea-90fd-8963ec143d23" style="tcDefBox" x="659" y="1" width="24" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mpv1_Payroll}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#">
+				<reportElement uuid="38638bae-d56d-4862-a05d-c5999ed6c5f9" style="tcDefBox" x="683" y="1" width="30" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Grace2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6e84153b-e8c9-4bbe-b4e2-4bcb86fded3f" style="tcDefBox" x="713" y="1" width="24" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mpv2_Payroll}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="39c8097e-0f61-4e9b-8822-ce28e49e0a6f" style="tcDefBox" x="616" y="1" width="13" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{Ndm_Start} != null || $F{Ndm_End} != null) ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#">
+				<reportElement uuid="38d2f915-66f0-4014-bcb7-db9e74fd19db" style="tcDefBox" x="870" y="1" width="29" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Budgeted_Hours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="3da882c0-5bb6-4f0c-b4db-2bd608b7e9d4" style="tcDefBox" x="968" y="1" width="40" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Budgeted_Mpv_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="888dd3b5-5f71-4cb6-8b21-5e51e0cd932e" style="tcDefBox" x="899" y="1" width="40" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Budgeted_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="7e0395b3-86a9-4bf4-80b3-e57753e67df1" style="tcDefBox" x="830" y="1" width="40" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Actual_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#">
+				<reportElement uuid="ef71f4ec-4342-46bd-8a96-c2ece6bab54f" style="tcDefBox" x="939" y="1" width="29" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Budgeted_Mpv}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e5e4d983-66f4-48f4-bf1b-08be451e88f0" style="tcDefBox" x="810" y="1" width="20" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Forced_Call}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="644d8d0d-b1dd-4b7a-b426-290e0e58506b" style="tcDefBox" x="788" y="1" width="22" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{French_Hours}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4c6f5194-d576-4fca-8b7a-6a5bf090f2fa" style="tcDefBox" x="763" y="1" width="25" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Last_Man_In}.booleanValue() == true ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="f41d6d1e-df53-4c33-9242-1e6a3edd15eb" x="281" y="0" width="727" height="20"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

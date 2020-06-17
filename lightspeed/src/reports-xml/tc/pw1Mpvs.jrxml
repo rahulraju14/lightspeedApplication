@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pw1Mpvs" pageWidth="108" pageHeight="70" columnWidth="108" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="68706452-7515-49cf-b834-f7151958c47d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="weeklyId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select sum(ifnull(mpv1,0) + ifnull(mpv2,0) + ifnull(mpv3,0)) as totalMpv
+from weekly_time_card w, pay_job pj, pay_job_daily pjd
+where w.id = $P{weeklyId} and pj.weekly_id = w.id and pjd.job_id = pj.id]]>
+	</queryString>
+	<field name="totalMpv" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4a1b0a2c-0e85-4b29-b0dc-80dfb8a7742e" style="tcDefault" stretchType="RelativeToBandHeight" x="0" y="-5" width="40" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{totalMpv}.signum()==0 ? null : $F{totalMpv})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

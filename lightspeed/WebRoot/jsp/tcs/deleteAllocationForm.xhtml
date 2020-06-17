@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Popup for adding allocation form contacts -->
+	<c:set var="bean" value="#{taxWageAllocationBean}" />
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	
+	<h:form>
+		<ace:dialog visible="#{bean.visible}"
+				header="#{bean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>	
+
+			<div id="popupBdy4W">
+				<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div id="popupCont4W">
+					<div class="popup_main pad15tp">
+
+						<div class="MA W95percnt pad15tp">
+							<h:panelGroup styleClass="FL txt12 B_false">
+								<h:outputText value="#{msg.Tours_Allocation_CreateForm_Text1}" />
+							</h:panelGroup>
+							<div id="rowCont">&#160;</div>
+							<h:panelGroup styleClass="FL txt12">
+								<h:outputText value="Note: " styleClass="B" />
+								<h:outputText value="#{msg.Tours_Allocation_CreateForm_Text2}" styleClass="B_false"/>
+							</h:panelGroup>
+							<div id="rowCont">&#160;</div>
+							<!-- Contact Name dropdown -->
+							<h:panelGroup styleClass="txt12 W90percnt">
+								<h:panelGroup styleClass="FL pad10lt pad3tp W10percnt">
+									<h:outputText value="Name:" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad3lt W80percnt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu styleClass="W70percnt" valueChangeListener="#{bean.listenContactChange}"
+											value="#{bean.newFormContact}">
+											<f:selectItems value="#{bean.contactsDL}" />
+											<f:converter converterId="lightspeed.ContactConverter" />
+											<ace:ajax/>
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</h:panelGroup>
+								<!-- Display error message if selected contact has existing allocation forms -->
+								<h:panelGroup rendered="#{bean.contactAllocFormExists}" styleClass="FL pad35tp RED">
+									<h:outputText value="#{msg.Tours_Allocation_Error_CreateForm1}" />
+									<div id="rowCont">&#160;</div>
+									<h:outputText value="#{msg.Tours_Allocation_Error_CreateForm2}" />
+								</h:panelGroup>
+								<!-- Adding new contact info -->
+								<h:panelGroup rendered="#{bean.addNewContact}" styleClass="FL pad35tp">
+									<h:outputText value="#{msg.Tours_Allocation_CreateForm_FirstName}" styleClass="pad10lt"/>
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<ace:textEntry maxLength="100" styleClass="pad3lt" style="width:125px;"
+											valueChangeListener="#{bean.listenFirstNameChange}" value="#{bean.newFormContact.user.firstName}" >
+											<ace:ajax/>
+										</ace:textEntry>
+									</icecore:setEventPhase>
+									<h:outputText styleClass="pad10lt" value="#{msg.Tours_Allocation_CreateForm_LastName}" />
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<ace:textEntry maxLength="100" styleClass="pad3lt" style="width:125px;" 
+											valueChangeListener="#{bean.listenLastNameChange}" value="#{bean.newFormContact.user.lastName}" >
+											<ace:ajax/>
+										</ace:textEntry>											
+									</icecore:setEventPhase>
+								</h:panelGroup>
+							</h:panelGroup>
+						</div> <!-- End of MA -->
+
+					</div> <!-- End of popup_main -->
+				</div> <!-- End of popupCont4W -->
+
+
+				<div class="popBtnCont padPop50rt pad10tp">
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{not bean.disableAddBttn}">
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="Add" styleClass="btnSecHotCt" action="#{bean.actionOk}" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{bean.disableAddBttn}">
+						<span class="FR pad10rt">
+							<span class="btnPriDisLt"/>
+							<span>
+								<ace:linkButton value="Add" styleClass="btnPriDisCt" onClick="return false;" />
+							</span>
+							<span class="btnPriDisRt"/>
+						</span>
+					</h:panelGroup>
+				</div> <!-- End popBtnCont -->
+
+			</div> <!-- End popupBdy4W -->
+		</ace:dialog>
+	</h:form>
+</ui:composition>

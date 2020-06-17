@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} BreakDown Page</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+  element = document.getElementById('miniView');
+  resizeElement(element, 181, 342); /* 185, 338 rt detail panel */
+
+  //resizeScrollable('bd:scenelist', 376, 200);/* lt list panel */
+  element = document.getElementById('scriptPageContB');
+  resizeElement(element, 396, 187);
+
+  element = document.getElementById('bd:sceneelem');
+  if (element != null) { /* it won't exist when user is on another tab */
+  	resizeElement(element, 430, 165); /* element table only */
+  }
+  resizeScrollable('bd:datastripnoteList', 308, 278); /* scene notes only */
+	</c:if>
+
+	//clearOnScroll('bd:scenelist');
+}
+
+var formname = "bd"; // NOTE: this name is referenced by several Javascript methods in script.js!
+
+/** The id of the popup's scrolling div; used by script.js methods */
+var popScrollId = 'bk_elemTblScr';
+
+</script>
+</h:head>
+
+<h:body>
+
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript" type="text/javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+
+	<h:form id="bd"><!-- This id field value is expected by the Java code and script.js!! -->
+
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+			<f:attribute name="tabid" value="breakdown" />
+		</h:outputText>
+
+		<div id="main">
+
+			<ui:include src="../common/header2.xhtml" />
+
+			<div id="mainCont">
+				<div id="ctrCont">
+					<div id="pnlCont">
+
+						<!-- Begin Scene Breakdown List pnlLt -->
+						<div id="pnlLt">
+
+							<div class="topBdrCont">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div id="breakdwnHdr" class="rowCont ltrtBdr BKwhite FL">
+								<span class="pnlHdrTxt FL"> <h:outputText
+										value="#{headerViewBean.project.script.description}" />
+								</span>
+								<h:panelGroup styleClass="FR pad5rt"
+									rendered="#{breakdownBean.scene.script ne null and not empty authBean.pgFields['4.1,edit']}">
+									<span class="btnPriHotLt" />
+									<span> <ace:linkButton value="Add"
+											action="#{breakdownBean.actionOpenAddPopup}"
+											styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</h:panelGroup>
+							</div>
+
+							<div id="sceneListCont" class="rowCont ltrtBdr">
+								<!-- Note: "id=scenelist" is referenced by Javascript in script.js: showStrip()! -->
+								<ace:dataTable selectionMode="single"
+										style="width:100%;max-width:100%;"
+										value="#{breakdownBean.sceneList}" var="scene" id="scenelist"
+										styleClass="bk_sl_grid"
+										rowSelectListener="#{breakdownBean.listenRowSelect}"
+										stateMap="#{breakdownBean.stateMap}"
+										scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+										scrollHeight="#{headerViewBean.mobile ? '' : '182'}">
+									<ace:column style="width:1px;">
+										<!-- provide a 1-pixel column for ICEface's keyboard navigation link and GIF,
+										so it doesn't break our "jelly-bean" graphics. rev 3802 - ->
+										value="#{scene.selected}"
+										styleClass="bk_sl_row"
+										selectionListener="#{breakdownBean.listenRowSelect}"/>
+										-->
+									</ace:column>
+									<ace:column styleClass="bk_sl_sheet" style="width:59px !important;">
+										<f:facet name="header">
+											<h:outputText value="#" styleClass="pad15lt"/>
+										</f:facet>
+										<h:panelGroup style="width:59px;"
+												styleClass="FL bp_number_td scc #{breakdownBean.colorClassMap[scene.colorKey]} scc_del_#{scene.omitted}">
+											<div class="FL">
+												<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26" />
+											</div>
+											<h:panelGroup class="FL bp_number_mid">
+												<a href="#" class="non_link" title="#{scene.number}">
+													<h:outputText styleClass="DB" value="#{scene.number}" />
+												</a>
+											</h:panelGroup>
+											<div class="FL">
+												<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26" />
+											</div>
+										</h:panelGroup>
+									</ace:column>
+									<ace:column id="Location" styleClass="bk_sl_scene">
+										<f:facet name="header">
+											<h:outputText value="Scene Heading" styleClass="LT pad4lt" />
+										</f:facet>
+										<h:outputText value="#{scene.shortHeading}"
+												style="float:left;position:relative;width:auto;padding-right:25px;left:4px;" />
+									</ace:column>
+								</ace:dataTable>
+								<div class="bk_sl_gridHdr">&#160;</div>
+							</div>
+							<!-- end sceneListCont -->
+
+							<!-- Script Page display for current scene -->
+							<div class="scriptPageWrap">
+								<!-- wrapper does border & white background fill -->
+
+								<div id="scriptPageContB">
+
+									<ui:include src="scriptText.xhtml">
+										<ui:param name="bean" value="#{scriptPageBean}" />
+										<ui:param name="rows" value="1000" />
+									</ui:include>
+
+								</div>
+							</div>
+							<!-- end scriptRevDetailsBtm -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+						</div>
+						<!-- End Scene Breakdown List pnlLt -->
+
+						<!--  Begin Scene Details - pnlRt -->
+						<div id="pnlRt">
+
+							<h:panelGroup
+									rendered="#{(not breakdownBean.showAddPopup) and (not locationSelector.showNewLocation)
+									and (not breakdownBean.showMerge)}">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:panelGroup>
+
+							<div class="topBdrCont">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div class="rowCont FL ltrtBdr BKwhite">
+								<div class="pnlHdrTxt FL pad10rt">
+									<h:outputText value="Scene" />
+								</div>
+								<h:commandLink title="Previous scene" value=""
+										disabled="#{breakdownBean.listIndex eq 0}" tabindex="-1"
+										actionListener="#{breakdownBean.actionPrevious}"
+										styleClass="previous2">
+									<h:graphicImage value="" url="../../i/previous.gif" alt="" />
+								</h:commandLink>
+
+								<h:panelGroup style="width:59px;"
+										styleClass="FL pad2lt pad2rt bp_number_td scc #{breakdownBean.colorClassMap[breakdownBean.scene.colorKey]} scc_del_#{breakdownBean.scene.omitted}">
+									<div class="FL">
+										<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26" />
+									</div>
+									<h:panelGroup class="FL bp_number_mid">
+										<a href="#" class="non_link" title="#{breakdownBean.scene.number}">
+											<h:outputText styleClass="DB" value="#{breakdownBean.scene.number}" rendered="#{not empty breakdownBean.scene.number}" />
+											<h:outputText styleClass="DB" value="&#160;" rendered="#{empty breakdownBean.scene.number}" />
+										</a>
+									</h:panelGroup>
+									<div class="FL">
+										<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26" />
+									</div>
+								</h:panelGroup>
+
+								<h:commandLink value="" styleClass="next2" title="Next scene"
+										disabled="#{! breakdownBean.nextEnabled}" tabindex="-1"
+										actionListener="#{breakdownBean.actionNext}">
+									<h:graphicImage value="" url="../../i/next.gif" alt="" />
+								</h:commandLink>
+
+								<h:outputText
+										value="(unsaved changes)" styleClass="noteTxt pad20lt DIB pad6tp"
+										style="position:relative;visibility: #{breakdownBean.dataChanged ? 'visible' : 'hidden'}" />
+								<h:panelGroup
+									rendered="#{not empty authBean.pgFields['4.1,edit'] and breakdownBean.scene.script ne null and breakdownBean.scene.omitted}">
+									<span class="FR pad5rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton value="Delete"
+													action="#{breakdownBean.actionDelete}"
+													styleClass="btnPriEnbCt" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup
+										rendered="#{breakdownBean.editMode and (not empty authBean.pgFields['4.1,edit'])}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt"
+												type="text" onclick="return false;" />
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{(not breakdownBean.editMode) and (not empty authBean.pgFields['4.1,edit']) and breakdownBean.scene.script ne null}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Edit"
+												action="#{breakdownBean.actionEdit}"
+												styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+
+								<div class="rowBtn4RtTpPnl">
+									<h:panelGroup
+											rendered="#{not empty authBean.pgFields['4.1,edit']
+											and (not breakdownBean.scene.omitted)
+											and breakdownBean.scene.script ne null}">
+										<span class="FL pad5rt"> <span class="btnPriEnbLt" />
+											<span> <ace:linkButton value="Merge"
+													title="Merge another scene"
+													action="#{breakdownBean.actionOpenMerge}"
+													styleClass="btnPriEnbCt" />
+										</span> <span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not empty authBean.pgFields['4.1,edit'] and breakdownBean.sceneMerged and breakdownBean.scene.script ne null}">
+										<span class="FL pad5rt"> <span class="btnPriEnbLt" />
+											<span> <ace:linkButton value="Split"
+													title="Split off a merged scene"
+													action="#{breakdownBean.actionOpenSplit}"
+													styleClass="btnPriEnbCt" />
+										</span> <span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{(not empty authBean.pgFields['4.1,edit']) and (breakdownBean.scene.script ne null and not breakdownBean.scene.omitted)}">
+										<span class="pad5rt">
+											<span class="btnPriEnbLt" />
+											<span>
+												<ace:linkButton value="Omit"
+													action="#{breakdownBean.actionOmit}"
+													styleClass="btnPriEnbCt" />
+											</span>
+											<span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+									<h:panelGroup
+											rendered="#{(not empty authBean.pgFields['4.1,edit']) and breakdownBean.scene ne null and breakdownBean.scene.omitted}">
+										<span class="pad10rt">
+											<span class="btnPriEnbLt" />
+											<span>
+												<ace:linkButton value="Restore"
+													action="#{breakdownBean.actionRestore}"
+													styleClass="btnPriEnbCt" />
+											</span>
+											<span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+								</div>
+								<!-- end of rowBtn4RtTpPnl -->
+							</div>
+							<!-- end of top rowCont -->
+
+							<div id="sceneDetailCont" class="ltrtBdr BKwhite">
+
+								<div id="miniView" class="pad3tp">
+									<h:panelGroup binding="#{breakdownRequestBean.editPanel}">
+
+										<!-- Tabs for Scene Details -->
+										<ace:tabSet id="tabs" styleClass="W100percnt"
+											selectedIndex="#{breakdownBean.selectedTab}">
+											<!-- This id field value ('tabs') is expected by the Java code!! -->
+
+											<!-- DETAIL TAB  -->
+											<ui:include src="breakdownDetail.xhtml" />
+
+											<!-- NOTES TAB   -->
+											<ui:include src="breakdownNotes.xhtml" />
+
+										</ace:tabSet>
+										<!--  END TAB set -->
+
+									</h:panelGroup>
+									<!-- end miniView panel group -->
+								</div>
+								<!-- end miniView -->
+
+								<!-- secondary buttons -->
+								<div class="rowBtn">
+									<div class="rowBtnBdr"></div>
+									<h:panelGroup rendered="#{breakdownBean.editMode}">
+
+										<div class=" ">
+											<div class="stdTxt FL pad6lt pad4tp">
+												Autosave is
+												<h:selectOneListbox styleClass="pad5lt"
+														value="#{breakdownBean.autosaveValue}"
+														valueChangeListener="#{breakdownBean.listenAutosave}"
+														size="1">
+													<f:selectItem itemLabel="On" itemValue="ON" />
+													<f:selectItem itemLabel="Off" itemValue="OFF" />
+													<ace:ajax />
+												</h:selectOneListbox>
+											</div>
+
+											<h:panelGroup styleClass="FL pad5lt pad6tp">
+												<h:outputText rendered="#{breakdownBean.autosave}"
+													value="Changes are saved automatically." />
+												<h:outputText rendered="#{! breakdownBean.autosave}">
+													Changes are only saved when you click on the&#160; <b>Save</b> button.
+												</h:outputText>
+											</h:panelGroup>
+										</div>
+
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt" />
+											<span>
+												<ace:linkButton value="Cancel" immediate="true"
+													onmouseup="showErrors();"
+													action="#{breakdownBean.actionCancel}"
+													styleClass="btnPriEnbCt" />
+											</span>
+											<span class="btnPriEnbRt" />
+										</span>
+
+										<h:panelGroup styleClass="FR pad5rt"
+												rendered="#{! breakdownBean.autosave}">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Save"
+													action="#{breakdownBean.actionSave}"
+													onmouseup="showErrors();" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt" />
+										</h:panelGroup>
+
+										<h:panelGroup styleClass="FR pad5rt"
+												rendered="#{breakdownBean.autosave}">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Save &amp; Exit"
+													action="#{breakdownBean.actionSave}"
+													onmouseup="showErrors();" styleClass="btnSecHotCt">
+												</ace:linkButton>
+											</span>
+											<span class="btnSecHotRt" />
+										</h:panelGroup>
+
+										<h:panelGroup styleClass="FR pad5rt"
+											rendered="#{breakdownBean.autosave}">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Save Now"
+														action="#{breakdownBean.actionSaveNow}"
+														onmouseup="showErrors();" styleClass="btnSecHotCt">
+												</ace:linkButton>
+											</span>
+											<span class="btnSecHotRt" />
+										</h:panelGroup>
+
+									</h:panelGroup>
+								</div>
+								<!-- end secondary buttons -->
+
+							</div>
+							<!-- end sceneDetailCont -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+
+						</div>
+						<!--  End Scene Details - pnlRt -->
+
+					</div>
+					<!-- end panelCont -->
+				</div>
+				<!-- end ctrCont -->
+
+				<div class="CB"></div>
+				<!-- clears float for liquid layout -->
+
+			</div>
+			<!-- end mainCont -->
+
+			<div class="footerCont CT">
+				<ui:include src="../common/footercont.xhtml" />
+			</div>
+
+		</div>
+		<!-- end main -->
+
+	</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+	<ui:include src="addscenepopupbk.xhtml" />
+	<ui:include src="mergescenepopup.xhtml" />
+	<ui:include src="splitscenepopup.xhtml" />
+	<ui:include src="../common/confirmpopup.xhtml" />
+	<ui:include src="../common/locationdialog.xhtml" />
+
+</h:body>
+</html>

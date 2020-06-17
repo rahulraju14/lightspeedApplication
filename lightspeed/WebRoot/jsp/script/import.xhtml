@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Import Script</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	element = document.getElementById('importScrCont');
+	resizeElement(element, 209, 367); /* 207, 328 */
+	</c:if>
+}
+
+var formname = "import";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript" type="text/javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="import">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="newrevision" />
+</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="#{headerViewBean.project.title}"/>
+							</span>
+							<span class="pnlHdrTxt FR pad10rt">
+								<!-- temporarily hide the steps until we generate them dynamically
+								 <h:outputText
+									rendered="#{! importScript.importComplete}"
+									value="Step 1 of 4"/>
+								<h:outputText
+									rendered="#{importScript.importComplete}"
+									value="Step 1 of 4"/>-->
+							</span>
+						</div>
+
+						<div class="centerFullTb MA">
+
+						<div id="errMsgContFull" class="CT rowCont FL pad12lt pad2tp">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</div>
+
+							<div id="miniView" class="FL">
+
+									<div id="importCont">
+										<!-- Tab for script import -->
+										<ace:tabSet id="tabs" selectedIndex="0"
+											width="100%" cellpadding="0" cellspacing="0" border="0">
+
+											<!--  New Script Rev Tab   -->
+												<ace:tabPane label="New Script Revision" id="importOpt">
+
+<div id="importScrCont">
+	<div class="W70percnt MA">
+
+		<h:panelGroup styleClass="FL rowCont pad10tp pad20rt"
+			rendered="#{importScript.importComplete}">
+			<div class="pad10tp FL rowCont">
+				<h:outputText
+					styleClass="infoTxt hotTxt"
+					rendered="#{importScript.importOk}"
+					value="Script was imported successfully." />
+				<h:outputText
+					styleClass="infoTxt hotTxt"
+					rendered="#{! importScript.importOk}"
+					value="Script import was NOT successful." />
+			</div>
+		</h:panelGroup>
+
+		<div class="FL pad30lt pad15tp">
+			<h:outputText
+				styleClass="B pad10rt" value="Revision Name:" />
+			<h:outputText value="*"
+				rendered="#{! importScript.importComplete}"
+				styleClass="mandatory" />
+			<ace:textEntry
+				id="Revision_Name"
+				disabled="true"
+				size="50" maxlength="100"
+				value="#{importScript.description}">
+			</ace:textEntry>
+			<h:outputText
+				styleClass="B pad10lt pad10rt"
+				value="Page Color:" />
+			<h:selectOneMenu
+				value="#{importScript.colorName}"
+				disabled="true">
+				<f:converter converterId="lightspeed.ColorNameConverter" />
+				<f:selectItems value="#{importScript.colorList}"/>
+			</h:selectOneMenu>
+		</div>
+
+		<h:panelGroup styleClass="FL rowCont pad30lt"
+			rendered="#{importScript.importComplete}">
+			<div class="pad10tp rowCont FL">
+				<h:panelGroup
+					rendered="#{importScript.importer.scenesAdded gt 0}">
+					<h:outputText styleClass="B" value="Script contained:"/>
+					<ul>
+						<li><h:outputText value="#{importScript.importer.scenesAdded} scenes"/>
+						</li>
+						<li><h:outputText value="#{importScript.importer.pageCount} pages"/>
+						</li>
+						<li><h:outputText value="#{importScript.importer.newLocations} new Sets"/>
+						</li>
+						<li><h:outputText value="#{importScript.importer.newScriptElements} new characters and other elements"/>
+						</li>
+					</ul>
+				</h:panelGroup>
+				<h:outputText styleClass="B rowCont" value="Additional information about the import:"/>
+				<div class="W90percnt MA txt12">
+					<ace:textAreaEntry cols="100" readonly="true"
+						value="#{importScript.messageText}" rows="8"/>
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="FL pad15tp rowCont"
+			rendered="#{importScript.importOk}">
+			<h:outputText styleClass="FR hotTxt B I" value="Click Next to continue."/>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="FL pad15tp rowCont"
+			rendered="#{!importScript.importOk}">
+			<h:outputText style="FR hotTxt B I"
+				value="Click Return to return to the Script Revisions page." />
+		</h:panelGroup>
+
+	</div>
+</div>
+
+											</ace:tabPane><!--  End Script Import Tab -->
+										</ace:tabSet>
+									</div>
+
+							</div><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+								<h:panelGroup styleClass="FR pad10rt" rendered="#{! importScript.importOk}">
+									<span class="btnSecHotLt" />
+									<span>
+										<ace:linkButton
+											value="Return"
+											action="drafts"
+											styleClass="btnSecHotCt"/>
+									</span>
+									<span class="btnSecHotRt" />
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="FR pad10rt" rendered="#{importScript.importOk}">
+									<span class="btnSecHotLt" />
+									<span>
+										<ace:linkButton
+											action="#{importScript.actionNext}"
+											value="Next"
+											styleClass="btnSecHotCt">
+										</ace:linkButton>
+									</span>
+									<span class="btnSecHotRt" />
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+</h:body></html>

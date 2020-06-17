@@ -1,0 +1,223 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- For Onboarding / Documents and Packets - this is the dialog box used to
+	(a) upload a custom document;
+	(b) upload the master XFDF for a custom document;
+	(c) set the edit options on a custom document;
+	(d) upload a replacement document (see popupUploadReplace.xhtml, included here); not yet implemented
+ -->
+
+	<!-- Uses params:  -->
+	<!--   "i9msg" : true if the warning about I9 attachments should be displayed -->
+	<!--   "isTcAttachment" : true if this include is for the timecard attachments tab -->
+
+<h:form enctype="multipart/form-data">
+	<!-- multipart spec is needed due to fileEntry embedded within dialog -->
+	<c:set var="bean" value="#{popupUploadBean}"></c:set>
+	<f:loadBundle var="msg" basename="com.lightspeedeps.util.app.messageResources"/>
+	
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+
+		<div class="popupBdyAW">
+
+			<div class="popupCont4W">
+				<div class="popup_main">
+
+				<h:panelGroup rendered="#{i9msg}" style="font-weight: normal;">
+					<h:outputText value="#{msg.Startform_i9_attachment}" />
+					<div class="pad50tp" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{(! bean.isReplacement)}">
+
+					<div class="CT txt12">
+						<br/><br/>
+					</div>
+					<div>
+					<h:panelGroup rendered="#{(! bean.uploaded) and (! bean.isEditInfo)}">
+						<table>
+							<tr>
+								<td class="LT" style="width:400px;">
+									<ace:fileEntry id="inputFileComponent" label="Upload File"
+											fileEntryListener="#{bean.listenUpload}"
+											styleClass="pad20lt"
+											relativePath="upload"
+											messagePersistence="false"
+											maxFileSize="6291456"
+											required="false"
+											useOriginalFilename="true" />
+										<br/>
+									<h:commandButton value="Upload File" styleClass="btn pad20lt pad5tp"/>
+								</td>
+							</tr>
+						</table>
+						<!-- <h:message for="fileEntryComp" infoStyle="display:none" />  -->
+					</h:panelGroup>
+
+					<div class="pad15tp">
+						<h:outputText style="font-size:13px" rendered="#{bean.inputError and (! bean.isEditInfo) and (! bean.uploaded)}" styleClass="RED"
+								value="#{bean.errorMessage}" />
+						<h:panelGroup rendered="#{! bean.inputError}">
+							<br/>
+						</h:panelGroup>
+					</div>
+
+					<h:panelGroup rendered="#{bean.uploaded or bean.isEditInfo}">
+						<div class="pad-10tp">
+							Selected File: <h:outputText value="#{bean.displayFilename}"/>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{(bean.uploaded or bean.isEditInfo) and ! bean.isXfdf}">
+						<div class="FL pad20tp">
+							<h:outputText style="font-weight:normal" escape="false"
+							 		value="Enter the name of the file as well as an abbreviated name or nickname that will be used
+										&lt;br/&gt; to identify the file. The name will be displayed in the document list."
+									rendered="#{bean.revisionType eq 'n' and (! bean.isAttach)}"/>
+							<h:outputText style="font-weight:normal" value="Select the existing file that will be updated by the revision."
+									rendered="#{bean.revisionType eq 'u'}"/>
+							<h:outputText escape="false"
+								 	value="Enter the name of the file that will be used to identify the file.
+								 		The name will be displayed in the Attachment list."
+									rendered="#{bean.isAttach}"/>
+						</div>
+
+						<div class="FL pad10tp">
+							<span style="width:200px;"><h:outputText style="font-weight:normal;"
+								 	value="Name:" rendered="#{bean.revisionType eq 'n'}"/></span>
+							<ace:textEntry rendered="#{bean.revisionType eq 'n'}" tabindex="1"
+									value="#{bean.displayFilename}" id="popupUploadInput_focus"
+									style="width:320px;margin-left:80px" maxlength="100" />
+
+							<div>
+								<h:outputText rendered="#{bean.inputError and bean.isNameError}" styleClass="RED"
+										value="#{bean.errorMessage}" />
+								<h:panelGroup rendered="#{! bean.inputError or (not bean.isNameError)}">
+									<br/>
+								</h:panelGroup>
+							</div>
+							<div>
+								<h:selectOneMenu style="width:320px; margin-top:-15px;" rendered="#{bean.revisionType eq 'u'}"
+										value="#{bean.selectedObject}">
+									<f:selectItems value="#{bean.documentChainList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+						<!-- CHECKBOX FOR PRIVATE ATTACHMENT -->
+						<h:panelGroup rendered="#{bean.isAttach and (! isTcAttachment)
+								and attachmentBean.contactDocument.formType eq 'DEPOSIT'}">
+							<div class="FL pad40tp">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox value="#{bean.isPrivateAttachment}"
+											styleClass="iceSelBoolChkbx">
+									</h:selectBooleanCheckbox>
+									<span style="font-weight:normal;"> The attachment is private: only viewable
+									by me and the payroll service company.</span>
+								</icecore:setEventPhase>
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{bean.uploadDocument eq null and (! bean.isAttach)}">
+							<div class="FL pad5tp">
+								<!-- SHORT NAME -->
+								<h:outputText style="font-weight:normal"
+									 	value="Abbreviated Name:" rendered="#{bean.revisionType eq 'n'}"/>
+								<ace:textEntry rendered="#{bean.revisionType eq 'n'}" tabindex="1"
+										value="#{bean.shortName}"
+										style="width:320px;margin-left:10px" maxlength="20" />
+							</div>
+	
+							<!-- DOCUMENT ACTIONS -->
+							<div class="FL rowCont" style="margin-top:25px;">
+								<h:outputText value="Document Actions:" />
+							</div>
+							<div class="FL pad12tp">
+								<h:outputText style="font-weight:normal" escape="false"
+									 	value="Please select what actions are required by the employee and any document approvers:"
+										rendered="#{bean.revisionType eq 'n'}"/>
+							</div>
+	
+							<div class="FL pad15tp pad10lt">
+								<h:outputText style="font-weight:normal;" value="Employee Action:"/>
+								<h:selectOneMenu value="#{bean.employeeAction}"
+										style="width:300px;margin-left:20px; margin-top:-15px;">
+									<f:selectItems value="#{bean.empActionTypeList}" var="empAct" 
+											 itemValue="#{empAct}" itemLabel="#{empAct.label}"/>
+									<ace:ajax />
+								</h:selectOneMenu>
+							</div>
+							<div class="FL pad8tp pad10lt">
+								<h:outputText style="font-weight:normal" value="Approver Action:"/>
+							<h:selectOneMenu value="#{bean.approvalRequired}"
+									style="width:300px;margin-left:25px">
+								<f:selectItems value="#{bean.appActionTypeList}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+							</div>
+							<div class="FL rowCont pad10tp pad10lt">
+								<h:outputText rendered="#{(bean.inputError) and (not bean.isNameError)}" styleClass="RED"
+										value="#{bean.errorMessage}" />
+								<h:panelGroup rendered="#{! bean.inputError or (bean.isNameError)}">
+									<br/>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+					</div>
+
+					</h:panelGroup><!-- custom document & edit info section -->
+
+					<h:panelGroup rendered="#{bean.isReplacement}">
+						
+						<ui:include src="popupUploadReplacement.xhtml">
+							<ui:param name="bean" value="#{bean}" />
+						</ui:include>
+
+					</h:panelGroup>
+
+				</div>
+			</div>
+
+			<div class="popBtnCont4">
+				<h:panelGroup rendered="#{not empty bean.buttonCancelLabel}">
+					<span class="FR pad20rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton tabindex="3" value="#{bean.buttonCancelLabel}"
+							action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{bean.uploaded or bean.isEditInfo}" >
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton tabindex="2" value="#{bean.buttonOkLabel}"
+							onclick="override();"
+							action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+</ui:composition>

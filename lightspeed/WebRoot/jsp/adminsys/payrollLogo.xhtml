@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- LOGOS minitab of the Admin / Payroll Services page -->
+
+		<div class="blueLegendContWrap pad10tp" style="width: 45%;">
+			<h:panelGroup styleClass="blueLegendCont">
+
+				<span class="legendHdg">
+					<h:outputText value="#{name}" />
+				</span>
+
+				<h:panelGroup styleClass="btn_legend"
+						rendered="#{payrollServiceListBean.editMode and
+							payrollServiceListBean.selectedTab eq 3 and (image ne null)}">
+					<span class="btnMiniLtHot"/>
+					<ace:linkButton value="Delete Logo" styleClass="btnMiniCt"
+							action="#{payrollServiceListBean.actionDeleteImage}">
+						<f:setPropertyActionListener value="#{imageType}" target="#{payrollServiceListBean.imageType}" />
+					</ace:linkButton>
+					<span class="btnMiniRtHot"/>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="btn_legend"
+						rendered="#{payrollServiceListBean.editMode and payrollServiceListBean.selectedTab eq 3}" >
+					<span class="btnMiniLtHot"/>
+					<ace:linkButton value="New Logo" styleClass="btnMiniCt"
+							action="#{payrollServiceListBean.actionOpenNewImage}">
+						<f:setPropertyActionListener value="#{imageType}" target="#{payrollServiceListBean.imageType}" />
+					</ace:linkButton>
+					<span class="btnMiniRtHot"/>
+				</h:panelGroup>
+
+				<div>
+
+					<div class="rowCont FL pad20tp">
+						<h:panelGroup styleClass="imageBox CT" rendered="#{empty image}">
+							<div id="logoDefaultSmall"><br />
+								No Logo<br />Stored<br /><br />
+							</div>
+						</h:panelGroup>
+					</div>
+
+					<h:panelGroup styleClass="CT pad20tp" rendered="#{not empty image}">
+						<div>
+							<ace:linkButton title="click to view full-size image" value=""
+									action="#{imageViewerBean.actionShowImage}">
+								<ace:graphicImage value="#{image.thumbnailB}" />
+								<f:setPropertyActionListener value="#{image.id}" target="#{imageViewerBean.imageId}"/>
+								<f:setPropertyActionListener value="Image" target="#{imageViewerBean.title}"/>
+							</ace:linkButton>
+						</div>
+					</h:panelGroup>
+
+				</div><!-- end logo -->
+
+				<div class="pad10tp pad10lt">
+					<div class="rowCont FL NW">
+						<h:outputText styleClass="W100percnt" value="#{image.title}" />
+					</div>
+					<h:outputText styleClass="rowCont FL NW W100percnt" value="#{image.date}">
+						<f:convertDateTime pattern=" M/d/yy h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+				</div>
+
+			</h:panelGroup>
+		</div>
+
+</ui:composition>

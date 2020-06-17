@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tc1JobCount" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="03fef8b5-649a-4634-a99f-7b21c98f2097">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="weeklyId" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[116]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select count(*) as jobCount from pay_job where weekly_id = $P{weeklyId};]]>
+	</queryString>
+	<field name="jobCount" class="java.lang.Integer"/>
+	<variable name="jobCount" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA[$F{jobCount}]]></variableExpression>
+	</variable>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+</jasperReport>

@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- IMPORT (contacts) mini-tab of Project page -->
+	<ace:tabPane label="Import"
+			rendered="#{(not empty authBean.pgFields['2.0,view_import'])}">
+
+		<!-- upload/import data -->
+		<h:panelGroup rendered="#{(not empty authBean.pgFields['2.0,import_data'])}">
+
+			<div class="rowCont FL rowGradient" style="height:120px;">
+				<h:outputText styleClass="FL txt14 rowCont B pad10lt pad10tp"
+						value="Import: load project(job) and crew entries." />
+
+				<div class="FL pad10lt pad10tp">
+					<h:panelGroup rendered="#{! projectViewBean.editMode}">
+						<span class="FL">
+							<span class="btnPriHotLt" />
+							<span>
+							<ace:linkButton title="Upload your data file into #{headerViewBean.domainTabTitle}'s temporary table"
+								value="Upload" action="#{importContactsBean.actionImport}"
+								styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</span>
+						<div class="FL B pad10tp pad20lt">
+							<h:outputText value="Step 1: Upload your data file to holding table (shown below)" />
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{projectViewBean.editMode}">
+						<h:outputText styleClass="FL rowCont B pad40lt pad20tp txt14"
+								value="Import is not available in Edit mode; click Save or Cancel to proceed." />
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont">
+					<div class="FL pad10lt pad10tp">
+						<h:panelGroup rendered="#{! projectViewBean.editMode}">
+							<span class="FL">
+								<span class="btnPriHotLt" />
+								<span>
+								<ace:linkButton title="Use table data to make projects and crew entries"
+									value="Create" action="#{importContactsBean.actionCreate}"
+									styleClass="btnPriHotCt" />
+								</span>
+								<span class="btnPriHotRt" />
+							</span>
+							<div class="FL B pad10tp pad20lt">
+								<h:outputText value="Step 2: Create projects and crew from holding table" />
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+
+			</div>
+		</h:panelGroup>
+
+		<!-- Display contents of import table -->
+		<div class="rowCont">
+			<div class="FL pad3lt pad5tp">
+			</div>
+
+			<div class="FL W100percnt">
+
+				<ace:dataTable
+						value="#{importContactsBean.contactList}" var="item"
+						scrollable="true"
+						rows="20"
+						scrollHeight="170"
+						styleClass="bk_sl_grid"
+						paginator="true"
+						paginatorPosition="top"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks}
+									{NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						reorderableColumns="false"
+						rowsPerPageTemplate="20,50,100,all"
+						style="width:100%;max-width:100%;">
+
+					<!-- Episode Code -->
+					<ace:column headerText="episode" styleClass="W5percnt" filterBy="#{item.episodeCode}"
+							filterMatchMode="contains">
+						<h:outputText value="#{item.episodeCode}" />
+					</ace:column>
+
+					<!-- Episode Title -->
+					<ace:column headerText="Title" styleClass="W20percnt" filterBy="#{item.episodeTitle}"
+							filterMatchMode="contains">
+						<h:outputText value="#{item.episodeTitle}" />
+					</ace:column>
+
+					<!-- Start Date -->
+					<ace:column headerText="Start" styleClass="W5percnt">
+						<h:outputText value="#{item.projectStartDate}"
+								rendered="#{item.action ne 'DELETE'}">
+							<f:convertDateTime pattern="M/d" />
+						</h:outputText>
+						<h:outputText value="DELETE" rendered="#{item.action eq 'DELETE'}" />
+					</ace:column>
+
+					<!-- End Date -->
+					<ace:column headerText="End" styleClass="W5percnt">
+						<h:outputText value="#{item.projectedEndDate}"
+								rendered="#{item.action ne 'DELETE'}">
+							<f:convertDateTime pattern="M/d/yy" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- City -->
+					<ace:column headerText="City" styleClass="W10percnt" filterBy="#{item.workCity}"
+							filterMatchMode="contains">
+						<h:outputText value="#{item.workCity}" />
+					</ace:column>
+
+					<!-- State - ->
+					<ace:column headerText="State" styleClass="W5percnt" filterBy="#{item.workState}">
+						<h:outputText value="#{item.workState}" />
+					</ace:column>
+					-->
+
+					<!-- First Name -->
+					<ace:column headerText="First Name" styleClass="W5percnt" filterBy="#{item.firstName}"
+							filterMatchMode="contains">
+						<h:outputText value="#{item.firstName}" />
+					</ace:column>
+
+					<!-- Last Name -->
+				   <ace:column headerText="Last Name" styleClass="W10percnt" filterBy="#{item.lastName}"
+							filterMatchMode="contains">
+						<h:outputText value="#{item.lastName}" />
+					</ace:column>
+
+					<!-- Email - ->
+					<ace:column headerText="Email" styleClass="W10percnt" filterBy="#{item.emailAddress}"
+							filterMatchMode="contains">
+						<h:outputText styleClass=" " value="#{item.emailAddress}" />
+					</ace:column>
+					-->
+
+					<!-- Phone - ->
+					<ace:column headerText="Phone" styleClass="W10percnt" filterBy="#{item.phone}">
+						<h:outputText styleClass=" " value="#{item.phone}" />
+					</ace:column>
+					-->
+
+					<!-- Occupation -->
+					<ace:column headerText="Occupation" styleClass="W10percnt" filterBy="#{item.occupation}"
+							filterMatchMode="contains">
+						<h:outputText styleClass=" " value="#{item.occupation}" />
+					</ace:column>
+
+					<!-- Department - ->
+					<ace:column headerText="Dept" styleClass="W10percnt" filterBy="#{item.department}"
+							filterMatchMode="contains">
+						<h:outputText styleClass=" " value="#{item.department}" />
+					</ace:column>
+					-->
+
+				</ace:dataTable>
+			</div>
+		</div>
+
+	</ace:tabPane>
+
+</ui:composition>

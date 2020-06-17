@@ -1,0 +1,186 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+<!-- Popup for stripboard editor, to auto-schedule all strips -->
+
+<h:form>
+	<c:set var="bean" value="#{autoScheduleBean}"></c:set>
+
+	<ace:dialog visible="#{bean.showDialog}"
+			header="Stripboard Auto Schedule"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popupAutoSched">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+
+		<div class="popAutoSchedBdy">
+
+			<div class="FL rowCont pad22tp">
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</div>
+
+	<div class="autoSchedCont">
+
+		<div class="autoschedform popup_main">
+
+			<span class="rowCont FL">
+				<span class="FL infoTxt">
+					This Stripboard Auto-Scheduler will place all strips into the Scheduled
+					side and sort them according to the criteria selected below.
+				</span>
+			</span>
+			<span class="rowCont pad5tp FL pad25lt">
+				<h:outputText styleClass="B hotTxt pad5lt" value="Warning: The existing Stripboard will be overwritten." />
+			</span>
+
+			<div class="rowCont FL pad15tp">
+				<div class="FL" style="left:25px;border:1px solid #999;padding:5px;width:88%;height:165px;">
+					<span class="FL" style="padding-left:2px;background-color:#999;width:63px;left:5px;top:-14px;color:#fff;">
+						Sort Order
+					</span>
+
+					<div class="FL rowCont H50">
+						<span class="FL">
+							<span class="FL pad15lt W140">
+								<h:outputText styleClass="fdNm_w" value="Sort strips first by:" />
+							</span>
+							<span class="FL">
+								<h:selectOneMenu 
+										value="#{bean.sortKey1}">
+									<f:selectItems value="#{bean.sortOptionDL}" />
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="FL pad20lt">
+							<ace:radioButtons styleClass="W140 radioTxtLbl" id="order1"
+									value="#{bean.sortOrder1}">
+								<f:selectItem itemLabel="Ascending" itemValue="ASC"/>
+								<f:selectItem itemLabel="Descending" itemValue="DESC" />
+							</ace:radioButtons>
+						</span>
+					</div>
+
+					<div class="FL rowCont pad5tp H50">
+						<span class="FL">
+							<span class="FL pad15lt W140">
+								<h:outputText styleClass="fdNm_w" value="Then second by:" />
+							</span>
+							<span class="FL">
+								<h:selectOneMenu
+									value="#{autoScheduleBean.sortKey2}">
+									<f:selectItems value="#{bean.sortOptionDL}" />
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="FL pad20lt">
+							<ace:radioButtons styleClass="W140 radioTxtLbl" id="order2"
+									value="#{bean.sortOrder2}">
+								<f:selectItem itemLabel="Ascending" itemValue="ASC"/>
+								<f:selectItem itemLabel="Descending" itemValue="DESC" />
+							</ace:radioButtons>
+						</span>
+					</div>
+
+					<div class="FL rowCont pad5tp H50">
+						<span class="FL">
+							<span class="FL pad15lt W140">
+								<h:outputText styleClass="fdNm_w" value="Then third by:" />
+							</span>
+							<span class="FL">
+								<h:selectOneMenu
+									value="#{bean.sortKey3}">
+									<f:selectItems value="#{bean.sortOptionDL}" />
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="FL pad20lt">
+							<ace:radioButtons styleClass="W140 radioTxtLbl" id="order3"
+									value="#{bean.sortOrder3}">
+								<f:selectItem itemLabel="Ascending" itemValue="ASC"/>
+								<f:selectItem itemLabel="Descending" itemValue="DESC" />
+							</ace:radioButtons>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="rowCont FL pad15tp">
+				<div class="FL" style="left:25px;border:1px solid #999;padding:5px;width:88%;">
+					<span class="FL" style="padding-left:2px;background-color:#999;width:70px;left:5px;top:-14px;color:#fff;">
+						Day Breaks
+					</span>
+					<div class="FL rowCont">
+						<div class="FL W225">
+							<ace:radioButtons id="break"
+									styleClass="radioTxtLbl"
+									value="#{bean.breakOption}">
+								<f:selectItem itemLabel="Insert a Day Break every" itemValue="EVERY"/>
+								<f:selectItem itemLabel="Spread the scheduled strips over" itemValue="SPREAD" />
+								<ace:ajax />
+							</ace:radioButtons>
+						</div>
+						<div class="FL">
+							<span class="fd FL">
+								<ace:textEntry maxlength="2" styleClass="W20 pad15lt"
+										disabled="#{bean.breakOption eq 'SPREAD'}"
+										value="#{bean.breakCount}" >
+									<f:validateLongRange minimum="1" maximum="99"/>
+								</ace:textEntry>
+								<h:selectOneMenu styleClass="pad15lt"
+										disabled="#{bean.breakOption eq 'SPREAD'}"
+										value="#{autoScheduleBean.breakType}">
+									<f:selectItems value="#{autoScheduleBean.breakTypeDL}" />
+								</h:selectOneMenu>
+							</span>
+							<span class="FL rowCont pad5tp">
+								<span class="FL pad15lt">
+									<ace:textEntry maxlength="3" style="width:30px;"
+										disabled="#{bean.breakOption eq 'EVERY'}"
+										value="#{bean.spreadCount}" >
+										<f:validateLongRange minimum="1" maximum="999"/>
+									</ace:textEntry>
+								</span>
+								<span class="FL pad5lt">days</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+			<div class="popBtnCont4">
+				<span class="FR pad5rt">
+					<span class="btnPriEnbLt" />
+					<span>
+					<ace:linkButton value="Cancel" immediate="true"
+						action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad10rt">
+					<span class="btnSecHotLt" />
+					<span>
+					<ace:linkButton value="Continue"
+						action="#{stripBoardEditBean.actionDoSchedule}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

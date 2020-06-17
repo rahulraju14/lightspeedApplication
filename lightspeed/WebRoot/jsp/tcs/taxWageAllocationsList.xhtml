@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ice-cc="http://www.icesoft.com/icefaces-composite-comps">
+
+	<c:set var="bean" value="#{taxWageAllocationBean}" />
+	<!-- data list container for Week Details List -->
+
+	<div id="listScrolldiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+		<h:panelGroup styleClass="empList">
+			<ace:dataTable id="empList"
+				selectionMode="single"
+				style="width:100%;max-width:100%;"
+				styleClass="bk_sl_grid" value="#{bean.sortedItemList}" var="cf"
+				scrollHeight="#{headerViewBean.mobile ? '' : '326'}"
+				stateMap="#{bean.stateMap}"
+				rowSelectListener="#{bean.rowSelected}"
+				scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+				<ace:column style="width:10%;">
+					<h:panelGroup rendered="#{cf.count eq 1}">
+						<h:graphicImage value="" url="../../i/singleDoc.png" alt="" title="One revision" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{cf.count gt 1}" styleClass="pad3lt">
+						<h:graphicImage value="" url="../../i/icon_document_18.png" alt="" title="Multiple revisions" />
+					</h:panelGroup>
+				</ace:column>
+
+				<ace:column headerText="Name" sortBy="#{cf.contact.user.lastNameFirstName}" style="width:70%;">
+					<h:outputText value="#{cf.contact.user.lastNameFirstName}" />
+				</ace:column>
+
+				<ace:column headerText="Revisions" styleClass="CT" style="width:20%;">
+					<h:outputText value="#{cf.count}" />
+				</ace:column>
+			</ace:dataTable>
+		</h:panelGroup>
+	 <!-- Data grid contains data -->
+	 <!-- Add legend to show user reference -->
+	</div>
+</ui:composition>

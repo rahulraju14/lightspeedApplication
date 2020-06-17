@@ -1,0 +1,520 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Personal mini-tab of the Cast & Crew page -->
+
+	<ace:tabPane label="Contact" id="personaltab">
+
+		<div class="miniTabPart rowGradient" style="padding-left: 0px">
+
+			<div id="Dim" class="subPersonalLt FL rowCont pad5lt"><!-- Dim is used to identify only these fields when contact assist 1st is ckd -->
+
+				<!-- DISPLAY NAME/AKA -->
+				<div class="rowCont FL fd_btmPad">
+					<span class="fdNm">
+						<h:outputText value="Name/AKA:" />
+					</span>
+					<h:panelGroup
+						rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,email'] and contactViewBean.contact.hidden))}">
+						<span class="fd">
+							<h:outputText
+									rendered="#{not empty contactViewBean.contact.displayName}"
+									value="#{contactViewBean.contact.displayName}" />
+							<h:outputText value="NA"
+									rendered="#{empty contactViewBean.contact.displayName}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+							rendered="#{contactViewBean.editMode and (not (empty authBean.pgFields['3.1.1,email'] and contactViewBean.contact.hidden))}">
+						<span class="fd">
+							<ace:textEntry maxlength="35" styleClass="address"
+									value="#{contactViewBean.contact.displayName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<h:panelGroup styleClass="#{contactViewBean.contact.contactAsstFirst ? 'dim' : ''}">
+					<!-- EMAIL -->
+					<div class="rowCont FL fd_btmPad">
+						<span class="fdNm">
+							<h:outputText value="E-mail:" />
+						</span>
+						<h:panelGroup
+								rendered="#{((not contactViewBean.editMode) or empty authBean.pgFields['2.0,write_any'])
+										and (not (empty authBean.pgFields['3.1,email'] and contactViewBean.contact.hidden))}">
+							<span class="fd">
+								<ace:linkButton rendered="#{(not empty contactViewBean.contact.emailAddress) and (not contactViewBean.isFakeEmail)}"
+									value="#{contactViewBean.contact.emailAddress}" href="mailto:#{contactViewBean.contact.emailAddress}">
+									<!-- <h:outputText value="#{contactViewBean.contact.emailAddress}" /> -->
+								</ace:linkButton>
+								<h:outputText rendered="#{(empty contactViewBean.contact.emailAddress) or (contactViewBean.isFakeEmail)}"
+									value="Email Not Provided" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{contactViewBean.editMode and (not empty authBean.pgFields['2.0,write_any'])}">
+							<span class="fd">
+								<ace:textEntry styleClass="address"
+										maxlength="55" value="#{contactViewBean.contact.emailAddress}">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div><!-- end personal Email -->
+
+					<!--  PHONE section -->
+					<div class="rowCont FL">
+
+						<!-- I placed this radio set outside where the radio tags are placed because
+								 each radio btn is placed separately next to the corresponding text input field, it was
+								 the only way to get them properly placed across from the fields -->
+						<!-- A space is required in the item label values so that I can use the radioTxtLbl class in CSS
+								 in order to get them to align (line height) in all browsers -->
+						<ace:buttonGroup id="primaryPh" styleClass="radioTxtLbl"
+								layout="spread" mutuallyExclusive="true" >
+							<!-- value="#{contactViewBean.contact.primaryPhoneIndex}"
+							<f:selectItems value="#{contactViewBean.phoneItems}" /> -->
+
+						<span class="fdNm" style="width:200px;">
+							Phone Numbers:
+							<h:panelGroup
+									rendered="#{(not contactViewBean.editMode) and (
+										(not empty contactViewBean.contact.homePhone     and (contactViewBean.contact.primaryPhoneIndex eq 2) and (not (empty authBean.pgFields['3.1,home_phone'] and contactViewBean.contact.hidden))) or
+										(not empty contactViewBean.contact.cellPhone     and (contactViewBean.contact.primaryPhoneIndex eq 1) and (not (empty authBean.pgFields['3.1,cell_phone'] and contactViewBean.contact.hidden))) or
+										(not empty contactViewBean.contact.businessPhone and (contactViewBean.contact.primaryPhoneIndex eq 0) and (not empty authBean.pgFields['3.1,business_phone']))
+									) }">
+								<span> (</span>
+								<span class="pad2tp">
+									<ace:graphicImage url="../../i/icon_check.gif"/>
+								</span>
+								<span class=" ">&#160;- Primary )</span>
+							</h:panelGroup>
+						</span>
+						
+						<div class="rowCont FL">
+							<div>
+								<div class="LH12 MA">
+									<h:outputText rendered="#{contactViewBean.editMode}"
+										styleClass="FL B txt10 pad5lt"
+										value="Primary#" />&#160;
+								</div>
+								<div class="pad10lt">
+									<!-- OFFICE PHONE -->
+									<div class="LH20">
+										<h:panelGroup
+											rendered="#{(not contactViewBean.editMode) and (not empty authBean.pgFields['3.1,business_phone'])}">
+											<h:panelGroup styleClass="FL pad10lt pad-2tp"
+												rendered="#{(not empty contactViewBean.contact.businessPhone) and
+													(contactViewBean.contact.primaryPhoneIndex eq 0)}">
+												
+												<ace:graphicImage url="../../i/icon_check.gif"/>
+												
+											</h:panelGroup>
+											<h:panelGroup styleClass="FL pad25lt"
+												rendered="#{(empty contactViewBean.contact.businessPhone) or
+													(contactViewBean.contact.primaryPhoneIndex ne 0)}">
+													&#160;&#160;
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{contactViewBean.editMode}">
+											<span class="FL pad10lt">
+												<ace:radioButton id="officePhone"
+													group="primaryPh" value="#{contactViewBean.primaryPhone[0]}"
+													valueChangeListener="#{contactViewBean.listenPhoneChange}">
+													<ace:ajax execute="@form" event="activate" render="@all"/>
+												</ace:radioButton>
+											</span>
+										</h:panelGroup>
+										<span class="FL B LH18 W42 pad3lt">
+											<h:outputText value="Office:" />
+										</span>
+										<span class="FL LH20">
+											<h:panelGroup rendered="#{contactViewBean.editMode}">
+												<ace:textEntry styleClass="FL"
+													id="businessPhoneNumber" maxlength="25"
+													value="#{contactViewBean.contact.businessPhone}">
+													<f:validator validatorId="lightspeed.phoneNumberValidator" />
+												</ace:textEntry>
+											</h:panelGroup>
+											<h:panelGroup
+												rendered="#{(not contactViewBean.editMode) and (not empty authBean.pgFields['3.1,business_phone'])}">
+												<h:outputText styleClass="#{contactViewBean.contact.contactAsstFirst ? 'xtradim' : ''} pad10lt FL W140"
+													value="#{contactViewBean.contact.businessPhone}" />
+											</h:panelGroup>
+										</span>
+									</div>
+
+									<!-- CELL PHONE -->
+									<div class="LH20 pad2tp">
+										<h:panelGroup
+											rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,cell_phone'] and contactViewBean.contact.hidden))}">
+											<h:panelGroup styleClass="FL pad10lt pad-2tp"
+													rendered="#{(not empty contactViewBean.contact.cellPhone) and
+													(contactViewBean.contact.primaryPhoneIndex eq 1)}">
+												
+												<ace:graphicImage url="../../i/icon_check.gif"/>
+												
+											</h:panelGroup>
+											<h:panelGroup styleClass="FL pad25lt"
+													rendered="#{(empty contactViewBean.contact.cellPhone) or
+													(contactViewBean.contact.primaryPhoneIndex ne 1)}">
+												&#160;&#160;
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{contactViewBean.editMode}">
+											<span class="FL pad10lt">
+												<ace:radioButton id="cellPhone"
+													group="primaryPh" value="#{contactViewBean.primaryPhone[1]}"
+													valueChangeListener="#{contactViewBean.listenPhoneChange}">
+													<ace:ajax execute="@form" event="activate" render="@all"/>
+												</ace:radioButton>
+											</span>
+										</h:panelGroup>
+										<span class="FL B LH18 W42 pad3lt">
+											<h:outputText value="Cell:" />
+										</span>
+										<span class="FL LH20">
+											<h:panelGroup
+												rendered="#{contactViewBean.editMode and (not (empty authBean.pgFields['3.1.1,cell_phone'] and contactViewBean.contact.hidden))}">
+												<ace:textEntry styleClass="FL" maxlength="25"
+													value="#{contactViewBean.contact.cellPhone}">
+													<f:validator validatorId="lightspeed.phoneNumberValidator" />
+												</ace:textEntry>
+											</h:panelGroup>
+											<h:panelGroup
+												rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,cell_phone'] and contactViewBean.contact.hidden))}">
+												<h:outputText styleClass="#{contactViewBean.contact.contactAsstFirst ? 'xtradim' : ''} pad10lt FL W140"
+													value="#{contactViewBean.contact.cellPhone}" />
+											</h:panelGroup>
+										</span>
+									</div>
+
+									<!-- HOME PHONE -->
+									<div class="LH20 pad2tp">
+										<h:panelGroup
+											rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,home_phone'] and contactViewBean.contact.hidden))}">
+											<h:panelGroup styleClass="FL pad10lt pad-2tp"
+												rendered="#{(not empty contactViewBean.contact.homePhone) and
+													(contactViewBean.contact.primaryPhoneIndex eq 2)}">
+												 
+												<ace:graphicImage url="../../i/icon_check.gif"/>
+												
+											</h:panelGroup>
+											<h:panelGroup styleClass="FL pad25lt"
+													rendered="#{(empty contactViewBean.contact.homePhone) or
+													(contactViewBean.contact.primaryPhoneIndex ne 2)}">
+												&#160;&#160;
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{contactViewBean.editMode}">
+											<span class="FL pad10lt">
+												<ace:radioButton id="homePhone"
+													group="primaryPh" value="#{contactViewBean.primaryPhone[2]}"
+													valueChangeListener="#{contactViewBean.listenPhoneChange}">
+													<ace:ajax execute="@form" event="activate" render="@all"/>
+												</ace:radioButton>
+											</span>
+										</h:panelGroup>
+										<span class="FL B LH18 W42 pad3lt">
+											<h:outputText value="Home:" />
+										</span>
+										<span class="FL LH20">
+											<h:panelGroup
+												rendered="#{contactViewBean.editMode and (not (empty authBean.pgFields['3.1,home_phone'] and contactViewBean.contact.hidden))}">
+												<ace:textEntry styleClass="FL" maxlength="25"
+													value="#{contactViewBean.contact.homePhone}">
+													<f:validator validatorId="lightspeed.phoneNumberValidator" />
+												</ace:textEntry>
+											</h:panelGroup>
+											<h:panelGroup
+												rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,home_phone'] and contactViewBean.contact.hidden))}">
+												<h:outputText styleClass="#{contactViewBean.contact.contactAsstFirst ? 'xtradim' : ''} pad10lt FL W140"
+													value="#{contactViewBean.contact.homePhone}" />
+											</h:panelGroup>
+										</span>
+									</div>
+								</div>
+							</div><!-- end phone #'s -->
+						</div>
+					</ace:buttonGroup>
+					</div>
+
+					<!-- personal IM -->
+					<div class="rowCont FL">
+						<h:panelGroup rendered="#{contactViewBean.contact.status ne 'PENDING'}">
+							<span class="fdNm">
+								<h:outputText value="IM:" />
+							</span>
+							<div class="fd" style="max-width:255px;">
+								<h:panelGroup
+									rendered="#{not (empty authBean.pgFields['3.1.1,im_address'] and contactViewBean.contact.hidden)}">
+									<h:outputText styleClass="FL"
+										value="#{contactViewBean.contact.user.imService}" />
+									<span class="FL B pad5lt">ID:</span>
+									<h:outputText styleClass="FL pad3lt NW" style="max-width:188px;height:20px;overflow:hidden;"
+										value="#{contactViewBean.contact.user.imAddress}" />
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div><!-- end personal IM -->
+
+					<!-- personal IMDB -->
+					<div class="rowCont FL fd_btmPad">
+						<h:panelGroup rendered="#{contactViewBean.contact.status ne 'PENDING'}">
+						<span class="fdNm">
+							<h:outputText value="IMDB:" />
+						</span>
+						<span class="fd">
+							<h:panelGroup style="width:250px;overflow-x:hidden;">
+								<ace:linkButton target="_blank"
+									value="http://#{contactViewBean.contact.user.imdbLink}">
+									<h:outputText
+										value="#{contactViewBean.contact.user.imdbLink}" />
+								</ace:linkButton>
+							</h:panelGroup>
+						</span>
+						</h:panelGroup>
+					</div><!-- end personal IMDB -->
+
+				</h:panelGroup><!-- dim switch when contact assist 1st is ckd -->
+
+				<!--  Assistant Section -->
+				<div class="pad5tp">
+					<h:panelGroup	rendered="#{not empty authBean.pgFields['3.1,all']}">
+						<div id="assistCont" >
+							<!-- assistant name -->
+							<h:panelGroup>
+								<div class="rowCont FL fd_btmPad pad4tp pad-5lt">
+									<span class="fdNm">
+										<h:outputText value="Assistant:" />
+									</span>
+									<h:panelGroup rendered="#{not contactViewBean.editMode}">
+										<span class="fd">
+											<ace:linkButton value="#{contactViewBean.contact.assistant.displayName}"
+												rendered="#{contactViewBean.contact.assistant ne null}"
+												actionListener="#{contactViewBean.contactLinkJump}">
+												<f:attribute name="currentRow" value="#{contactViewBean.contact.assistant.id}" />
+											</ace:linkButton>
+											<h:outputText rendered="#{contactViewBean.contact.assistant eq null}"
+												value="None Assigned" />
+										</span>
+									</h:panelGroup>
+									<!-- assistant Drop Down Selector -->
+									<h:panelGroup rendered="#{contactViewBean.editMode}">
+										<h:selectOneMenu styleClass="selAssist"
+											valueChangeListener="#{contactViewBean.listenAssistant}"
+											value="#{contactViewBean.assistantId}">
+											<f:selectItems value="#{contactViewBean.contactDL}" />
+												<ace:ajax />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup><!-- end assistant name -->
+
+							<div class=" FL W30percnt">
+								<h:panelGroup rendered="#{contactViewBean.contact.assistant ne null}">
+									<!-- <div class="rowCont FL"><br /></div> --><!-- spacer -->
+									<!-- assistant Email -->
+									<div class="rowCont FL fd_btmPad ">
+										<h:panelGroup>
+											<span class="fdNm">
+												<h:outputText value="E-mail:" />
+											</span>
+											<span class="fd">
+												<h:outputText value="#{contactViewBean.contact.assistant.emailAddress}" />
+											</span>
+										</h:panelGroup>
+									</div><!-- end assistant Email -->
+
+								</h:panelGroup><!-- end assistant address info -->
+
+							</div><!-- end subAssistLt -->
+
+							<!-- subAssistRt -->
+							<div class="subAssistRt FR">
+								<h:panelGroup  rendered="#{contactViewBean.contact.assistant ne null}">
+
+									<!-- assistant Office Phone -->
+									<div class="rowCont FL fd_btmPad">
+										<span class="fdNm_sm">
+											<h:outputText value="Office:" />
+										</span>
+										<span class="fd_sm">
+											<h:panelGroup>
+												<h:outputText rendered="#{not empty authBean.pgFields['3.1,business_phone']}"
+													value="#{contactViewBean.contact.assistant.businessPhone}" />
+											</h:panelGroup>
+										</span>
+									</div>
+
+									<!-- assistant cell phone -->
+									<div class="rowCont FL fd_btmPad">
+										<span class="fdNm_sm">
+											<h:outputText value="Cell:" />
+										</span>
+										<span class="fd_sm">
+											<h:panelGroup>
+												<h:outputText
+													rendered="#{not empty authBean.pgFields['3.1,asst_phone']}"
+													value="#{contactViewBean.contact.assistant.cellPhone}" />
+											</h:panelGroup>
+										</span>
+									</div><!-- end assistant cell phone -->
+
+								</h:panelGroup><!-- end assistant Phone group -->
+
+							</div><!-- end subAssistRt -->
+
+						</div><!-- end assistCont -->
+					</h:panelGroup><!-- End Assistant Section -->
+				</div><!-- end Assistant Section -->
+
+			</div><!-- end subPersonal Left -->
+
+			<!-- subPersonalRt -->
+			<div class="subPersonalRt FR thumbNail">
+
+				<ui:include src="../common/imageTable.xhtml">
+					<ui:param name="list" value="#{contactViewBean.contact.imageResources}" />
+					<ui:param name="imageTitle" value="Image" />
+					<ui:param name="showName" value="false" />
+				</ui:include>
+
+			</div><!-- end subPersonal Right -->
+		</div><!-- end personalCont -->
+		
+		<!-- Position data table
+		legend for contact list start -->
+		<div class="blueLegendContWrap">
+			<div class="blueLegendCont W100percnt"
+					style="margin-top:15px;">
+			<span class="legendHdg">Occupations</span>
+
+				<!-- legend buttons -->
+				<h:panelGroup styleClass="btn_legend" rendered="#{contactViewBean.editMode}">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Add" styleClass="btnMiniCt" action="#{contactViewBean.actionCreateNewOccupation}" />
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+
+				<div class="FL W100percnt">
+					<ace:dataTable id="occupationsTable"
+							value="#{contactViewBean.contactEmploymentList}"
+							style="width:100%;max-width:100%;"
+							rowIndexVar="idx" var="item"
+							scrollable="true"
+							styleClass="FL bk_sl_grid">
+
+						<!-- the delete [cross] buttons -->
+						<ace:column style="width:3%;">
+							<h:commandButton value=""  title="Remove" styleClass="deleteXbtn pad5lt"
+									rendered="#{contactViewBean.editMode and (! item.disableDataAdminEmp)}"
+									action="#{contactViewBean.actionDeleteEmployment}">
+								 <f:setPropertyActionListener value="#{item}" target="#{contactViewBean.employmentToDelete}"/>
+							</h:commandButton>
+						</ace:column>
+
+						<!-- Primary -->
+						<ace:column headerText="Primary" style="width:5%;text-align:left;">
+							<div class="FL">
+								<icecore:setEventPhase events="ValueChangeEvent"
+									phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox value="#{item.defRole}"
+										valueChangeListener="#{contactViewBean.listenPrimarySingleCheck}"
+										disabled="#{(! contactViewBean.editMode)
+												or (item.disableEmpDefRole)
+												or (item.disableDataAdminEmp)}">
+										<f:attribute name="selectedRow" value="#{item}"></f:attribute>
+										<ace:ajax />
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</div>
+						</ace:column>
+
+						<!-- the Project -->
+						<ace:column id="project" headerText="#{contactViewBean.projectTitle}" rendered="#{headerViewBean.production.type.aicp}"
+							style="width:15%;text-align:left;">
+							<!-- <div class="FL"> -->
+								<h:panelGroup rendered="#{item.forAllProjects}">
+									<h:outputText  value="All #{contactViewBean.projectsTitle}" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{(! item.forAllProjects)}">
+									<h:outputText  value="#{item.project.title}" />
+								</h:panelGroup>
+							<!-- </div> -->
+						</ace:column>
+
+						<!-- the Department -->
+						<ace:column headerText="Department" style="width:15%;text-align:left;">
+							<!-- <div class="FL"> -->
+								<h:outputText  value="#{item.department.name}"/>
+							<!-- </div> -->
+						</ace:column>
+
+						<!-- the Position -->
+						<ace:column style="width:20%;" headerText="Occupation">
+							<ace:linkButton styleClass="FL" disabled="#{item.disableDataAdminEmp}"
+								actionListener="#{contactViewBean.actionOpenChangeEmp}" value="#{item.occupation}">
+								 <f:setPropertyActionListener value="#{item}" target="#{contactViewBean.currentEmployment}"/>
+							</ace:linkButton>
+						</ace:column>
+
+						<!-- the Status -->
+						<ace:column id="Status" headerText="Status" style="width:10%;text-align:left;">
+							<!-- <div class="FL"> -->
+								<h:outputText  value="#{item.status.label}"/>
+								<h:outputText rendered="#{empty item.status}" value="N/A"/>
+							<!-- </div> -->
+						</ace:column>
+
+						<!--  the Starts -->
+						<ace:column headerText="Starts" style="width:5%;text-align:left;">
+							<div class="FL">
+								<h:commandButton value="" action="#{jumpBean.actionJump}"
+										styleClass="#{headerViewBean.production.allowOnboarding ?  'icon_document_18'  :
+										(headerViewBean.production.type.tours ?
+										(item.startForm.hasRequiredToursFields ? 'icon_doc_10_appr' : 'icon_doc_01_open') :
+										(item.startForm.hasRequiredFields ? 'icon_doc_10_appr' : 'icon_doc_01_open'))}"
+										title="Jump to Payroll start entry"
+										disabled="#{contactViewBean.editMode or item.disableDataAdminEmp}"
+										style="#{contactViewBean.editMode or item.disableDataAdminEmp ? 'cursor: default;' : ''};"
+										rendered="#{(not empty item.status) and (item.status ne 'N_A') and
+										( (contactViewBean.production.allowOnboarding and
+											(contactViewBean.matchesUser or item.showStartsIcon)) or
+										((not contactViewBean.production.allowOnboarding) and
+											(contactViewBean.matchesUser or not empty authBean.pgFields['9.3,view']) and
+											(item.showStartsIcon)) )}">
+									<f:setPropertyActionListener value="#{(headerViewBean.production.allowOnboarding ? 'payrollStart' : 'tcstarts')}"
+											target="#{jumpBean.jumpTo}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.employmentId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{item.id}" target="#{jumpBean.value}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+									<!-- next 2 values force use of Employment id instead of StartForm id -->
+									<f:setPropertyActionListener value="com.lightspeedeps.StartFormId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+								</h:commandButton>
+								<ace:linkButton action="tcstarts" value="Create"
+										title="Jump to Payroll start page"
+										disabled="#{contactViewBean.editMode or item.disableDataAdminEmp}"
+										style="#{contactViewBean.editMode ? 'cursor: default;' : ''};"
+										rendered="#{(item.status eq 'N_A') and
+												(not item.disableDataAdminEmp) and
+												(not contactViewBean.production.allowOnboarding) and
+												(not empty authBean.pgFields['9.3,edit'])}">
+								</ace:linkButton>
+							</div>
+						</ace:column>
+
+					</ace:dataTable>
+				</div>
+			</div>
+		</div>
+		<!-- Position data table -->
+
+	</ace:tabPane>
+
+</ui:composition>

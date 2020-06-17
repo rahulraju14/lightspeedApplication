@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- Right side of one row from Weekly/Hourly AICP Overtime rates portion of Start Payroll form -->
+
+<!-- Uses params: -->
+<!--   "aicpHours" StartForm.StartRateSet.ot'n'Hours -->
+<!--   "aicpRate"  StartForm.StartRateSet.ot'n'Rate -->
+<!--   "aicpMult"  StartForm.StartRateSet.ot'n'Multiplier -->
+<!--   "v30" : true if this is the 3.0 (Non-On-Boarding) style page
+		done :				true if this form has been 'finalized'
+-->
+
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" />
+		<c:set var="exemptDGA" value="#{startFormBean.union.number eq 'DGA' and startFormBean.form.jobClass ne 'Director' and startFormBean.form.rateType ne 'HOURLY'}" />
+
+		<!-- AICP OVERTIME TABLE - DIVIDER -->
+		<td>&#160;
+		</td>
+
+		<!-- AICP OVERTIME TABLE - HOURS -->
+		<td>
+			<span class="FL pad10lt">OT after</span>
+
+			<h:panelGroup rendered="#{startFormBean.editMode}">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:textEntry styleClass="FL hoursin3 " style="margin-right:5px;" maxlength="5"
+							valueChangeListener="#{startFormBean.listenRateOvertime}"
+							value="#{aicpHours}" disabled="#{done or not appEdit  or exemptDGA}">
+						<f:convertNumber type="number" pattern="#.0" />
+						<ace:ajax />
+					</ace:textEntry>
+				</icecore:setEventPhase>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{(! startFormBean.editMode)}">
+				<span class="hoursout3 pad5rt FL">
+					<h:outputText value="#{aicpHours}">
+						<f:convertNumber type="number" pattern="#.0" />&#160;
+					</h:outputText>
+				</span>
+			</h:panelGroup>
+
+			<span class="FL">hours</span>
+		</td>
+
+		<!-- AICP OVERTIME TABLE - RATE -->
+		<td class="CT">
+			<div class="DIB">
+				<h:panelGroup rendered="#{startFormBean.editMode}">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:textEntry styleClass="dollarsin2"
+								valueChangeListener="#{startFormBean.listenRateOvertime}"
+								value="#{aicpRate}" maxlength="10"
+								disabled="#{done or not appEdit or exemptDGA}"
+								style="width:75px;margin-left:1%;">
+							<f:convertNumber type="number" pattern="#.00##" />
+							<ace:ajax />
+						</ace:textEntry>
+					</icecore:setEventPhase>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{(! startFormBean.editMode)}">
+					<div class="dollarsout2">
+						<h:outputText value="#{aicpRate}">
+							<f:convertNumber type="number" pattern="###,###.00##" />
+						</h:outputText>&#160;
+					</div>
+				</h:panelGroup>
+			</div>
+		</td>
+
+		<!-- AICP OVERTIME TABLE - MULTIPLIER -->
+		<td class="CT">
+			<div class="DIB">
+				<div class="hoursout2">
+					<h:outputText value="#{aicpMult}">
+						<f:convertNumber type="number" pattern="#.0#####" />
+					</h:outputText>
+				</div>
+			</div>
+		</td>
+
+
+</ui:composition>

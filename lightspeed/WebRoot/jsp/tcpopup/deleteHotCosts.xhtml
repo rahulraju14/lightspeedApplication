@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- CLONE HOTCOSTS dialog box -->
+
+	<!-- Uses params:  -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<h:form>
+		<ace:dialog visible="#{deleteHotCostsBean.visible}"
+				header="#{deleteHotCostsBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{deleteHotCostsBean.actionCancel}"/>	
+			<div class="popupBdyAW">
+				<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="popCont90">
+					<div class="popup_main pad15tp">
+						<div class="rowCont">
+							<div class="FL rowCont W100percnt">
+								<!-- DELETE NOT DONE YET - display controls for performing delete -->
+								<h:panelGroup>
+									<div class="W90percnt MA txt12 B_false pad5tp">
+										<span class="">
+											<h:outputText value="#{msg.HotCosts_DeleteText}" />
+										</span>
+									</div>
+
+									<div class="popup_inner pad30tp">
+										<span class="popup_inner_leg">
+											Select Recipients
+										</span>
+										<div class="MA pad10bm" style="width:90%;">
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<span class="pad4lt">
+													<h:panelGroup styleClass="ckbx">
+														<h:selectBooleanCheckbox value="#{deleteHotCostsBean.selectAllRecipients}"
+															valueChangeListener="#{deleteHotCostsBean.listenSelectAllRecipients}"  >
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectBooleanCheckbox>
+														<span class="ckbxTxtLbl_B pad3lt">
+															Select All Recipients
+														</span>
+													</h:panelGroup>
+												</span>
+											</icecore:setEventPhase>
+
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<ace:dataTable styleClass="gradTbl2 CT W100percnt"
+														style="width:100%;max-width:100%;" 
+														scrollable="true" scrollHeight="370" 
+														value="#{deleteHotCostsBean.recipients}" var="recip">
+
+													<ace:column style="width:10%;border:0;">
+														<h:selectBooleanCheckbox id="recipChecked" value="#{recip.checked}" />
+													</ace:column>
+
+													<ace:column styleClass="B_false" style="width:90%;">
+														<h:outputText value="#{recip.weeklyHotCostsEntry.weeklyHotCosts.employment.contact.displayName} - " />
+														<h:outputText value="#{recip.weeklyHotCostsEntry.weeklyHotCosts.employment.occupation}" />
+													</ace:column>
+												</ace:dataTable>
+											</icecore:setEventPhase>
+										</div>
+									</div><!-- end inner box -->
+									<div class="MA W90percnt">
+									</div>
+								</h:panelGroup><!-- end "not done" section -->
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 padPop25rt pad10tp">
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{deleteHotCostsBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Ok"
+								action="#{deleteHotCostsBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

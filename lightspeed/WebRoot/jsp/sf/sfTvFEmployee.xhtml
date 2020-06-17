@@ -1,0 +1,410 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Employee information (left side - demographics, etc.) of Start Payroll form -->
+	<!-- LS-2723 Mandatory labels will always be red for Team clients. Highlight mandatory fields when empty and in edit mode.-->
+
+	<!-- passed parameters:
+		isAddrUnif : 		FF4J setting of TTCO_ADDR_UNIF_PAYROLL_START
+		isEnhancedLoanOut : FF4J setting of TTCO_ENHANCED_LOAN_OUT
+		isTeamPayroll:      true if this production is processed by Team
+		nonTeamEmp	:		true if employee editing, and non-Team production
+		done :				true if this form has been 'finalized'
+	 -->
+	<div class="rowCont">
+		<c:set var="edit" value="#{startFormBean.editMode}" />
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (edit and v30)}" />
+		<c:set var="empEdit" value="#{startFormBean.empEdit and not startFormBean.appEdit}" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted and not v30}" />
+
+		<!-- LEFT portion -->
+		<div class="W50percnt FL pad4tp">
+
+			<!-- EMPLOYEE INFORMATION -->
+			<div class="rowCont">
+				<h:outputText styleClass="FL B txt14 pad-5lt" value="EMPLOYEE INFORMATION:" />
+			</div>
+
+			<!-- SOCIAL SECURITY + OFF PRODUCTION -->
+			<div class="rowCont FL pad15tp">
+				<span class="fdNm">
+					<h:outputText value="Soc Sec #:"
+						styleClass="#{(empty startFormBean.form.viewSSN or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" />
+					<span class="mandatory">*</span>
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_xsm pad2tp">
+						<h:outputText value="#{startFormBean.form.viewSSN}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_xsm">
+						<ace:textEntry maxlength="11" disabled="#{submitted or done or not edit}"
+							style="margin-left:-2px;" id="sfSSN"
+							valueChangeListener="#{startFormBean.listenSSN}"
+							value="#{startFormBean.form.socialSecurity}"
+							styleClass="#{nonTeamEmp or empty (startFormBean.form.socialSecurity) ? 'requiredDiv' : ''}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+				<h:selectBooleanCheckbox styleClass="ckbx" id="offProd_focus2"
+					style="margin-left:10%;"
+					value="#{startFormBean.form.offProduction}"
+					disabled="#{done or nonTeamEmp or not edit}" >
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<span class="ckbxTxtLbl_B">OFF PRODUCTION</span>
+			</div>
+
+			<!-- UNION -->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Union:" />
+					<span class="mandatory"></span>
+					<!-- was "degree" - #176 for "complete form" -->
+				</span>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="FL W70percnt" id="union_focus2"
+								valueChangeListener="#{startFormBean.listenUnion}"
+								value="#{startFormBean.union.id}"
+								disabled="#{empEdit or done or not edit}"
+								style="#{(edit) and
+									startFormBean.union.id eq (-1) ? 'background-color: rgb(255,255,170)' : ''};">
+								<f:selectItems value="#{startFormBean.unionNameDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+					<h:outputText value="#{startFormBean.union.name}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup styleClass="rowCont FL"
+					rendered="#{startFormBean.union.number eq 'TEAM'}">
+					<span class="fdNm"> <h:outputText value="Local #:" /> </span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.unionLocalNum}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span>
+							<ace:textEntry size="5" maxlength="4" id="sfUnionLocalNum"
+								value="#{startFormBean.form.unionLocalNum}"
+								disabled="#{empEdit or done or not edit}" />
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+
+			<!-- JOB CLASS -->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Job Class:"
+						styleClass="#{(empty startFormBean.form.jobClass or (isTeamPayroll and isEnhancedLoanOut))? 'mandatory' : ''}" />
+					<span class="mandatory">*</span>
+				</span>
+				<h:panelGroup rendered="#{edit and startFormBean.isUnion}">
+					<span class="fd_sm">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="FL W70percnt"
+									id="jobClass_focus2" disabled="#{empEdit or done or not edit}"
+									valueChangeListener="#{startFormBean.listenJobClass}"
+									value="#{startFormBean.jobClassId}"
+									style="#{(edit) and
+										startFormBean.jobClassId eq (-1) ? 'background-color: rgb(255,255,170)' : ''};">
+								<f:selectItems value="#{startFormBean.jobClassDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit and (not empEdit) and startFormBean.useNonUnionOccList}">
+					<span class="fd_sm">
+							<h:selectOneMenu styleClass="FL W70percnt"
+									id="jobClass_Occupation" disabled="#{empEdit or done or not edit}"
+									valueChangeListener="#{startFormBean.listenNonUnionJobClass}"
+									value="#{startFormBean.jobClassId}"
+									style="#{(edit) and
+										startFormBean.jobClassId eq (-1) ? 'background-color: rgb(255,255,170)' : ''};">
+								<f:selectItems value="#{startFormBean.jobClassDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.jobClass}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit and 
+						((not startFormBean.isUnion and not startFormBean.useNonUnionOccList) or empEdit)}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" id="sfJobClass1"
+							styleClass="#{edit and
+								(empty startFormBean.form.jobClass) ? 'requiredDiv' : ''}"
+							value="#{startFormBean.form.jobClass}"
+							disabled="#{(startFormBean.union.id lt 0) or (empEdit or done or (not edit))}" />
+					</span>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="rowCont FL"
+					rendered="#{edit and startFormBean.jobClassId eq -3}">
+					<span class="fdNm">
+						<h:outputText value="Job Name:"
+							styleClass="#{empty startFormBean.form.jobClass ? 'mandatory' : ''}" />
+						<span class="mandatory">*</span>
+					</span>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" id="sfJobClass2"
+							value="#{startFormBean.form.jobClass}" disabled="#{empEdit or done or not edit}" />
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- OCCUPATION CODE & SCHEDULE (NON-ASA) -->
+			<h:panelGroup styleClass="rowCont FL"
+				rendered="#{startFormBean.isUnion and ! startFormBean.asa}">
+				<span class="fdNm">Occ. Code: </span>
+				<h:panelGroup rendered="#{edit}">
+					<span>
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="FL W25percnt"
+								style="min-width:80px;"
+								valueChangeListener="#{startFormBean.listenOccCode}"
+								disabled="#{(not startFormBean.occCodeDlEnable) or (empEdit or done or not edit)}"
+								value="#{startFormBean.occCodeId}">
+								<f:selectItems value="#{startFormBean.occCodeDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_xsm22" style="width:90px;">
+						<h:outputText value="#{startFormBean.form.occupationCode}" />
+					</span>
+				</h:panelGroup>
+
+				<!-- SCHEDULE -->
+				<h:outputText styleClass="fdNm_xsm22 CT pad10lt" value="Sched:" />
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_xsm22">
+						<h:outputText value="#{startFormBean.form.contractSchedule}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_xsm">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="FL W80percnt" id="sfScheduleId"
+								valueChangeListener="#{startFormBean.listenSchedule}"
+								disabled="#{(empty startFormBean.scheduleDL) or (empEdit or done or not edit)}"
+								value="#{startFormBean.scheduleId}">
+								<f:selectItems value="#{startFormBean.scheduleDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</span>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<h:panelGroup styleClass="rowCont FL" rendered="#{startFormBean.isUnion and startFormBean.usesVideoTape}">
+				<h:selectBooleanCheckbox styleClass="pad20lt ckbx" id="sfAddtlStaff"
+						value="#{startFormBean.form.additionalStaff}"
+						disabled="#{! edit}" />
+				<span class="ckbxTxtLbl_B">Additional Staff?</span>
+			</h:panelGroup>
+
+			<!-- PRODUCTION TYPE (ASA) -->
+			<h:panelGroup styleClass="rowCont FL" rendered="#{startFormBean.asa}">
+				<span class="fdNm">Type: </span>
+				<h:panelGroup>
+					<span>
+						<h:outputText value="#{startFormBean.production.payrollPref.asaContract.label}" />
+					</span>
+					<!-- NEARBY HIRE (ASA) -->
+					<h:selectBooleanCheckbox styleClass="pad30lt ckbx" id="sfASA"
+							value="#{startFormBean.form.nearbyHire}"
+							disabled="#{! edit}" />
+					<span class="ckbxTxtLbl_B">Nearby Hire?</span>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<!-- RETIREMENT PLAN -->
+			<h:panelGroup styleClass="rowCont FL pad5tp"
+				rendered="#{! startFormBean.isUnion}">
+				<span class="fdNm_w">
+					<h:outputText value="Retirement Plan:" />
+				</span>
+				<h:selectOneMenu styleClass="pad5lt" id="sfRetirementPlan"
+					 disabled="#{done or not appEdit}"
+					value="#{startFormBean.form.retirementPlan}">
+					<f:selectItems value="#{startFormBean.retirementPlanDL}" />
+					<ace:ajax />
+				</h:selectOneMenu>
+			</h:panelGroup>
+		</div>
+		<!-- LEFT portion END-->
+
+		<!-- RIGHT portion START-->
+		<div class="W50percnt FL">
+
+			<!-- EMPLOYMENT BASIS -->
+			<div class="rowCont">
+				<h:outputText styleClass="B" value="Affordable Care Act Employment Basis: " />
+				<h:selectOneMenu disabled="#{done or not appEdit}" id="sfAffordCareAct"
+					style="width:35%" styleClass="pad5lt"
+					value="#{startFormBean.form.employmentBasis}">
+					<f:selectItems value="#{startFormBean.employmentBasisDL}" />
+					<ace:ajax/>
+				</h:selectOneMenu>
+			</div>
+
+			<!-- GENDER + ETHNIC -->
+			<div class="rowCont FL pad15tp">
+				<span class="fdNm">Gender:
+					<span class="mandatory"></span>
+
+				</span>
+					<h:selectOneMenu disabled="#{done or not edit}" id="sfGender"
+							styleClass="FL #{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+							style="width:66px;" value="#{startFormBean.form.gender}">
+							<f:converter converterId="lightspeed.GenderConverter" />
+							<f:selectItems value="#{enumList.genderShortList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				<span class="fdNm_sm" style="width:86px;">
+					<h:outputText styleClass="pad10lt pad1rt" value="Ethnic Code:" />
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm" style="width:20px;min-width:20px;">
+						<h:outputText value="#{startFormBean.form.ethnicCode}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_xsm" style="width:25px;">
+						<ace:textEntry disabled="#{done or not edit}"
+							maxlength="2" style="width:25px;" id="sfEthnicCode"
+							value="#{startFormBean.form.ethnicCode}"
+							title="Ethnic Codes:&#13; 01 - Asian/Pacific &#13; 02 - Black
+							 &#13; 03 - White/Caucasian &#13; 04 - Hispanic/Latino &#13; 05 - Native American">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- CITIZENSHIP -->
+			<div class="rowCont FL">
+				<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+					<div class="FL">
+						<span class="fdNm" style="width:79px;">
+							<h:outputText styleClass="#{(empty startFormBean.form.citizenStatus or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="Citizenship:" />
+							<span class="mandatory">*</span>
+						</span>
+						<h:selectOneMenu disabled="#{submitted or done or not edit}"
+								value="#{startFormBean.form.citizenStatus}" id="sfCitizenship"
+								styleClass="#{(not v30) and edit and (nonTeamEmp or empty startFormBean.form.citizenStatus) ? 'requiredDiv' : ''}"
+								style="width:64px;">
+							<f:selectItems value="#{startFormBean.citizenStatusItems}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+				</h:panelGroup>
+				<div class="FL #{not (isAddrUnif) or not isTeamPayroll ? 'pad10lt' : ''}" 
+					style="width:62%">
+					<!-- BIRTH DATE -->
+					<span class="fdNm pad1rt" style="width:85px;">
+						<h:outputText styleClass="#{(empty startFormBean.form.dateOfBirth or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="Date of Birth:" />
+						<span class="mandatory">*</span>
+					</span>
+					<h:outputText rendered="#{not edit}"
+						styleClass="LH22 pad5lt"
+						value="#{startFormBean.form.dateOfBirth}">
+						<f:convertDateTime pattern="MMMM d, yyyy"
+							timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+					<ace:dateTimeEntry rendered="#{edit}" id="sfDOB"
+							tabindex="0" value="#{startFormBean.form.dateOfBirth}"
+							styleClass="#{(not v30) and edit and (nonTeamEmp or (startFormBean.form.dateOfBirth eq null)) ? 'required' : ''}"
+							renderAsPopup="true" disabled="#{submitted or done or not edit}">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+						<ace:ajax event="dateTextChange"/>
+					</ace:dateTimeEntry>
+				</div>
+			</div>
+
+			<!-- STATE OF RESIDENCE -->
+			<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+				<div class="rowCont">
+					<span class="fdNm_w" style="width:123px;">
+						<h:outputText styleClass="#{(startFormBean.form.stateOfResidence eq null or empty startFormBean.form.stateOfResidence.trim() or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="State of Residence:" />
+						<span class="mandatory">*</span>
+					</span>
+					<h:selectOneMenu
+							disabled="#{submitted or done or not edit}" id="sfStateOfResidence"
+							value="#{startFormBean.form.stateOfResidence}"
+							styleClass="#{(not v30) and edit and (nonTeamEmp or startFormBean.form.stateOfResidence eq null or empty startFormBean.form.stateOfResidence.trim())  ? 'requiredDiv' : ''}" >
+						<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+				</div>
+			</h:panelGroup>
+			<div class="FL">
+				<!-- MINOR -->
+				<h:selectBooleanCheckbox styleClass="pad70lt ckbx"
+					value="#{startFormBean.form.minor}" id="sfIsMinor"
+					disabled="#{submitted or done or not edit}" >
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<span class="ckbxTxtLbl_B">Minor</span>
+				<!-- can't color checkbox, so put colored area behind it -->
+				<h:panelGroup rendered="#{edit and nonTeamEmp}" style="width:60px;margin-left:-60px;z-index:-1;position:relative;">
+					<ace:textEntry maxlength="1" disabled="true"
+						style="width:60px;z-index:-1;position:relative;"
+						styleClass="requiredDiv">
+					</ace:textEntry>
+				</h:panelGroup>
+			</div>
+
+			<!-- PHONE -->
+			<div class="rowCont FL">
+				<span class="fdNm"> <h:outputText value="Phone:"> </h:outputText>
+					<span class="mandatory"></span>
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.phone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="25" disabled="#{submitted or done or not edit}"
+							styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+							value="#{startFormBean.form.phone}" id="sfPhoneNum">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+		</div>
+		<!-- RIGHT portion END-->
+
+	</div> <!-- 1st div -->
+
+</ui:composition>

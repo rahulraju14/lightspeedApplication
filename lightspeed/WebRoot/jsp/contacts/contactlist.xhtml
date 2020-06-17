@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<c:set var="canada" value="#{headerViewBean.production.type.canadaTalent}" />
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} #{canada ? 'Staff &amp; Talent' : 'Cast &amp; Crew'}</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+var formname = "ct";
+var mainListId = "ct:contactList"; // used by main list scrolling functions
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+		<c:if test="#{not headerViewBean.production.type.episodic}">
+			resizeScrollable('ct:contactList', 184,392);
+		</c:if>
+		<c:if test="#{headerViewBean.production.type.episodic}">
+			resizeScrollable('ct:contactList', 208,368);
+		</c:if>
+		resizeScrollable('ct:contactStartsTable', 300, 280);
+
+		element = document.getElementById('ct:miniView');
+		resizeElement(element, 181, 340);
+
+		resizeScrollable('ct:occupationsTable', 515, 70);
+
+		element = document.getElementById('sdscroll'); // Start Form tab sub-container
+		resizeElement(element, 300, 200); // extends into "rowBtnBdr" gradient!
+
+	</c:if>
+
+	//clearOnScroll('ct:contactStartsTable');
+
+}
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="ct">
+
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="display:none">
+	<f:attribute name="tabid" value="#{not headerViewBean.talent ? 'contactlist' : 'talentcontactlist'}" />
+</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Contact List pnlLt-->
+				<div id="pnlLt">
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+					<div id="contactHdr" class="rowCont ltrtBdr BKwhite FL">
+						<h:outputText class="pnlHdrTxt FL" value="#{canada ? 'Staff &amp; Talent' : 'Cast &amp; Crew'}" />
+						<h:panelGroup styleClass="FR pad5rt" rendered="#{not empty authBean.pgFields['3.0,new']}">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton value="Add" tabindex="1"
+									action="#{contactViewBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ltrtBdr BKwhite">
+						<h:panelGroup styleClass="ckbxRow" rendered="#{headerViewBean.production.type.episodic}">
+							<h:selectBooleanCheckbox styleClass="ckbx"
+								value="#{contactViewBean.showProject}"
+								valueChangeListener="#{contactViewBean.listenShowProject}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+							<span class="ckbxTxtLbl txt11">Show People on this #{contactViewBean.projectTitle} Only</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- data list container for contacts -->
+					<div id="contactListCont" class="ltrtBdr">
+						<div class="rowCont FL ">
+							<ace:dataTable id="contactList"
+								selectionMode="single" singleSort="true"
+								rendered="#{not empty contactViewBean.contactList}"
+								styleClass="bk_sl_grid FL"
+								value="#{contactViewBean.contactList}" var="contact"
+								scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+								scrollHeight="#{headerViewBean.mobile ? '' : '368'}"
+								rowSelectListener="#{contactViewBean.rowSelected}"
+								stateMap="#{contactViewBean.stateMap}">
+								<ace:ajax/>
+								<ace:column headerText="&#160; Name" style="width:35%;"
+									sortBy="#{contact.user.lastName}, #{contact.user.firstName}">
+									<h:outputText styleClass="pad5lt"
+										value="#{contact.user.lastName}, #{contact.user.firstName}" />
+								</ace:column>
+
+								<ace:column headerText="Department" style="width:25%;" sortBy="#{contact.role.department.name}">
+									<h:outputText
+										value="#{contact.role.department.name}"/>
+								</ace:column>
+
+								<ace:column headerText="Role" style="width:40%;" sortBy="#{contact.roleName}">
+								<h:outputText style="padding-right:20px;"
+									value="#{contact.roleName}" />
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div><!-- end contactListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- End Contact List - pnlLt -->
+
+				<!--  Begin Contact Details - pnlRt -->
+				<div id="pnlRt">
+
+					<h:panelGroup
+						rendered="#{! contactViewBean.showAddContact and ! imageAddBean.showNewImage and ! contactViewBean.showAddOccupation}">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="FL rowCont ltrtBdr BKwhite">
+						<span class="FL pnlHdrTxt">
+							<h:outputText
+								rendered="#{contactViewBean.contact.user.displayName ne null}"
+								value="#{contactViewBean.contact.user.displayName}" />&#160;
+							<h:outputText styleClass="noteTxt pad5lt"
+								rendered="#{contactViewBean.contact.status eq 'PENDING' and not empty authBean.pgFields['3.0,new']}"
+								value="(Invited)" />
+							<h:outputText styleClass="noteTxt pad5lt"
+								rendered="#{not contactViewBean.contact.loginAllowed and not empty authBean.pgFields['3.1,edit']}"
+								value="(Access Disabled)" />
+						</span>
+
+						<!-- DELETE BUTTON - edit mode -->
+						<h:panelGroup rendered="#{contactViewBean.editMode and
+							(contactViewBean.contact.id ne null) and
+							( (contactViewBean.contact.isCast and not empty authBean.pgFields['3.0,delete_cast']) or
+								(not contactViewBean.contact.isCast and not empty authBean.pgFields['3.0,delete_crew']) or
+								(contactViewBean.contact.isNonProd and not empty authBean.pgFields['3.0,delete_nonprod']) )}">
+							<span class="FR pad5rt">
+								<span class="btnPriEnbLt"/>
+								<span>
+									<ace:linkButton tabindex="4"
+										value="Delete" action="#{contactViewBean.actionDelete}"
+										styleClass="btnPriEnbCt"/>
+								</span>
+								<span class="btnPriEnbRt"/>
+							</span>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{contactViewBean.editMode}">
+
+							<!-- EDIT BUTTON - edit mode - Disabled -->
+							<span class="FR pad5rt">
+								<span class="btnPriDisLt"/>
+								<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;" />
+								</span>
+								<span class="btnPriDisRt"/>
+							</span>
+
+							<!-- RE-INVITE BUTTON - edit mode - Disabled -->
+							<h:panelGroup styleClass="FR pad5rt"
+									rendered="#{contactViewBean.contact.status eq 'PENDING' and not empty authBean.pgFields['3.0,new']}">
+								<span class="pad5rt" style="float:right">
+									<span class="btnPriDisLt"/>
+									<span>
+										<ace:linkButton tabindex="2"
+											value="Re-Invite" styleClass="btnPriDisCt" type="text" onclick="return false;" />
+									</span>
+									<span class="btnPriDisRt"/>
+								</span>
+							</h:panelGroup>
+
+						</h:panelGroup>
+
+						<!-- DELETE BUTTON - view mode -->
+						<h:panelGroup rendered="#{(not contactViewBean.editMode) and
+							( (contactViewBean.contact.isCast and not empty authBean.pgFields['3.0,delete_cast']) or
+								(not contactViewBean.contact.isCast and not empty authBean.pgFields['3.0,delete_crew']) or
+								(contactViewBean.contact.isNonProd and not empty authBean.pgFields['3.0,delete_nonprod']) )}">
+							<span class="FR pad5rt">
+								<span class="btnPriEnbLt"/>
+								<span>
+									<ace:linkButton tabindex="4"
+										value="Delete" action="#{contactViewBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt"/>
+							</span>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{(not contactViewBean.editMode) and
+							( (contactViewBean.contact.isCast and not empty authBean.pgFields['3.1,edit_cast']) or
+								(not contactViewBean.contact.isCast and not empty authBean.pgFields['3.1,edit_crew']) or
+								(contactViewBean.contact.isNonProd and not empty authBean.pgFields['3.1,edit_nonprod']) )}">
+
+							<!-- EDIT BUTTON - view mode (enabled) -->
+							<span class="FR pad5rt">
+								<span class="btnPriHotLt"/>
+								<span>
+									<ace:linkButton tabindex="3"
+										value="Edit" action="#{contactViewBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+								</span>
+								<span class="btnPriHotRt"/>
+							</span>
+
+							<!-- RE-INVITE BUTTON - view mode -->
+							<h:panelGroup styleClass="FR pad5rt"
+									rendered="#{contactViewBean.contact.status eq 'PENDING' and not empty authBean.pgFields['3.0,new']}">
+								<span class="pad5rt" style="float:right">
+									<span class="btnPriEnbLt"/>
+									<span>
+										<ace:linkButton tabindex="2"
+											value="Re-Invite" action="#{contactViewBean.actionReinvite}"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt"/>
+								</span>
+							</h:panelGroup>
+
+						</h:panelGroup>
+
+					</div>
+
+					<div id="contactDetailCont" class="FL ltrtBdr BKwhite">
+
+						<!-- aicp boolean variable -->
+						<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" />
+
+						<h:panelGrid id="miniView" styleClass="miniPanel">
+
+							<!-- Tabs for Contact Details -->
+							<ace:tabSet id="tabs" selectedIndex="#{contactViewBean.selectedTab}"
+								cellpadding="0" cellspacing="0" border="0">
+
+								<!--  Personal Tab  -->
+								<ui:include src="personalTab.xhtml" />
+
+								<!--  Images Tab   -->
+								<ui:include src="imageTab.xhtml" />
+
+								<!--  Preferences Tab   -->
+								<ui:include src="preferenceTab.xhtml" />
+
+								<!--  admin tab   -->
+								<ui:include src="adminTab.xhtml" />
+
+							</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+						</h:panelGrid><!-- end miniView -->
+
+						<!-- secondary buttons -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<!-- Cancel btn -->
+							<h:panelGroup rendered="#{contactViewBean.editMode}">
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton styleClass="btnPriEnbCt" tabindex="100"
+											value="Cancel" action="#{contactViewBean.actionCancel}" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<!-- end Cancel btn -->
+							<!-- Save btn -->
+							<h:panelGroup rendered="#{contactViewBean.editMode}">
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+									<ace:linkButton value="Save" onmouseup="showErrors();" tabindex="99"
+										action="#{contactViewBean.actionSaveContact}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+								</span>
+							</h:panelGroup>
+						</div><!-- end secondary buttons -->
+
+					</div><!-- end contactDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlRt -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+	<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+
+<ui:include src="addnewcontact.xhtml" />
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+<ui:include src="../common/confirmpopupbig.xhtml" />
+<ui:include src="../common/popupinput.xhtml" />
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="createNewOccupation.xhtml"></ui:include>
+
+</h:body>
+</html>

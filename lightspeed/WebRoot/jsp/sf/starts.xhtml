@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The Start Forms page for NON-onboarding productions -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Start Forms</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+var formname = "starts";
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+	var element = document.getElementById('starts:miniView');
+	resizeElement(element, 190, 385);
+
+	// resize div for payroll start form
+	element = document.getElementById('scrolldiv2');
+	resizeElement(element, 240, 200);
+
+	element = document.getElementById('scrolldiv'); // Start Form tab sub-container
+	resizeElement(element, 240, 200);
+
+	if (scrollme > 0) { // scrollToPos was called...
+		scrollme = 0;
+		scrollToPos(); // re-do scroll after resize of div is done.
+	}
+
+	</c:if>
+
+}
+</script>
+
+</h:head>
+<h:body>
+
+<c:if test="#{not headerViewBean.mobile}">
+	<script language="javascript">
+	ice.ace.jq( document ).ready(function() {
+		initDomLoaded(); // do our standard page initialization tasks.
+	});
+	</script>
+</c:if>
+
+	<h:form id="starts">
+
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}"  style="visibility:hidden">
+			<f:attribute name="tabid" value="contactlist" />
+		</h:outputText>
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.startFormBackPage" />
+
+		<div id="main">
+
+			<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" scope="request" />
+
+			<ui:include src="../common/header2.xhtml" />
+			<div id="mainCont">
+				<div id="ctrCont">
+					<div id="pnlCont">
+						<!-- Begin Element Details - pnlFull -->
+						<div id="pnlFull" class="MA">
+
+							<div class="topBdrCont FL">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div class="rowCont FL ltrtBdr BKwhite"> <!-- Top header -->
+
+								<h:panelGroup styleClass="pad10tp" rendered="#{(! fileLoadBean.visible) and (! startFormBean.showAddStartForm)
+												and (! startFormBean.showDayRate)}" >
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="rowCont">
+									<div class="W75percnt FL">
+										<h:panelGroup styleClass="pnlHdrTxt">
+											<h:outputText styleClass=" " value="Start Forms: " />&#160;
+			 								<h:outputText value="#{startFormBean.contact.user.lastName}" />,&#160;
+			 								<h:outputText value="#{startFormBean.contact.user.firstName}" />
+		 								</h:panelGroup>
+									</div>
+
+		 							<div class="W25percnt FL">
+
+										<!-- EDIT button for Payroll Start-->
+										<h:panelGroup rendered="#{(not startFormBean.editMode) and
+												(startFormBean.startFormId ne null) and (startFormBean.startFormId ge 0)
+												and (not empty authBean.pgFields['9.3,edit'])
+												and (headerViewBean.miniTab eq 0)}">
+											<span class="FR pad5rt">
+												<span class="btnPriHotLt"/>
+													<ace:linkButton value="Edit" action="#{startFormBean.actionEdit}"
+														styleClass="btnPriHotCt" />
+												<span class="btnPriHotRt"/>
+											</span>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{(startFormBean.editMode) and
+												(startFormBean.startFormId ne null) and (startFormBean.startFormId ge 0)
+												and (not empty authBean.pgFields['9.3,edit'])
+												and (headerViewBean.miniTab eq 0)}">
+											<span class="FR pad5rt">
+												<span class="btnPriDisLt" />
+												<span>
+													<ace:linkButton value="Edit" styleClass="btnPriDisCt" onclick="return false;"/>
+												</span>
+												<span class="btnPriDisRt"/>
+											</span>
+										</h:panelGroup><!--End of EDIT button for Payroll Start-->
+
+										<!-- PRINT button -->
+										<h:panelGroup rendered="#{(not aicp) and (not startFormBean.editMode) and
+												(startFormBean.startFormId ne null) and (startFormBean.startFormId ge 0) and
+												(headerViewBean.miniTab eq 0) and
+												((headerViewBean.user.id eq startFormBean.contact.user.id) or
+												(not empty authBean.pgFields['9.3,view']))}" >
+											<span class="FR pad5rt">
+												<span class="btnPriHotLt"/>
+													<ace:linkButton value="Print" action="#{startFormBean.actionPrint}"
+														styleClass="btnPriHotCt" />
+												<span class="btnPriHotRt"/>
+											</span>
+										</h:panelGroup>
+
+									</div>
+
+								</div><!-- End of Top header -->
+
+								<div class="centerFullPg2">
+
+									<h:panelGrid id="miniView" styleClass="miniPanel">
+
+										<!-- Tabs -->
+										<ace:tabSet id="tabs"
+											selectedIndex="#{startFormBean.selectedTab}">
+
+											<!-- Start Forms mini-tab -->
+											<ui:include src="startPayroll30.xhtml" />
+
+										</ace:tabSet><!-- END TAB set -->
+									</h:panelGrid>
+									<!-- end miniView -->
+
+									<!-- secondary (bottom right corner) buttons -->
+									<div class="rowBtnFullPg">
+										<div class="rowBtnBdr"></div>
+
+										<!-- Save and Cancel Buttons for Payroll Start -->
+										<!-- CANCEL BUTTON -->
+										<h:panelGroup rendered="#{(startFormBean.editMode)
+														and (headerViewBean.miniTab eq 0)}">
+											<span class="FR pad10rt">
+												<span class="btnPriEnbLt"/>
+												<span>
+													<ace:linkButton styleClass="btnPriEnbCt" onclick="queueClick(this,event);"
+														value="Cancel" action="#{startFormBean.actionCancel}" />
+												</span>
+												<span class="btnPriEnbRt"/>
+											</span>
+										</h:panelGroup>
+
+										<!-- SAVE BUTTON -->
+										<h:panelGroup rendered="#{(startFormBean.editMode)
+													and (headerViewBean.miniTab eq 0)}">
+											<span class="FR pad5rt">
+												<span class="btnSecHotLt"/>
+												<span>
+												<ace:linkButton value="Save" onmouseup="showErrors();" onclick="queueClick(this,event);"
+													action="#{startFormBean.actionSave}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt"/>
+											</span>
+										</h:panelGroup>
+										<!-- End of Save and Cancel Buttons for Payroll Start -->
+
+										<!-- RETURN BUTTON -->
+										<h:panelGroup rendered="#{(! startFormBean.editMode)
+														and (headerViewBean.miniTab eq 0)
+														and (headerViewBean.production.type.tours)
+														and (! headerViewBean.production.allowOnboarding)}">
+											<span class="FR pad10rt">
+												<span class="btnSecHotLt"/>
+												<span>
+												<ace:linkButton value="Return" styleClass="btnSecHotCt"
+													action="contactlist" />
+													<!-- action="#{headerViewBean.actionBack}" -->
+												</span>
+												<span class="btnSecHotRt"/>
+											</span>
+										</h:panelGroup>
+
+									</div>
+									<!-- end secondary buttons -->
+								</div>
+
+							</div><!-- end outer container -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+						</div><!-- end pnlFull -->
+					</div>
+					<!-- end pnlCont -->
+				</div>
+				<!-- end ctrCont -->
+
+				<div class="CB"></div>
+				<!-- clears float for liquid layout -->
+
+			</div>
+			<!-- end mainCont -->
+
+			<div class="footerCont CT">
+				<ui:include src="../common/footercont.xhtml" />
+			</div>
+		</div><!-- end main -->
+
+	<h:inputHidden id="scrollPos" value="#{startFormBean.scrollPos}" />
+
+	</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+	<ui:include src="../common/confirmpopup.xhtml" />
+	<ui:include src="addstartform.xhtml" />
+	<ui:include src="rateCalculator.xhtml" />
+
+</h:body>
+</html>

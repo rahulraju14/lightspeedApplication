@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Commands and Icons for any timecard list's "Status" column -->
+	<!-- Requires two parameters: -->
+	<!--  bean: the bean to be called for command actions and passing the timecard id -->
+	<!--  tcEntry: the 'var' parameter of the enclosing datatable, which should be a TimecardEntry instance. -->
+
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Not yet submitted"
+				rendered="#{tcEntry.status eq 'OPEN'}" image="../../i/icon_tc_01_open.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Submitted, Awaiting Initial Approval(s)"
+				rendered="#{tcEntry.status eq 'SUBMITTED'}" image="../../i/icon_tc_03_submit.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Submitted, Ready For Your Review"
+				rendered="#{tcEntry.status eq 'APPROVED_READY'}" image="../../i/icon_tc_04_ready.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Submitted, Final Approval Pending"
+				rendered="#{tcEntry.status eq 'APPROVED_PAST'}" image="../../i/icon_tc_02_past.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Approved"
+				rendered="#{tcEntry.status eq 'APPROVED'}" image="../../i/icon_tc_10_appr.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Recalled"
+				rendered="#{tcEntry.status eq 'RECALLED'}" image="../../i/icon_tc_06_recall.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Recalled, Ready For Your Review"
+				rendered="#{tcEntry.status eq 'RECALLED_READY'}" image="../../i/icon_tc_06a_recall_ready.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Rejected"
+				rendered="#{tcEntry.status eq 'REJECTED'}" image="../../i/icon_tc_05_reject.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Rejected, Ready For Your Review"
+				rendered="#{tcEntry.status eq 'REJECTED_READY'}" image="../../i/icon_tc_05a_rej_ready.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Resubmitted, Awaiting Initial Approval(s)"
+				rendered="#{tcEntry.status eq 'RESUBMITTED'}" image="../../i/icon_tc_08_resubmit.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Resubmitted, Ready for Your Review"
+				rendered="#{tcEntry.status eq 'RESUBMITTED_READY'}" image="../../i/icon_tc_09_resub_ready.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Resubmitted, Final Approval Pending"
+				rendered="#{tcEntry.status eq 'REJECTED_PAST'}" image="../../i/icon_tc_07_rej_past.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Locked, Approved"
+				rendered="#{tcEntry.status eq 'LOCKED'}" image="../../i/icon_tc_11_lock.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+		<h:commandButton action="#{bean.actionViewTimecard}" title="Void"
+				rendered="#{tcEntry.status eq 'VOID'}" image="../../i/icon_tc_12_void.png">
+			<f:setPropertyActionListener target="#{bean.selectedTimecardId}" value="#{tcEntry.weeklyTc.id}"/>
+		</h:commandButton>
+
+</ui:composition>

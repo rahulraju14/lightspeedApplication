@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Drop-down select list plus confirmation dialog (message + ok/cancel buttons) -->
+<!-- This is the similar to confirmpopupbig with the addition of the drop-down field. -->
+
+<h:form>
+	<c:set var="bean" value="#{popupSelectBean}"></c:set>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="confpopup">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+
+		<div class="confPopBdy">
+
+			<div class="confPopCont">
+				<div class="popup_main stdTxt">
+					<h:outputText escape="false" value="#{bean.message}" />
+					<div class="pad15lt pad10tp txt12">
+						<h:selectOneMenu styleClass="pad8lt" id="popSelect_focus"
+								value="#{bean.selectedObject}" style="width:200px;">
+							<f:selectItems value="#{bean.selectList}"/>
+						</h:selectOneMenu>
+						<br /><br />
+					</div>
+
+					<div>
+					<!-- 
+						<h:outputText styleClass="B" rendered="#{bean.inputError}"
+								value="#{bean.confirmMessage}" />
+						<h:outputText rendered="#{bean.inputError}" styleClass="RED"
+								value="#{bean.errorMessage}" />
+						<h:panelGroup rendered="#{! bean.inputError}">
+							<br/>
+						</h:panelGroup>
+					 -->
+					</div>
+
+				</div>
+			</div>
+
+			<div class="confpopBtnCont">
+				<h:panelGroup rendered="#{not empty bean.buttonCancelLabel}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="#{bean.buttonCancelLabel}"
+									action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+				</h:panelGroup>
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="#{bean.buttonOkLabel}"
+								onclick="override();"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

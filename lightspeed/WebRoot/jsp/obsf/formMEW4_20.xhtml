@@ -1,0 +1,234 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <c:set var="bean" value="#{formStateMEW4Bean}" />
+   <c:set var="editable" value="#{contactFormBean.editMode and bean.empEdit}" />
+   <c:set var="form" value="#{bean.form}" />
+   <div class="miniTab pad15lt" style="width:875px;">
+   <div class="BKwhite" >
+      <div id="" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+         <div class="w4_ME_20_1">
+            <div class="FL" style="margin-top: 10px;">
+               <div class="FL">
+                  <ace:textEntry value="#{form.firstName}"
+                     disabled="#{!editable}" maxlength="15" id="meW4FirstName"
+                     style="height: 9px;width: 215px;margin-left: 61px;margin-top: 112px;">
+                     <ace:ajax />
+                  </ace:textEntry>
+               </div>
+               <div class="FL">
+                  <ace:textEntry value="#{form.middleInitial}"
+                     disabled="#{!editable}" maxlength="1" id="meW4MiddleName"
+                     style="height: 9px;width: 22px;margin-left: 9px;margin-top: 112px;">
+                     <ace:ajax />
+                  </ace:textEntry>
+               </div>
+               <div class="FL">
+                  <ace:textEntry value="#{form.lastName}"  disabled="#{!editable}" maxlength="30"
+                     id="meW4LastName"
+                     style="height: 9px;width: 188px;margin-left: 11px;margin-top: 112px;">
+                     <ace:ajax />
+                  </ace:textEntry>
+               </div>
+               <div class="FL">
+                  <ace:textEntry value="#{form.socialSecurity}"  disabled="#{!editable}" maxlength="11"
+                     id="meW4SocialSecurity"
+                     style="height: 9px;width: 210px;margin-left: 14px;margin-top: 113px;">
+                     <ace:ajax />
+                     <f:converter converterId="lightspeed.SSNConverter" />
+                  </ace:textEntry>
+               </div>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -1001px;">
+            <div class="FL">
+               <ace:textEntry value="#{form.address.addrLine1}"  disabled="#{!editable}" maxlength="60"
+                  id="meW4MalingAddress"
+                  style="height: 9px;width: 444px;margin-left: 60px;margin-top: 15px;">
+                  <ace:ajax />
+               </ace:textEntry>
+            </div>
+            <div class="FL" style="margin-left: 44px;margin-top: 6px;">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4Single"
+                  valueChangeListener="#{bean.listenSingleStatus}"
+                  value="#{form.single}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+            <div class="FL" style="margin-left: 140px;margin-top: 6px;">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4Married"
+                  valueChangeListener="#{bean.listenMarriedStatus}"
+                  value="#{form.married}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+            <div class="FL" style="margin-left: -181px;margin-top: 32px;">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4MarriedWithHold"
+                  valueChangeListener="#{bean.listenMarriedWithholdStatus}"
+                  value="#{form.marriedWithhold}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -937px;">
+            <div class="FL">
+               <ace:textEntry value="#{form.allowances}"  disabled="#{!editable}" maxlength="4"
+                  id="meW4Allowances"
+                  style="height: 9px;width: 127px;margin-left: 664px;margin-top: 18px;">
+                  <f:validateLongRange minimum="0" />
+                  <f:convertNumber pattern="#,##0" type="number"/>
+                  <ace:ajax />
+               </ace:textEntry>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -895px;">
+            <div class="FL">
+               <ace:textEntry value="#{form.additionalAmount}"  disabled="#{!editable}" maxlength="9"
+                  id="meW4SdditionalAmount"
+                  style="height: 9px;width: 108px;margin-left: 683px;margin-top: 0px;">
+                  <f:validateLongRange minimum="0" />
+                  <f:convertNumber pattern="#,##0" type="number"/>
+                  <ace:ajax />
+               </ace:textEntry>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -952px;">
+            <div class="FL">
+               <ace:textEntry value="#{form.address.city}" disabled="#{!editable}" styleClass="W200" maxlength="30"
+                  id="meW4city"
+                  style="margin-top: 7px;margin-left:60px;height: 9px;width: 258px;" />
+            </div>
+            <div class="FL">
+               <h:selectOneMenu styleClass="FL" id="meW4AddrState"
+                  value="#{form.address.state}"
+                  style="margin-top: 7px;margin-left:12px;height: 17px;width: 47px;" 
+                  disabled="#{!editable}">
+                  <f:selectItems
+                     value="#{applicationScopeBean.stateCodeDL['US']}" />
+               </h:selectOneMenu>
+            </div>
+            <div class="FL">
+               <ace:textEntry value="#{form.address.zip}" 
+                  disabled="#{!editable}" styleClass="W200" maxlength="5"
+                  id="meW4Zip"
+                  style="margin-top: 7px;margin-left:17px;height: 9px;width: 64px;" >
+                  <f:convertNumber integerOnly="true"/>
+               </ace:textEntry>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -833px;margin-left: 751px;">
+            <div class="FL">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4Exempt"
+                  value="#{form.exempt}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -808px;margin-left: 751px;">
+            <div class="FL">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4FederalForm"
+                  value="#{form.federalForm}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -781px;margin-left: 751px;">
+            <div class="FL">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4TaxLiability"
+                  value="#{form.taxLiability}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -756px;margin-left: 751px;">
+            <div class="FL">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="meW4PerodicRetirement"
+                  value="#{form.perodicRetirement}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL" style="margin-top: -729px;margin-left: 751px;">
+            <div class="FL">
+               <h:selectBooleanCheckbox styleClass="ckbx" id="mew4MilitarySpouseResidency"
+                  value="#{form.militarySpouseResidency}" disabled="#{!editable}">
+                  <ace:ajax render="@form" />
+               </h:selectBooleanCheckbox>
+            </div>
+         </div>
+         <div class="FL"
+            style="margin-top: -489px; margin-left: 220px; height: 29px;">
+            <div class="FL" style="margin-top: -182px;margin-left: -49px;">
+               <span>
+                  <h:outputText escape="false"
+                     styleClass="txt7 W200"
+                     rendered="#{bean.contactDoc.empSignature ne null}">
+                     <h:outputText value="E-signed by" styleClass="U" />
+                     <h:outputText value=" #{bean.contactDoc.empSignature.name}"
+                        styleClass="U B txtBlue" />
+                     <h:outputText
+                        value=" #{bean.contactDoc.empSignature.displayTime}" />
+                     <br />
+                     <h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+                  </h:outputText>
+               </span>
+               <h:panelGroup styleClass="FL"
+                  rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+                  <h:panelGroup styleClass="btn_legend"
+                     style="margin-top:15px; margin-right:10px;margin-left: 79px;">
+                     <h:panelGroup
+                        rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+                        (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+                        <span class="btnMiniLtHot" />
+                        <ace:linkButton value="Sign &amp; Submit"
+                           action="#{contactFormBean.actionSubmit}"
+                           title="Signature field" styleClass="btnMiniCt" />
+                        <span class="btnMiniRtHot" />	
+                     </h:panelGroup>
+                     <h:panelGroup
+                        rendered="#{not (bean.empEdit or
+                        (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+                        or (bean.contactDoc.status eq 'PENDING')}">
+                        <span class="btnMiniLt" />
+                        <span>
+                           <h:commandLink value="Sign &amp; Submit"
+                              onclick="return false;" styleClass="btnMiniDisCt dislink" />
+                        </span>
+                        <span class="btnMiniRt" />
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+            <div class="FL" style="margin-top: -173px;">
+               <ace:textEntry value="#{contactFormBean.contactDocument.empSignature.date}"  disabled="true" maxlength="60"
+                  id="meW4date"
+                  style="height: 9px;width: 112px;margin-left: 421px;">
+                  <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+               </ace:textEntry>
+            </div>
+            <div class="FL B" style="margin-left: 158px;margin-top:-144px;">
+				<h:outputText value="#{msg.Form_State_W4_Employer_Section}" style="font-size:12px;color:red"/>
+			</div>
+         </div>
+      </div>
+      <div class="w4_ME_20_2">
+	  </div>	
+      
+      <!-- end scroll div -->
+      <div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+         <h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+            <div class="FL BKwhite sfFormBorder1 pad30tp pad15bm"
+               style="width: 838px; margin-bottom: 15px;">
+               <ui:include src="signatureHistory.xhtml">
+                  <ui:param name="bean" value="#{bean}" />
+                  <ui:param name="events"
+                     value="#{bean.contactDoc.contactDocEvents}" />
+               </ui:include>
+            </div>
+         </h:panelGroup>
+      </div>
+   </div>
+</ui:composition>

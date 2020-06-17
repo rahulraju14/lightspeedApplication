@@ -1,0 +1,380 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Global Preferences section of SETUP mini-tab of Payroll Preferences page (screen number 9.9) -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+
+	<!-- THIRD SECTION - GLOBAL SETTINGS -->
+	<div class="rowCont B pad5tp">
+		<div class="W98percnt MA">
+
+			<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+				<div class="rowCont B pad10tp">
+					Global Preferences:
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{aicp}">
+				<!-- First day of payroll week -->
+				<div class="rowCont FL pad20tp">
+					<span  class="fdNm_wa pad10rt">
+						<h:outputText styleClass="FL" escape="false" value="First day on timecard:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad10lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="FL"
+									style="width:120px;"
+									disabled="#{(not payrollSetupBean.editMode) or (payrollSetupBean.timecardExists)}"
+									valueChangeListener="#{payrollSetupBean.listenChangeWeekFirstDay}"
+									value="#{payrollSetupBean.payrollPref.weekFirstDay}">
+								<f:selectItems value="#{payrollSetupBean.weekDayNameDl}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</span>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+
+			<div class="rowCont pad15tp #{headerViewBean.production.type.tours ? '' : 'pad15lt'}">
+
+				<div class="W50percnt FL"><!-- LEFT-hand column of Global Preferences -->
+
+					<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+						<div class="rowCont B">
+							Display Options:
+						</div>
+
+						<div class="rowCont pad5lt">
+							<div class="rowCont pad5tp">
+								<div class="FL">
+									<h:selectBooleanCheckbox styleClass="FL ckbx"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.hideTcGuarantee}" >
+									</h:selectBooleanCheckbox>
+									<div class="FL pad5lt">
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											Do not display a Guaranteed Hours amount on timecards for
+											<br/>Non-Union employees.
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="rowCont pad5lt">
+							<div class="rowCont pad5tp">
+								<div class="FL">
+									<h:selectBooleanCheckbox styleClass="FL ckbx"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.hidePrDiscrepancy}" >
+									</h:selectBooleanCheckbox>
+									<div class="FL pad5lt">
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											Do not highlight Timecard/PR discrepancies on the payroll dashboard.
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="rowCont B pad15tp">
+							Timecard Creation:
+						</div>
+
+						<div class="rowCont pad5lt">
+							<div class="rowCont pad5tp">
+								<div class="FL">
+									<h:selectBooleanCheckbox styleClass="FL ckbx"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.autoCreateTimecards}" >
+											<ace:ajax />
+									</h:selectBooleanCheckbox>
+									<div class="FL pad5lt">
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											Create timecards automatically
+										</h:panelGroup>
+										<h:selectOneMenu
+												disabled="#{not (payrollSetupBean.editMode and payrollSetupBean.payrollPref.autoCreateTimecards)}"
+												value="#{payrollSetupBean.payrollPref.createTimecardsAdvance}">
+											<f:selectItems value="#{payrollSetupBean.advanceSelectDL}" />
+										</h:selectOneMenu>
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											day(s) before the start of the payroll week.
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+
+							<div class="rowCont pad5tp pad20lt">
+								<div class="FL">
+									<h:selectBooleanCheckbox styleClass="FL ckbx"
+											title="Timecard will be created even if form is missing work city, work state, and/or SSN"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.createIncompleteTimecards}" >
+										<ace:ajax />
+									</h:selectBooleanCheckbox>
+									<div class="FL pad5lt">
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											Automatically create a timecard even if the Start Form is incomplete.
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+
+							<div class="rowCont pad5tp">
+								<div class="FL">
+									<div class="FL pad5lt">
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											Timecards may be created
+										</h:panelGroup>
+											<h:selectOneMenu
+													disabled="#{not payrollSetupBean.editMode}"
+													value="#{payrollSetupBean.production.payrollPref.maxWeeksInAdvance}">
+												<f:selectItems value="#{payrollSetupBean.weeksAdvanceSelectDL}" />
+											</h:selectOneMenu>
+										<h:panelGroup styleClass="ckbxTxtLbl">
+											week(s) in advance.
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</h:panelGroup>
+
+					<div class="rowCont pad20tp">
+						<div>
+							<h:outputText styleClass="B" value="Payroll Service: " />
+							<h:panelGroup styleClass="pad10lt B_false">
+								<h:outputText value="#{payrollServiceBean.payrollService.name}" />
+								<h:outputText value="(None)"
+										rendered="#{payrollServiceBean.payrollService eq null}" />
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div class="rowCont pad10lt">
+						<div class="pad10tp">
+							<h:outputText value="Data transfer to Payroll Service:"/>
+							<br/>
+						</div>
+					</div>
+
+					<div class="rowCont pad10lt">
+						<div class="rowCont pad10tp">
+							<div class="FL">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox styleClass="FL ckbx"
+											valueChangeListener="#{payrollSetupBean.listenBatchEmail}"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.useEmail}" >
+											<ace:ajax />
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+								<div class="FL pad5lt W90percnt">
+									<h:panelGroup styleClass="ckbxTxtLbl">
+										Email timecard data to my Payroll Company representative
+										<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+											using the <br/><b>Batch Transfer</b> dashboard.
+										</h:panelGroup>
+										<h:panelGroup rendered="#{headerViewBean.production.type.tours}">
+											upon Submit.
+										</h:panelGroup>
+									</h:panelGroup>
+									<div class="rowCont pad5tp">
+										<h:panelGroup styleClass="FL B_false pad3tp pad10rt">
+												Representative's Email:
+										</h:panelGroup>
+										<ace:textEntry styleClass="W200"
+												maxlength="100" disabled="#{not payrollSetupBean.editMode}"
+												value="#{payrollSetupBean.payrollPref.batchEmailAddress}" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+					<div class="rowCont pad10lt">
+						<div class="pad10tp">
+							<h:outputText styleClass="B_false LH18" value="Include the following Production-derived calculations in the transfer:"/>
+						</div>
+						<div class=" ">
+							<div class="rowCont pad5tp pad10lt">
+								<h:selectBooleanCheckbox styleClass="ckbx pad10lt"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollServiceBean.production.payrollPref.includeBreakdown}" >
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+										Job tables, Pay Breakdown, and Grosses
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+					</h:panelGroup>
+
+				</div><!-- end left-hand column of Global Preferences -->
+
+				<div class="W5percnt FL"><!-- * * * * * *  spacing (column break) * * * * * * * * -->
+				</div>
+
+				<h:panelGroup rendered="#{headerViewBean.production.type.tours}">
+					<div class="W45percnt FL" style="margin-left: 45%;margin-top: -8%;">
+						<div class="rowCont B">Preferences for Pay Period:</div>
+						<div class="rowCont pad5lt">
+							<div class="rowCont pad10tp">
+								<div class="pad15lt B_false">
+									<h:selectOneRadio styleClass="h_radio" layout="pageDirection"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.production.payrollPref.payPeriodType}">
+										<f:selectItem itemLabel="Weekly (7 days)" itemValue="W" />
+										<f:selectItem itemLabel="Biweekly (14 days)" itemValue="BW" />
+										<f:selectItem itemLabel="Semi Monthly (15 days or 16 days)"
+											itemValue="SM" />
+										<f:selectItem itemLabel="Monthly (31 days max)" itemValue="M" />
+										<f:converter converterId="lightspeed.PayPeriodConverter" />
+										<ace:ajax />
+									</h:selectOneRadio>
+								</div>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+				<div class="W45percnt FL"><!-- RIGHT-hand column of Global Preferences -->
+
+					<div class="rowCont B">
+						Employee Time Entry:
+					</div>
+					<div class="rowCont pad5lt">
+						<div class="rowCont pad10tp">
+							<h:outputText styleClass="pad5rt B_false" value="Round Non-Union employee hours to the:"/>
+							<h:selectOneMenu disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.payrollPref.hourRoundingType}">
+								<f:selectItems value="#{payrollSetupBean.hourRoundingTypeDL}" />
+							</h:selectOneMenu>
+							
+						</div>
+						<div class="rowCont pad10tp">
+							<div class="FL">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.allowEmployeeExpense}" >
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+										Allow employees to record expenses.
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+
+					<div class="rowCont B pad30tp">
+						Batching:
+					</div>
+					<div class="rowCont pad5lt">
+						<div class="rowCont pad10tp">
+							<div class="FL">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.includeWeSuffix}" >
+										<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+										Include the W/E in Weekly Batch names as a
+								</h:panelGroup>
+								<div class="pad15lt B_false">
+									<h:selectOneRadio id="weBatch" styleClass="h_radio"
+											disabled="#{(not payrollSetupBean.editMode) or
+												not payrollSetupBean.payrollPref.includeWeSuffix}"
+											value="#{payrollSetupBean.weBatchUse}"
+											layout="lineDirection">
+										<f:selectItem itemLabel="prefix" itemValue="p" />
+										<f:selectItem itemLabel="suffix" itemValue="s" />
+									</h:selectOneRadio>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="rowCont B pad30tp">
+						Job Split Retention:
+					</div>
+					<div class="rowCont pad5lt">
+						<div class="rowCont pad10tp">
+							<div class="FL">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.copyJobTables}" >
+										<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+									Copy each timecard's multiple Job Tables from the current week to the following week.
+								</h:panelGroup>
+							</div>
+						</div>
+						<div class="rowCont pad3tp pad20lt">
+							<div class="FL">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.copyJobSplits}" >
+										<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+									When copying Job Tables, include the exact Job Splitting from week to week.
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+
+					<div class="rowCont B pad30tp">
+						Hours to Gross:
+					</div>
+					<div class="rowCont pad5lt">
+						<div class="rowCont pad10tp">
+							<div class="FL">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.calcFlsa}" >
+										<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="ckbxTxtLbl">
+									Automatically calculate FLSA Adjustments due to Wage Augments
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+					<!-- LS-2283 OT Calc - Project Level Preference  -->
+					<div class="rowCont B pad30tp">
+						Premium vs. Non-Premium Overtime Default for Project
+					</div>	
+					<div class="rowCont pad5lt">
+					<!-- Premium Rate and  Non-Premium rate-->
+						<div class="rowCont pad10tp">
+								<div class="pad15lt B_false">
+									<h:selectOneRadio styleClass="h_radio" layout="pageDirection"
+										disabled="#{! payrollSetupBean.editMode}" value="#{payrollSetupBean.payrollPref.usePremiumRate}">
+										<f:selectItem itemLabel="Premium Rate" itemValue="true" />
+										<f:selectItem itemLabel="Non-Premium Rate" itemValue="false" />
+										<ace:ajax />
+									</h:selectOneRadio>
+								</div>
+							</div>
+					</div>
+				</div><!-- end right-hand column of Global Preferences -->
+				</h:panelGroup>
+
+			</div><!-- end Global Preferences -->
+
+		</div>
+
+	</div><!-- 98% -->
+
+</ui:composition>

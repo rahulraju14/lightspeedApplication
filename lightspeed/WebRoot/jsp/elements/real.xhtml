@@ -1,0 +1,1236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Production Elements</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('elem:mainlist', 210, 366); /* be careful adjusting these */
+
+	resizeScrollable('elem:linkedto', 512, 77);
+
+	resizeScrollable('elem:realelemblkout', 512, 77);
+
+	resizeScrollable('elem:realelempoi', 503, 78);
+
+	var element = document.getElementById('elem:miniView');
+	resizeElement(element, 181, 345);
+
+	// Handle the rich-text editor
+	var element1 = document.getElementById('elem:rwElemDirectScrEdit');
+	if (element1 != null) { // edit mode
+			resizeElement(element1, 461, 115); // 461,115
+			//console.log(element1.id);
+			//console.log(element1.style.height);
+	}
+	else { // view mode
+		var element2 = document.getElementById('elem:rwElemDirectScrView');
+		//console.log(element2.id);
+		resizeElement(element2, 461, 115);
+	}
+
+	</c:if>
+
+}
+
+var formname = "elem";
+var mainListId = "elem:mainlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="elem">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="realelements" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Element List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="contactHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Production Elements</span>
+						<h:panelGroup styleClass="FR pad5rt" rendered="#{not empty authBean.pgFields['5.0.1,add']}">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton
+								value="Add" action="#{realElementBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ckbxRow2 ltrtBdr BKwhite">
+						<div class="ckbxTxtLbl_rw">
+							<h:panelGroup rendered="#{headerViewBean.production.type.episodic}">
+								<h:selectBooleanCheckbox styleClass="FL"
+									value="#{realElementBean.showLinkedOnly}"
+									valueChangeListener="#{realElementBean.changeShowLinkedOnly}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="FL pad2tp">Show Production Elements<br/>linked to this Project only</span>
+							</h:panelGroup>
+						</div>
+						<span class="FR pad2tp">
+							<h:selectOneMenu styleClass="catdd_rw"
+								value="#{realElementBean.category}"
+								disabled="#{empty authBean.pgFields['5.0.1,all']}"
+								valueChangeListener="#{realElementBean.selectedCategory}">
+								<f:selectItems value="#{realElementBean.realElementTypeDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</div>
+
+					<!-- data list container for Production Element List -->
+					<div id="realElemListCont" class="ltrtBdr">
+						<div class="rowCont FL">
+							<ace:dataTable id="mainlist"
+									selectionMode="single" singleSort="true"
+									style="width:100%;max-width:100%;"
+									styleClass="bk_sl_grid"
+									value="#{realElementBean.sortedItemList}" var="element"
+									scrollHeight="#{headerViewBean.mobile ? '' : '366'}"
+									scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+									stateMap="#{realElementBean.stateMap}"
+									rowSelectListener="#{realElementBean.listenRowClicked}" >
+
+								<ace:column headerText="Name" style="width:48%;" sortBy="#{element.name}">
+									<h:outputText value="#{element.name}" styleClass="txt11" />
+								</ace:column>
+								<ace:column headerText="Start" style="width:16%;" sortBy="#{element.elementDood.firstWorkDate}">
+									<span class="txt11" >
+										<h:outputText value="#{element.elementDood.firstWorkDate}"
+												title="#{element.elementDood.dateFlag ? 'Blackout date(s) conflict with the schedule'
+													: 'First date needed based on current strip board'}"
+												styleClass="#{element.elementDood.dateFlag ? 'RED B' : ''}">
+											<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy" />
+										</h:outputText>
+									</span>
+								</ace:column>
+								<ace:column headerText="End" style="width:%;16" sortBy="#{element.elementDood.lastWorkDate}">
+									<span class="txt11">
+										<h:outputText value="#{element.elementDood.lastWorkDate}"
+												title="#{element.elementDood.dateFlag ? 'Blackout date(s) conflict with the schedule'
+													: 'Last date needed based on current strip board'}"
+												styleClass="#{element.elementDood.dateFlag ? 'RED B' : ''}">
+											<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy" />
+										</h:outputText>
+									</span>
+								</ace:column>
+								<ace:column headerText="Type" style="width:20%;" sortBy="#{element.type.rwLabel}">
+									<h:outputText styleClass="txt11 pad12rt" value="#{element.type.rwLabel}" />
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div><!-- end scriptElemListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End Element List - pnlLt -->
+
+			<!--  Begin Element Details - pnlRt -->
+			<div id="pnlRt">
+
+				<h:panelGroup rendered="#{(!realElementBean.showAdd) and (!imageAddBean.showNewImage)
+							and (!realElementBean.showBlackout) and (!realElementBean.showInterest)}">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="pnlHdrTxtElemCont FL">
+							<h:outputText
+								rendered="#{realElementBean.element.name ne null}"
+								value="#{realElementBean.element.name}"/>
+						</div>
+
+						<div class="rowBtn4RtTpPnlElem">
+							<h:panelGroup rendered="#{realElementBean.editMode and (realElementBean.element.id ne null) and
+									(realElementBean.type ne 'CHARACTER') and
+									((realElementBean.type ne 'LOCATION' and not empty authBean.pgFields['5.0.1,delete_other'])
+										or (realElementBean.type eq 'LOCATION' and not empty authBean.pgFields['5.0.1,delete_locations'])) }">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton
+											value="Delete" action="#{realElementBean.actionDelete}"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{realElementBean.editMode}">
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton
+											value="Edit"
+											styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not realElementBean.editMode) and (realElementBean.element ne null) and
+									(realElementBean.type ne 'CHARACTER') and
+									((realElementBean.type ne 'LOCATION' and not empty authBean.pgFields['5.0.1,delete_other'])
+									or (realElementBean.type eq 'LOCATION' and not empty authBean.pgFields['5.0.1,delete_locations'])) }">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton
+											value="Delete" action="#{realElementBean.actionDelete}"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not realElementBean.editMode) and (realElementBean.element ne null) and
+									((realElementBean.type ne 'LOCATION' and realElementBean.type ne 'CHARACTER' and not empty authBean.pgFields['5.0.1,edit_other'])
+									or (realElementBean.type eq 'CHARACTER' and not empty authBean.pgFields['5.0.1,edit_cast'])
+									or (realElementBean.type eq 'LOCATION' and not empty authBean.pgFields['5.0.1,edit_locations'])) }">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{realElementBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div id="realElemDetailCont" class="ltrtBdr BKwhite">
+
+						<h:panelGrid id="miniView" styleClass="miniPanel">
+
+							<!-- Tabs for real element Details -->
+
+							<ace:tabSet id="tabs" selectedIndex="#{realElementBean.selectedTab}"
+								style="width:100%;">
+
+								<!--  element details tab  -->
+								<ace:tabPane label="Details" id="detailtab">
+
+									<div id="realElemDetailTab" class="rowGradient pad20tp">
+
+										<!-- Top Row only of the CHARACTER or OTHER types to VIEW/EDIT -->
+										<h:panelGroup styleClass="rowCont FL" rendered="#{realElementBean.editMode and ((realElementBean.element.type eq 'CHARACTER') or (realElementBean.layoutOther))}">
+											<span class="fdNm_sm FL">
+												<h:outputText value="Category:" />
+											</span>
+											<h:selectOneMenu styleClass="FL fd"
+												disabled="true"
+												value="#{realElementBean.type}">
+												<f:selectItem itemValue="#{realElementBean.realElement.type}"
+													itemLabel="#{realElementBean.realElement.type.rwLabel}"/>
+											</h:selectOneMenu>
+											<h:panelGroup styleClass="FL pad3lt" rendered="#{realElementBean.type eq 'CHARACTER'}">
+												<span>
+													<h:outputText styleClass="FL fdNm_first B pad2tp" value="First Name: " />
+													<span class="mandatory FL">*</span>
+													<ace:textEntry styleClass="FL W120" maxlength="30"
+														value="#{realElementBean.element.actor.user.firstName}"/>
+													<h:outputText styleClass="FL pad3lt B pad2tp" value="Last Name: " />
+													<span class="mandatory FL">*</span>
+													<ace:textEntry styleClass="FL W120 pad2bm" maxlength="30"
+														value="#{realElementBean.element.actor.user.lastName}" />
+												</span>
+											</h:panelGroup>
+											<h:panelGroup styleClass="FL LH22" rendered="#{realElementBean.layoutOther}">
+												<h:outputText styleClass="FL pad2tp pad3lt pad5rt B" rendered="#{realElementBean.layoutOther}"
+													value="Name:" />
+												<span class="FL">
+													<ace:textEntry
+														rendered="#{realElementBean.layoutOther}"
+														maxlength="45" styleClass="W240 pad2bm"
+														value="#{realElementBean.element.name}" />
+												</span>
+											</h:panelGroup>
+										</h:panelGroup><!-- END Top Row only of the CHARACTER or OTHER types to VIEW/EDIT -->
+
+										<!-- real Element Details TOP LEFT_Char_Oth  remaining fields-->
+										<h:panelGroup styleClass="realElemDetailsTopLeft_Char_Oth FL"
+											rendered="#{(realElementBean.element.type eq 'CHARACTER') or (realElementBean.layoutOther)}">
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_sm FL" value="Category:" />
+												<h:outputText styleClass="fd_sm FL" value="#{realElementBean.realElement.type.rwLabel}" />
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3bm pad2tp H40"
+												rendered="#{realElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Description:" />
+												</span>
+												<span class="fd FL"><!-- this span is needed for Safari on PC -->
+													<ace:textAreaEntry maxlength="5000" styleClass="realDescTxtArea FL"
+														value="#{realElementBean.element.description}" />
+												</span>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3bm pad3tp H40"
+												rendered="#{not realElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Description:" />
+												</span>
+												<h:outputText styleClass="realElemDescCont FL" rendered="#{not empty realElementBean.element.description}"
+													value="#{realElementBean.element.description}"/>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad2tp"
+													rendered="#{(realElementBean.editMode) and (realElementBean.layoutOther)}">
+												<span class="fdNm_sm FL pad2tp">
+													<h:outputText value="Rate:" />
+												</span>
+												<ace:textEntry maxlength="15" styleClass="fd_sm_rate"
+													value="#{realElementBean.element.rate}"></ace:textEntry>
+												<h:outputText styleClass="fd_sm_rate" value=" per "/>
+												<ace:textEntry maxlength="10" styleClass="fd_sm_rate pad3lt"
+													value="#{realElementBean.element.ratePer}"></ace:textEntry>
+											</h:panelGroup>
+											<h:panelGroup styleClass="rowCont FL "
+													rendered="#{(not realElementBean.editMode) and (realElementBean.element.rate ne null) and (realElementBean.layoutOther)}">
+												<span class="fdNm_sm FL pad2tp">
+													<h:outputText value="Rate:" />
+												</span>
+												<h:outputText value="#{realElementBean.element.rate}" styleClass="FL pad3tp">
+													<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+														currencySymbol="$"
+														maxIntegerDigits="9"
+														minFractionDigits="2"
+														type="currency"/>
+												</h:outputText>
+												<h:outputText value="per #{realElementBean.element.ratePer}" styleClass="FL pad3tp pad3lt" />
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3bm pad3tp H34"
+												rendered="#{realElementBean.editMode}">
+												<span class="fdNm_sm_2lines FL">
+													<h:outputText value="Special Instructions:" />
+												</span>
+												<span class="fd FL"><!-- this span is needed for Safari on PC -->
+													<ace:textAreaEntry maxlength="5000" styleClass="realSpInstTxtArea FL"
+														value="#{realElementBean.element.specialInstructions}" />
+												</span>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3bm pad5tp H34"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_sm_2lines FL" value="Special Instructions:" />
+												<h:outputText styleClass="realSpInstCastCont FL" rendered="#{not empty realElementBean.element.specialInstructions}"
+													value="#{realElementBean.element.specialInstructions}"/>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3tp"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_sm FL" value="Manager:" />
+												<span class="FL fd">
+													<ace:linkButton
+														rendered="#{realElementBean.element.manager ne null}"
+														value="#{realElementBean.element.manager.user.displayName}"
+														action="contactview" >
+														<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+														<f:setPropertyActionListener value="#{realElementBean.element.manager.id}" target="#{jumpBean.value}"/>
+													</ace:linkButton>
+													<h:outputText
+														rendered="#{realElementBean.element.manager eq null}"
+														value="None Assigned" />
+												</span>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="realElemMgrContWrap"
+												rendered="#{realElementBean.editMode}">
+												<div id="realElemMgrCont_Char_Oth" class="FL pad5tp">
+													<div class="subSecHdg_realElemMgr">Manager</div>
+
+													<!--
+													<h:panelGroup styleClass="btn_addMgr"
+														rendered="#{(not empty authBean.pgFields['5.1.1,add_contact'])}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Create"
+															action="#{realElementBean.actionOpenQuickAdd}"
+															styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+													 -->
+
+													<h:panelGroup styleClass="rowCont FL pad10lt H20">
+														<h:selectOneMenu style="position:relative;float:left;width:285px;top:-7px;"
+															valueChangeListener="#{realElementBean.changeManager}"
+															value="#{realElementBean.managerId}">
+															<f:selectItems value="#{realElementBean.contactDL}" />
+																<ace:ajax />
+														</h:selectOneMenu>
+													</h:panelGroup>
+												</div>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL  pad3tp"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm FL" value="#{realElementBean.managerLabel} Phone:" />
+												<h:outputText styleClass="fd_sm" style="text-decoration:none;"
+													rendered="#{realElementBean.element.manager.businessPhone ne null}"
+													value="#{realElementBean.element.manager.businessPhone}" />
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3tp"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm FL" value="#{realElementBean.managerLabel} Email:" />
+												<span class="fd_sm FL">
+													<h:outputLink
+														value="mailto:#{realElementBean.element.manager.emailAddress}"
+														rendered="#{realElementBean.element.manager.emailAddress ne null}">
+														<h:outputText styleClass="U" value="#{realElementBean.element.manager.emailAddress}" />
+													</h:outputLink>
+												</span>
+											</h:panelGroup>
+										</h:panelGroup><!-- end real Element Details Top Left_Char_Oth -->
+
+										<!-- Top Row only of the LOCATION type to VIEW/EDIT -->
+										<h:panelGroup styleClass="rowCont FL"
+											rendered="#{(realElementBean.editMode) and (realElementBean.element.type eq 'LOCATION')}">
+											<span class="fdNm_sm FL">
+												<h:outputText value="Category:" />
+											</span>
+											<span class="FL txt11">
+												<h:selectOneMenu style="width:101px;line-height:14px;height:20px;"
+													disabled="true"
+													value="#{realElementBean.type}">
+													<f:selectItems value="#{realElementBean.realElementTypeEditDL}" />
+												</h:selectOneMenu>
+											</span>
+
+											<h:outputText styleClass="FL pad2tp pad3lt pad5rt B" rendered="#{realElementBean.editMode}"
+												value="Name:" />
+											<span class="FL pad2bm">
+												<ace:textEntry style="width:305px;" maxlength="50"
+													rendered="#{realElementBean.editMode}"
+													value="#{realElementBean.element.name}" />
+											</span>
+										</h:panelGroup><!-- END Top Row only of the LOCATION type to VIEW/EDIT -->
+
+										<!-- LOCATION types remaining fields -->
+										<h:panelGroup styleClass="realElemDetailsTopLeft_Loc FL"
+											rendered="#{realElementBean.element.type eq 'LOCATION'}">
+
+											<div class="rowCont FL">
+												<h:panelGroup styleClass="fdNm_sm FL" rendered="#{not realElementBean.editMode}">
+													<h:outputText value="Category:" />
+												</h:panelGroup>
+												<h:outputText styleClass="FL pad3tp" value="#{realElementBean.realElement.type.rwLabel}"
+													rendered="#{not realElementBean.editMode}" />
+
+												<h:panelGroup
+													rendered="#{not realElementBean.editMode}">
+													<span class="FR pad12rt">
+														<span class="btnMiniLtHot" />
+														<span>
+														<ace:linkButton styleClass="btnMiniCt"
+															value="Get Directions"
+															onclick="javascript:showDirections(
+																'#{headerViewBean.contact.homeAddress.completeAddress}',
+																'#{realElementBean.element.address.completeAddress}');" />
+														</span>
+														<span class="btnMiniRtHot" />
+													</span>
+													<span class="FR pad5rt">
+														<span class="btnMiniLtHot" />
+														<span>
+															<ace:linkButton styleClass="btnMiniCt"
+																action="#{reportBean.actionPrintLocationReport}"
+																value="Location Report">
+																<f:setPropertyActionListener value="#{realElementBean.element.id}" target="#{reportBean.locationId}"/>
+															</ace:linkButton>
+														</span>
+														<span class="btnMiniRtHot" />
+													</span>
+												</h:panelGroup>
+											</div>
+
+											<!-- location address 1 VIEW/EDIT MODE-->
+											<div class="rowCont FL  pad2tp">
+												<span class="fdNm_sm">
+													<h:outputText value="Address:" />
+												</span>
+												<h:panelGroup
+													rendered="#{not realElementBean.editMode}">
+													<span class="fd_sm">
+														<h:outputText
+															value="#{realElementBean.element.address.addrLine1}" />
+													</span>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{realElementBean.editMode}">
+													<span class="fd_sm">
+														<ace:textEntry maxlength="100"
+															styleClass="address"
+															value="#{realElementBean.element.address.addrLine1}" />
+													</span>
+												</h:panelGroup>
+											</div><!-- end personal address 1 -->
+
+											<!-- location address 2 VIEW/EDIT MODE-->
+											<h:panelGroup
+												rendered="#{not realElementBean.editMode and (not empty realElementBean.element.address.addrLine2)}">
+												<div class="rowCont FL ">
+													<span class="fdNm_sm">
+														<!-- address 2 keep this title place holder -->
+													</span>
+													<span class="fd_sm">
+														<h:outputText
+															value="#{realElementBean.element.address.addrLine2}" />
+													</span>
+												</div>
+											</h:panelGroup>
+											<h:panelGroup styleClass="rowCont FL  pad4tp"
+												rendered="#{realElementBean.editMode}">
+												<span class="fdNm_sm">
+													<!-- location address 2 keep this title place holder -->
+												</span>
+												<span class="fd_sm">
+													<ace:textEntry maxlength="100" styleClass="address"
+														value="#{realElementBean.element.address.addrLine2}" />
+												</span>
+											</h:panelGroup><!-- location address 2 -->
+
+											<!-- location city, state zip "VIEW mode" -->
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{not realElementBean.editMode}">
+												<span class="fdNm_sm">
+													<!-- keep this place holder -->
+												</span>
+												<span class="fd_sm">
+													<span class="FL">
+														<h:outputText styleClass="pad5rt" rendered="#{not empty realElementBean.element.address.city}"
+															value="#{realElementBean.element.address.city}," />
+													</span>
+													<span class=" FL pad5rt">
+														<h:outputText
+															value="#{realElementBean.element.address.state}" />
+													</span>
+													<span class="FL">
+														<h:outputText
+															value="#{realElementBean.element.address.zip}" />
+													</span>
+												</span>
+											</h:panelGroup>
+											<!-- end location city state zip "VIEW mode" -->
+
+											<!-- location city, state zip "EDIT mode" -->
+											<h:panelGroup
+												rendered="#{realElementBean.editMode}">
+												<div class="rowCont FL pad4tp">
+													<span class="fdNm_sm">
+														<h:outputText value="City:" />
+													</span>
+													<span class="FL fd_sm">
+														<ace:textEntry maxlength="35" styleClass="city"
+															value="#{realElementBean.element.address.city}" />
+													</span>
+												</div>
+												<div class="rowCont FL">
+													<span class="fdNm_sm pad4tp">
+														<h:outputText value="State:" />
+													</span>
+													<h:panelGroup>
+														<span class="fd_state FL pad4tp">
+															<h:selectOneMenu styleClass="state"
+																value="#{realElementBean.element.address.state}">
+																<f:selectItems
+																	value="#{applicationScopeBean.stateDL[realElementBean.element.address.country]}" />
+															</h:selectOneMenu>
+														</span>
+													</h:panelGroup>
+													<span class="fdNm_zip pad4tp">
+														<h:outputText value="Zip:" />
+													</span>
+													<h:panelGroup>
+														<span class="fd_zip pad4tp">
+															<ace:textEntry maxlength="10" styleClass="zip"
+																value="#{realElementBean.element.address.zip}" />
+														</span>
+													</h:panelGroup>
+												</div>
+											</h:panelGroup>
+											<!-- end location city, state zip "EDIT mode" -->
+
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{realElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Description:" />
+												</span>
+												<span class="fd FL"><!-- this span is needed for Safari on PC -->
+													<ace:textAreaEntry maxlength="5000" styleClass="realDescTxtArea_Loc FL"
+														value="#{realElementBean.element.description}" />
+												</span>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL  pad3tp H34"
+												rendered="#{not realElementBean.editMode}">
+												<span class="fdNm_sm FL">
+													<h:outputText value="Description:" />
+												</span>
+												<h:outputText styleClass="realElemDescCont FL" rendered="#{not empty realElementBean.element.description}"
+													value="#{realElementBean.element.description}"/>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL  pad2tp"
+												rendered="#{not realElementBean.editMode}">
+												<span>
+													<h:outputText styleClass="fdNm_sm FL pad3tp" value="#{realElementBean.managerLabel}:" />
+												</span>
+												<h:panelGroup styleClass="FL fd"
+													rendered="#{realElementBean.element.manager ne null}">
+													<span class="FL">
+														<ace:linkButton
+															value="#{realElementBean.element.manager.user.displayName}"
+															rendered="#{not empty authBean.pgFields['5.1,link_contact']}"
+															action="contactview" >
+															<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+															<f:setPropertyActionListener value="#{realElementBean.element.manager.id}" target="#{jumpBean.value}"/>
+														</ace:linkButton>
+														<h:outputText value="#{realElementBean.element.manager.user.displayName}"
+															rendered="#{empty authBean.pgFields['5.1,link_contact']}" />
+													</span>
+												</h:panelGroup>
+												<h:panelGroup styleClass="fd"
+													rendered="#{realElementBean.element.manager eq null}">
+													<span>
+														<h:outputText
+															value="None Assigned" />
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="realElemMgrContWrap MA"
+												rendered="#{realElementBean.editMode}">
+												<div id="realElemMgrCont_Loc" class="FL">
+													<div class="subSecHdg_realElemMgr">Site Rep</div>
+
+													<!--
+													<h:panelGroup styleClass="btn_addMgr"
+														rendered="#{realElementBean.editMode}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Create"
+															action="#{realElementBean.actionOpenQuickAdd}"
+															styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+													 -->
+
+													<h:panelGroup styleClass="rowCont FL H20 pad10lt"
+														rendered="#{realElementBean.editMode}">
+														<h:selectOneMenu style="position:relative;float:left;width:285px;top:-7px;"
+															valueChangeListener="#{realElementBean.changeManager}"
+															value="#{realElementBean.managerId}">
+															<f:selectItems value="#{realElementBean.contactDL}" />
+																<ace:ajax />
+														</h:selectOneMenu>
+													</h:panelGroup>
+												</div>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad2tp"
+												rendered="#{not realElementBean.editMode}">
+												<span>
+													<h:outputText styleClass="fdNm FL" value="#{realElementBean.managerLabel} Phone:" />
+												</span>
+												<ace:linkButton styleClass="fd_sm" style="text-decoration:none;"
+													rendered="#{realElementBean.element.manager.businessPhone ne null}"
+													value="#{realElementBean.element.manager.businessPhone}"
+													action="contactview">
+													<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+													<f:setPropertyActionListener value="#{realElementBean.element.manager.id}" target="#{jumpBean.value}"/>
+												</ace:linkButton>
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad2tp"
+												rendered="#{not realElementBean.editMode}">
+												<span>
+													<h:outputText styleClass="fdNm FL" value="#{realElementBean.managerLabel} Email:" />
+												</span>
+												<span class="fd_sm">
+													<h:outputLink
+														rendered="#{realElementBean.element.manager.emailAddress ne null}"
+														value="mailto:#{realElementBean.element.manager.emailAddress}">
+														<h:outputText styleClass="U" value="#{realElementBean.element.manager.emailAddress}" />
+													</h:outputLink>
+												</span>
+											</h:panelGroup>
+										</h:panelGroup><!-- end real Element Details Top Left_Loc -->
+										<!-- END LOCATION types remaining fields -->
+
+										<!-- real world Detail Mini Image viewer  -->
+										<div id="realElemDetailsTopRight" class="thumbNail">
+
+											<ui:include src="../common/imageTable.xhtml">
+												<ui:param name="list" value="#{realElementBean.element.imageResources}" />
+												<ui:param name="imageTitle" value="Image" />
+												<ui:param name="showName" value="false" />
+											</ui:include>
+
+										</div><!-- end real Element Details Top Right -->
+									</div><!-- end realElemDetailTab -->
+
+									<!-- Linked To -->
+									<div class="realElemDetailsBtmLeft FL">
+										<!-- Linked To legend wrapper -->
+										<div class="realElemLinkedToContWrap MA">
+											<div id="realElemLinkedToCont" class="FL">
+												<div class="legendHdg">Associated with/Playing</div>
+
+												<h:panelGroup styleClass="btn_reallinkedToAddLink pad10rt"
+														rendered="#{realElementBean.editMode and realElementBean.showAddLink}">
+													<span class="btnMiniLtHot" />
+													<ace:linkButton value="Associate"
+														action="#{realElementBean.actionOpenScriptLink}"
+														styleClass="btnMiniCt" />
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+												<h:panelGroup styleClass="btn_reallinkedToAddLink"
+													rendered="#{not realElementBean.editMode}">&#160;</h:panelGroup>
+
+												<h:panelGroup rendered="#{headerViewBean.production.type.episodic}">
+													<div class="rowCont FL txt11 realElemShowCkCont">
+														<h:selectBooleanCheckbox styleClass="FL ckbx"
+																value="#{realElementBean.showProjectOnly}"
+																valueChangeListener="#{realElementBean.changeShowProjectOnly}">
+															<ace:ajax />
+														</h:selectBooleanCheckbox>
+														<h:outputText styleClass="ckbxTxtLbl pad2tp"
+																value="Show Script Elements for current Project only" />
+													</div>
+												</h:panelGroup>
+
+												<ace:dataTable id="linkedto" styleClass="bk_sl_grid FL pad5tp"
+													selectionMode="single"
+													style="width:100%;max-width:100%;"
+													value="#{realElementBean.realLinks}"
+													scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+													scrollHeight="#{headerViewBean.mobile ? '' : '77'}"
+													var="realLink" >
+													<ace:column headerText="Role">
+														<table><!-- this table prevents longer names from wrapping under the delete icon -->
+															<tr>
+																<td>
+																	<span class="FL">
+																		<h:commandButton
+																			rendered="#{realElementBean.editMode}"
+																			value="" title="Remove association" image="../../i/icon_deleteX.gif"
+																			action="#{realElementBean.actionRemoveScriptLink}">
+																			<f:setPropertyActionListener value="#{realLink.id}" target="#{realElementBean.removeLinkId}" />
+																			<f:setPropertyActionListener value="#{realLink.scriptElement.name}" target="#{realElementBean.removeName}" />
+																		</h:commandButton>
+																	</span>
+																</td>
+																<td>
+																	<ace:linkButton styleClass="txt11 FL"
+																		rendered="#{(realLink.scriptElement.project.id eq headerViewBean.project.id)
+																				and (not empty authBean.pgFields['5.0.1,link_element'])}"
+																		value="#{realLink.scriptElement.name}"
+																		title="View script element"
+																		action="scriptelements">
+																		<f:setPropertyActionListener value="com.lightspeedeps.ScriptElementId" target="#{jumpBean.attribute}"/>
+																		<f:setPropertyActionListener value="#{realLink.scriptElement.id}" target="#{jumpBean.value}"/>
+																	</ace:linkButton>
+																	<h:outputText styleClass="txt11 FL" rendered="#{realLink.scriptElement.project.id ne headerViewBean.project.id
+																				or (empty authBean.pgFields['5.0.1,link_element'])}"
+																		value="#{realLink.scriptElement.name}"/>
+																</td>
+															</tr>
+														</table>
+													</ace:column>
+
+													<ace:column headerText="Project">
+															<h:outputText styleClass="txt11 FL" value="#{realLink.scriptElement.project.title}"/>
+													</ace:column>
+
+													<ace:column headerText="Status">
+														<h:selectOneMenu styleClass="txt11"
+															rendered="#{realElementBean.editMode}"
+															value="#{realLink.status}"
+															disabled="#{not realElementBean.editMode}"
+															style="width:90px">
+															<f:selectItems value="#{enumList.realLinkStatusList}"/>
+														</h:selectOneMenu>
+														<h:outputText styleClass="FR W80" title="Selected"
+															rendered="#{(not realElementBean.editMode) and (realLink.status eq 'SELECTED')}" >
+															<h:graphicImage alt="" value="" url="../../i/icon_check.gif"/>
+														</h:outputText>
+														<h:outputText styleClass="FR W80" title="Candidate"
+															rendered="#{(not realElementBean.editMode) and (realLink.status eq 'UNDER_REVIEW')}" >
+															<h:graphicImage alt="" value="" url="../../i/icon_qstMrk.gif"/>
+														</h:outputText>
+														<h:outputText styleClass="FR W80" title="Not selected"
+															rendered="#{(not realElementBean.editMode) and (realLink.status eq 'REJECTED')}" >
+															<h:graphicImage alt="" value="" url="../../i/icon_notSel.gif"/>
+														</h:outputText>
+													</ace:column>
+												</ace:dataTable>
+											</div>
+											<h:panelGroup styleClass="FL legend"
+												rendered="#{not realElementBean.editMode}">
+												<span class="FL pad2tp">
+													<h:graphicImage alt="" value="" url="../../i/icon_check.gif"/>
+												</span>
+												<span class="legendTxt">&#160;- Selected&#160;&#160;</span>
+
+												<span class="FL pad2tp">
+													<h:graphicImage alt="" value="" url="../../i/icon_qstMrk.gif"/>
+												</span>
+												<span class="legendTxt">&#160;- Candidate&#160;&#160;</span>
+
+												<span class="FL pad2tp">
+													<h:graphicImage alt="" value="" url="../../i/icon_notSel.gif"/>
+												</span>
+												<span class="legendTxt">&#160;- Not Selected</span>
+											</h:panelGroup>
+										</div>
+									</div><!-- end linked to Btm Left -->
+
+									<!-- Blackout Dates -->
+									<div class="realElemDetailsBtmRight FR">
+										<div class="realElemBlkOutContWrap MA">
+											<div id="realElemBlkOutCont" class="FL">
+												<div class="legendHdg">Blackout Dates</div>
+
+												<h:panelGroup styleClass="btn_addBODate pad5rt"
+														rendered="#{realElementBean.editMode}">
+													<span class="btnMiniLtHot" />
+													<ace:linkButton value="Add Date"
+														action="#{realElementBean.actionOpenBlackout}"
+														title="Add a new black-out date range"
+														styleClass="btnMiniCt" />
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+												<h:panelGroup styleClass="btn_addBODate"
+													rendered="#{not realElementBean.editMode}">&#160;</h:panelGroup><!-- this is needed to keep the height from shifing between edit&view modes -->
+
+												<!-- FL is for MAC browsers -->
+												<ace:dataTable id="realelemblkout" styleClass="bk_sl_grid FL"
+													selectionMode="single"
+													style="width:100%;max-width:100%;"
+													value="#{realElementBean.realElement.dateRanges}"
+													var="dateRange" scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+													scrollHeight="#{headerViewBean.mobile ? '' : '77'}">
+													<ace:column id="column0">
+														<h:commandButton
+															rendered="#{realElementBean.editMode}"
+															value="" title="Remove" image="../../i/icon_deleteX.gif"
+															action="#{realElementBean.actionRemoveBlackout}">
+															<f:setPropertyActionListener value="#{dateRange.id}" target="#{realElementBean.removeBlackoutId}"/>
+														</h:commandButton>
+														<h:outputText title="#{dateRange.description}"
+																value=" " style="padding-right:15px;"
+																rendered="#{not realElementBean.editMode}"/>
+													</ace:column>
+													<ace:column headerText="Start">
+														<h:outputText value="#{dateRange.startDate}" styleClass="CT"
+															style="padding-right:10px;"
+															title="#{dateRange.description}">
+															<f:convertDateTime pattern="MMM d, ''yy"/>
+														</h:outputText>
+													</ace:column>
+													<ace:column headerText="End">
+														<h:outputText value="#{dateRange.endDate}" styleClass="CT"
+															style="padding-right:10px;"
+															title="#{dateRange.description}">
+															<f:convertDateTime pattern="MMM d, ''yy"/>
+														</h:outputText>
+													</ace:column>
+												</ace:dataTable>
+											</div>
+										</div>
+									</div><!-- end Blackout Dates Btm Right -->
+								</ace:tabPane><!--  end real element detail Tab  -->
+
+								<!--  Images Tab   -->
+								<ace:tabPane label="Images" id="imagetab"
+									rendered="#{not empty authBean.pgFields['5.1,all']}">
+
+									<div id="imagesCont">
+
+										<!-- Paginator with page controls -->
+										<h:panelGroup rendered="#{not empty realElementBean.element.images}">
+											<div class="rowCont FL pager">
+											</div>
+										</h:panelGroup>
+
+										<h:panelGroup styleClass="LH29"
+											rendered="#{empty realElementBean.element.images}">
+											&#160;
+										</h:panelGroup>
+
+										<div class="rowCont FL">
+											<div id="imgPreviewCont">
+
+												<div class="subSecHdg_images FL LH20">&#160;</div><!-- keeps legend in right spot since there is no legend title -->
+
+												<h:panelGroup
+													rendered="#{realElementBean.editMode and realElementBean.selectedTab eq 1 and (not empty realElementBean.element.images)}"
+													styleClass="btn_delImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="Delete Image"
+															action="#{imagePaginatorBean.actionDeleteImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<h:panelGroup
+													rendered="#{realElementBean.editMode and realElementBean.selectedTab eq 1}"
+													styleClass="btn_newImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="New Image"
+															action="#{realElementBean.actionOpenNewImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<ui:include src="../common/imageTable.xhtml">
+													<ui:param name="list" value="#{realElementBean.element.imageResources}" />
+													<ui:param name="imageTitle" value="#{realElementBean.element.name}" />
+												</ui:include>
+
+											</div>
+										</div><!-- end imagesCont -->
+									</div>
+								</ace:tabPane><!--  End Images Tab  -->
+
+								<!--  Map Tab  -->
+								<ace:tabPane label="Map" id="maptab"
+									rendered="#{realElementBean.element.type eq 'LOCATION'}">
+
+									<div id="realElemMapTab" class="rowGradient">
+
+										<div class="realMapLt FL pad6tp">
+											<!-- parking for map tab-->
+											<h:panelGroup styleClass="rowCont FL"
+												rendered="#{realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_2lines pad3tp FL" value="Parking:" />
+												<ace:textAreaEntry maxlength="500" styleClass="realParkTxtArea FR stdTxt"
+													value="#{realElementBean.element.parking}" />
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3tp H59"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_2lines FL" value="Parking:" />
+												<h:panelGroup
+													rendered="#{not empty realElementBean.element.parking}">
+													<span class="FL realElemParkCont">
+														<h:outputText value="#{realElementBean.element.parking}" escape="false"/>
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+										</div><!-- end parking in realMapLt -->
+
+										<div class="realMapRt FL pad9tp">
+											<!-- map area wrapper -->
+											<div class="realElemManageMapContWrap MA">
+												<div id="realElemManageMapCont" class="FL">
+													<div class="legendHdg">Map</div>
+
+													<h:panelGroup styleClass="btn_addManageMaplink"
+														rendered="#{realElementBean.editMode and (realElementBean.element.map eq null)}">
+														<span class="btnMiniLtHot" />
+															<ace:linkButton value="Add/Create Map"
+																action="#{realElementBean.actionOpenAddMap}"
+																styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+													<h:panelGroup styleClass="btn_addManageMaplink2"
+														rendered="#{realElementBean.editMode and (realElementBean.element.map ne null)}">
+														<span class="btnMiniLtHot" />
+															<ace:linkButton value="Replace Map"
+																action="#{realElementBean.actionOpenAddMap}"
+																styleClass="btnMiniCt" />
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+
+													<div id="realMap_imgCont" class="pad3tp rowCont">
+														<div class="imgCont">
+															<ace:linkButton value="" title="click to view larger image"
+																action="#{imageViewerBean.actionShowImage}">
+																<ace:graphicImage style="visibility:#{realElementBean.element.map ne null}"
+																	value="#{realElementBean.realElement.map.thumbnailB}" />
+																<f:setPropertyActionListener value="#{realElementBean.realElement.map.id}" target="#{imageViewerBean.imageId}"/>
+																<f:setPropertyActionListener value="Location Map" target="#{imageViewerBean.title}"/>
+															</ace:linkButton>
+														</div>
+													</div>
+
+													<div class="rowCont FL NW">
+														<h:panelGroup styleClass="FL pad2tp" rendered="#{realElementBean.editMode and (realElementBean.element.map ne null)}">
+															<h:commandButton
+																value="" image="../../i/icon_deleteX.gif"
+																action="#{realElementBean.actionDeleteMap}" styleClass="pad5lt">
+															</h:commandButton>
+														</h:panelGroup>
+														<h:outputText styleClass="pad5lt W100percnt" value="#{realElementBean.realElement.map.title}" />
+													</div>
+												</div>
+											</div><!-- end map area wrapper -->
+										</div><!-- realMapRt  -->
+
+									</div><!-- end top Map tab -->
+
+									<div id="realElemMapDirCont" class="FL rowCont pad15tp pad5lt">
+										<!-- Directions - Bottom of map tab-->
+										<h:panelGroup styleClass="rowCont FL pad3bm"
+											rendered="#{realElementBean.editMode}">
+											<span class="fdNm FL">
+												<h:outputText value="Directions:" />
+											</span>
+											<h:panelGroup
+												id="rwElemDirectScrEdit"
+												styleClass="realDirectnsTxtCont">
+												<ace:richTextEntry id="dirEdit" styleClass="stdTxt W100percnt" style="height:100%;"
+													value="#{realElementBean.element.directions}"
+													toolbar="Basic" customConfigPath="/js/toolconfig.js"
+													language="en" saveOnSubmit="false" height="100%" />
+											</h:panelGroup>
+										</h:panelGroup>
+
+										<h:panelGroup styleClass="rowCont FL pad3bm"
+											rendered="#{not realElementBean.editMode}">
+											<span class="fdNm FL">
+												<h:outputText value="Directions:" />
+											</span>
+											<h:panelGroup
+												id="rwElemDirectScrView"
+												styleClass="pad3tp FL realElemDirectCont"
+												rendered="#{not empty realElementBean.element.directions}">
+												<h:outputText escape="false"
+													value="#{realElementBean.element.directions}" />
+											</h:panelGroup>
+										</h:panelGroup>
+									</div><!-- end Directions -->
+								</ace:tabPane><!--  end Map Tab   -->
+
+								<!--  Manage Tab  -->
+								<ace:tabPane label="Manage" id="managetab"
+									rendered="#{realElementBean.element.type eq 'LOCATION'}">
+
+									<div id="realElemManageTab" class="rowCont rowGradient">
+
+										<div class="FL rowCont LH22">
+											<h:outputText styleClass="fdNm FL" value="Site Phone:" />
+											<h:outputText styleClass="fd_sm FL" value="#{realElementBean.realElement.phone}"
+												rendered="#{not realElementBean.editMode}" />
+											<ace:textEntry maxlength="25" styleClass="fd_sm_ph"
+												value="#{realElementBean.realElement.phone}"
+												rendered="#{realElementBean.editMode}" />
+										</div>
+
+										<!-- permit data for manage tab-->
+										<h:panelGroup styleClass="rowCont FL pad3tp"
+											rendered="#{realElementBean.editMode}">
+											<span class="fdNm FL pad3tp">
+												<h:outputText value="Permit Data:" />
+											</span>
+											<ace:textAreaEntry maxlength="5000" styleClass="realPermitDataTxtArea FL stdTxt"
+												value="#{realElementBean.element.permitData}" />
+										</h:panelGroup>
+
+										<h:panelGroup styleClass="rowCont FL pad10tp"
+											rendered="#{not realElementBean.editMode}">
+											<span class="fdNm FL">
+												<h:outputText value="Permit Data:" />
+											</span>
+											<h:panelGroup
+												 rendered="#{not empty realElementBean.element.permitData}">
+												<span class="FL realElemPermitCont">
+													<h:outputText escape="false"
+														value="#{realElementBean.element.permitData}"/>
+												</span>
+											</h:panelGroup>
+										</h:panelGroup><!-- end permit data for manage tab -->
+
+										<!-- special instructions for manage tab-->
+										<div class="rowCont FL pad10tp">
+											<h:panelGroup styleClass="rowCont FL pad3tp"
+												rendered="#{realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_2lines FL" value="Special Instructions:" />
+												<ace:textAreaEntry maxlength="5000" styleClass="realSpecialInstTxtArea FR stdTxt"
+													value="#{realElementBean.element.specialInstructions}" />
+											</h:panelGroup>
+
+											<h:panelGroup styleClass="rowCont FL pad3tp"
+												rendered="#{not realElementBean.editMode}">
+												<h:outputText styleClass="fdNm_2lines FL" value="Special Instructions:" />
+												<h:panelGroup
+													rendered="#{not empty realElementBean.element.specialInstructions}">
+													<span class="FL realElemSplInstCont">
+														<h:outputText escape="false"
+															value="#{realElementBean.element.specialInstructions}" />
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+										</div><!-- end special instructions for manage tab -->
+
+									</div><!-- end realElemManageTab Top of manage tab -->
+
+									<div class="FL rowCont pad22tp">
+										<!-- Points of Interest Bottom of manage tab-->
+										<!-- POI legend wrapper -->
+										<div class="realElemManagePOIContWrap MA">
+											<div id="realElemManagePOICont" class="FL">
+												<div class="legendHdg">Points of Interest:</div>
+
+												<h:panelGroup styleClass="btn_addManagePoilink"
+													rendered="#{realElementBean.editMode}">
+													<span class="btnMiniLtHot" />
+													<ace:linkButton value="Add"
+														action="#{realElementBean.actionOpenInterest}"
+														styleClass="btnMiniCt" />
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<ace:dataTable id="realelempoi"
+													selectionMode="single"
+													value="#{realElementBean.realElement.pointOfInterests}"
+													var="poi" styleClass="bk_sl_grid FL"
+													scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+													style="width:100%;max-width:100%;overflow-x:hidden;"
+													scrollHeight="#{headerViewBean.mobile ? '' : '78'}">
+													<ace:column>
+														<h:commandButton
+															value="" image="../../i/icon_deleteX.gif"
+															rendered="#{realElementBean.editMode}"
+															action="#{realElementBean.actionRemoveInterest}">
+															<f:setPropertyActionListener value="#{poi.id}" target="#{realElementBean.removeInterestId}"/>
+														</h:commandButton>
+													</ace:column>
+													<ace:column headerText="Name">
+														<ace:linkButton styleClass="txt11"
+															value="#{poi.name}"
+															action="pointofinterest">
+															<f:setPropertyActionListener value="com.lightspeedeps.PointOfInterestId" target="#{jumpBean.attribute}"/>
+															<f:setPropertyActionListener value="#{poi.id}" target="#{jumpBean.value}"/>
+														</ace:linkButton>
+													</ace:column>
+													<ace:column headerText="Type">
+														<h:outputText styleClass="txt11" value="#{poi.type}"/>
+													</ace:column>
+													<ace:column headerText="Address">
+														<h:panelGroup styleClass="txt11" rendered="#{poi.address ne null}">
+															<h:outputText value="#{poi.address.addrLine1},"/>
+															<h:outputText value="#{poi.address.city}"/>
+														</h:panelGroup>
+													</ace:column>
+												</ace:dataTable>
+											</div>
+										</div>
+									</div><!-- end Points of Interest Bottom of manage tab -->
+								</ace:tabPane><!--  end Manage Tab   -->
+
+							</ace:tabSet><!--  END TAB set  -->
+						</h:panelGrid><!-- end miniView -->
+
+						<!-- secondary buttons -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<!-- Cancel btn -->
+							<h:panelGroup rendered="#{realElementBean.editMode}">
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton styleClass="btnPriEnbCt"
+										onmouseup="showErrors();"
+										value="Cancel" action="#{realElementBean.actionCancel}" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<!-- end Cancel btn -->
+							<!-- Save btn -->
+							<h:panelGroup rendered="#{realElementBean.editMode}">
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+										<ace:linkButton value="Save"
+										onmouseup="showErrors();"
+										action="#{realElementBean.actionSave}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+								</span>
+							</h:panelGroup>
+						</div><!-- end secondary buttons -->
+
+					</div><!-- end scriptElemDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlRt -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont FL CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+<ui:include src="rwaddblackoutdate.xhtml" />
+<ui:include src="rwaddscriptlink.xhtml" />
+<ui:include src="rwaddinterest.xhtml" />
+<ui:include src="rwaddelement.xhtml" />
+
+</h:body>
+</html>

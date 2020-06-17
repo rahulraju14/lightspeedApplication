@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+
+	<mongo:mongo-client id="mongo" host="${com.lightspeedeps.mongo.url}" port="27017"><!-- see web.xml for URL -->
+		<mongo:client-options connections-per-host="8"
+			threads-allowed-to-block-for-connection-multiplier="4"
+			connect-timeout="40000"
+			max-wait-time="35000"
+			socket-keep-alive="true"
+			socket-timeout="30000"
+			write-concern="ACKNOWLEDGED"
+			/>
+			<!-- 
+			description=""
+			heartbeat-connect-timeout=""
+			heartbeat-frequency=""
+			heartbeat-socket-timeout=""
+			max-connection-idle-time=""
+			max-connection-life-time=""
+			min-connections-per-host=""
+			min-heartbeat-frequency=""
+			read-preference="PRIMARY"
+			ssl-socket-factory-ref=""
+			ssl="true"
+			 -->
+	</mongo:mongo-client>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<!-- Change 'value' in next line to use a different MongoDB database on same host (server) -->
+		<constructor-arg name="databaseName" value="${com.lightspeedeps.mongo.databaseName}" /><!-- see web.xml -->
+	</bean>
+
+	<bean id="ContentDAO" class="com.lightspeedeps.dao.ContentDAO">
+		<property name="mongoTemplate">
+			<ref bean="mongoTemplate" />
+		</property>
+	</bean>
+
+	<bean id="XfdfContentDAO" class="com.lightspeedeps.dao.XfdfContentDAO">
+		<property name="mongoTemplate">
+			<ref bean="mongoTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="AttachmentContentDAO" class="com.lightspeedeps.dao.AttachmentContentDAO">
+		<property name="mongoTemplate">
+			<ref bean="mongoTemplate" />
+		</property>
+	</bean>
+
+</beans>

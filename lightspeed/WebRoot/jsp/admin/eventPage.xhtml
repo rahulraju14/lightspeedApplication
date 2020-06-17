@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The Events page, which includes Event and Change lists
+		and details mini-tabs -->
+
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="System Event and Change Logs"/>
+							</span>
+						<h:panelGroup styleClass="pad10lt"
+							rendered="false">
+							<h:panelGroup styleClass="FR pad5rt"><!-- sample top button -->
+								<span class="btnPriHotLt" />
+								<ace:linkButton
+									value="View"
+									action="eventlist"
+									styleClass="btnPriHotCt">
+								</ace:linkButton>
+								<span class="btnPriHotRt" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+						<div class="centerFullTb MA pad3tp">
+
+							<div id="miniView" >
+
+								<div id="errMsgCont" class="CT rowCont FL pad12lt pad2tp">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</div>
+
+								<div id="dprCont">
+									<!-- Tabs for dpr rpt -->
+									<ace:tabSet id="tabs" selectedIndex="#{eventBean.selectedTab}">
+
+										<!--  Event List Tab   -->
+										<ui:include src="eventList.xhtml" />
+
+										<!--  Event Details Tab   -->
+										<ui:include src="eventDetails.xhtml" />
+
+										<!--  Change List Tab   -->
+										<ui:include src="changeList.xhtml" />
+
+										<!--  Change Details Tab   -->
+										<ui:include src="changeDetails.xhtml" />
+
+									</ace:tabSet>
+								</div><!-- end container -->
+
+							</div><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<!-- bottom button(s) -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+								<h:panelGroup rendered="false"><!--  sample bottom button -->
+									<span class="FR pad10rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton value="Return"
+												action="reports"
+												styleClass="btnSecHotCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end bottom button row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+		<div class="CB"></div><!-- clears float for liquid layout -->
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</ui:composition>

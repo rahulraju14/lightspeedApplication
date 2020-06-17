@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Users</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	resizeScrollable('users:itemlist', 252, 367);
+
+	var element = document.getElementById('users:miniView');
+	resizeElement(element, 181, 347);
+
+	</c:if>
+}
+var formname = "users";
+var mainListId = "users:itemlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="users">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="adminusers" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin POI List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="poiHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Users</span>
+
+						<!-- "ADD" user - Hidden 3/27/18 (haven't used it in years) -->
+						<h:panelGroup styleClass="FR pad5rt"
+								rendered="#{false and (not empty authBean.pgFields['5.3,edit'])}">
+							<span class="btnPriHotLt"/>
+							<span>
+								<ace:linkButton value="Add"
+									action="#{userListBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt"/>
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ltrtBdr BKwhite">
+						<div class="FR">
+							<h:selectOneMenu styleClass="txt11 FR pad2tp pad2rt" style="width:110px;"
+								value="#{userListBean.category}"
+								valueChangeListener="#{userListBean.selectedCategory}">
+								<f:selectItems
+									value="#{userListBean.userStatusDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<!-- data list container for users -->
+					<div id="poiListCont" class="rowCont ltrtBdr">
+						<ace:dataTable id="itemlist" rows="50"
+							styleClass="bk_sl_grid"
+							value="#{userListBean.testUserList}" var="item"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							selectionMode="single"
+							rowSelectListener="#{userListBean.listenRowClicked}"
+							stateMap="#{userListBean.stateMap}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '367'}"
+							paginator="true" paginatorPosition="top"
+							lazy="true"
+							pageCount="5">
+
+							<ace:column filterBy="#{item.firstName}">
+								 <f:facet name="header">
+									<h:outputText value="First" />
+								</f:facet>
+								<h:outputText
+									value="#{item.firstName}" />
+							</ace:column>
+							<ace:column filterBy="#{item.lastName}">
+								<f:facet name="header">
+									<h:outputText value="Last" />
+								</f:facet>
+								<h:outputText
+									value="#{item.lastName}"/>
+							</ace:column>
+							<ace:column filterBy="#{item.emailAddress}">
+								 <f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText
+									value="#{item.emailAddress}"/>
+							</ace:column>
+							<ace:column>
+								 <f:facet name="header">
+									<h:outputText value="Acct#" />
+								</f:facet>
+								<h:outputText
+									value="#{item.accountNumber}"/>
+							</ace:column>
+							<ace:column>
+								 <f:facet name="header">
+									<h:outputText value="Status" style="" />
+								</f:facet>
+								<h:outputText style="font-size:11px;padding-left:3px;"
+									value="#{item.status.shortLabel}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end poiListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End POI List - pnlLt -->
+
+					<!--  Begin POI Details - pnlRt -->
+					<div id="pnlRt">
+
+						<h:panelGroup styleClass="errMsgCont" rendered="#{not preferencesBean.showChangePassword}">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+
+						<div class="rowCont FL BKwhite ltrtBdr">
+							<span class="pnlHdrTxt FL">
+								<h:outputText
+									value="#{userListBean.element.fullName}"/>&#160;
+								<h:outputText rendered="#{userListBean.element.student}"
+									styleClass="noteTxt pad5lt" value="(Student)"/>
+							</span>
+
+							<h:panelGroup rendered="#{userListBean.editMode and (userListBean.element.id ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{userListBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not userListBean.editMode) and (userListBean.element ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{userListBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not userListBean.editMode) and (userListBean.element ne null) and (not empty authBean.pgFields['0.1,account'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{userListBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div id="detailCont" class="ltrtBdr BKwhite">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+									<!-- miniview Tabs for Users -->
+									<ace:tabSet selectedIndex="#{userListBean.selectedTab}">
+
+										<!--  Personal Tab  -->
+										<ui:include src="userPersonal.xhtml" />
+
+										<!--  Images Tab  -->
+										<ui:include src="userImages.xhtml" />
+
+										<!--  Admin Tab  -->
+										<ui:include src="userAdmin.xhtml" />
+
+										<!--  Info Tab  -->
+										<ui:include src="userInfo.xhtml" />
+
+									</ace:tabSet><!-- END TAB set -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+								<!-- Cancel btn -->
+								<h:panelGroup rendered="#{userListBean.editMode}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt"
+												value="Cancel" action="#{userListBean.actionCancel}" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup><!-- end Cancel btn -->
+								<!-- Save btn -->
+								<h:panelGroup rendered="#{userListBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnSecHotLt" />
+										<span>
+										<ace:linkButton value="Save"  onmouseup="showErrors();"
+											action="#{userListBean.actionSave}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end poiDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+
+					</div><!-- end pnlRt -->
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+		</div><!-- end mainCont -->
+
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+
+<ui:include src="../user/changepassword.xhtml" />
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+
+</h:body>
+</html>

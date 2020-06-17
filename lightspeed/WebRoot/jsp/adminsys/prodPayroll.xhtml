@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- PAYROLL mini-tab of the Prod Admin / Productions page -->
+	<c:set var="payrollServiceAssigned" value="#{productionAdminBean.element.payrollPref.payrollService ne null ? true: false}" />
+	<ace:tabPane label="Payroll">
+		<div id="projectTopCont" class="rowGradient">
+
+			<div class="projectSubCont pad20tp FL W50percnt">
+				<div>
+					<h:outputText styleClass="fdNm_w2" value="Payroll Service:" />
+					<h:selectOneMenu
+							value="#{productionAdminBean.payrollServiceId}"
+							disabled="#{not productionAdminBean.editMode}"
+							valueChangeListener="#{productionAdminBean.listenChangePayroll}">
+						<f:selectItems value="#{productionAdminBean.payrollServices}" />
+							<ace:ajax />	
+					</h:selectOneMenu>
+				</div>
+
+				<div class="rowCont pad10tp">
+					<h:outputText styleClass="ckbxTxtLbl_B fdNm_w2" value="Mark Holidays:"  />
+					<h:selectBooleanCheckbox styleClass="ckbx"
+						value="#{productionAdminBean.element.payrollPref.autoMarkHolidays}"
+						disabled="#{not productionAdminBean.editMode}" />
+				</div>
+
+				<div class="rowCont pad10tp">
+					<h:outputText styleClass="ckbxTxtLbl_B fdNm_w2" value="Allow Onboarding:"  />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL"
+							value="#{productionAdminBean.element.allowOnboarding}"
+							disabled="#{true}">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+					</icecore:setEventPhase>
+
+					<h:panelGroup styleClass="btn_legend_left pad10lt pad10tp">
+						<h:panelGroup rendered="#{productionAdminBean.element.allowOnboarding}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Disable Onboarding"
+									action="#{productionAdminBean.actionChangeOnboardingType}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{not productionAdminBean.element.allowOnboarding}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Enable Onboarding"
+									action="#{productionAdminBean.actionChangeOnboardingType}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</div>
+
+				<!-- TIMECARD FEE PERCENT -->
+				<div class="rowCont FL pad6tp">
+					<span class="fdNm_w2" style="width:155px;">
+						<h:outputText value="Timecard Fee Percent:" />
+					</span>
+					<h:panelGroup rendered="#{not productionAdminBean.editMode}" styleClass="pad4tp">
+						<span class="fd_sm2">
+							<h:outputText value="#{productionAdminBean.element.timecardFeePercent}">
+								<f:convertNumber type="number" pattern="#0.00#" />
+							</h:outputText>
+							<h:outputText rendered="#{productionAdminBean.element.timecardFeePercent ne null}" value="%" styleClass="pad3lt"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{productionAdminBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="RT" size="5" maxlength="7" value="#{productionAdminBean.element.timecardFeePercent}">
+								<f:convertNumber type="number" pattern="#0.00#" />
+							</ace:textEntry>
+							<span>%</span>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- DOCUMENT FEE AMOUNT -->
+				<div class="rowCont pad10tp FL">
+					<span class="fdNm_w2" style="width:155px;">
+						<h:outputText value="Document Fee Amount:" />
+					</span>
+					<h:panelGroup rendered="#{not productionAdminBean.editMode}" styleClass="pad4tp">
+						<span class="fd_sm2">
+							<h:outputText value="#{productionAdminBean.element.documentFeeAmount}">
+								<f:convertNumber type="number" pattern="$ #,##0.00##" />
+							</h:outputText>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{productionAdminBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="RT" size="5" maxlength="7" value="#{productionAdminBean.element.documentFeeAmount}">
+								<f:convertNumber type="number" pattern="#,##0.00##" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont pad5tp">&#160;
+				</div>
+
+			</div>
+
+			<div class="projectSubCont pad20tp FL W45percnt">
+				<div>
+					<h:outputText styleClass="fdNm_w2" value="Payroll prod. id:" />
+					<ace:textEntry styleClass=" "  maxlength="30"
+						value="#{productionAdminBean.element.payrollPref.payrollProdId}"
+						disabled="#{not productionAdminBean.editMode}" />
+				</div>
+				<div class="FL rowCont pad10tp">
+					<span class="fdNm_w3">Calculate Timecard on Submit:</span>
+					<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FL" 
+						disabled="#{not productionAdminBean.editMode or not payrollServiceAssigned}"
+						value="#{productionAdminBean.element.payrollPref.calcTimecardsOnSubmit}"/>
+				</div>
+				<h:panelGroup rendered="#{productionAdminBean.element.allowOnboarding}">
+					<div class="FL rowCont pad10tp">
+						<h:selectOneMenu style="width:135px;" styleClass="FL"
+							disabled="#{not productionAdminBean.editMode}"
+							value="#{productionAdminBean.selectedDocument}">
+							<f:selectItems value="#{productionAdminBean.documentList}" />
+						</h:selectOneMenu>
+
+						<h:panelGroup styleClass="btn_legend_left pad20lt pad10tp">
+							<h:panelGroup rendered="#{productionAdminBean.editMode}">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Add Document"
+										action="#{productionAdminBean.actionAddDocument}"
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not productionAdminBean.editMode}">
+								<span class="btnMiniLt"/>
+								<span>
+									<ace:linkButton value="Add Document" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+			</div>
+
+		</div><!-- end projectTopCont -->
+	</ace:tabPane><!--  End Payroll mini-Tab   -->
+
+</ui:composition>

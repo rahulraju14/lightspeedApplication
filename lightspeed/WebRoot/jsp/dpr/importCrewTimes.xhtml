@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{dprPopupBean.visible}"
+				header="#{dprPopupBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{dprPopupBean.actionCancel}"/>			
+
+			<div id="popAddElemBdy">
+				<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div id="addElemCont">
+					<div class="popup_main">
+						<span class="rowCont padPop20tp B_false">
+							You may import crew <b> In</b> and <b> Out</b> (Call and Wrap) times automatically.
+						</span>
+						<span class="rowCont pad15lt padPop20tp B_false">
+							<span class="FL">
+									<h:selectBooleanCheckbox styleClass="ckbx"
+										value="#{dprPopupBean.importCallTime}" >
+										Import <b> In</b> times from:
+										<ace:ajax/>
+									</h:selectBooleanCheckbox>
+							</span>
+							<span class="FL pad10lt">
+								<h:selectOneRadio styleClass="h_radio" id="source"
+										value="#{dprPopupBean.callTimeSource}" layout="pageDirection">
+									<f:selectItem itemLabel="Call Sheet" itemValue="c"/>
+									<f:selectItem itemLabel="Completed Crew Timecards" itemValue="t" />
+								</h:selectOneRadio>
+<!--							
+									<ice:radio for="source" index="0" />
+									<span class="rowCont pad3tp">
+											<ice:radio for="source" index="1" />
+									</span>
+-->									
+							</span>
+						</span>
+
+						<span class="rowCont pad15lt padPop20tp B_false">
+							<h:selectBooleanCheckbox styleClass="ckbx"
+								value="#{dprPopupBean.importWrapTime}" />
+								Import <b> Out</b> times from Completed Crew Timecards
+						</span>
+
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="#{dprPopupBean.buttonCancelLabel}"
+								action="#{dprPopupBean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="#{dprPopupBean.buttonOkLabel}"
+								action="#{dprPopupBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

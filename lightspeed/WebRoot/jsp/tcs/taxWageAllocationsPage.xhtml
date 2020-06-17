@@ -1,0 +1,209 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	<c:set var="editable" value="#{bean.editMode}" />
+
+	<div id="main">
+		<ui:include src="../common/header2.xhtml" />
+		<div id="mainCont">
+			<div id="ctrCont">
+				<div id="pnlCont">
+					<!-- Begin Element List pnlLt -->
+					<div id="pnlLt25">
+						<div class="topBdrCont">
+							<div class="midTop">
+								<div class="ltTopCnr"></div>
+								<div class="rtTopCnr"></div>
+							</div>
+						</div>
+						<div id="projectHdr" class="rowCont ltrtBdr BKwhite FL">
+							<h:panelGroup styleClass="FL B pnlHdrTxt">
+								<h:outputText value="#{msg.Tours_Allocation_List_Title}"  />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{editable}">
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton value="Create Form" styleClass="btnPriDisCt" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FR pad5rt" rendered="#{not editable}">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton value="Create Form" action="#{bean.actionCreateForm}" styleClass="btnPriHotCt" />
+								</span>
+								<span class="btnPriHotRt" />
+							</h:panelGroup>
+						</div>
+
+						<div class="taxWagAllocationListCont ltrtBdr">
+							<div class="FL rowCont">
+								<ui:include src="taxWageAllocationsList.xhtml">
+									<ui:param name="bean" value="#{bean}" />
+								</ui:include>
+							</div>
+						</div>
+						<div class="btmBdrCont">
+							<div class="midBtm">
+								<div class="ltBtmCnr"></div>
+								<div class="rtBtmCnr"></div>
+							</div>
+						</div>
+
+					</div><!-- End Element List - pnlLt -->
+
+					<!-- Begin Element Details - pnlRt -->
+<!--					<div id="pnlRt"> -->
+					<div id="pnlRt73">
+						<h:panelGroup rendered="#{not bean.showTransmitDialog}" styleClass="errMsgCont">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop">
+								<div class="ltTopCnr"></div>
+								<div class="rtTopCnr"></div>
+							</div>
+						</div>
+
+						<div class="rowCont ltrtBdr BKwhite FL">
+							<!-- DELETE BUTTON -->
+							<h:panelGroup>
+								<h:panelGroup styleClass="FR pad5rt" rendered="#{not editable and bean.allocationForm ne null
+									and bean.allocationForm.id ne null and not bean.allocationForm.transmitted}">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton value="Delete" onclick="queueClick(this,event);"
+											action="#{bean.actionDelete}" styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FR pad5rt" rendered="#{editable or bean.allocationForm eq null
+									or bean.allocationForm.id eq null or bean.allocationForm.transmitted}">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton value="Delete" onclick="return false;"
+											styleClass="btnPriEnbCt btnPriDisCt"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</h:panelGroup>
+							</h:panelGroup>
+
+							<!-- EDIT BUTTON -->
+							<h:panelGroup>
+								<h:panelGroup styleClass="FR pad5rt" rendered="#{not editable and bean.allocationForm ne null
+									and not bean.allocationForm.transmitted}">
+									<span class="btnPriHotLt" />
+									<span>
+										<ace:linkButton value="Edit" action="#{bean.actionEdit}" styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{editable or bean.allocationForm eq null or bean.allocationForm.transmitted}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- PRINT BTTN -->
+							<h:panelGroup>
+								<h:panelGroup styleClass="FR pad5rt" rendered="#{not editable and bean.allocationForm ne null
+									and bean.allocationForm.id ne null}">
+									<span class="btnPriHotLt" />
+									<span>
+										<ace:linkButton value="Print" styleClass="btnPriHotCt"
+											action="#{bean.actionPrint}"/>
+									</span>
+									<span class="btnPriHotRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup>
+								<h:panelGroup styleClass="FR pad5rt" rendered="#{editable or bean.allocationForm eq null
+									or bean.allocationForm.id eq null}">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton value="Print" styleClass="btnPriDisCt"
+											onClick="return false;"/>
+									</span>
+									<span class="btnPriDisRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</div><!-- End of Top header -->
+						<div class="rowCont ltrtBdr BKwhite">
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+								<!-- Tabs -->
+								<ace:tabSet id="tabs"
+									selectedIndex="#{bean.selectedTab}">
+
+									<!--  consolidated tax wage form tab  -->
+									<ui:include src="taxWageAllocationsDetail.xhtml">
+										<ui:param name="bean" value="#{bean}" />
+									</ui:include>
+								</ace:tabSet>
+								<!--  END TAB set  -->
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary (bottom right corner) buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+								<!-- Save/Cancel buttons -->
+								<h:panelGroup rendered="#{editable}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt" tabindex="289"
+												title="Do NOT save changes to this form"  onclick="queueClick(this,event);"
+												value="Cancel" action="#{bean.actionCancel}" immediate="true"/>
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{editable}">
+									<span class="FR pad5rt"><span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton value="Save"
+												title="Save all changes to this form" onclick="queueClick(this,event);"
+												action="#{bean.actionSave}" styleClass="btnSecHotCt"  tabindex="288"/>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+								<!-- Transmit button -->
+								<h:panelGroup rendered="#{not editable and bean.allocationForm.id ne null}">
+									<span class="FR pad10rt"><span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton value="Transmit"
+												title="Transfer form" tabindex="287"
+												action="#{bean.actionTransmit}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div> <!-- end secondary buttons -->
+						</div> 	<!-- end scriptElemDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+					</div> <!-- end pnlRT -->
+				</div> <!--  end pnlCont -->
+			</div> <!-- end ctrCont -->
+			<div class="CB"></div>
+		</div><!-- end mainCont -->
+		<div class="footerCont CT">
+			<ui:include src="../common/footercont.xhtml" />
+		</div>
+	</div> <!-- end main -->
+</ui:composition>
+

@@ -1,0 +1,191 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<c:set var="bean" value="#{formStateOHW4Bean}" />
+	<c:set var="editable" value="#{contactFormBean.editMode and bean.empEdit}" />
+	<c:set var="form" value="#{bean.form}" />
+
+	<div class="miniTab pad15lt" style="width:875px;height:1250px">
+		<div class="BKwhite" >
+			<div id="" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+				<div class="w4_OH_20">
+					<!-- Employee Personal Info - Step 1 sect  ion -->
+					<div class="FL" style="margin-top: 616px; margin-left:19px;">
+						<div class="FL">
+							<div class="FL">
+								<ace:textEntry value="#{form.fullName}" disabled="#{!editable}"
+									styleClass="W220" maxlength="50" id="ohW4FullName"
+									style="margin-left: 106px;height:9px;width: 310px;" />
+							</div>
+							<div class="FL">
+								<ace:textEntry value="#{form.socialSecurity}"
+									disabled="#{!editable}" styleClass="W120" maxlength="11"
+									id="ohW4SsNumber"
+									style="margin-left: 133px;height:9px;width: 128px;">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry>
+							</div>
+						</div>
+						<div class="FL" >
+							<div class="FL" style="margin-top: 7px; margin-left: 41px;">
+								<div class="FL">
+									<ace:textEntry value="#{form.completeAddress}"
+										disabled="#{!editable}" styleClass="W200" maxlength="150"
+										id="ohW4HomeAddrZip"
+										style="margin-left:139px;height: 9px;width: 602px;" />
+								</div>
+							</div>
+						</div>
+						<div class="FL" style="margin-top:9px;">
+							<div class="FL">
+								<ace:textEntry value="#{form.schoolDisName}" disabled="#{!editable}"
+									styleClass="W220" maxlength="50" id="ohW4DistrictResidence"
+									style="margin-left: 206px;height:9px;width: 350px;" />
+							</div>
+							<div class="FL">
+								<ace:textEntry value="#{form.schoolDisNo}"
+									disabled="#{!editable}" styleClass="W120" maxlength="30"
+									id="ohW4DistrictNo"
+									style="margin-left: 96px;height:9px;width: 122px;">
+								</ace:textEntry>
+							</div>
+						</div>
+
+					</div>
+					<!-- End of Employee Personal Info - Step 1 section -->
+					
+						<!-- Exemptions -step 2 section   -->
+					<div class="FL">
+						<div class="FL" style="margin-left: 541px;">
+							<ace:textEntry value="#{form.personalExemptions}" disabled="#{!editable}"
+								 maxlength="1" id="ohPersonalExemptions" 
+								 valueChangeListener="#{bean.listenPersonalExemptChange}"
+								style="height: 9px;width: 120px;margin-left: 140px;margin-top: 16px;">
+								<f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number" />
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top:7px; margin-left: 541px;">
+							<ace:textEntry value="#{form.spouseExemptions}" id="ohSpouseExemptions"
+								disabled="#{!editable}"  maxlength="1"
+								valueChangeListener="#{bean.listenSpouseExemptChange}"
+								style="height: 9px;width: 120px;margin-left: 140px;margin-top: 1px;">
+								<f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number" />
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top:3px; margin-left: 541px;">
+							<ace:textEntry value="#{form.qualifiedDependents}" id="ohDependents"
+								disabled="#{!editable}"  maxlength="3"
+								valueChangeListener="#{bean.listenDependentExemptChange}"
+								 style="height: 9px;width: 120px;margin-left: 140px;margin-top: 4px;">
+								 <f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number"/>
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top:3px; margin-left: 541px;">
+							<ace:textEntry value="#{form.claimedExemptions}" id="ohClaimedExemptions"
+								disabled="#{true}"  
+								 style="height: 9px;width: 120px;margin-left: 140px;margin-top: 5px;">
+								 <f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number"/>
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top:3px; margin-left: 541px;">
+							<ace:textEntry value="#{form.additionalAmount}" id="ohAdditionalWithholding"
+								disabled="#{!editable}"  maxlength="9"
+								 style="height: 9px;width: 120px;margin-left: 140px;margin-top: 5px;">
+								 <f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number"/>
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						
+					</div>
+					
+					<!-- end of  Exemptions -step 2 section   -->
+					<!-- Signature Section 3 -->
+					<!-- SIGNATURE VALUE -->
+					<!-- Display the most recent employee signature. -->
+					<!-- SIGNATURE DATE -->
+					
+					<div class="FL"
+						style="margin-top: 183px; margin-left: -356px; height: 29px;">
+						<!-- SIGNATURE DISPLAY -->
+						<div class="FL" style="margin-top: -19px;margin-left: -413px;width: 400px;">
+							<span> <h:outputText escape="false"
+									styleClass="txt12 W200"
+									rendered="#{bean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}"
+										styleClass="U B txtBlue" />
+									<h:outputText
+										value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br />
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+								</h:outputText>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup styleClass="FL"
+								rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend"
+									style="margin-top:15px; margin-right:10px;">
+									<h:panelGroup
+										rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt" />
+										<span> <h:commandLink value="Sign &amp; Submit"
+												onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+						<!-- SIGNATURE ROW END -->
+					</div>
+					
+					<div class="FL txt14"
+							style="margin-left: 566px; margin-top: 42px;">
+							<h:outputText value="#{bean.contactDoc.empSignature.date}"
+								rendered="#{bean.contactDoc.empSignature ne null}">
+								<f:convertDateTime pattern="MM/dd/yyyy"
+									timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</div>
+				</div>
+			</div> <!-- end scroll div -->
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm"
+					style="width: 838px; margin-bottom: 15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="events"
+							value="#{bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+		</div>
+	</div>
+</ui:composition>

@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="LightSPEEDeps">
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:net/bull/javamelody/monitoring-spring-datasource.xml
+			/WEB-INF/applicationContext.xml
+			/WEB-INF/applicationContextVersion-dev.xml
+		</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>com.icesoft.faces.concurrentDOMViews</param-name>
+		<param-value>false</param-value>
+		<!-- true: allows 2nd browser window to exist without hanging 1st window -->
+	</context-param>
+	<context-param>
+		<param-name>org.icefaces.strictSessionTimeout</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.icefaces.sessionExpiredRedirectURI</param-name>
+		<param-value>/jsp/error/expired.jsp</param-value>
+	</context-param>
+<!-- NOT currently using ICEpush facility (as of 2.9.5348 5/28/2015)
+	<context-param>
+		<param-name>org.icepush.serverErrorRetryTimeouts</param-name>
+		<param-value>5000 10000 20000 60000</param-value>
+	</context-param><!- - default=1000 2000 4000 (ms) - ->
+	<context-param>
+		<param-name>org.icepush.heartbeatTimeout</param-name>
+		<param-value>30000</param-value>
+	</context-param><!- - default=10000 (10 sec) - ->
+-->
+	<context-param>
+		<param-name>org.icefaces.messagePersistence</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<!--<param-value>Production</param-value>-->
+		<!--<param-value>Development</param-value>-->
+		<param-value>Development</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</param-name>
+		<param-value>false</param-value>
+	</context-param>
+<!--
+	<context-param>
+		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+		<param-value>false</param-value>
+	</context-param>
+ -->
+	<context-param><!-- timezone used for most web-page displays -->
+		<param-name>com.lightspeedeps.model.timeZone</param-name>
+		<param-value>PST</param-value>
+	</context-param>
+	<context-param><!-- Use locale's daylight savings setting -->
+		<param-name>com.lightspeedeps.model.DST</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param><!-- prefix for User account #'s created on this instance -->
+		<param-name>com.lightspeedeps.model.accountPrefix</param-name>
+		<param-value>D01</param-value>
+	</context-param>
+	<context-param><!-- prefix for Production id strings created on this instance -->
+		<param-name>com.lightspeedeps.model.productionPrefix</param-name>
+		<param-value>PD</param-value>
+	</context-param>
+	<context-param><!-- must match persistence unit name in persistence.xml -->
+		<param-name>com.lightspeedeps.hibernate.PUname</param-name>
+		<param-value>lightspeed.db.PU</param-value>
+	</context-param>
+
+	<!-- The following parameters are likely to be changed for development environments -->
+
+	<context-param><!-- the database name within the MySql server -->
+		<param-name>com.lightspeedeps.mysql.databaseName</param-name>
+		<param-value>dbt31a</param-value><!-- dbt31a dba1 ttcodev -->
+	</context-param>
+	<context-param><!-- the user name for accessing the MySql server -->
+		<param-name>com.lightspeedeps.mysql.user</param-name>
+		<param-value>root</param-value>
+	</context-param>
+	<context-param><!-- the  URL for the MySql server -->
+		<param-name>com.lightspeedeps.mysql.url</param-name>
+		<param-value>localhost</param-value>
+		<!--10.1.20.56 for prod; 10.1.20.82 for test; or "localhost" -->
+	</context-param>
+	<context-param><!-- the database name within the mongoDb server -->
+		<param-name>com.lightspeedeps.mongo.databaseName</param-name>
+		<param-value>lightspeed</param-value><!-- dba1 dbt31a ttcodev -->
+	</context-param>
+	<context-param><!-- the URL for the MongoDb server -->
+		<param-name>com.lightspeedeps.mongo.url</param-name>
+		<param-value>localhost</param-value>
+		<!--10.1.20.56 for test/prod; or "localhost" -->
+	</context-param>
+	<context-param><!-- 'true' for "Beta" mode, which disables some features; 'false' for production -->
+		<param-name>com.lightspeedeps.isBeta</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- The following parameters are likely to be changed for development environments -->
+	<!-- Feature Flag/ActiveDirectory/LDAP Connection Pool parms -->
+	<context-param>
+		<param-name>LDAP_INITIAL_POOL_SIZE</param-name>
+		<param-value>2</param-value>
+	</context-param>
+	<context-param>
+		<param-name>LDAP_MAX_POOL_SIZE</param-name>
+		<param-value>10</param-value>
+	</context-param>
+	<context-param>
+		<param-name>LDAP_HOSTNAME</param-name>
+		<param-value>ts01pdc01.teamservices.net</param-value>
+	</context-param>
+	<context-param>
+		<param-name>LDAP_USERNAME</param-name>
+		<param-value>devadmin</param-value>
+	</context-param>
+	<context-param>
+		<param-name>LDAP_PASSWORD</param-name>
+		<param-value>Out0n@gain</param-value>
+	</context-param>
+	<context-param>
+		<param-name>LDAP_PORT</param-name>
+		<param-value>389</param-value>
+	</context-param>
+	<!-- End of ActiveDirectory/LDAP Connection Pool parms -->
+
+	<!-- URLs for microservice API calls -->
+	<context-param>
+		<param-name>AUTHORIZATION_API_URL</param-name><!-- ttco-authorization-api -->
+		<param-value>http://172.16.10.74:7073</param-value>
+	</context-param>
+	<context-param>
+		<param-name>ONBOARDING_API_URL</param-name><!-- ttco-onboarding-api -->
+		<param-value>http://localhost:8081</param-value>
+		<!-- http://172.16.10.74:8080 -->
+	</context-param>
+	<context-param>
+		<param-name>RELEASE_API_URL</param-name><!-- Release Notes: part of ttco-core-api -->
+		<param-value>http://172.16.10.189:8080</param-value>
+	</context-param>
+	<!-- Feature Flag (FF4J) Feature/Property Store URL -->
+	<context-param>
+		<param-name>FF_STORE_URL</param-name>
+		<param-value>http://localhost:8083/api/ff4j</param-value>
+	</context-param>
+	<!-- End of  microservice API parms -->
+
+	<!-- URLs for external jumps -->
+	<context-param>
+		<param-name>ESS_URL</param-name><!-- ESS application -->
+		<param-value>https://ess-qa.ttconline.com/</param-value>
+	</context-param>
+
+	<context-param><!-- the Lightspeed User account to be added to all new Productions -->
+		<param-name>com.lightspeedeps.model.prodAdmin</param-name>
+		<param-value>admin@lightspeedeps.com</param-value>
+	</context-param>
+	<context-param><!-- the second Lightspeed User account to be added to all new Productions with read-only access -->
+		<param-name>com.lightspeedeps.model.prodAdminView</param-name>
+		<param-value>admin.view@lightspeedeps.com</param-value>
+	</context-param>
+	<context-param><!-- the Lightspeed User account to receive audit trail emails -->
+		<param-name>com.lightspeedeps.model.emailAuditTrail</param-name>
+		<param-value>audit.trail@lightspeedeps.com</param-value>
+	</context-param>
+	<context-param><!-- default sender's email address (not usually used) -->
+		<param-name>com.lightspeedeps.model.sendEmailFrom</param-name>
+		<param-value>admin@lightspeedeps.com</param-value>
+	</context-param>
+	<context-param><!-- email address to receive daily login error reports; set to empty to skip email -->
+		<param-name>com.lightspeedeps.batch.sendLoginReportsTo</param-name>
+		<param-value></param-value>
+	</context-param>
+	<context-param><!-- email address to receive Event error reports; set to empty to skip email -->
+		<param-name>com.lightspeedeps.batch.sendErrorSummaryTo</param-name>
+		<param-value></param-value>
+	</context-param>
+	<context-param><!-- SMTP outbound server to use for sending generated emails -->
+		<param-name>lightspeed_mailHost</param-name>
+		<param-value>theteamcompanies-com.mail.protection.outlook.com</param-value>
+			<!-- theteamcompanies-com.mail.protection.outlook.com smtp.gmail.com us-smtp-o365-outbound-1.mimecast.com -->
+	</context-param>
+	<context-param><!-- SMTP outbound port to use for sending generated emails -->
+		<param-name>lightspeed_mailPort</param-name>
+		<param-value>25</param-value><!-- for gmail use 587; for outlook use 25 -->
+	</context-param>
+	<context-param><!-- SMTP mail user name (for connection) to use when sending emails -->
+		<param-name>lightspeed_mailUsername</param-name>
+		<param-value>lightspeed-noreply@theteamcompanies.com</param-value>
+	</context-param>
+	<context-param><!-- SMTP mail user password (for connection) to use when sending emails -->
+		<param-name>lightspeed_mailPassword</param-name>
+		<param-value></param-value>
+	</context-param>
+	<context-param><!-- used for links in generated emails -->
+		<param-name>com.lightspeedeps.model.secureBaseURL</param-name>
+		<param-value>https://*/alphawin/</param-value>
+	</context-param>
+	<context-param><!-- true if using authorize.net production (live) values; false for test -->
+		<param-name>com.lightspeedeps.model.authorizeProduction</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<!-- Authorization parameters -->
+
+	<context-param><!-- (Application) Client ID (name) -->
+		<param-name>com.lightspeedeps.model.authClientId</param-name>
+		<param-value>ttcguest</param-value><!-- test:ttcguest  prod:tocsauthprd -->
+	</context-param>
+	<context-param><!--  (Application) Client secret (password) -->
+		<param-name>com.lightspeedeps.model.authClientPassword</param-name>
+		<param-value>Ttc$#@2007!TTC</param-value><!-- test:Ttc$#@2007!TTC  -->
+	</context-param>
+	<context-param><!-- Standard user name to acquire access token -->
+		<param-name>com.lightspeedeps.model.authStandardUserId</param-name>
+		<param-value>ttcouser@theteamcompanies.com</param-value><!-- test:ttcouser@  prod:ttcoprduser@-->
+	</context-param>
+	<context-param><!-- password for Standard user name to acquire access token -->
+		<param-name>com.lightspeedeps.model.authStandardUserPassword</param-name>
+		<param-value>TTCO!Bur</param-value><!-- test:TTCO!Bur -->
+	</context-param>
+	<context-param><!-- The protocol+domain for City/State Lookup API -->
+		<param-name>com.lightspeedeps.model.apiServerDomain</param-name>
+		<param-value>https://losangeles.teamservicesonline.net/</param-value><!-- test:losangeles  prod:newyork -->
+	</context-param>
+
+	<!-- The parameters ABOVE are likely to be changed for development environments -->
+
+	<context-param><!-- this is a v1.8.2 compatibility setting -->
+		<param-name>com.icesoft.faces.ignoreUserRoleAttributes</param-name>
+		<param-value>true</param-value>
+		<!-- true: better performance when 'renderedOnUserRole' and 'enabledOnUserRole' are not used -->
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<!-- JavaMelody entries -->
+	<filter>
+		<filter-name>monitoring</filter-name>
+		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+		<init-param>
+			<param-name>system-actions-enabled</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>monitoring-path</param-name>
+			<param-value>/moniter</param-value>
+		</init-param>
+		<init-param>
+			<!-- collapse icefaces resources, our GIFs, JPGs and PNGs, and our reports (pdf and xls) -->
+			<!-- also file progress URLs ("...progress.s::vi....") -->
+			<!-- also *.html, which is almost all help topics -->
+			<param-name>http-transform-pattern</param-name>
+			<param-value>faces/resource/.*/|ort/.*pdf|rt/.*xls|[^/]*\.gi|[^/]*\.jp|i/[^/]*\.p|:vi[^.]*|[^/]*\.html</param-value>
+		</init-param>
+		<init-param>
+			<!-- collapse "id in (,,,)" and "id=<number>" -->
+			<param-name>sql-transform-pattern</param-name>
+			<param-value> in \([0-9 ,]+\)| =\d+| = \d+</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>monitoring</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<listener>
+		<listener-class>net.bull.javamelody.SessionListener</listener-class>
+	</listener>
+	<!-- Login controls for Javamelody monitoring page -->
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>Monitoring</realm-name>
+	</login-config>
+	<security-role>
+		<role-name>monitoring</role-name>
+	</security-role>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Monitoring</web-resource-name>
+			<url-pattern>/moniter</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>monitoring</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<!-- specify "NONE" for http, "CONFIDENTIAL" to enforce https -->
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/icefaces/*</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<description>Servlet to receive and respond to posts from the Authorize.net service</description>
+		<servlet-name>authnetServlet</servlet-name>
+		<servlet-class>com.lightspeedeps.checkout.AuthNetCheckoutServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>downloadServlet</servlet-name>
+		<servlet-class>com.lightspeedeps.web.servlet.FileDownloadServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>LsAccessServlet</servlet-name>
+		<!-- this servlet requires a logged-in session before access is allowed -->
+		<servlet-class>com.lightspeedeps.web.servlet.LsFacesServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<description>Onboarding Api Servlet</description>
+		<servlet-name>onboardingapi</servlet-name>
+		<servlet-class>com.lightspeedeps.web.servlet.OnboardingApiServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<description>Test servlet for debugging</description>
+		<servlet-name>testServlet</servlet-name>
+		<servlet-class>com.lightspeedeps.checkout.TestServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>onboardingapi</servlet-name>
+		<url-pattern>/onboardingapi/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>/report/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>/_db_image/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping><!-- for Onboarding documents -->
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>/_db_document/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping><!-- for Onboarding attachment files -->
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>/_db_attachment/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>/_db_annotations/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LsAccessServlet</servlet-name>
+		<url-pattern>*.xls</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>authnetServlet</servlet-name>
+		<url-pattern>*.auth</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>downloadServlet</servlet-name>
+		<url-pattern>/servlet/FileDownloadServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>testServlet</servlet-name>
+		<url-pattern>*.test</url-pattern>
+	</servlet-mapping>
+
+<!-- For development, you can turn off these error pages, to get more diagnostic info. -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/jsp/error/404.html</location>
+	</error-page>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+</web-app>

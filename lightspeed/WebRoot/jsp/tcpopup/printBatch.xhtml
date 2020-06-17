@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- BATCH REPORT CRITERIA for the Print Timecard dialog box -->
+
+	<!-- WEEK-ENDING DATE -->
+	<div class="rowCont pad20tp">
+		<div class="padPop3tp FL W25percnt">
+			<span class="B">Week Ending:</span>
+		</div>
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<div class="FL W75percnt">
+				<h:panelGroup styleClass="pad4lt">
+					<h:selectOneMenu
+						value="#{printTimecardBean.weekEndDate}"
+						valueChangeListener="#{printTimecardBean.listenWeekEndChange}" >
+						<f:convertDateTime timeZone="#{timezone}" pattern="MM/dd/yyyy" />
+						<f:selectItems value="#{printTimecardBean.weekEndDateDL}" />
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+		</icecore:setEventPhase>
+	</div>
+
+	<!-- INCLUDE SELECTION -->
+	<div class="FL W25percnt pad30tp">
+		Include:
+	</div>
+	<div class="FL W60percnt pad30tp">
+		<div class="FL W10percnt">
+			<h:selectOneRadio value="#{printTimecardBean.batchReportType}" styleClass="h_radio"
+				layout="pageDirection">
+				<f:selectItem itemValue="a" itemLabel="" />
+				<f:selectItem itemValue="u" itemLabel="" />
+				<f:selectItem itemValue="b" itemLabel="" />
+			</h:selectOneRadio>
+		</div>
+		<div class="FL W80percnt">
+			<div class="rowCont B_false">
+				<div class="FL">
+					<h:outputText value="All Batches" />
+				</div>
+				<span class="ckbxTxtLbl FL pad5lt rowCont B_false">
+					<h:selectBooleanCheckbox value="#{printTimecardBean.allUnbatchedTimecard}" 
+						styleClass="ckbx" style="margin-left: 10%;"/>Include Unbatched Timecards
+				</span>			
+			</div>
+			<div class="rowCont pad3tp B_false">
+				<h:outputText value="Only Unbatched Timecards"/>				
+			</div>
+			<div class="rowCont">&#160;</div>
+			<div class="rowCont pad9tp B_false">
+				<div>
+					<h:outputText value="Only Batch" />
+				</div>
+				<div class="FL W75percnt rowCont">
+					<h:panelGroup styleClass="pad4lt">
+						<h:selectOneMenu styleClass="pad10lt"
+								value="#{printTimecardBean.selectedObject}" style="width:200px; margin-left: 25px;">
+							<f:selectItems value="#{printTimecardBean.selectBatchList}"/>
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+			</div>	
+		</div>		
+	</div>
+</ui:composition>

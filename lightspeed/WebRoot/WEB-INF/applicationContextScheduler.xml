@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<!-- Contains beans which are identical across all instances; some of these are used
+			by the batch (Quartz) processes. -->
+
+	<!-- E-mail related beans -->
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<description>Utility bean for email support</description>
+		<property name="host" value="${lightspeed_mailHost}"/>
+		<property name="port" value="${lightspeed_mailPort}"/>
+		<property name="username" value="${lightspeed_mailUsername}"/>
+		<property name="password" value="${lightspeed_mailPassword}"/>
+	</bean>
+
+	<bean id="appMailer" class="com.lightspeedeps.message.Mailer">
+		<description>Utility bean for email support</description>
+		<property name="mailSender" ref="mailSender"/>
+		<property name="from" value="${com.lightspeedeps.model.sendEmailFrom}"/>
+	</bean>
+
+	<!-- VARIOUS SCHEDULED JOBS -->
+
+	<!-- Define the beans to be run -->
+
+	<bean id="calculateHtg" class="com.lightspeedeps.batch.CalculateHtg">
+		<property name="startFormDAO" ref="StartFormDAO" />
+		<property name="weeklyTimecardDAO" ref="WeeklyTimecardDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="clearDoodMapJob" class="com.lightspeedeps.batch.ClearDoodMapJob">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="databaseCheck" class="com.lightspeedeps.batch.DatabaseCheck">
+		<property name="productionDAO" ref="ProductionDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dueOverdueCheck" class="com.lightspeedeps.batch.DueOverdueCheck">
+		<property name="callsheetDAO" ref="CallsheetDAO" />
+		<property name="dprDAO" ref="DprDAO" />
+		<property name="exhibitGDAO" ref="ExhibitGDAO" />
+		<property name="notificationDAO" ref="NotificationDAO" />
+		<property name="projectDAO" ref="ProjectDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="eventLogSummary" class="com.lightspeedeps.batch.EventLogSummary">
+		<property name="triggerHours" value="1"/> <!-- best if this matches the quartz schedule -->
+		<property name="mailer" ref="appMailer"/>
+		<property name="recipient" value="${com.lightspeedeps.batch.sendErrorSummaryTo}"/>
+		<property name="eventDAO" ref="EventDAO" />
+		<property name="productionDAO" ref="ProductionDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="failedLogonJob" class="com.lightspeedeps.batch.FailedLogonJob">
+		<property name="mailer" ref="appMailer"/>
+		<property name="recipient" value="${com.lightspeedeps.batch.sendLoginReportsTo}"/>
+		<property name="userDAO" ref="UserDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="formI9Check" class="com.lightspeedeps.batch.FormI9Check">
+		<property name="notificationDAO" ref="NotificationDAO" />
+		<property name="projectDAO" ref="ProjectDAO" />
+		<property name="authBean" ref="AuthBean" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="scriptPagesCheck" class="com.lightspeedeps.batch.ScriptPagesCheck">
+		<property name="notificationDAO" ref="NotificationDAO" />
+		<property name="projectDAO" ref="ProjectDAO" />
+		<property name="projectMemberDAO" ref="ProjectMemberDAO" />
+		<property name="sceneDAO" ref="SceneDAO" />
+		<property name="stripDAO" ref="StripDAO" />
+		<property name="authBean" ref="AuthBean" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="timecardCreator" class="com.lightspeedeps.batch.TimecardCreator">
+		<property name="startFormDAO" ref="StartFormDAO" />
+		<property name="weeklyTimecardDAO" ref="WeeklyTimecardDAO" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- not currently used
+	<bean id="documentDistributor" class="com.lightspeedeps.batch.DocumentDistributor">
+		<property name="notificationDAO" ref="NotificationDAO" />
+		<property name="projectDAO" ref="ProjectDAO" />
+		<property name="authBean" ref="AuthBean" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	 -->
+
+	<!-- Define the quartz factory beans to run them. -->
+
+	<bean id="clearDoodMapJobDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="clearDoodMapJob" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="databaseCheckDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="databaseCheck" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="dueOverdueCheckDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="dueOverdueCheck" />
+		<property name="targetMethod" value="projectBasedNotifications" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="eventLogSummaryDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="eventLogSummary" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="failedLogonJobDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="failedLogonJob" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="formI9CheckDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="formI9Check" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="scriptPagesCheckDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scriptPagesCheck" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="timecardCreatorDetail"
+			class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="timecardCreator" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- Define the triggers with appropriate schedules for each factory.
+		The triggers are initiated via their listing in applicationContext.xml. -->
+
+	<bean id="clearDoodMapJobTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="clearDoodMapJobDetail" />
+		<property name="cronExpression" value="0 0 2 * * ?" /><!-- daily 2am -->
+	</bean>
+
+	<bean id="databaseCheckTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="databaseCheckDetail" />
+		<property name="cronExpression" value="0 01 0/1 * * ?" /><!-- every hour -->
+	</bean>
+
+	<bean id="dueOverdueCheckTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dueOverdueCheckDetail" />
+		<property name="cronExpression" value="0 02 0/1 * * ?" /><!-- every hour -->
+	</bean>
+
+	<bean id="eventLogSummaryTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="eventLogSummaryDetail" />
+		<property name="cronExpression" value="0 05 0/1 * * ?" /><!-- every hour -->
+	</bean>
+
+	<bean id="failedLogonJobTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="failedLogonJobDetail" />
+		<property name="cronExpression" value="0 45 23 * * ?" /><!-- daily -->
+	</bean>
+	
+	<bean id="formI9CheckTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="formI9CheckDetail" />
+		<property name="cronExpression" value="0 30 0 * * ?" /><!-- 12:30am daily -->
+	</bean>
+
+	<bean id="scriptPagesCheckTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="scriptPagesCheckDetail" />
+		<property name="cronExpression" value="0 03 0 * * ?" /><!-- daily -->
+	</bean>
+
+	<bean id="timecardCreatorTrigger"
+			class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="timecardCreatorDetail" />
+		<property name="cronExpression" value="0 10 0 * * ?" /><!-- daily (may run for several minutes) -->
+	</bean>
+
+</beans>

@@ -1,0 +1,45 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<!--
+	Create TTCO .war file from all compiled Java classes and WebRoot files.
+  -->
+<project default="build" name="LSmakeWar" basedir=".">
+
+	<import file="macrodefs.xml" />
+
+	<property name="build.dir" location="target" />
+	<property name="warFilename" value="betawin.20.x.0.betaN.war" /><!-- usual format for beta war file name -->
+	<!-- property name="warFilename" value="ls-Release.20.x.0.war" --><!-- usual format for production war file name -->
+
+<!--	Following properties expected to be defined:
+		warFilename - name of the war file to be built.
+-->
+
+	<target name="clean">
+		<mkdir dir="${build.dir}"/>
+		<delete>
+		  <fileset dir="${build.dir}" includes="*.war"/>
+		</delete>
+	</target>
+
+	<target name="makewar" depends="clean" description="Create a war for the TTCO project">
+		<war 
+			destfile="${build.dir}/${warFilename}" 
+			webxml="WebRoot/WEB-INF/web.xml">
+			<fileset dir="WebRoot" > 
+				<exclude name="upload/**/*" /><!-- transient files that may have been created during testing -->
+				<exclude name="report/**/*" /><!-- transient files that may have been created during testing -->
+				<exclude name="WEB-INF/classes/com/lightspeedeps/test/**" /><!-- test/junit classes, not used in production -->
+				<exclude name="WEB-INF/**/*.mex" /><!-- documentation file, not used in execution -->
+				<exclude name="WEB-INF/lib/PDFNet*.jar" /><!-- this is in tomcat's shared lib directory -->
+			</fileset>
+			<classes dir="${basedir}/src" includes="/META-INF**/*.xml" />
+		</war>
+	</target>
+
+	<target name="build" depends="makewar">
+		<echoTS message="makewar done." />
+	</target>
+
+</project>

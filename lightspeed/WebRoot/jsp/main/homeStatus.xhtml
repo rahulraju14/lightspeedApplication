@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Mini-Tab -->
+
+	<ace:tabPane label="Status" id="statustabs">
+
+		<h:panelGroup id="statusScroll"
+				styleClass="homeStatusScrollCont"
+				style="overflow-x:hidden !important;"
+				scrollHeight="#{headerViewBean.mobile ? '' : '349px'}">
+
+		<!-- Status Mini-Tab / Work Status section -->
+		<h:panelGroup rendered="#{showScriptTabs}">
+			<ui:include src="homeStatusWork.xhtml">
+				<ui:param name="aicp" value="#{aicp}" />
+				<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+			</ui:include>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{not showScriptTabs}">
+			<div class="pad10tp" />
+		</h:panelGroup>
+
+		<!-- Status Mini-Tab / Notifications -->
+		<ui:include src="homeStatusRecent.xhtml">
+			<ui:param name="aicp" value="#{aicp}" />
+			<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+		</ui:include>
+
+		<!-- Status Mini-Tab / Materials 
+		<ui:include src="homeStatusMaterials.xhtml">
+			<ui:param name="aicp" value="#{aicp}" />
+			<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+		</ui:include>
+		-->
+
+		<!-- Status Mini-Tab / Report Status -->
+		<ui:include src="homeStatusReports.xhtml">
+			<ui:param name="aicp" value="#{aicp}" />
+			<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+		</ui:include>
+
+		<!-- Status Mini-Tab / Script Element Status -->
+		<ui:include src="homeStatusElements.xhtml">
+			<ui:param name="aicp" value="#{aicp}" />
+			<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+		</ui:include>
+
+		</h:panelGroup>
+	</ace:tabPane><!--  end Status Tab  -->
+
+</ui:composition>

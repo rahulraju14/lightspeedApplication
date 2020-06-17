@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Account codes section of one row from Weekly/Hourly Rates section, or Allowances section,
+	 of Payroll Start Form page -->
+	<!-- parameters: -->
+	<!-- edit : true for edit mode, false for display (output) mode -->
+	<!-- appEdit : true to enable fields in edit mode, false for disabled -->
+	<!-- rate : the line item to display, AccountLine, Allowance, AllowanceCap, AllowanceCheck, PerDiem -->
+	<!-- aicp: true if this is an AICP (Commercial) Start Form -->
+	<!-- hideLoc: true if display should exclude the Location field (not shown in Start form and Transfer) -->
+	<!-- disablePayBreakdownLines: if true pay breakdown lines are disabled in edit mode. -->
+
+	<h:panelGroup rendered="#{edit and (disablePayBreakdownLines eq null or not disablePayBreakdownLines)}">
+		<h:panelGroup rendered="#{! aicp}">
+			<h:panelGroup rendered="#{! hideLoc}">
+				<ace:textEntry styleClass="sttextin acLocT acEditT" 
+						maxlength="4" value="#{rate.aloc}" disabled="#{not appEdit}"/>
+			</h:panelGroup>
+			<ace:textEntry styleClass="sttextin acPrdT acEditT" 
+					maxlength="6" value="#{rate.major}" disabled="#{not appEdit}"/>
+			<ace:textEntry styleClass="sttextin acDtlT acEditT" 
+					maxlength="8" value="#{rate.dtl}" disabled="#{not appEdit}" />
+			<ace:textEntry styleClass="sttextin acSubT acEditT" 
+					maxlength="5" value="#{rate.sub}" disabled="#{not appEdit}" />
+			<ace:textEntry styleClass="sttextin acSetT acEditT" 
+					maxlength="5" value="#{rate.set}" disabled="#{not appEdit}" />
+			<ace:textEntry styleClass="sttextin acFr1T acEditT" 
+					maxlength="2" value="#{rate.free}" disabled="#{not appEdit}" />
+			<ace:textEntry styleClass="sttextin acFrT acEditT" 
+					maxlength="2" value="#{rate.free2}" disabled="#{not appEdit}" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{aicp}">
+			<ace:textEntry styleClass="sttextin acPrdTc acEditT" 
+					maxlength="7" value="#{rate.major}" disabled="#{not appEdit}" style="width:116px;" />
+		</h:panelGroup>
+	</h:panelGroup>
+	<h:panelGroup rendered="#{(! edit) or (disablePayBreakdownLines ne null and disablePayBreakdownLines)}">
+		<div class="W100percnt">
+			<h:panelGroup rendered="#{! aicp}">
+				<h:panelGroup rendered="#{! hideLoc}">
+					<div class="acLocT"><h:outputText value="#{rate.aloc}&#160;"/></div>
+				</h:panelGroup>
+				<div class="acPrdT"><h:outputText value="#{rate.major}&#160;"/></div>
+				<div class="acDtlT"><h:outputText value="#{rate.dtl}&#160;"/></div>
+				<div class="acSubT"><h:outputText value="#{rate.sub}&#160;"/></div>
+				<div class="acSetT"><h:outputText value="#{rate.set}&#160;"/></div>
+				<div class="acFr1T"><h:outputText value="#{rate.free}&#160;"/></div>
+				<div class="acFrT"><h:outputText value="#{rate.free2}&#160;"/></div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{aicp}">
+				<div class="acPrdTc LH26"><h:outputText value="#{rate.major}&#160;"/></div>
+			</h:panelGroup>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>

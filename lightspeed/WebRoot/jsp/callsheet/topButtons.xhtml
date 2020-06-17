@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Top Button row of callsheet (view and edit modes) -->
+
+	<div class="FL rowCont">
+		<span class="pnlHdrTxt FL">
+			Call Sheet
+			<h:panelGroup styleClass="pad10lt" rendered="#{callSheetViewBean.callsheet.id ne null}">
+
+				<h:panelGroup rendered="#{(not callSheetViewBean.editMode) and
+						(not empty callSheetViewBean.dateDL)}">
+					<h:selectOneMenu styleClass="stdDd" 
+							valueChangeListener="#{callSheetViewBean.listenDate}"
+							value="#{callSheetViewBean.callsheetId}">
+						<f:selectItems value="#{callSheetViewBean.dateDL}"/>
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{callSheetViewBean.editMode}">
+					<h:outputText value="#{callSheetViewBean.callsheet.date}">
+						<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern=" - MMMM d, yyyy" />
+					</h:outputText>
+				</h:panelGroup>
+
+			</h:panelGroup>
+		</span>
+
+		<h:panelGroup styleClass="pnlHdrTxt FL pad100lt W40percnt" rendered="#{callSheetViewBean.unit.number gt 1}">
+			<div class="MA W150">
+				<h:outputText value="#{callSheetViewBean.unit.name}"/>
+				<h:panelGroup styleClass="hdrUnitIcon pad5rt">
+					<h:outputText
+						styleClass="NW FL txtBrtBlue txt14 B pad5lt pad2tp"
+						value="#{callSheetViewBean.unit.number}" />
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
+
+		<!-- ** BUTTONS ** -->
+		<h:panelGroup rendered="#{callSheetViewBean.callsheet.id ne null}">
+
+			<!-- EDIT -->
+			<h:panelGroup rendered="#{(not callSheetViewBean.editMode)
+					and (not empty authBean.pgFields['6.2,edit'])}">
+				<span class="FR pad5rt">
+					<span class="btnPriHotLt"/>
+					<span>
+						<ace:linkButton value="Edit"
+							action="#{callSheetViewBean.actionEdit}" styleClass="btnPriHotCt">
+							<f:setPropertyActionListener value="com.lightspeedeps.callsheetid" target="#{jumpBean.attribute}"/>
+							<f:setPropertyActionListener value="#{callSheetViewBean.callsheet.id}" target="#{jumpBean.value}"/>
+							<f:setPropertyActionListener value="com.lightspeedeps.headerTabId" target="#{jumpBean.attribute}"/>
+							<f:setPropertyActionListener value="#{callSheetViewBean.headerTabId}" target="#{jumpBean.value}"/>
+						</ace:linkButton>
+					</span>
+					<span class="btnPriHotRt"/>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{callSheetViewBean.editMode}">
+				<span class="FR pad5rt">
+					<span class="btnPriDisLt"/>
+					<span>
+						<ace:linkButton value="Edit"
+								styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+					</span>
+					<span class="btnPriDisRt"/>
+				</span>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{(not callSheetViewBean.editMode)}">
+				<!-- remainder of buttons only displayed in view mode -->
+				<!-- EMAIL -->
+				<h:panelGroup rendered="#{(not empty authBean.pgFields['6.2,publish'])}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt"/>
+						<span>
+							<ace:linkButton value="Email"
+								action="#{printDailyReportBean.actionSendCallsheet}"
+								styleClass="btnPriEnbCt">
+								<f:setPropertyActionListener target="#{printDailyReportBean.reportId}"
+									value="#{callSheetViewBean.callsheet.id}" />
+							  </ace:linkButton>
+						</span>
+						<span class="btnPriEnbRt"/>
+				  </span>
+				</h:panelGroup>
+
+				<!-- PRINT -->
+				<h:panelGroup  rendered="#{(callSheetViewBean.callsheet.id ne null)}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt"/>
+							<ace:linkButton value="Print" styleClass="btnPriEnbCt"
+								action="#{printDailyReportBean.actionPrintCallsheet}">
+								<f:setPropertyActionListener target="#{printDailyReportBean.reportId}"
+									value="#{callSheetViewBean.callsheet.id}" />
+							 </ace:linkButton>
+						<span class="btnPriEnbRt"/>
+					</span>
+				</h:panelGroup>
+
+				<!-- EXPORT -->
+				<h:panelGroup styleClass="pad5lt">
+					<h:panelGroup styleClass="FR pad5rt" rendered="#{callSheetViewBean.callsheet.id ne null}">
+						<span class="btnPriHotLt"/>
+						<span>
+							<ace:linkButton value="Export"
+								styleClass="btnPriHotCt" action="#{printDailyReportBean.actionExportCallsheet}">
+								<f:setPropertyActionListener target="#{printDailyReportBean.reportId}" value="#{callSheetViewBean.callsheet.id}" />
+							</ace:linkButton>
+						</span>
+						<span class="btnPriHotRt"/>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<!-- MAKE FINAL -->
+				<h:panelGroup id="btnMkFinal" visible="true"
+					rendered="#{callSheetViewBean.callsheet.id ne null and callSheetViewBean.callsheet.status ne 'PUBLISHED' and not empty authBean.pgFields['6.2,publish']}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt"/>
+						<span>
+							<ace:linkButton value="Make Final"
+								action="#{callSheetViewBean.actionMakeFinal}"
+								styleClass="btnPriEnbCt">
+							</ace:linkButton>
+						</span>
+						<span class="btnPriEnbRt"/>
+					</span>
+				</h:panelGroup>
+			</h:panelGroup><!-- end view-mode buttons -->
+		</h:panelGroup><!-- end ID not null -->
+	</div>
+</ui:composition>

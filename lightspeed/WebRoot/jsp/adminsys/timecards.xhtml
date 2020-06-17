@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Timecards mini-tab of the Prod Admin / Other page -->
+  <ace:tabPane label="Timecards" id="timecardtab">
+
+				<!-- RUN TIMECARD CREATOR on ALL productions) -->
+ 				<div class="rowCont pad20tp">
+					<h:outputText styleClass="pnlHdrTxt" value="Create Timecards" />
+					<h:panelGroup styleClass="rowCont">
+						<div class="pad5tp pad20lt W40percnt">
+							This creates new (blank) timecards for the current payroll week,
+							for *ALL* active productions.
+							It will also create timecards for the following week IF the
+							current date is within the number of days specified by the
+							payroll preference for that production.
+							For each production, timecards are created for all
+							employees that have valid (completed) Start Forms with effective
+							dates that include one or more days within the specified week.
+							An Event log entry is created when this completes, showing the
+							number of timecards created for each production.
+						</div>
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont pad20tp pad20lt">
+					<h:selectBooleanCheckbox value="#{adminTimecardBean.ignorePriorWeek}"
+							styleClass="pad20lt" disabled="true">
+					</h:selectBooleanCheckbox>
+					Ignore prior week's timecard status (not currently allowed)
+				</div>
+
+        <div class="rowCont pad20tp pad20lt">
+					<span class="btnPriHotLt"/>
+        	<ace:linkButton value="Run Timecard Creator"
+                  action="#{adminTimecardBean.actionTimecardCreator}" styleClass="btnPriHotCt" />
+					<span class="btnPriHotRt"/>
+        </div>
+
+</ace:tabPane>
+
+</ui:composition>

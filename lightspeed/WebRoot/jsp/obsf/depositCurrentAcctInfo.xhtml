@@ -1,0 +1,183 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Current Bank Account Information -->
+
+	<c:set var="setupOrChange" value="#{(formDepositBean.form.firstBank or formDepositBean.form.changeAccount) and (formDepositBean.empEdit)}" />
+	<c:set var="setupOrChangeInit" value="#{(formDepositBean.form.firstBank or formDepositBean.form.changeAccount) and (contactFormBean.editAuth)}" />
+
+	<div class="BKwhite" style="width:820px;">
+
+		<div class="rowCont FL pad8tp">
+			<span class="W40percnt pad15lt FL">
+				<h:outputText styleClass="FL B U I txt13" value="Current Bank Account for Deposit of Net Wages:" />
+			</span>
+			<span class="W40percnt">
+				<h:outputText styleClass="FL pad30lt" value="Initial here to authorize:" />
+			</span>
+			<!-- Initial Button  -->
+			<h:panelGroup styleClass="btn_legend_left pad8tp" style="float:left;" rendered="#{formDepositBean.form.bankInitial1 eq null}">
+				<h:panelGroup rendered="#{setupOrChangeInit}">
+					<span class="btnMiniLtHot" />
+					<h:commandLink value="Initial"
+						styleClass="btnMiniCt"
+						 action="#{formDepositBean.actionInitial}">
+						 <f:setPropertyActionListener target="#{formDepositBean.initial}" value="#{true}" />
+					</h:commandLink>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not setupOrChangeInit}">
+					<span class="btnMiniLt"/>
+					<span>
+						<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					</span>
+					<span class="btnMiniRt"/>
+				</h:panelGroup>
+			</h:panelGroup>
+			<span class="pad5lt">
+				<h:outputText escape="false" styleClass="txt12" rendered="#{formDepositBean.form.bankInitial1 ne null}">
+					<h:outputText value=" #{formDepositBean.form.bankInitial1.initials}" styleClass="B txtBlue" />
+				</h:outputText>
+			</span>
+			<!-- Initial Button End -->
+		</div>
+
+		<div class="rowCont FL pad6tp">
+			<!-- ACCOUNT NAME 1 -->
+			<div class="W40percnt FL pad15lt">
+				<span class="fdNm" style="width:100px;">
+					<h:outputText styleClass="FL" value="Account Name:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" styleClass="FL" style="width:60%"
+							value="#{formDepositBean.form.accountName1}"
+							disabled="#{not setupOrChange}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ACCOUNT TYPE 1 -->
+			<div class="FL" style="width:29%">
+				<span>
+					<h:outputText styleClass="FL B pad5lt pad3tp" value="TYPE:" />
+				</span>
+				<span class="FL pad1tp pad5lt #{setupOrChange and (formDepositBean.form.accountType1 eq null) ? 'requiredDiv' : ''}">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:buttonGroup id="accountType1" mutuallyExclusive="true"
+						layout="lineDirection" styleClass="pad-1tp">
+						<span class="FL I">
+							<ace:radioButton group="accountType1" id="CHK1"
+								label="CHECKING" labelPosition="right"
+								value="#{formDepositBean.currentAcctType[0]}"
+								valueChangeListener="#{formDepositBean.listenCurrentAccountType}"
+								disabled="#{not setupOrChange}">
+								<ace:ajax execute="accountType1" event="activate" render="accountType1"/>
+							</ace:radioButton>
+						</span>
+						<span class="pad5lt FL I">
+							<ace:radioButton group="accountType1" id="SAV1"
+								label="SAVINGS" labelPosition="right"
+								disabled="#{not setupOrChange}"
+								value="#{formDepositBean.currentAcctType[1]}"
+								vlueChangeListener="#{formDepositBean.listenCurrentAccountType}">
+								<ace:ajax execute="accountType1" event="activate" render="accountType1"/>
+							</ace:radioButton>
+						</span>
+					</ace:buttonGroup>
+				</icecore:setEventPhase>
+				</span>
+			</div>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- ACCOUNT NUMBER 1 -->
+			<div class="W35percnt FL pad15lt">
+				<span class="fdNm" style="width:101px;">
+					<h:outputText styleClass="FL" value="Account Number:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{setupOrChange and (empty formDepositBean.form.accountNumber1) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="25" styleClass="FL"
+							value="#{formDepositBean.form.accountNumber1}"
+							disabled="#{not setupOrChange}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ABA ROUTING 1 -->
+			<div class="W31percnt FL">
+				<span  class="fdNm pad10lt" style="width:90px;">
+					<h:outputText styleClass="FL" value="ABA Routing #:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{setupOrChange and (empty formDepositBean.form.aBARouting1) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="10" styleClass="FL"
+							style="min-width:40%; width:56%;"
+							value="#{formDepositBean.form.aBARouting1}"
+							disabled="#{not setupOrChange}">
+							<!-- <f:converter converterId="lightspeed.ABARoutingConverter" /> -->
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- BANK NAME -->
+			<div class="W42percnt FL pad15lt">
+				<span class="fdNm" style="width:100px;">
+					<h:outputText styleClass="FL" value="Bank Name:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{setupOrChange and (empty formDepositBean.form.bankName1) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="50" styleClass="FL" style="width:64%"
+							value="#{formDepositBean.form.bankName1}"
+							disabled="#{not setupOrChange}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- BANK PHONE 1-->
+			<div class="W26percnt FL">
+				<span  class="fdNm" style="width:70px;">
+					<h:outputText styleClass="FL" value="Telephone:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="25" styleClass="FL"
+							style="min-width:40%; width:54%;"
+							value="#{formDepositBean.form.bankPhone1}"
+							disabled="#{not setupOrChange}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<!-- BANK ADDRESS 1 -->
+		<div class="W67percnt FL pad15lt pad5tp">
+			<span  class="fdNm"  style="width:100px;" >
+				<h:outputText styleClass="FL" value="Bank Address:" />
+			</span>
+			<h:panelGroup>
+				<span class="fd_sm2">
+					<ace:textEntry maxlength="100" styleClass="FL" style="width:78%"
+						value="#{formDepositBean.form.bankAddress1}"
+						disabled="#{not setupOrChange}">
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+	</div>
+</ui:composition>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tcHeader" pageWidth="540" pageHeight="65" orientation="Landscape" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT * FROM weekly_time_card where id = $P!{weeklyId}"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="weeklyId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[950]]></defaultValueExpression>
+	</parameter>
+	<parameter name="hideTcGuarantee" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aicp" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sfDAO" class="com.lightspeedeps.dao.StartFormDAO" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="end_date" class="java.sql.Date"/>
+	<field name="Last_Name" class="java.lang.String"/>
+	<field name="First_Name" class="java.lang.String"/>
+	<field name="Social_Security" class="java.lang.String"/>
+	<field name="Loan_Out_Corp" class="java.lang.String"/>
+	<field name="Prod_Name" class="java.lang.String"/>
+	<field name="Prod_Co" class="java.lang.String"/>
+	<field name="Job_Name" class="java.lang.String"/>
+	<field name="Off_Production" class="java.lang.Boolean"/>
+	<field name="Occupation" class="java.lang.String"/>
+	<field name="Occ_Code" class="java.lang.String"/>
+	<field name="Union_Number" class="java.lang.String"/>
+	<field name="Rate" class="java.math.BigDecimal"/>
+	<field name="guar_hours" class="java.math.BigDecimal"/>
+	<field name="State_Worked" class="java.lang.String"/>
+	<field name="City_Worked" class="java.lang.String"/>
+	<field name="Fed_Corp_Id" class="java.lang.String"/>
+	<field name="State_Corp_Id" class="java.lang.String"/>
+	<field name="Account_Major" class="java.lang.String"/>
+	<field name="Account_Dtl" class="java.lang.String"/>
+	<field name="Adjusted" class="java.lang.Boolean"/>
+	<field name="Start_Form_Id" class="java.lang.Integer"/>
+	<field name="Work_Zip" class="java.lang.String"/>
+	<field name="Paid_As" class="java.lang.String"/>
+	<detail>
+		<band height="65" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da" mode="Transparent" x="0" y="26" width="275" height="39"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da" mode="Transparent" x="275" y="26" width="265" height="39"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="c8c57c42-8562-445c-badc-683f9547b294" style="tcDefBold" x="0" y="13" width="50" height="13"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c8c57c42-8562-445c-badc-683f9547b294" style="tcDefBold" x="275" y="13" width="75" height="13"/>
+				<textElement/>
+				<text><![CDATA[Week Ending:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBold" x="0" y="26" width="75" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{aicp} ? "Project Name:" : "Prod. Name:"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="275" y="26" width="50" height="13"/>
+				<textElement/>
+				<text><![CDATA[Loan-Out:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="0" y="39" width="75" height="13"/>
+				<textElement/>
+				<text><![CDATA[Production Co.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="200" y="39" width="50" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Union:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="275" y="39" width="50" height="13"/>
+				<textElement/>
+				<text><![CDATA[Federal ID:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="400" y="39" width="75" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[State Corp #:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="0" y="52" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[Occ.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="200" y="52" width="50" height="13"/>
+				<textElement/>
+				<text><![CDATA[Occ. Code:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="275" y="52" width="50" height="13"/>
+				<textElement/>
+				<text><![CDATA[Work Loc:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c1a48690-985a-4bb3-9886-1404f070c3ff" style="tcDefBold" x="75" y="13" width="200" height="13"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Last_Name} + ", " + $F{First_Name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement uuid="b220cbbc-f093-4fca-9ce6-00394c35247e" style="tcDefault" x="350" y="13" width="50" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b220cbbc-f093-4fca-9ce6-00394c35247e" style="tcDefault" x="400" y="13" width="50" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[($F{Adjusted} ? "- ADJ" : "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b220cbbc-f093-4fca-9ce6-00394c35247e" style="tcDefBold" x="425" y="13" width="100" height="13"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[($F{Off_Production} ? "OFF PRODUCTION" : "")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" mode="Transparent" x="75" y="26" width="200" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{aicp} ? $F{Job_Name} : $F{Prod_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="325" y="26" width="200" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Loan_Out_Corp}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="75" y="39" width="125" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Prod_Co}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="250" y="39" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Union_Number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="325" y="39" width="50" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($P{REPORT_SCRIPTLET}.startFormFedId($F{Start_Form_Id}))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="475" y="39" width="50" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{State_Corp_Id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="25" y="52" width="175" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="250" y="52" width="25" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Occ_Code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="325" y="52" width="125" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{City_Worked} +", " +  $F{State_Worked} + " " + ($F{Work_Zip} == null ? "" : $F{Work_Zip})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="823599fd-5da8-4206-b72a-7b16586e5ce0" style="tcDefBold" x="0" y="0" width="140" height="13"/>
+				<textElement/>
+				<text><![CDATA[This timecard was submitted as ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f01c3155-839f-40ef-8a68-b54aaee6c273" style="tcDefBold" x="140" y="0" width="100" height="13" forecolor="#FF0000">
+					<printWhenExpression><![CDATA[$F{Paid_As}.equals("LO")]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[LOAN-OUT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09852fef-ca34-413d-acf7-2a3c2dc76f4c" style="tcDefBold" x="140" y="0" width="100" height="13" forecolor="#0000FF">
+					<printWhenExpression><![CDATA[$F{Paid_As}.equals("I")]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[INDIVIDUAL]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cast" pageWidth="540" pageHeight="900" whenNoDataType="AllSectionsNoDetail" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="74d81e82-aa58-47dc-a91c-45f1d459fb90">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="queryParam" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT user.first_name, user.last_name, tc.castid, tc.role as name, " +
+"case tc.day_type  when 'WORK' then 'W'  when 'OTHER_TRAVEL' then 'T' when 'COMPANY_TRAVEL' then 'T' when 'HOLIDAY' then 'Y' when 'OFF' then ' ' when 'START' then 'SW' when 'START_FINISH' then 'SWF' when 'START_DROP' then 'SWD' when 'START_TRAVEL' then 'ST' when 'DROP' then 'WD' when 'PICKUP' then 'PW' when 'PICKUP_DROP' then 'PWD' when 'PICKUP_FINISH' then 'PWF' when 'FINISH' then 'WF' when 'HOLD' then 'H' when 'NOT_NEEDED' then ' ' else '?' end as status, " +
+"tc.* " +
+"FROM time_card tc, contact, user " +
+"WHERE  contact.id = tc.contact_id  and user.id = contact.user_id  and tc.dpr_cast_id = " +
+"68" +
+" order by tc.castid;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="castTimeFormat" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("h:mma", $P{REPORT_LOCALE}, $P{productionTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{queryParam}]]>
+	</queryString>
+	<field name="castid" class="java.lang.Integer"/>
+	<field name="castid_str" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="DTYPE" class="java.lang.String"/>
+	<field name="Contact_Id" class="java.lang.Integer"/>
+	<field name="Role" class="java.lang.String"/>
+	<field name="Department_Id" class="java.lang.Integer"/>
+	<field name="Minor" class="java.lang.Boolean"/>
+	<field name="Day_Type" class="java.lang.String"/>
+	<field name="Report_Set" class="java.sql.Timestamp"/>
+	<field name="Dismiss_Set" class="java.sql.Timestamp"/>
+	<field name="First_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="First_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Report_Makeup" class="java.sql.Timestamp"/>
+	<field name="Dismiss_Makeup" class="java.sql.Timestamp"/>
+	<field name="ND_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="ND_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Leave_For_Location" class="java.sql.Timestamp"/>
+	<field name="Arrive_Location" class="java.sql.Timestamp"/>
+	<field name="Leave_Location" class="java.sql.Timestamp"/>
+	<field name="Arrive_Studio" class="java.sql.Timestamp"/>
+	<field name="Stunt_Adjust" class="java.sql.Timestamp"/>
+	<field name="Wardrobe_Outfits" class="java.lang.Integer"/>
+	<field name="Mpv1" class="java.lang.String"/>
+	<field name="Mpv2" class="java.lang.String"/>
+	<field name="Forced_Call" class="java.lang.Boolean"/>
+	<field name="Tutoring_Hours" class="java.sql.Timestamp"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="last_name" class="java.lang.String"/>
+	<columnHeader>
+		<band height="40" splitType="Prevent">
+			<staticText>
+				<reportElement uuid="44247f43-b69f-4d52-9977-7915b07a1285" key="staticText-22" style="prDefBold" mode="Opaque" x="0" y="0" width="63" height="30" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[W - Worked
+S - Started
+TR - Travel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44247f43-b69f-4d52-9977-7915b07a1285" key="staticText-22" style="prDefBold" mode="Opaque" x="63" y="0" width="72" height="30" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[R - Rehearsal
+H - Hold
+F - Finished]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44247f43-b69f-4d52-9977-7915b07a1285" key="staticText-22" style="prDefBold" mode="Opaque" x="135" y="0" width="63" height="30" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T - Test
+K - Minor
+FT - Fitting]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44247f43-b69f-4d52-9977-7915b07a1285" key="staticText-22" style="prDefBox" mode="Transparent" x="0" y="0" width="198" height="30" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7fe6a11-5bed-4aba-bff0-0a0a03f607de" key="staticText-17" style="prDefBoxBold" mode="Opaque" x="198" y="0" width="90" height="20" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Work Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="43ff2a6d-6922-4795-ba04-bdeb107aeb62" key="staticText-20" style="prDefBoxBold" mode="Opaque" x="288" y="0" width="135" height="20" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Meals]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0833c2d-a376-4b82-9096-9bb515ecd050" key="staticText-21" style="prDefBoxBold" mode="Opaque" x="423" y="0" width="90" height="20" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Travel time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="774f8530-a636-4a67-b998-665c8cfc5a28" key="staticText-23" style="prDefBoxBold" mode="Opaque" x="513" y="0" width="27" height="20" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7fe6a11-5bed-4aba-bff0-0a0a03f607de" key="staticText-17" style="prDefBoxBold" mode="Opaque" x="198" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="882ce5b1-d63a-47e0-af49-a7ccadb1e3ab" key="staticText-18" style="prDefBoxBold" mode="Opaque" x="243" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Dismiss]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c5386f95-2d74-4f7e-b822-6cd1be216e38" key="staticText-19" style="prDefBoxBold" mode="Opaque" x="288" y="20" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NDB]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c5386f95-2d74-4f7e-b822-6cd1be216e38" key="staticText-19" style="prDefBoxBold" mode="Opaque" x="315" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[1st meal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="43ff2a6d-6922-4795-ba04-bdeb107aeb62" key="staticText-20" style="prDefBoxBold" mode="Opaque" x="360" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[2nd meal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="774f8530-a636-4a67-b998-665c8cfc5a28" key="staticText-23" style="prDefBoxBold" mode="Opaque" x="405" y="20" width="18" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94f5d045-f890-4d33-a460-8df77d2eca8b" key="staticText-15" style="prDefBoxBold" mode="Opaque" x="423" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[Lv for|Arrv]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94f5d045-f890-4d33-a460-8df77d2eca8b" key="staticText-15" style="prDefBoxBold" mode="Opaque" x="468" y="20" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[  Lv | Arrv]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94f5d045-f890-4d33-a460-8df77d2eca8b" key="staticText-15" style="prDefBoxBold" mode="Opaque" x="513" y="20" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Stunt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94fa5d64-6f97-4e39-a02d-710055fee5c1" key="staticText-1" style="prDefBoxBold" mode="Opaque" x="0" y="30" width="18" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="11225d26-c980-499c-8dfd-72de4964f790" key="staticText-2" style="prDefBoxBold" mode="Opaque" x="18" y="30" width="81" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3e175534-1e9c-4c37-b41e-b6f830950dc7" key="staticText-3" style="prDefBoxBold" mode="Opaque" x="99" y="30" width="72" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[Character]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4163ef3f-58b7-4ffd-a41f-1f02915873c8" key="staticText-4" style="prDefBoxBold" mode="Opaque" x="171" y="30" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0da1a28d-6587-4c84-8ba0-1bca40e2cc62" key="staticText-5" style="prDefBoxBold" mode="Opaque" x="198" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[M/Up| Set]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="636fd7d8-2d1f-4219-9ef0-19f564ef68d4" key="staticText-8" style="prDefBoxBold" mode="Opaque" x="243" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[M/Up| Set]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fd92d9c8-edd5-4e52-a74b-10223c7c4f6e" key="staticText-13" style="prDefBoxBold" mode="Opaque" x="288" y="30" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" rotation="None"/>
+				<text><![CDATA[End]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="03583760-280c-4bdb-bdcf-b08e872ff098" key="staticText-10" style="prDefBoxBold" mode="Opaque" x="315" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Out   |  In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="52d7d80d-1d19-44ba-8bc7-fdc519e834f3" key="staticText-12" style="prDefBoxBold" mode="Opaque" x="360" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Out   |  In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="977ac6bb-dbf1-4fac-8d81-6c47eee86368" key="staticText-14" style="prDefBoxBold" mode="Opaque" x="405" y="30" width="18" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[MP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="94f5d045-f890-4d33-a460-8df77d2eca8b" key="staticText-15" style="prDefBoxBold" mode="Opaque" x="423" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Loc  | Loc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5410f91-dac8-4d46-898d-daa1ddecb60e" key="staticText-16" style="prDefBoxBold" mode="Opaque" x="468" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Loc  | Hotel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="776a7a95-fa7a-4c3a-a754-785ef306618d" key="staticText-23" style="prDefBoxBold" mode="Opaque" x="513" y="30" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Adj]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b28eada0-f176-452c-9dfe-33f0a5a7aa6b" key="textField" style="prDefBox" x="18" y="0" width="81" height="10"/>
+				<textElement textAlignment="Justified">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{first_name}+" "+$F{last_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4d714ddd-e272-43f3-8687-83374eef16a0" key="textField" style="prDefBox" x="99" y="0" width="72" height="10"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}=="null"?"":$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="66ce7f91-d31c-4152-aec1-21243bccf8cf" key="textField" style="prDefBox" x="171" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="f3f85a4c-113b-4e21-b996-222b19e12b97" key="textField" style="prDefBox" x="243" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{Dismiss_Makeup},$F{Dismiss_Set})]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="c59751d7-ccbd-4f21-aaaa-cec384873044" key="textField" style="prDefBox" x="315" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{First_Meal_Start},$F{First_Meal_End})]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="c8e16e94-fa19-4e6e-a71b-5fbe04152416" key="textField" style="prDefBox" x="360" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{Second_Meal_Start},$F{Second_Meal_End})]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="0cdde64c-b968-47b9-ab76-05e9ca90a1a1" key="textField" style="prDefBox" x="198" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{Report_Makeup},$F{Report_Set})]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="1de52088-67d7-4c11-8ab5-73ded5acb0a9" key="textField" style="prDefBox" x="423" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{Leave_For_Location},$F{Arrive_Location})]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="cd48af3b-1814-4aa2-9cdd-d7a7ceebfb8c" key="textField" style="prDefBox" x="468" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTwoTimes($P{castTimeFormat},$F{Leave_Location},$F{Arrive_Studio})]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="6ca4055b-6ec9-44ee-8106-c5733a578e2e" key="textField" style="prDefBox" x="513" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTime($P{castTimeFormat},$F{Stunt_Adjust})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="075267f5-58bb-4006-b0da-26310ca02529" key="textField" style="prDefBox" x="0" y="0" width="18" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{castid_str}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="f3f85a4c-113b-4e21-b996-222b19e12b97" key="textField" style="prDefBox" x="288" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTime($P{castTimeFormat},$F{ND_Meal_End})]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="66ce7f91-d31c-4152-aec1-21243bccf8cf" key="textField" style="prDefBox" x="405" y="0" width="9" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mpv1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="66ce7f91-d31c-4152-aec1-21243bccf8cf" key="textField" style="prDefBox" x="414" y="0" width="9" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mpv2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

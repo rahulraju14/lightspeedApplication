@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Points of Interest</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('poi:itemlist', 213, 364);
+
+	element = document.getElementById('poi:miniView');
+	resizeElement(element, 181, 347);
+	</c:if>
+}
+var formname = "poi";
+var mainListId = "poi:itemlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="poi">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}"  style="visibility:hidden" >
+		<f:attribute name="tabid" value="pointofinterest" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin POI List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="poiHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Points of Interest</span>
+						<h:panelGroup styleClass="FR pad5rt" rendered="#{(not empty authBean.pgFields['5.3,edit'])}">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton value="Add"
+									action="#{pointOfInterestBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ckbxRow ltrtBdr BKwhite">
+						<h:selectOneMenu styleClass="txt11 FR pad2tp pad2rt" style="width:110px;"
+							value="#{pointOfInterestBean.category}"
+							valueChangeListener="#{pointOfInterestBean.selectedCategory}">
+							<f:selectItems
+								value="#{pointOfInterestBean.pointOfInterestTypeDL}" />
+								<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+
+					<!-- data list container for POI -->
+					<div id="poiListCont" class="rowCont ltrtBdr">
+						<ace:dataTable id="itemlist"
+							style="width:100%;max-width:100%;"
+							styleClass="bk_sl_grid"
+							selectionMode="single"
+							value="#{pointOfInterestBean.sortedItemList}" var="item"
+							scrollHeight="#{headerViewBean.mobile ? '' : '367'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							stateMap="#{pointOfInterestBean.stateMap}"
+							rowSelectListener="#{pointOfInterestBean.listenRowClicked}" >
+
+							<ace:column headerText="" style="width:7%;padding-left:3px;">
+								<a href="#" title="#{item.address.completeAddress}"><!-- both title for href and alt for img req for iE7 and iE8 -->
+									<h:graphicImage value=" " alt="#{item.address.completeAddress}" url="../../i/icon_GlobeSm.png" />
+								</a>
+							</ace:column>
+
+							<ace:column headerText="Name" style="width:38%;">
+								<h:outputText
+									value="#{item.name}"/>
+							</ace:column>
+
+							<ace:column headerText="Phone" style="width:30%;">
+								<h:outputText
+									value="#{item.phone}"/>
+							</ace:column>
+
+							<ace:column headerText="Type" style="width:25%;">
+								<h:outputText style="font-size:11px;padding-right:18px;"
+									value="#{item.type}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end poiListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End POI List - pnlLt -->
+
+					<!--  Begin POI Details - pnlRt -->
+					<div id="pnlRt">
+
+						<h:panelGroup>
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+
+						<div class="rowCont FL BKwhite ltrtBdr">
+							<span class="pnlHdrTxt FL">
+								<h:outputText
+									rendered="#{pointOfInterestBean.element.name ne null}"
+									value="#{pointOfInterestBean.element.name}"/>&#160;
+							</span>
+
+							<h:panelGroup rendered="#{pointOfInterestBean.editMode and (pointOfInterestBean.element.id ne null) and (not empty authBean.pgFields['5.3,delete'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{pointOfInterestBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not pointOfInterestBean.editMode) and (pointOfInterestBean.element ne null) and (not empty authBean.pgFields['5.3,delete'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Delete" action="#{pointOfInterestBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not pointOfInterestBean.editMode) and (pointOfInterestBean.element ne null) and (not empty authBean.pgFields['5.3,edit'])}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{pointOfInterestBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div id="poiDetailCont" class="ltrtBdr BKwhite">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+								<!-- miniview Tabs for POI -->
+								<ace:tabSet selectedIndex="#{pointOfInterestBean.selectedTab}"
+									width="100%" cellpadding="0" cellspacing="0" border="0">
+
+									<!--  Detail Tab  -->
+									<ace:tabPane label="Details" id="detailtab">
+
+										<div id="poiCont" class="FL pad15tp">
+
+											<h:panelGroup
+												rendered="#{pointOfInterestBean.editMode}"
+												styleClass="rowCont FL fd_btmPad">
+												<span class="fdNm">
+													<h:outputText value="Name:" />
+													<span class="mandatory">*</span>
+												</span>
+												<span class="fd">
+													<ace:textEntry maxlength="45" styleClass="address"
+														value="#{pointOfInterestBean.element.name}" />
+												</span>
+											</h:panelGroup>
+
+											<div class="subPoiLt FL">
+
+												<div class="rowCont FL fd_btmPad">
+													<h:outputText styleClass="fdNm FL" value="Type:" />
+													<h:outputText styleClass="fd pad2tp" value="#{pointOfInterestBean.element.type.label}"
+														rendered="#{not pointOfInterestBean.editMode}" />
+													<h:panelGroup styleClass="fd pad1tp" rendered="#{pointOfInterestBean.editMode}">
+														<h:selectOneMenu style="width:150px;"
+															value="#{pointOfInterestBean.type}"
+															valueChangeListener="#{pointOfInterestBean.changeEditCategory}">
+															<f:selectItems
+																value="#{enumList.pointOfInterestTypes}" />
+																<ace:ajax />
+														</h:selectOneMenu>
+													</h:panelGroup>
+												</div>
+
+												<!-- poi address 1 VIEW/EDIT MODE -->
+												<div class="rowCont FL fd_btmPad">
+													<span class="fdNm">
+														<h:outputText value="Address:" />
+													</span>
+													<h:panelGroup
+														rendered="#{not pointOfInterestBean.editMode}">
+														<span class="fd">
+															<h:outputText
+																value="#{pointOfInterestBean.element.address.addrLine1}" />
+														</span>
+													</h:panelGroup>
+													<h:panelGroup
+														rendered="#{pointOfInterestBean.editMode}">
+														<span class="fd">
+															<ace:textEntry maxlength="35" styleClass="address"
+																value="#{pointOfInterestBean.element.address.addrLine1}" />
+														</span>
+													</h:panelGroup>
+												</div><!-- end poi address 1 -->
+
+												<!-- poi address 2 VIEW/EDIT mode -->
+												<h:panelGroup
+													rendered="#{not pointOfInterestBean.editMode and (not empty pointOfInterestBean.element.address.addrLine2)}">
+													<div class="rowCont FL fd_btmPad">
+														<span class="fdNm">
+															<!-- address 2 keep this title place holder -->
+														</span>
+														<span class="fd">
+															<h:outputText
+																value="#{pointOfInterestBean.element.address.addrLine2}" />
+														</span>
+													</div>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode}">
+													<div class="rowCont FL fd_btmPad">
+														<span class="fdNm">
+															<!-- address 2 keep this title place holder -->
+														</span>
+														<span class="fd">
+															<ace:textEntry maxlength="35" styleClass="address"
+																value="#{pointOfInterestBean.element.address.addrLine2}" />
+														</span>
+													</div>
+												</h:panelGroup><!-- poi address 2 -->
+
+												<!-- poi city, state zip "VIEW mode" -->
+												<h:panelGroup styleClass="rowCont FL fd_btmPad"
+													rendered="#{not pointOfInterestBean.editMode}">
+													<span class="fdNm">
+														<!-- keep this place holder -->
+													</span>
+													<span class="fd">
+														<span class="FL">
+															<h:outputText styleClass="pad5rt" rendered="#{not empty pointOfInterestBean.element.address.city}"
+																value="#{pointOfInterestBean.element.address.city}," />
+														</span>
+														<span class=" FL pad5rt">
+															<h:outputText
+																 value="#{pointOfInterestBean.element.address.state}" />
+														</span>
+														<span class="FL">
+															<h:outputText
+																value="#{pointOfInterestBean.element.address.zip}"/>
+														</span>
+													</span>
+												</h:panelGroup><!-- end poi city state zip "VIEW mode" -->
+
+												<!-- poi city, state zip "EDIT mode" -->
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode}">
+													<div class="rowCont FL fd_btmPad">
+														<span class="fdNm">
+															<h:outputText value="City:" />
+														</span>
+														<h:panelGroup>
+															<span class="fd">
+																<ace:textEntry maxlength="30" styleClass="city"
+																	value="#{pointOfInterestBean.element.address.city}"	/>
+															</span>
+														</h:panelGroup>
+													</div>
+													<div class="rowCont FL fd_btmPad">
+														<span class="fdNm">
+															<h:outputText value="State:" />
+														</span>
+														<h:panelGroup styleClass="fd_state pad1tp">
+															<h:selectOneMenu styleClass="state"
+																value="#{pointOfInterestBean.element.address.state}" >
+																<f:selectItems
+																	value="#{applicationScopeBean.stateDL[pointOfInterestBean.element.address.country]}" />
+															</h:selectOneMenu>
+														</h:panelGroup>
+														<span class="fdNm_zip">
+															<h:outputText value="Zip:" />
+														</span>
+														<h:panelGroup>
+															<span class="fd_zip">
+																<ace:textEntry maxlength="10" styleClass="zip"
+																	value="#{pointOfInterestBean.element.address.zip}"/>
+															</span>
+														</h:panelGroup>
+													</div>
+												</h:panelGroup><!-- end poi city, state zip "EDIT mode" -->
+
+												<!-- poi country -->
+												<h:panelGroup
+													rendered="#{not pointOfInterestBean.editMode and (not empty pointOfInterestBean.element.address.country) and (pointOfInterestBean.element.address.country ne 'US')}">
+													<span class="fdNm">
+														<h:outputText value="Country:"/>
+													</span>
+													<span class="fd">
+														<h:outputText
+															value="#{pointOfInterestBean.element.address.country}" />
+													</span>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode}"
+													styleClass="rowCont FL fd_btmPad">
+													<span class="fdNm">
+														<h:outputText value="Country:"/>
+													</span>
+													<span class="fd">
+														<h:panelGroup>
+															<h:selectOneMenu
+																value="#{pointOfInterestBean.element.address.country}" styleClass="country">
+																<f:selectItems
+																	value="#{applicationScopeBean.countryDL}" />
+																	<ace:ajax />
+															</h:selectOneMenu>
+														</h:panelGroup>
+													</span>
+												</h:panelGroup><!-- end poi country -->
+
+												<!-- poi office phone -->
+												<div class="rowCont FL fd_btmPad">
+													<span class="fdNm">
+														<h:outputText value="Phone:" />
+													</span>
+													<span class="fd_sm FL">
+														<h:panelGroup
+															rendered="#{not pointOfInterestBean.editMode}">
+															<h:outputText
+																value="#{pointOfInterestBean.element.phone}" />
+														</h:panelGroup>
+														<h:panelGroup
+															rendered="#{pointOfInterestBean.editMode}">
+															<ace:textEntry id="businessPhoneNumber" maxlength="25"
+																value="#{pointOfInterestBean.element.phone}">
+																<f:validator validatorId="lightspeed.phoneNumberValidator" />
+															</ace:textEntry>
+														</h:panelGroup>
+													</span>
+												</div>
+
+											</div><!-- end subPoiLt -->
+
+											<!-- subPoiRt -->
+											<div class="subPoiRt FR">
+												<!-- poi detail mini image viewer -->
+
+												<div class="thumbNail">
+		
+													<ui:include src="../common/imageTable.xhtml">
+														<ui:param name="list" value="#{pointOfInterestBean.element.imageResources}" />
+														<ui:param name="imageTitle" value="Image" />
+														<ui:param name="showName" value="false" />
+													</ui:include>
+		
+												</div><!-- end real Element Details Top Right -->
+
+											</div><!-- end subPoiRt -->
+
+											<div class="rowCont FL fd_btmPad poiDescription pad15tp">
+												<span class="fdNm">
+													<h:outputText value="Description:" />
+												</span>
+												<h:panelGroup
+													rendered="#{(not empty pointOfInterestBean.element.description) and (not pointOfInterestBean.editMode)}">
+													<h:outputText styleClass="poiDescCont" value="#{pointOfInterestBean.element.description}" />
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode}">
+													<ace:textAreaEntry maxlength="1000" styleClass="poiDescTxtArea"
+														value="#{pointOfInterestBean.element.description}" />
+												</h:panelGroup>
+											</div>
+
+										</div><!-- end poiCont -->
+									</ace:tabPane><!--  End POI Detail Tab   -->
+
+									<!--  Images Tab   -->
+									<ace:tabPane label="Images" id="imagetab"
+											rendered="#{not empty authBean.pgFields['5.3,all']}">
+
+										<div id="imagesCont">
+											<h:panelGroup styleClass="LH22">
+												&#160;
+											</h:panelGroup>
+
+											<div id="imgPreviewCont">
+
+												<div class="subSecHdg_images FL LH20">&#160;</div><!-- keeps legend in right spot since there is no legend title -->
+
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode and pointOfInterestBean.selectedTab eq 1 and (not empty pointOfInterestBean.element.images)}"
+													styleClass="btn_delImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="Delete Image"
+															action="#{imagePaginatorBean.actionDeleteImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<h:panelGroup
+													rendered="#{pointOfInterestBean.editMode and pointOfInterestBean.selectedTab eq 1}"
+													styleClass="btn_newImg">
+													<span class="btnMiniLtHot" />
+														<ace:linkButton value="New Image"
+															action="#{pointOfInterestBean.actionOpenNewImage}"
+															styleClass="btnMiniCt">
+														</ace:linkButton>
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+
+												<ui:include src="../common/imageTable.xhtml">
+													<ui:param name="list" value="#{pointOfInterestBean.element.imageResources}" />
+													<ui:param name="imageTitle" value="Image" />
+												</ui:include>
+											</div>
+										</div>
+
+									</ace:tabPane><!--  End Images Tab  -->
+
+								</ace:tabSet><!--  END TAB set for POI Details  -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+								<!-- Cancel btn -->
+								<h:panelGroup rendered="#{pointOfInterestBean.editMode}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt"
+												value="Cancel" action="#{pointOfInterestBean.actionCancel}" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup><!-- end Cancel btn -->
+								<!-- Save btn -->
+								<h:panelGroup rendered="#{pointOfInterestBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnSecHotLt" />
+										<span>
+										<ace:linkButton value="Save" onmouseup="showErrors();"
+											action="#{pointOfInterestBean.actionSave}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end poiDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+
+					</div><!-- end pnlRt -->
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+		</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+
+</h:body>
+</html>

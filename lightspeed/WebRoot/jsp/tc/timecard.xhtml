@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The Basic Timecard page, within a production. -->
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Individual Timecard</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<!-- WebViewer js files: -->
+		<script src="../../lib/webviewer.min.js" />
+
+		<script language="javascript">
+		function resize() {
+			<c:if test="#{not headerViewBean.mobile}">
+				/* controls size of left-hand scrolling list.
+				INCREASE first parameter to decrease the size of the area! */
+			resizeScrollable('time:mainlist', 186, 391);
+
+			/* controls size of right-side panel within Timecard mini-tab */
+			element = document.getElementById('scrollTc'); // the scrollable div's id
+			resizeElement(element, 250, 327);
+
+			/* controls size of right-side panel within Mileage mini-tab */
+			element = document.getElementById('scrollMiles'); // the scrollable div's id
+			resizeElement(element, 250, 327);
+
+			/* controls size of right-side panel within Box Rental mini-tab */
+			element = document.getElementById('scrollBoxRental'); // the scrollable div's id
+			resizeElement(element, 250, 327);
+
+			/* controls size of entire right-hand tab area.
+			INCREASE first parameter to decrease the size of the area! */
+			element = document.getElementById('time:miniView');
+			resizeElement(element, 182, 344);
+
+			//resize for attachment list's outer blue legend
+			element = document.getElementById('attachment_formLegend');
+			resizeElement(element, 242, 340);
+
+			//resize for attachment's outer blue legend
+			element = document.getElementById('attachment_sfLegend');
+			resizeElement(element, 242, 340);
+
+			element = document.getElementById('attachViewer');
+			resizeElement(element, 260, 320);
+
+			</c:if>
+
+		}
+
+		var formname = "time";
+		var mainListId = "time:mainlist"; // used by main list scrolling functions
+
+
+		</script>
+	</h:head>
+	<h:body>
+
+		<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+		<c:set var="aicp" value="#{indivTimecardBean.viewProduction.type.aicp}" scope="request" />
+
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(mainListId); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+		<h:form id="time">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="timecard" />
+			</h:outputText>
+
+			<ui:include src="basictcPage.xhtml" >
+				<ui:param name="mytc" value="false" />
+			</ui:include>
+
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+		<ui:include src="../common/confirmpopupbig.xhtml" />
+
+		<ui:include src="../tcpopup/approvePrompt.xhtml" /><!-- for approval, and also for Submit by dept approver -->
+		<ui:include src="../tcpopup/pinPrompt.xhtml" />
+		<ui:include src="../tcpopup/submitPrompt.xhtml" /><!-- used for "submit on behalf of other" -->
+		<ui:include src="../tcpopup/create.xhtml" />
+		<ui:include src="../tcpopup/printTimecard.xhtml" />
+
+		<ui:include src="../tcpopup/changePin.xhtml" />
+		<ui:include src="../ob/popupUpload.xhtml">
+			<ui:param name="isTcAttachment" value="#{true}" />
+			<ui:param name="i9msg" value="#{false}" />
+		</ui:include>
+
+		<h:panelGroup rendered="#{not mytc}"> <!-- following dialogs not used on My Timecards page -->
+			<ui:include src="../tcpopup/reject.xhtml" >
+				<ui:param name="bean" value="#{rejectPromptBean}"></ui:param>
+			</ui:include>
+			<ui:include src="../tcpopup/voidPrompt.xhtml" />
+			<ui:include src="../tcpopup/clone.xhtml">
+				<ui:param name="timecardBean" value="#{indivTimecardBean}"/>
+			</ui:include>
+		</h:panelGroup>
+
+	</h:body>
+</html>

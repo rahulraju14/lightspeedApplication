@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Delete Account</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	element = document.getElementById('myacct:innerView');
+	resizeElement(element, 190, 135);
+	</c:if>
+}
+
+var formname = "myacct";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="myacct">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="myaccount" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin User pnlFull -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="FL rowCont ltrtBdr BKwhite">
+						<span class="FL pnlHdrTxt">
+							<h:outputText
+								rendered="#{userViewBean.user.displayName ne null}"
+								value="#{userViewBean.user.displayName}" />&#160;
+						</span>
+						<!-- top-right buttons usually go here -->
+					</div>
+
+					<div id="contactDetailCont" class="ltrtBdr BKwhite">
+
+						<h:panelGrid id="innerView" styleClass="miniPanel">
+
+							<!-- Tabs for Contact Details -->
+							<ace:tabSet  selectedIndex="#{userViewBean.selectedTab}">
+
+								<!--  Personal Tab  -->
+								<ace:tabPane label="Personal" id="personaltab">
+									<!-- for this simple page, we don't need the miniTab class div -->
+
+									<h:panelGroup styleClass="subPersonal FL pad2tp">
+
+										<div class="rowCont pad40tp">&#160;
+										</div>
+										<div class="homeMatContWrap MA">
+											<div id="homeMatCont" style="margin-left:15%;width:70%;" class="MA">
+												<span class="legendHdg FL">Account Deletion</span>
+												<p>&#160;</p>
+												<div style="width:80%;margin-left:10%">
+												<p>
+												You have selected the <b> "Delete My Account"</b> link.
+												</p>
+												<p>
+												If you proceed you will close your #{headerViewBean.domainTabTitle} account.
+												Once your account is closed, all information related to your account
+												is removed, and you will no longer be able to access it.
+												</p>
+												<p>
+												Select the <b> Delete</b> button if you want to delete the account for:
+												</p>
+												<p>
+												<h:outputText styleClass="pad30lt B"  			value="#{userViewBean.user.emailAddress}"/>
+												</p>
+												<br/>
+												<p>
+												<b>Warning:</b> <u>Deleting an account is permanent.</u>
+												</p>
+												<br/>
+												</div>
+											</div>
+										</div>
+
+									</h:panelGroup>
+
+								</ace:tabPane>
+								<!--  End inner Personal Tab  -->
+
+							</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+						</h:panelGrid><!-- end miniView -->
+						<!-- secondary buttons -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<!-- Cancel btn -->
+							<h:panelGroup>
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton styleClass="btnPriEnbCt" id="cancelDeleteAcct"
+											value="Cancel" action="myaccount" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+							<!-- end Cancel btn -->
+							<!-- Save btn -->
+							<h:panelGroup>
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+									<ace:linkButton value="Delete" onmouseup="showErrors();" id="deleteAcct"
+										action="#{userViewBean.actionDelete}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+								</span>
+							</h:panelGroup>
+						</div><!-- end secondary buttons -->
+
+					</div><!-- end contactDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End pnlFull -->
+
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+	<ui:include src="../common/confirmpopup.xhtml" />
+
+</h:body>
+</html>

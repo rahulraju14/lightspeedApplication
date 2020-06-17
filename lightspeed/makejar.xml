@@ -1,0 +1,31 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<!--
+	Create lightspeed.jar from all compiled Java classes.
+	This is used by iReport (Jasper report IDE) for finding ReportScriptlet's.
+  -->
+<project default="build" name="LSmakejar" basedir=".">
+
+	<import file="macrodefs.xml" />
+
+	<property name="build.dir" location="${basedir}/WebRoot/WEB-INF/lib" />
+
+	<target name="makejar" description="Create a jar for the LightSPEED project">
+		<jar destfile="${build.dir}/lightspeed.jar"
+				includes="com/**"
+				excludes="com/lightspeedeps/test/**/*.class"
+				basedir="${basedir}/WebRoot/WEB-INF/classes">
+			<metainf dir="${basedir}/WebRoot/WEB-INF/classes/META-INF" includes="faces-config.xml" />
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete file="${build.dir}/lightspeed.jar"/>
+	</target>
+
+	<target name="build" depends="makejar">
+		<echoTS message="makejar done."/>
+	</target>
+
+</project>

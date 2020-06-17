@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+    <c:set var="bean" value="#{formModelReleaseBean}" />
+	<c:set var="editable" value="#{bean.editMode}"/>
+	<c:set var="form" value="#{bean.form}" />
+	<c:set var="isEmployee" value="#{bean.empEdit or (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)}" />
+	<c:set var="isApprover" value="#{contactFormBean.isApprover}" />
+	<c:set var="isAppEdit" value="#{isApprover and editable}" />
+	<c:set var="isEmpEdit" value="#{isEmployee and editable}" />
+   <div class="miniTab pad15lt" style="width:840px;">
+      <div class="BKwhite sfFormBorder1" >
+         <div class="pad20tp">
+            <div id="" class="scrollPnlTab"	onscroll="setScrollPos(this.scrollTop);">
+				<ui:include src="formModelReleaseHeader.xhtml">
+					<ui:param name="isAppEdit" value="#{isAppEdit}" />
+					<ui:param name="bean" value="#{bean}" />
+					<ui:param name="form" value="#{form}" />
+				</ui:include>
+				<div class="rowCont"></div>
+               <ui:include src="formModelReleaseTopDetail.xhtml" >
+	                <ui:param name="editable" value="#{editable}" />
+	                <ui:param name="bean" value="#{bean}" />
+					<ui:param name="form" value="#{form}" />
+					<ui:param name="isAppEdit" value="#{isAppEdit}" />
+					<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+               </ui:include>
+               <div class="rowCont"></div>
+                <ui:include src="formModelReleaseUsage.xhtml" >
+	                <ui:param name="editable" value="#{editable}" />
+	                <ui:param name="bean" value="#{bean}" />
+					<ui:param name="form" value="#{form}" />
+					<ui:param name="isAppEdit" value="#{isAppEdit}" />
+					<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+               </ui:include> 
+               <div class="rowCont"></div>
+                <ui:include src="formModelReleaseCompensation.xhtml" >
+	                <ui:param name="editable" value="#{editable}" />
+	                <ui:param name="bean" value="#{bean}" />
+					<ui:param name="form" value="#{form}" />
+					<ui:param name="isAppEdit" value="#{isAppEdit}" />
+					<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+               </ui:include> 
+               <div class="rowCont"></div>
+                <ui:include src="formModelReleaseReimburse.xhtml" >
+	                <ui:param name="editable" value="#{editable}" />
+	                <ui:param name="bean" value="#{bean}" />
+					<ui:param name="form" value="#{form}" />
+					<ui:param name="isAppEdit" value="#{isAppEdit}" />
+					<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+               </ui:include>
+            </div>
+            <!-- end scroll div -->
+         </div>
+      </div>
+      <div class="rowCont">&#160;</div>
+      <ui:include src="formModelReleaseTTCSignature.xhtml" >
+      <ui:param name="editable" value="#{editable}" />
+                  <ui:param name="bean" value="#{bean}" />
+				<ui:param name="editable" value="#{editable}" />
+				<ui:param name="form" value="#{form}" />
+				<ui:param name="isAppEdit" value="#{isAppEdit}" />
+				<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+				<ui:param name="isEmployee" value="#{isEmployee}" />
+				<ui:param name="isApprover" value="#{isApprover}" />
+				
+      </ui:include>
+   </div>
+</ui:composition>

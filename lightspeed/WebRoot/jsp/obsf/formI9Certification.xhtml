@@ -1,0 +1,630 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL" style="width:810px;">
+		<!-- Certification Start -->
+		<div class="FL">
+			<div class="FL rowCont">
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH10" value="&#160;" />
+				</div>
+				<h:outputText styleClass="txt16 B" escape="false"
+					value="Certification" />
+			</div>
+
+			<div class="FL">
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH10" value="&#160;" />
+				</div>
+				<h:outputText styleClass="rowCont txt13 B" escape="false" style="width:821px;"
+					value="I attest, under penalty of perjury, that (1) I have examined the
+							document(s) presented by the above-named employee, (2) the&lt;br/&gt;
+							above-listed document(s) appear to be genuine and to relate to the
+							employee named, and (3) to the best of my knowledge the&lt;br/&gt; employee
+							is authorized to work in the United States." />
+			</div>
+
+			<!-- First Day Of Employment -->
+			<div class="rowCont">
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH10" value="&#160;" />
+				</div>
+				<span class=" txt14 B" style="width:821px;">
+					<h:outputText escape="false" value="The employee's first day
+						of employment &lt;em&gt;(mm/dd/yyyy):&lt;/em&gt;" />
+				</span>
+				<ace:dateTimeEntry id="FIRST_DAY_OF_EMPLOYMENT"
+					styleClass="fd_sm" style="display: inline;" tabindex="0"
+					value="#{formI9Bean.form.firstDayOfEmployment}"
+					renderAsPopup="true" disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+					valueChangeListener="#{formI9Bean.listenValueChange}">
+					<f:converter converterId="lightspeed.MultiDateConverter" />
+					<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/> -->
+				</ace:dateTimeEntry>
+				<h:outputText styleClass="txt14 B"
+					value=" (See instructions for exemptions.)" />
+
+				<!-- AUTO-FILL BUTTON -->
+				<div class="pad5lt pad-10tp pad10rt" style="min-height:19px;"> <!-- keeps size even if button is hidden -->
+					<h:panelGroup rendered="#{(formWtpaBean.contactDoc.employerSignature eq null)}">
+						<h:panelGroup styleClass="btn_legend">
+							<h:panelGroup rendered="#{(contactFormBean.editAuth) and
+									(not formI9Bean.contactDoc.submitable)}">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Auto-fill" id="AUTO_FILL"
+									action="#{formI9Bean.actionAutoFillCertification}"
+									title="Signature field" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</div>
+				<!-- AUTO-FILL BUTTON End -->
+
+			</div>
+
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div> -->
+		</div>
+		<!-- Certification End -->
+
+		<!-- Employer's Signature start -->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp" style="height:151px;">
+			<!-- First Row Start -->
+
+			<!-- first block-->
+			<div class="W45percnt FL" style="margin-bottom:-2px">
+				<!-- Signature of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt" style="width:303px;">
+						<h:outputText value="Signature of Employer or Authorized Representative:" />
+					</span>
+					<div class="FL rowCont pad2lt">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.employerSignature ne null}">
+							<h:outputText value="E-signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.employerSignature.displayTime}" />
+							<br/>
+							<h:outputText styleClass="pad5lt" value="# #{formI9Bean.contactDoc.employerSignature.uuid}"/>
+						</h:outputText>
+					</div>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend pad10tp" style="float:left;"
+									rendered="#{formI9Bean.contactDoc.employerSignature eq null}">
+						<h:panelGroup rendered="#{(! formI9Bean.contactDoc.submitable)
+												and (! formI9Bean.contactDoc.status.finalized)
+												and (formI9Bean.contactDoc.status ne 'PENDING')
+												and (contactFormBean.mayApprove)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Sign &amp; Approve" id="APPROVER_SIGN_1"
+								action="#{contactFormBean.actionEmployerSign}"
+								title="Signature field" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{(formI9Bean.contactDoc.submitable) or
+												(formI9Bean.contactDoc.status eq 'PENDING') or
+												(not contactFormBean.mayApprove)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+
+				</div>
+				<!-- Signature of Employer or Authorized Representative field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W20percnt FL">
+				<!-- Employer's Signature Date Start -->
+				<div class="rowCont pad5lt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt"> <h:outputText value="Date:" /> </span>
+					<h:outputText value="#{formI9Bean.contactDoc.employerSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!--  Employer's Signature Date Start End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- Third block-->
+			<div class="W33percnt FL">
+				<!--Title of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad10lt" style="width:270px;">
+						<h:outputText value="Title of Employer or Authorized Representative" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry id="EMP_TITLE"
+								maxlength="35" style="width:97%;"
+								disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+								value="#{formI9Bean.form.empTitle}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Title of Employer or Authorized Representative field End -->
+			</div>
+			<!-- Third block End-->
+			<!-- First Row End -->
+
+			<hr class="rowCont FL pad-1tp"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Second Row Start -->
+			<div class="rowCont FL">
+				<!-- first block Start -->
+				<div class="W33percnt FL">
+					<!-- Employer's Last Name (Family Name) Start-->
+					<div class="rowCont pad5lt" style="height:50px;">
+						<span class="fdNm_w2"> <h:outputText value="Last Name (Family Name)" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="EMP_LAST_NAME"
+									maxlength="35" style="width:90%;"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empLastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Last Name (Family Name) End-->
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="W33percnt FL">
+					<!-- Employer's First Name (Given Name) Start-->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2">
+							<h:outputText value="First Name (Given Name)" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="EMP_FIRST_NAME"
+									maxlength="35" style="width:94%;"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empFirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's First Name (Given Name) End-->
+				</div>
+				<!-- Second block End -->
+
+				<!-- Third block-->
+				<div class="W34percnt FL">
+					<!--Employer's Business or Organization Name field Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad5lt" style="width:250px;">
+							<h:outputText value="Employer's Business or Organization Name" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad6lt">
+								<ace:textEntry style="width:93%;"
+									id="EMP_BUSINESS_NAME" maxlength="35"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empBusinessName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Business or Organization Name field End -->
+				</div>
+				<!-- Third block End-->
+			</div>
+			<!-- Second Row End -->
+
+			<hr class="rowCont FL"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Third row start -->
+			<div>
+				<!-- first block-->
+				<div class="W53percnt FL">
+					<!-- Employer's Address field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:420px;">
+							<h:outputText
+								value="Employer's Business or Organization Address (Street Number and Name)" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:96%;"
+									id="EMP_ADDR_STREET" maxlength="35"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.addrLine1}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Address field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W28percnt FL">
+					<!-- City or Town field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:220px;">
+							<h:outputText value="City or Town" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:93%;"
+									id="EMP_ADDR_CITY" maxlength="35"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.city}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- City or Town field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- third block Start-->
+				<div class="W8percnt FL">
+					<!-- State Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w pad5lt"> <h:outputText value="State" /> </span>
+						<h:selectOneMenu id="EMP_ADDR_STATE"
+							styleClass="FL W80percnt pad8lt"
+							disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+							value="#{formI9Bean.form.empAddress.state}"
+							valueChangeListener="#{formI9Bean.listenValueChange}">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+					<!--State End -->
+				</div>
+				<!-- third block End-->
+
+				<!-- Fourth block Start-->
+				<div class="W10percnt FL">
+					<!-- Zip Code Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w pad5lt"> <h:outputText value="Zip Code" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:90%;"
+									id="EMP_ADDR_ZIP" maxlength="10"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.zip}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!--Zip Code End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- Third row end -->
+
+		</div>
+		<!-- Employer's Signature end -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH15" value="&#160;" />
+		</div>
+
+		<!-- SECTION-3 Start  -->
+		<div class="FL BKgrey sfFormBorder1 rowCont" style="height:26px;">
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH3" value="&#160;" />
+			</div> -->
+			<span class="FL pad5tp"> <h:outputText styleClass="pad5lt txt15" escape="false"
+				value="&lt;strong&gt; Section 3. Reverification and Rehires &lt;/strong&gt;
+			 			&lt;em&gt;(To be completed and signed by employer or authorized
+			 			representative.)&lt;/em&gt;" /> </span>
+		</div>
+
+		<div class="rowCont sfFormBorder1 pad-1tp" style="height:50px;">
+			<!-- First Row Start -->
+			<div class="rowCont FL">
+
+				<!-- first block Start -->
+				<div class="W39percnt FL">
+					<!-- Sec-3 Last Name (Family Name) Start -->
+					<div class="rowCont pad5lt" style="height:50px;">
+						<span class="fdNm_w2" style="width:310px;">
+							<h:outputText value="A. New Name (if applicable) Last Name (Family Name)" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="SEC3_LAST_NAME"
+									maxlength="35" style="width:93%;"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3LastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Last Name (Family Name) End -->
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="W19percnt FL">
+					<!-- Sec-3 First Name (Given Name) Start-->
+					<div class="rowCont pad-4lt" style="height:50px;">
+						<span class="fdNm_w2"> <h:outputText value="First Name (Given Name)" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="SEC3_FIRST_NAME"
+									maxlength="35" style="width:90%;"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3FirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 First Name (Given Name) End-->
+				</div>
+				<!-- Second block End -->
+
+				<!-- Third block Start -->
+				<div class="W9percnt FL">
+					<!-- Middle Initial Start-->
+					<div class="rowCont pad-6lt" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2"> <h:outputText styleClass="pad-1lt" value="Middle Initial" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:84%;"
+									id="SEC3_MIDDLE_INITIAL" maxlength="35"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3MiddleInitial}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Middle Initial End-->
+				</div>
+				<!-- Third block End-->
+
+				<!-- Fourth block-->
+				<div class="W33percnt FL">
+					<!-- Sec-3 Rehire Date Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2" style="width:280px;">
+							<h:outputText value="B. Date of Rehire (if applicable) (mm/dd/yyyy):" />
+						</span>
+						<ace:dateTimeEntry id="SEC3_REHIRE_DATE"
+							styleClass="fd_sm3" tabindex="0"
+							value="#{formI9Bean.form.sec3RehireDate}"
+							disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true" >
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+							<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+						</ace:dateTimeEntry>
+					</div>
+					<!-- Sec-3 Rehire Date Start End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- First row end  -->
+		</div>
+		<!-- C part Start-->
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="rowCont sfFormBorder1 pad-1tp" style="height:81px;">
+			<!-- First Row Start -->
+			<div class="FL">
+				<div class="rowCont" style="height:30px;">
+					<h:outputText escape="false"
+						value="&#160; &lt;strong&gt;C.&lt;/strong&gt; If employee's previous
+							grant of employment authorization has expired, provide the
+							information for the document from List A or List C the employee
+							&lt;/br&gt; &#160; &#160; &#160; presented that establishes
+							current employment authorization in the space provided below." />
+				</div>
+			</div>
+			<!-- First Row End -->
+
+			<hr class="rowCont FL"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Second row start -->
+			<div>
+				<!-- first block-->
+				<div class="W35percnt FL">
+					<!-- Sec-3 Document Title field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:420px;">
+							<h:outputText value="Document Title:" />
+						</span>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad6lt"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.sec3DocTitle}"
+									id="SEC3_DOC_TITLE" style="width:96%;"
+									disabled="#{not formI9Bean.appEdit or
+											 formI9Bean.contactDoc.employerSignature eq null}">
+								<f:selectItems value="#{formI9Bean.i9DocListSec3}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Document Title field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W35percnt FL">
+					<!-- Sec-3 Document Number field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:220px;">
+							<h:outputText value="Document Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:94%;"
+									id="SEC3_DOC_NUMBER" maxlength="35"
+									value="#{formI9Bean.form.sec3DocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{not formI9Bean.appEdit or
+												formI9Bean.contactDoc.employerSignature eq null}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Document Number field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- third block Start-->
+				<div class="W30percnt FL">
+					<!-- Sec-3 Expiration Date Start -->
+					<div class="rowCont pad5lt" style="height:50px;">
+						<span class="fdNm_w" style="width:220px;">
+							<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+						</span>
+						<h:panelGroup>
+							<ace:dateTimeEntry id="SEC3_DOC_EXPIRATION"
+								styleClass="fd_sm3" tabindex="0"
+								value="#{formI9Bean.form.sec3DocExpiration}"
+								renderAsPopup="true"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+								<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+							</ace:dateTimeEntry>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Expiration Date End -->
+				</div>
+				<!-- third block End-->
+			</div>
+			<!-- Second row end -->
+		</div>
+		<!-- C partEnd -->
+		<!-- Section 3 Start  -->
+
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I attest, under penalty of perjury, that to the best of my knowledge, this
+						employee is authorized to work in the United States, and if the employee
+						presented document(s), the document(s) I have examined appear to be
+						genuine and to relate to the individual." />
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+		</div>
+
+		<!-- Signature start -->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp"
+			style="height:50px;">
+			<!-- First Row Start -->
+
+			<!-- first block-->
+			<div class="FL" style="width:44%">
+				<!-- Section-3 Signature of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt" style="width:303px;">
+						<h:outputText value="Signature of Employer or Authorized Representative:" />
+					</span>
+					<span class="pad5lt">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.sec3Signature ne null}">
+							<h:outputText value="Electronically signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.sec3Signature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.sec3Signature.displayTime}" />
+							<br/>
+							<h:outputText styleClass="pad5lt" value="# #{formI9Bean.contactDoc.sec3Signature.uuid}"/>
+						</h:outputText>
+					</span>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend pad10tp" style="float:left"
+									rendered="#{formI9Bean.contactDoc.sec3Signature eq null}">
+						<h:outputText rendered="#{(! formI9Bean.contactDoc.submitable)
+												and (! formI9Bean.contactDoc.status.finalized)
+												and (formI9Bean.contactDoc.status ne 'PENDING')
+												and (formI9Bean.contactDoc.employerSignature ne null)
+												and (contactFormBean.editAuth)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Sign &amp; Approve" id="APPROVER_SIGN_2"
+								action="#{contactFormBean.actionEmployerSign}"
+								title="Signature field" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:outputText>
+						<h:outputText rendered="#{(formI9Bean.contactDoc.submitable)
+												or (formI9Bean.contactDoc.status eq 'PENDING')
+												or (formI9Bean.contactDoc.employerSignature eq null)
+												or (not contactFormBean.editAuth)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:outputText>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+
+				</div>
+				<!-- Section-3 Signature of Employer or Authorized Representative field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W15percnt FL">
+				<!-- Section-3 Signature Date Start -->
+				<div class="rowCont pad5lt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt"> <h:outputText value="Date:" /> </span>
+					<h:outputText value="#{formI9Bean.contactDoc.finalSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Section-3 Signature Date End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- Third block-->
+			<div class="FL" style="width:41%">
+				<!--Print Name of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad15lt" style="width:311px;">
+						<h:outputText value="Print Name of Employer or Authorized Representative:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad15lt">
+							<ace:textEntry style="width:91%;"
+								id="SEC3_EMP_NAME" maxlength="35"
+								value="#{formI9Bean.form.sec3EmpName}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"/>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Print Name of Employer or Authorized Representative field End -->
+			</div>
+			<!-- Third block End-->
+			<!-- First Row End -->
+		</div>
+		<!-- Signature End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+	</div>
+
+</ui:composition>

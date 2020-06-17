@@ -1,0 +1,309 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL">
+		<!-- Employee's Signature row Start -->
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="rowCont sfFormBorder1" style="height:49px; width:810px; ">
+
+			<!-- First block Start-->
+			<div class="W77percnt FL">
+				<!-- Signature of Employee field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+
+					<div class="fdNm_w2 pad5lt pad10tp" style="width:140px;">
+						<h:outputText value="Signature of Employee:" />
+					</div>
+					<div class="pad8tp pad5lt">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.empSignature ne null}">
+							<h:outputText styleClass="U pad10tp" value="Electronically signed by" />
+							<h:outputText styleClass="U B txtBlue pad10tp" value=" #{formI9Bean.contactDoc.empSignature.name}" />
+							<h:outputText styleClass="pad10tp" value=" #{formI9Bean.contactDoc.empSignature.displayTime}" />
+							<br/>
+							<h:outputText value="# #{formI9Bean.contactDoc.empSignature.uuid}"/>
+						</h:outputText>
+					</div>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend_left pad22tp"
+						rendered="#{(formI9Bean.contactDoc.submitable) or (formI9Bean.contactDoc.status eq 'PENDING')}">
+						<h:panelGroup rendered="#{(formI9Bean.contactDoc.status ne 'PENDING') and (formI9Bean.empEdit or
+									(headerViewBean.user.id eq contactFormBean.contactDocument.contact.user.id))}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign &amp; Submit" id="EMPLOYEE_SIGN_1"
+									action="#{contactFormBean.actionSignature}"
+									title="Signature field"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{not (formI9Bean.empEdit or
+									(headerViewBean.user.id eq contactFormBean.contactDocument.contact.user.id))
+									or (formI9Bean.contactDoc.status eq 'PENDING')}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+				</div>
+				<!-- Signature of Employee field END -->
+			</div>
+			<!-- First block End-->
+
+			<!-- Second block-->
+			<div class="W22percnt FR">
+				<!-- Employee Signature Date Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad5lt"> <h:outputText value="Date:" /> </span>
+					<h:outputText value="#{formI9Bean.contactDoc.empSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Employee Signature Date End -->
+			</div>
+			<!-- Second block End-->
+		</div>
+		<!-- Employee's Signature row End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="FL BKgrey sfFormBorder1 rowCont" style="height:40px; width:810px;">
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH3" value="&#160;" />
+			</div> -->
+			<span class="FL pad5tp">
+				<h:outputText styleClass="pad5lt txt14" escape="false"
+					value="&lt;strong&gt; Preparer and/or Translator Certification&lt;/strong&gt;
+			 			&lt;em&gt;(To be completed and signed if Section 1 is prepared by a person
+			 			other than the &lt;/br&gt; &#160; employee.)&lt;/em&gt;" />
+			 </span>
+		</div>
+
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I attest, under penalty of perjury, that I have assisted in the completion of
+						this form and that to the best of my knowledge the &lt;/br&gt; information
+						is true and correct." />
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+		</div>
+
+		<!-- Attest and signature from Preparer Start-->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp"
+			style="height:147px; width:810px;">
+
+			<!-- First Row Start -->
+			<!-- first block-->
+			<div class="W77percnt FL" style="margin-bottom:-2px">
+				<!-- Signature of Preparer field Start -->
+				<div class="rowCont pad5rt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt pad10tp" style="width:210px;">
+						<h:outputText value="Signature of Preparer or Translator:" />
+					</span>
+					<span>
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.empPrepSignature ne null}">
+							<h:outputText value="Electronically signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.empPrepSignature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.empPrepSignature.displayTime}" />
+							<br/>
+							<h:outputText value="# #{formI9Bean.contactDoc.empPrepSignature.uuid}"/>
+						</h:outputText>
+					</span>
+
+					<!-- Sign Button  -->
+					<h:panelGroup styleClass="btn_legend_left pad22tp">
+						<!-- rendered="#{formI9Bean.prepEdit and formI9Bean.contactDoc.status ne 'PENDING'}" -->
+						<h:panelGroup rendered="#{false}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign" id="EMPLOYEE_SIGN_2"
+									action="#{contactFormBean.actionSignature}"
+									title="Signature field"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<!-- rendered="#{(not formI9Bean.prepEdit) or (formI9Bean.contactDoc.status eq 'PENDING')}" -->
+						<h:panelGroup rendered="#{true}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+				</div>
+				<!-- Signature of Preparer field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W22percnt FR" style="margin-bottom:-2px;">
+				<!--Preparer Signature Date Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad5lt"> <h:outputText value="Date:" /> </span>
+					<h:outputText value="#{formI9Bean.contactDoc.empPrepSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Preparer Signature Date End -->
+			</div>
+			<!-- Second block End-->
+			<!-- First Row End -->
+
+			<hr class="rowCont FL pad-1tp"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Second Row Start -->
+			<div class="rowCont FL">
+
+				<!-- first block Start -->
+				<div class="W45percnt FL">
+					<!-- Preparer Last Name (Family Name) -->
+					<div class="rowCont pad5lt">
+						<span class="fdNm_w2"> <h:outputText value="Last Name (Family Name)" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:98%;"
+									id="PREPARER_LAST_NAME" maxlength="35"
+									disabled="#{not formI9Bean.prepEdit}"
+									value="#{formI9Bean.form.preparerLastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="W42percnt FL">
+					<!-- Preparer First Name (Given Name) -->
+					<div class="rowCont pad15lt">
+						<span class="fdNm_w2"> <h:outputText value="First Name (Given Name)" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:100%;"
+									id="PREPARER_FIRST_NAME" maxlength="35"
+									disabled="#{not formI9Bean.prepEdit}"
+									value="#{formI9Bean.form.preparerFirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- Second block End -->
+			</div>
+			<!-- Second Row End -->
+
+			<hr class="rowCont FL pad4tp"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Third row Start -->
+			<div>
+				<!-- first block-->
+				<div class="W35percnt FL">
+					<!--Preparer Address field Start -->
+					<div class="rowCont" style="height:48px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:220px;">
+							<h:outputText value="Address (Street Number And Name)" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:94%;"
+									id="PREP_ADDR_STREET" maxlength="35"
+									disabled="#{not formI9Bean.prepEdit}"
+									value="#{formI9Bean.form.preparerAddress.addrLine1}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Address field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W33percnt FL">
+					<!--Preparer City or Town field Start -->
+					<div class="rowCont" style="height:48px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="City or Town" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:92%;"
+									id="PREP_ADDR_CITY" maxlength="35"
+									disabled="#{not formI9Bean.prepEdit}"
+									value="#{formI9Bean.form.preparerAddress.city}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- City or Town field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- Third block Start-->
+				<div class="W15percnt FL">
+					<!--Preparer State Start -->
+					<div class="rowCont" style="height:48px; border-right:solid 1px;">
+						<span class="fdNm_w pad8lt"> <h:outputText value="State" /> </span>
+						<h:selectOneMenu id="PREP_ADDR_STATE"
+							styleClass="FL W80percnt pad8lt"
+							disabled="#{not formI9Bean.prepEdit}"
+							value="#{formI9Bean.form.preparerAddress.state}"
+							valueChangeListener="#{formI9Bean.listenValueChange}">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+					<!--State End -->
+				</div>
+				<!-- Third block End-->
+
+				<!-- Fourth block Start-->
+				<div class="W15percnt FL">
+					<!--Preparer Zip Code Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w pad8lt"> <h:outputText value="Zip Code" /> </span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:95%;"
+									id="PREP_ADDR_ZIP" maxlength="10"
+									disabled="#{not formI9Bean.prepEdit}"
+									value="#{formI9Bean.form.preparerAddress.zip}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!--Zip Code End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- Third row End -->
+
+		</div>
+		<!-- Attest and signature from Preparer End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<h:graphicImage alt="" value="" style="width:820px;"
+			url="../../i/forms/formI9Footer.png">
+		</h:graphicImage>
+	</div>
+
+</ui:composition>

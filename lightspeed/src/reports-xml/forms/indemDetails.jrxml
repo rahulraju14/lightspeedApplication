@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="indemDetails" pageWidth="620" pageHeight="792" columnWidth="620" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.3636363636363642"/>
+	<property name="ireport.x" value="57"/>
+	<property name="ireport.y" value="65"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="formId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select * from form_indem where id = " + $P{formId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/ist-126/lightspeed/LightSpeedLocal/lightspeed29/WebRoot/reportstemplate/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contactDocId" class="java.lang.Integer"/>
+	<parameter name="formIndemDAO" class="com.lightspeedeps.dao.FormIndemDAO" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="version" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Company_Type" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Company_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Worker_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Full_Company_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Corp_Officer_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fedid_Number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_Of_Reg" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Address_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Telephone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="302" splitType="Stretch">
+			<line>
+				<reportElement mode="Transparent" x="8" y="90" width="260" height="1" uuid="c5f9fcfa-e310-4418-a536-116142f843ca"/>
+			</line>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="450" y="176" width="28" height="13" uuid="b4dce033-b51d-4114-8cc4-1d9fe1b034bc"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[State]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="312" y="176" width="121" height="13" uuid="022f5fe1-2e6e-4234-8b3e-b9409635abb8"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="19" y="38" width="245" height="13" isPrintInFirstWholeBand="true" uuid="609dab67-b600-4353-8177-3c460aa405dd"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature of Worker as Individual & Corporate Officer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="505" y="175" width="52" height="13" uuid="c84c76e0-09c5-4983-86c8-e6700ec5230b"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Zip ]]></text>
+			</staticText>
+			<subreport>
+				<reportElement mode="Transparent" x="302" y="117" width="260" height="13" uuid="986ea901-ce7b-4442-9637-f2d0ff652f43"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Transparent" x="303" y="161" width="130" height="13" uuid="16e3fb09-c6af-41fa-a25c-f0147d6498ee"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/addressCity.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Transparent" x="442" y="161" width="43" height="13" uuid="9e2d2120-70f1-4bf4-8d63-978eaedaf3fc"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/addressState.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Transparent" x="494" y="161" width="67" height="13" uuid="603aea58-bb90-4021-a604-5029a8d402c5"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/addressZip.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Transparent" x="8" y="8" width="260" height="28" uuid="b669e0c2-7b7d-4bb8-8839-1d22126d073a"/>
+				<subreportParameter name="signatureType">
+					<subreportParameterExpression><![CDATA["SUBMIT"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="contactDocId">
+					<subreportParameterExpression><![CDATA[$P{contactDocId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/signature.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Transparent" x="10" y="118" width="260" height="14" uuid="c6a58b5b-4877-40a7-8737-b740c4592e58"/>
+				<subreportParameter name="signatureType">
+					<subreportParameterExpression><![CDATA["SUBMIT"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="contactDocId">
+					<subreportParameterExpression><![CDATA[$P{contactDocId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/signatureDate.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="29" y="51" width="239" height="13" isPrintInFirstWholeBand="true" uuid="e2f9b454-c406-41a0-9bbd-9836f2f48cc7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(Parent/Guardian signature if Worker is a Minor)]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="303" y="23" width="260" height="13" uuid="396d1cfa-4b7d-4d9a-890a-f2638b0af8c4"/>
+				<textFieldExpression><![CDATA[$F{Full_Company_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="15" y="38" width="5" height="13" isPrintInFirstWholeBand="true" uuid="a73621d7-c3b3-40d4-a450-318c7339bd14"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="308" y="37" width="5" height="13" isPrintInFirstWholeBand="true" uuid="ee6440b7-1721-4271-ad86-7fdba59f9785"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="312" y="37" width="240" height="13" isPrintInFirstWholeBand="true" uuid="5475f26f-1a3a-4032-93e8-bcd6d449526f"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Full Company Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="8" y="77" width="260" height="13" uuid="64a7e1bb-81ed-4089-8eed-3590e3f682db"/>
+				<textFieldExpression><![CDATA[$F{Corp_Officer_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="19" y="91" width="244" height="13" isPrintInFirstWholeBand="true" uuid="d27ae72f-9eb5-4319-8f70-5911404a13e3"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Name (Please print or type legibly) Corporate Officer/Individual]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="20" y="134" width="250" height="13" uuid="c701f2f2-fb1e-4e8d-80ad-87f21b17052b"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="15" y="90" width="5" height="13" isPrintInFirstWholeBand="true" uuid="e65107c8-e933-4d6d-aa3e-5a49f6a16d9a"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="16" y="134" width="5" height="12" isPrintInFirstWholeBand="true" uuid="8059aa7c-d174-408f-9b84-40975adf6ba5"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="8" y="37" width="260" height="1" uuid="d377f65f-57ff-4483-9b5f-edfeebf5ae95"/>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="302" y="36" width="260" height="1" uuid="23b6f51a-77ee-42e8-b5d8-c9830c19136d"/>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="10" y="133" width="260" height="1" uuid="81d3d08f-89a3-4292-93d1-9ff9a8332689"/>
+			</line>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="303" y="76" width="120" height="13" uuid="0187520a-24a5-49a1-b0bc-26718a8e6d4d"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.indemFormFedId($F{Id})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="442" y="76" width="120" height="13" uuid="56ea4760-f7ca-468b-9e2b-f1a5c53bf83e"/>
+				<textFieldExpression><![CDATA[$F{State_Of_Reg}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="302" y="88" width="120" height="1" uuid="f269dec9-4e55-485c-b921-5c7b007c8e95"/>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="442" y="88" width="120" height="1" uuid="f530c046-53a4-4754-8abd-5d4cf548ce5a"/>
+			</line>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="308" y="89" width="5" height="13" isPrintInFirstWholeBand="true" uuid="d868b973-68ab-420c-ab9f-ba1dd104e63a"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="313" y="89" width="109" height="13" isPrintInFirstWholeBand="true" uuid="7cc8368a-b917-4d91-812e-4513ae55f00f"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Federal ID #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="448" y="88" width="5" height="13" isPrintInFirstWholeBand="true" uuid="d030dffa-7c17-4fc3-bd73-ff906e3f859d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="452" y="89" width="109" height="13" isPrintInFirstWholeBand="true" uuid="e91dc45b-0387-47e9-8850-b2ab75161eac"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[State of Inc./ Registration]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="318" y="132" width="5" height="13" isPrintInFirstWholeBand="true" uuid="55e3dab8-36b3-4c2e-ab1e-c04cbdb7cc1f"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="301" y="130" width="260" height="1" uuid="62697050-ad4c-4f01-98aa-dbb1a8bd1ea4"/>
+			</line>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="322" y="132" width="240" height="13" isPrintInFirstWholeBand="true" uuid="4b9f200b-237e-430f-8e1b-0b7c42d563d7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Company Street Address]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Transparent" x="303" y="174" width="130" height="1" uuid="3ce4331f-3c3f-4bc8-a41b-834db588ca35"/>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="443" y="175" width="42" height="1" uuid="11334027-16cd-4cb9-aae9-def14c9a3a8d"/>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="494" y="174" width="66" height="1" uuid="76a5a389-85af-429d-b290-315221f1f9dd"/>
+			</line>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="309" y="174" width="5" height="13" isPrintInFirstWholeBand="true" uuid="513d9d01-2afa-47a3-8500-4ce127fc5ca5"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="446" y="176" width="5" height="13" isPrintInFirstWholeBand="true" uuid="a06541da-8cf5-48d1-a2f9-edbd6f7fcfeb"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="500" y="176" width="5" height="13" isPrintInFirstWholeBand="true" uuid="60d106a2-b6bf-4927-b3eb-66c48fe5949b"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="303" y="203" width="191" height="13" uuid="241bc127-e739-4bf2-b4fd-83d2665e4f80"/>
+				<textFieldExpression><![CDATA[$F{Email}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="302" y="216" width="192" height="1" uuid="453b36e6-e046-4ab7-b4bc-3ff80bb66003"/>
+			</line>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="319" y="217" width="5" height="13" isPrintInFirstWholeBand="true" uuid="1c8754aa-6e60-44f0-bed7-e04274c6ee6c"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="323" y="217" width="171" height="13" isPrintInFirstWholeBand="true" uuid="af12a8ea-70ee-48ff-947f-059c9c7d8623"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="i9BlueText" mode="Transparent" x="304" y="241" width="190" height="13" uuid="a1249c19-12ff-435b-8d99-c9cdb622525b"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPhone($F{Telephone})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="303" y="254" width="191" height="1" uuid="c19b3de7-8f08-4e96-a511-5b2495d90204"/>
+			</line>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="320" y="255" width="5" height="13" isPrintInFirstWholeBand="true" uuid="cd76dfac-f285-479c-862e-8cea596bd5e7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9Default" mode="Transparent" x="324" y="255" width="170" height="13" isPrintInFirstWholeBand="true" uuid="2857d355-029a-43ac-b9ff-6dbc659744a7"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Telephone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="indemRedText" mode="Transparent" x="9" y="269" width="169" height="13" isPrintInFirstWholeBand="true" uuid="2e001420-b476-46fe-8ebc-59481641197a"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[*All fields must be completed.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="i9DefItalic" mode="Transparent" x="10" y="289" width="168" height="13" isPrintInFirstWholeBand="true" uuid="3449efb4-bc45-4188-8cb0-b894595da197"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Corp-Indem-Agmt-122316]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

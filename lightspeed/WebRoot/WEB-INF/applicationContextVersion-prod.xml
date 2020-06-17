@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- Just the bean that holds the version info; this file gets changed frequently to
+			update the version number, so it's nice to keep it simple and obvious.  -->
+
+	<bean id="applicationScopeBean" class="com.lightspeedeps.web.util.ApplicationScopeBean">
+		<property name="contactDocumentDAO" ref="ContactDocumentDAO" />
+		<property name="countryDAO" ref="CountryDAO" />
+		<property name="eventDAO" ref="EventDAO" />
+		<property name="projectDAO" ref="ProjectDAO" />
+		<property name="startFormDAO" ref="StartFormDAO" />
+		<property name="stateDAO" ref="StateDAO" />
+		<property name="weeklyTimecardDAO" ref="WeeklyTimecardDAO" />
+		<property name="isBeta" value="${com.lightspeedeps.isBeta}" /><!-- set in web.xml -->
+		<!-- license key for PDFTron, expires 12/27/2020: -->
+		<property name="pdfNetKey" value="The Team Companies(lightspeedeps.com):OEM:Lightspeed eps::WL:AMS(20201227):3277AC201F3784D0E35302786F616FDBF900E51BDB5C5DEA8F7C5837128A31F5C7" />
+		<property name="useXod" value="true" /><!-- pass XOD or PDF data to PDFTron WebViewer -->
+		<property name="quartzScheduler" ref="quartz_ls" />
+		<!-- This version string is displayed on the Home page and the Prod Admin/Productions page -->
+		<property name="version" value="20.7.0"/>
+	</bean>
+
+</beans>

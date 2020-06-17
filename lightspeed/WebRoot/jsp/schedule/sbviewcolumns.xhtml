@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Stripboard columns on VIEW page for UNSCHEDULED strips - Allows sorting -->
+	<!--  'strip' is a StripBoardScene object -->
+
+	<ace:column headerText="Scene" sortBy="#{strip.sceneNumbers==null ? '' : strip.sceneNumbers}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<ace:linkButton id="a" action="breakdown" value="#{strip.sceneNumbers==null ? ' ' : strip.sceneNumbers}"
+				rendered="#{not empty authBean.pgFields['6.1,link_scene']}">
+			<f:setPropertyActionListener value="com.lightspeedeps.breakdownSceneNumber" target="#{jumpBean.attribute}"/>
+			<f:setPropertyActionListener value="#{strip.sceneNumberList[0]}" target="#{jumpBean.value}"/>
+			<f:setPropertyActionListener value="breakdown" target="#{headerViewBean.menu}"/>
+		</ace:linkButton>
+		<h:outputText value="#{strip.sceneNumbers}"
+				rendered="#{empty authBean.pgFields['6.1,link_scene']}"/>
+	</ace:column>
+
+	<ace:column headerText="I/E" sortBy="#{strip.intExtType.shortLabel}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<h:outputText id="b" value="#{strip.intExtType.shortLabel}" />
+	</ace:column>
+
+	<ace:column headerText="Location / Synopsis" sortBy="#{strip.name}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<ace:linkButton id="e" value="#{strip.name==null ? ' ' : strip.name}"
+			rendered="#{not empty authBean.pgFields['6.1,link_script_element']}"
+			action="scriptelements">
+			<f:setPropertyActionListener value="com.lightspeedeps.ScriptElementId" target="#{jumpBean.attribute}"/>
+			<f:setPropertyActionListener value="#{strip.locationId}" target="#{jumpBean.value}"/>
+		</ace:linkButton>
+		<h:outputText value="#{strip.name}"
+			rendered="#{empty authBean.pgFields['6.1,link_script_element']}"/>
+		<h:outputText rendered="#{strip.comment eq null and stripBoardViewBean.layout eq 'THICK'}">
+			<br/>
+		</h:outputText>
+		<h:outputText value="#{strip.synopsis}"
+			rendered="#{stripBoardViewBean.layout eq 'THICK'}" >&#160;
+			</h:outputText>
+	</ace:column>
+
+	<ace:column headerText="D/N" sortBy="#{strip.dayNType.label}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<h:outputText id="c" value="#{strip.dayNType.label}" />
+	</ace:column>
+
+	<ace:column headerText="Scr day" sortBy="#{strip.dayNumber}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<h:outputText id="d" value="#{strip.dayNumber}"/>
+	</ace:column>
+
+	<ace:column headerText="Pages" sortBy="#{strip.pageLength}"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<h:outputText id="f" value="#{strip.pageLength}" />
+	</ace:column>
+
+	<ace:column headerText="Ids"
+			styleClass="#{strip.colorClass} #{(strip.selected ? 'sv_sel' : '')}">
+		<!-- TODO sortby -->
+		<c:forEach begin="0" end="10" var="x">
+			<h:commandLink value="#{strip.elementIdList[x]==null ? '' : strip.elementIdList[x]}"
+					action="#{jumpBean.actionViewElementByDbId}"
+					title="#{strip.elementNameList[x]}"
+					rendered="#{(x lt strip.idCount) and
+					(strip.elementIdList[x] ne '..') and (not empty authBean.pgFields['6.1,link_contact'])}">
+				<f:setPropertyActionListener value="#{strip.elementDbIdList[x]}" target="#{jumpBean.value}"/>
+				<ace:ajax />
+			</h:commandLink>
+			<h:outputText value="#{strip.elementIdList[x]}"
+					title="#{strip.elementNameList[x]}"
+					rendered="#{(x lt strip.idCount) and
+						((strip.elementIdList[x] eq '..') or (empty authBean.pgFields['6.1,link_contact']))}" />
+			<h:outputText value=" " />
+		</c:forEach>
+		<h:outputText rendered="#{strip.elementIdList eq null}"></h:outputText>
+	</ace:column>
+
+</ui:composition>

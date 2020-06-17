@@ -1,0 +1,172 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Event List mini-tab on Admin & Prod Admin / Events pages -->
+
+	<ace:tabPane label="Event list">
+
+		<h:panelGroup styleClass="FL pad10tp W90percnt">
+			<div class="FL W20percnt">
+				<span class="FL B pad5lt pad10rt pad3tp">From:</span>
+				<span class="FL">
+					<ace:dateTimeEntry
+							value="#{eventBean.startDate}" tabindex="0"
+							renderAsPopup="true" title="Start of date range to display"
+							style="position:relative;z-index:1000;" >
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+					</ace:dateTimeEntry>
+				</span>
+				<br/>
+				<div class="FL pad40lt pad20tp">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:checkboxButton styleClass="FL ckbx"
+								value="#{eventBean.showAllProductions}"
+								tabindex="99"
+								valueChangeListener="#{eventBean.listenShowAll}">
+							<ace:ajax />
+						</ace:checkboxButton>
+					</icecore:setEventPhase>
+					<span class="FL ckbxTxtLbl">Include All Productions</span>
+				</div>
+			</div>
+
+			<div class="FL W20percnt">
+				<span class="FL B pad5lt pad10rt pad3tp">To:</span>
+				<ace:dateTimeEntry
+						tabindex="0" value="#{eventBean.endDate}" title="End of date range to display"
+						renderAsPopup="true" style="margin-left: 10px;z-index:1000;">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+				</ace:dateTimeEntry>
+			</div>
+
+			<div class="FL W10percnt">
+				<span class="pad20lt FL">
+					<span class="btnMiniLt" />
+					<span>
+						<ace:linkButton value="Refresh"
+							action="#{eventBean.actionSearch}"
+							styleClass="btnMiniCt">
+						</ace:linkButton>
+					</span>
+					<span class="btnMiniRt" />
+				</span>
+			</div>
+
+			<div class="FL W50percnt">
+			<ace:buttonGroup id="types">
+				<div class="FL W50percnt">
+				<span class="pad10lt FL" style="text-align:left;">
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[0]}" 
+							label="#{eventBean.eventTypes[0].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[1]}"  
+							label="#{eventBean.eventTypes[1].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[2]}"  
+							label="#{eventBean.eventTypes[2].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[3]}" 
+							label="#{eventBean.eventTypes[3].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[4]}" 
+							label="#{eventBean.eventTypes[4].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+				</span>
+				</div>
+				<div class="FL W50percnt">
+				<span class="pad10lt FL" style="text-align:left;">
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[5]}" 
+							label="#{eventBean.eventTypes[5].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[6]}" 
+							label="#{eventBean.eventTypes[6].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[7]}" 
+							label="#{eventBean.eventTypes[7].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{eventBean.eventTypeCbs[8]}" 
+							label="#{eventBean.eventTypes[8].name}" labelPosition="right">
+						<ace:ajax execute="types" event="activate" render="@form"/>
+					</ace:checkboxButton>
+				</span>
+				</div>
+			</ace:buttonGroup>
+			</div>
+		</h:panelGroup>
+
+		<span class="rowCont CT pad10tp">
+		</span>
+
+		<span>
+			<ace:dataTable styleClass="bk_sl_grid" id="eventtable"
+					selectionMode="single" singleSort="true"
+					value="#{eventBean.eventList}"
+					var="event"
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '200'}"
+					paginator="true"
+					paginatorAlwaysVisible="false"
+					paginatorPosition="top" pagesToSkip="5" pageCount="5"
+					paginatorTemplate=
+	"{FirstPageLink} {FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward} {LastPageLink} {CurrentPageReport}"
+					rows="100"
+					style="width:99%;max-width:100%;position:relative;float:left;z-index:100;overflow-x:hidden;" >
+
+				<ace:column headerText="ID" style="width:4%;">
+					<h:outputText value="#{event.id}"/>
+				</ace:column>
+
+				<ace:column headerText="Time" style="width:8%;">
+					<h:outputText value="#{event.startTime}">
+						<f:convertDateTime pattern="M/d HH:mm:ss" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</ace:column>
+
+				<ace:column headerText="Type" style="width:10%;">
+					<ace:linkButton
+							value="#{event.type.name}"
+							actionListener="#{eventBean.actionEventView}">
+						<f:attribute name="currentRow" value="#{event}" />
+					</ace:linkButton>
+				</ace:column>
+
+				<ace:column headerText="User" style="width:14%;">
+					<h:outputText value="#{event.username}" />&#160;
+				</ace:column>
+
+				<ace:column headerText="Production" style="width:12%;">
+					<h:outputText value="#{event.production.title}" />&#160;
+				</ace:column>
+
+				<ace:column headerText="Project" style="width:12%;">
+					<h:outputText value="#{event.project.title}" />&#160;
+				</ace:column>
+
+				<ace:column headerText="Description" style="width:40%;">
+					<h:outputText escape="false" value="#{event.shortDescription} " />&#160;
+				</ace:column>
+
+			</ace:dataTable>
+		</span>
+	</ace:tabPane>
+
+</ui:composition>

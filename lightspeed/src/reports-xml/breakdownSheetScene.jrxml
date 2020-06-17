@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="breakdownSheetScene" pageWidth="613" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="553" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="118db83e-dc9c-49b8-96d4-f2893a71ed4d">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="624"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT distinct  sce.hint scene_hint, sce.Script_Day,sce.id scene_id, sp.scene_Numbers scene_number,  sce.Synopsis, sp.Elapsed_Time, sp.Sheet_Number, sce.IE_Type scne_IET, sce.DN_Type scene_DNT,  IF(sp.length>=8,concat(cast(truncate(sp.length/8,0) as char),if(sp.length%8=0,'',concat(' ',cast(sp.length%8 as char),'/8'))),concat(cast(sp.length as char),'/8')) page_length,  sce.Page_Num_Str scene_page_number,  unit.number unit_number, unit.name unit_name FROM project proj, scene sce, strip sp left join unit on sp.unit_id = unit.id WHERE proj.current_stripboard_id=sp.Stripboard_Id and sp.Type='BREAKDOWN' and  concat(sp.scene_numbers, ',' ) like concat(sce.number, ',%' )  and sce.Script_Id=proj.Current_Script_Id and proj.id = 5  order by sce.sequence;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="constant" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[ReportsConstants.BreakDownsheet]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="unitNumber" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="scene_hint" class="java.lang.String"/>
+	<field name="Script_Day" class="java.lang.String"/>
+	<field name="scene_number" class="java.lang.String"/>
+	<field name="Synopsis" class="java.lang.String"/>
+	<field name="Elapsed_Time" class="java.lang.Integer"/>
+	<field name="Sheet_Number" class="java.lang.Integer"/>
+	<field name="scne_IET" class="java.lang.String"/>
+	<field name="scene_DNT" class="java.lang.String"/>
+	<field name="page_length" class="java.lang.String"/>
+	<field name="scene_page_number" class="java.lang.String"/>
+	<field name="scene_id" class="java.lang.Integer"/>
+	<field name="unit_name" class="java.lang.String"/>
+	<background>
+		<band height="752" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="b130aea6-1e4f-43dd-a4fb-a967edb69bd1" key="rectangle-12" mode="Transparent" x="1" y="0" width="552" height="733"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="56" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="b40d54dd-6424-49b7-a701-09089d628d22" key="subreport-1" x="1" y="0" width="552" height="55"/>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$P{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="unitName">
+					<subreportParameterExpression><![CDATA[$F{unit_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="showUnit">
+					<subreportParameterExpression><![CDATA[$P{showUnit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="111" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="94a54ee4-1f9e-4451-bb3f-f0d46c821191" key="textField-9" x="35" y="48" width="483" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{Synopsis}!=null ?$F{Synopsis} : "" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="7ad07917-436f-4e91-8f53-2227f78d10f2" key="textField-10" x="88" y="75" width="243" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{Script_Day}!=null ? $F{Script_Day} : "" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7ee2a343-baa9-4bbb-9d72-cbe31fa93b09" key="textField-11" x="502" y="5" width="36" height="18"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{page_length}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="e62222be-cbe9-4e0c-add6-e4a5b873d2b0" key="textField-12" x="290" y="5" width="46" height="18"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{scene_page_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3b46ac63-16b1-4379-9e6b-38aacf306851" key="textField-13" x="494" y="92" width="25" height="18"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Elapsed_Time}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ca0fddc7-4b3d-486f-af80-b2233b99eec0" key="subreport-12" x="82" y="92" width="300" height="17"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/locationSubrept.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="89275c1c-89fe-433f-8441-65dad715d057" key="textField-14" x="419" y="92" width="75" height="18"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.EstimatedTime]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="ef80aa3c-4f44-45a4-b8b6-1aaa652434c9" key="textField-15" x="433" y="5" width="67" height="18"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.PageLength]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="b458ec4a-bb6f-4867-b9ab-06af226e237b" key="textField-16" x="221" y="5" width="67" height="18"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Pages]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="05a17b82-cf4d-4f12-9658-4e2dce262b56" key="textField-18" x="23" y="6" width="47" height="18"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Scenes]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="32218284-cf9f-4d7b-a0ec-1bae92ccbe39" key="textField-20" x="35" y="75" width="75" height="17"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ScriptDay]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="82e299f7-644f-4556-bb17-4cd12a272216" key="textField-21" x="35" y="92" width="52" height="17"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Location]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="dd71c058-6d16-478f-8af7-c8b7e2d176f6" key="textField-4" x="64" y="6" width="103" height="18"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{scene_number}!=null ? $F{scene_number} : "" )]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="45a07c6b-c076-405b-a60a-ea857c4b18b6" key="subreport-13" x="35" y="27" width="484" height="18"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/breakdownSheetSceneLocationSubRept.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="74" splitType="Stretch">
+			<frame>
+				<reportElement uuid="90815f00-0127-4ced-88de-dc29b9cbb583" key="rectangle-1" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="1" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<textField>
+					<reportElement uuid="31c7dbf6-37aa-4177-8f3a-0acf0af2dcaf" key="textField-28" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Cast]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="7f85dd32-05ab-49f7-ab5c-2b2331ffd90a" key="subreport-1" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/castsubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="322fce2e-059e-4e87-9d95-f6cf2709c79c" key="rectangle-4" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="139" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<textField>
+					<reportElement uuid="863cda18-5b0a-479e-bb7d-23e887503fab" key="textField-28" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Extras]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="d0ae4d74-f397-47bd-aca4-fea6472e2c96" key="subreport-3" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/extraSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="05be2f06-bc10-4250-98f8-db10a07b5b0d" key="rectangle-2" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="277" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textField>
+					<reportElement uuid="e6cdab3c-ecfd-45bd-bc51-b22e9cd41ae2" key="textField-28" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Prop]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true" runToBottom="false">
+					<reportElement uuid="23787d38-eb2c-48b6-b907-963f39530f07" key="subreport-2" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/propSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="4d126526-59a3-4358-a049-ae6410c5eb3c" key="rectangle-5" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="415" y="2" width="136" height="72"/>
+				<textField>
+					<reportElement uuid="e26587e5-4a5a-4e9e-a2a2-fd6b197a2333" key="textField-28" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Makeup]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="f1d29a2e-1cea-414b-a2fb-23a0127c7c9a" key="subreport-4" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/makeupSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+		<band height="74" splitType="Stretch">
+			<frame>
+				<reportElement uuid="6d24cc0d-7bbf-452f-9258-f07470b75441" key="rectangle-3" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="139" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<textField>
+					<reportElement uuid="3a966b84-e31b-4c04-a8c6-b4ffe1bff083" key="textField-26" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.SetDecoration]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="625e5f52-e1ce-4ff3-bbae-5850dd6c8fed" key="subreport-6" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/setdecorationSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="a505317a-62f2-42ab-abe9-1d3d99cbeec0" key="rectangle-11" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="415" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="b8c2b2b5-55ef-4f5e-848d-d236cf68257e" key="subreport-11" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/sfxSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="91ecfec5-d7e0-4c2a-aaab-9c7e43be6a16" key="textField-34" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.SFX]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="7bedd4fd-fc73-400d-a1aa-de9f42e0fada" key="rectangle-8" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="1" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<textField>
+					<reportElement uuid="0ec7c139-cddc-4dd4-80ba-94970f272ad6" key="textField-31" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Wardrobe]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="7d7080a4-854a-4eb8-8f57-3b1eb60f7d54" key="subreport-8" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/wardrobeSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="ff0b1635-b795-4c2f-ba35-c922808b9f06" key="rectangle-7" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="277" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="ef084447-98bb-4195-a932-09552b4d9c72" key="subreport-5" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/stuntSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="32fbab0f-c0a8-4127-aeed-4ff4bac37f1b" key="textField-30" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Stunts]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="74" splitType="Stretch">
+			<frame>
+				<reportElement uuid="56fe1318-e5e1-4756-8c57-47be03bc5deb" key="rectangle-10" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="1" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="a2ed9512-d599-49f5-92c6-eca693338030" key="subreport-10" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/vehicleSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="7dc676a7-b3f3-4088-9489-4647567ba6cb" key="textField-33" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Vehicles]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="b7445b38-e0d5-404b-a246-e4df41e013c0" key="rectangle-10" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="415" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="370354bc-bede-474d-80cd-2350bfe765a9" key="subreport-10" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/greenerySubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="73ea7e82-c89e-479e-9d19-1c87af3fba06" key="textField-33" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Greenery]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="514db708-fb02-44d7-8d80-45cfce62264b" key="rectangle-6" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="139" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="24cc1816-937e-403f-b8da-f52645584665" key="subreport-7" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/livestockSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="9e83a821-493e-4a86-a9ca-f225fe85303e" key="textField-29" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Livestock]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="c723166b-d1a8-43c1-81e0-d0af3ad0c329" key="rectangle-2" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="277" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textField>
+					<reportElement uuid="559ccdfe-a803-48c6-ac6b-658ebe18f9c9" key="textField-28" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Animals]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true" runToBottom="false">
+					<reportElement uuid="e564011b-2397-4f3a-a6c8-f66e7045bc7f" key="subreport-2" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/handlerSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+		<band height="74" splitType="Stretch">
+			<frame>
+				<reportElement uuid="a134561e-eb12-4d84-ae86-128166f319de" key="rectangle-9" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="139" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="0e1900b5-5324-4e86-ad40-72055398034d" key="subreport-9" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/soundSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="80a9565a-044e-4430-8f7d-15d39c783606" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Sound]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="3befc0a8-bf3c-4642-be76-84def0469686" key="rectangle-9" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="277" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="32359b81-1dc5-4324-8e71-0524264a7dea" key="subreport-9" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/equipmentSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="9f2c8a0b-8917-495f-83ea-3ea297bd3b72" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.SpecialEquipments]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="764698e6-49ae-4368-b04a-3b98aeeafbea" key="rectangle-9" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="415" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="c1be0cdc-3f91-4f9e-abef-ecc97ee069c7" key="subreport-9" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/laborSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="938ac67b-e5e8-4873-b24e-9c891d935403" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.AddtlLabor]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="8b50f412-35b0-4044-baa6-14f554d83a20" key="rectangle-3" style="element" stretchType="RelativeToBandHeight" mode="Transparent" x="1" y="2" width="136" height="72" isPrintInFirstWholeBand="true"/>
+				<textField>
+					<reportElement uuid="a07f060b-ff8c-4cb3-a68d-c97e39cea5a8" key="textField-26" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Music]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="fc3a0f2f-d9b6-432d-936f-a53e73c9528a" key="subreport-6" stretchType="RelativeToBandHeight" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/musicSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+		<band height="199" splitType="Stretch">
+			<frame>
+				<reportElement uuid="06053ceb-5b67-4b21-b1bc-81471916ba88" key="rectangle-9" style="element" mode="Transparent" x="139" y="1" width="136" height="72"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="758d2799-5893-40fe-913f-db253d070fca" key="subreport-9" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/mechanicalSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="280502ea-3a91-45b1-af84-6d889b6572d9" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.MechanicalFX]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="5291bfcf-3169-4334-96c1-74e25154ab2b" key="rectangle-9" style="element" mode="Transparent" x="277" y="1" width="136" height="72"/>
+				<textField>
+					<reportElement uuid="7e059408-5383-440c-9102-43ece2536bea" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Security]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="6e956610-de22-4c75-b316-bbc1daca4ebf" key="subreport-9" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/securitySubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="2b3c09fc-0b76-47bc-a9b3-fee8da5b6fcb" key="rectangle-9" style="element" mode="Transparent" x="415" y="1" width="136" height="72"/>
+				<subreport isUsingCache="true">
+					<reportElement uuid="f05e5c15-1e65-4809-af71-2bdc5bc25db0" key="subreport-9" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/miscSubrept.jasper"]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement uuid="6f1ff336-0336-4953-a2e7-442d149e8ae2" key="textField-32" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Misc]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="7b2cd98d-9c67-4873-9d24-7547afd06356" key="rectangle-3" style="element" mode="Transparent" x="1" y="1" width="136" height="72"/>
+				<textField>
+					<reportElement uuid="46d9ffbc-d0d4-4e96-979c-458ab52563c2" key="textField-26" style="element" mode="Opaque" x="1" y="0" width="135" height="12" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.OpticalFX]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="501d94c2-5902-4f62-8a61-68d6827f0268" key="subreport-6" x="1" y="12" width="135" height="60"/>
+					<subreportParameter name="sceneid">
+						<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/breakdown/opticalSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="741f346a-cee6-4f8c-b9fe-79b3c2719957" key="textField" x="522" y="0" width="30" height="17"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3e6ed2c1-9d27-453f-970d-2599a8bb7507" key="subreport-1" x="1" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b81b1e13-929d-441a-80cd-e86a63bb4154" key="staticText-1" x="175" y="4" width="216" height="15"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[No scenes met your selection criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

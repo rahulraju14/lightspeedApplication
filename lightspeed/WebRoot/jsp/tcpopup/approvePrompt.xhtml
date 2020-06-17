@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Password/PIN confirmation dialog (message + pw entry + PIN entry + ok/cancel buttons) -->
+	<!-- This is for timecards.  See documentApprovePrompt.xhtml for onboarding document approval. -->
+	<!-- This is based on the confirmpopupbig class (size). -->
+	<h:form>
+		<ace:dialog visible="#{approvePromptBean.visible}"
+				header="#{approvePromptBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+
+			<ace:ajax event="close" execute="@this" listener="#{approvePromptBean.actionCancel}"/>
+
+			<h:panelGroup>
+				<div class="popupBdyA">
+					<div class="popCont80">
+						<div class="popup_main stdTxt pad10tp">
+
+							<h:outputText styleClass="RED" value="#{approvePromptBean.alertMessage}" escape="false"
+									rendered="#{(not approvePromptBean.pinError) and (not empty approvePromptBean.alertMessage)}"/>
+							<h:outputText rendered="#{approvePromptBean.pinError}" styleClass="RED B" escape="false"
+									value="#{approvePromptBean.errorMsg}"/>
+							<h:outputText escape="false" value="#{approvePromptBean.message}" />
+
+							<div>
+								<span class="rowCont">
+									<h:panelGroup>
+										<span class="fdNm FL">
+											<h:outputText value="Password:" />
+										</span>
+										<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+											<ace:textEntry secret="true" tabindex="1" maxlength="20" id="approve_focus"
+												action="#{approvePromptBean.actionOk}"
+												redisplay="true" value="#{approvePromptBean.password}" />
+										</span>
+									</h:panelGroup>
+								</span>
+								<span class="rowCont pad10tp">
+									<span class="fdNm FL">
+										<h:outputText value="PIN:" />
+									</span>
+									<span class="fd FL">
+										<ace:textEntry secret="true" tabindex="2" maxlength="4" id="approvePromptPin" action="#{approvePromptBean.actionOk}"
+											redisplay="true" value="#{approvePromptBean.pin}" />
+									</span>
+								</span>
+
+								<h:panelGroup styleClass="rowCont pad10tp"
+										rendered="#{(not approvePromptBean.multipleApprovers)}">
+										<!--  and (! approvalsBean.isPool) -->
+									<span class="fdNm FL">
+										<h:outputText value="Forward to:" />
+									</span>
+									<span class="fd FL">
+										<h:outputText value="#{approvePromptBean.approverName}"
+												styleClass="FL pad4lt pad2tp"
+												style="min-width:130px;"
+												rendered="#{not approvePromptBean.showSelect}"/>
+										<h:selectOneMenu  tabindex="3"
+												rendered="#{approvePromptBean.showSelect}"
+												style="min-width:130px;max-width:350px;" value="#{approvePromptBean.approverContactId}" >
+											<f:selectItems value="#{approvePromptBean.approverContactDL}" />
+										</h:selectOneMenu>
+									</span>
+									<span class="pad10lt ckbxTxtLbl FL">
+										<h:selectBooleanCheckbox  tabindex="4"
+												value="#{approvePromptBean.showSelect}" styleClass="ckbx">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</span>
+									<span class="ckbxTxtLbl_B FL pad5lt">Change approver</span>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="rowCont pad10tp" rendered="false">
+										<!-- and (approvalsBean.isPool) and (approvalsBean.useFinalApprover)
+											and (not approvePromptBean.multipleApprovers) -->
+									<span class="fdNm FL">
+										<h:outputText value="Forward to:" />
+									</span>
+									<span class="fd FL">
+										<!--
+										<h:selectOneMenu  tabindex="3"
+												style="min-width:130px;">
+											<f:selectItems value="#{approvalsBean.poolApproverList}" />
+										</h:selectOneMenu>
+										 -->
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="rowCont pad10tp B" rendered="false">
+										<!-- (! approvalsBean.useFinalApprover) and (approvalsBean.isPool)  -->
+										This is the FINAL approval for this document.
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="rowCont pad10tp"
+										rendered="#{approvePromptBean.multipleApprovers}">
+										The selected timecards will be sent to multiple approvers.
+								</h:panelGroup>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="popBtnCont4 pad20rt">
+						<h:panelGroup rendered="#{not empty approvePromptBean.buttonCancelLabel}">
+							<span class="FR">
+								<span class="btnPriEnbLt"/>
+								<span>
+									<ace:linkButton value="#{approvePromptBean.buttonCancelLabel}" tabindex="6"
+										action="#{approvePromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt"/>
+							</span>
+						</h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="#{approvePromptBean.buttonOkLabel}" tabindex="5"
+									action="#{approvePromptBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

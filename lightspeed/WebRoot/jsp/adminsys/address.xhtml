@@ -1,0 +1,149 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Address section -->
+<!-- parameters:  -->
+<!--   title -->
+<!--   address -->
+<!--   editMode -->
+
+		<!-- ADDRESS LINE 1 -->
+		<h:panelGroup style="line-height:24px;margin-bottom:3px;">
+
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="#{title}" />
+				</span>
+				<h:panelGroup rendered="#{not editMode}">
+					<span class="fd1">
+						<h:outputText value="#{address.addrLine1}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{editMode}">
+					<span class="fd1">
+						<ace:textEntry maxlength="35"
+							styleClass="address" value="#{address.addrLine1}" />
+					</span>
+				</h:panelGroup>
+			</div><!-- end address 1 -->
+
+			<!-- LINE 2 -->
+			<h:panelGroup rendered="#{not editMode and (not empty address.addrLine2)}">
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<!-- address 2 keep this title place holder -->
+					</span>
+					<span class="fd1">
+						<h:outputText
+							value="#{address.addrLine2}" />
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{editMode}">
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<!-- address 2 keep this title place holder -->
+					</span>
+					<span class="fd1">
+						<ace:textEntry maxlength="35" styleClass="address"
+							value="#{address.addrLine2}" />
+					</span>
+				</div>
+			</h:panelGroup><!-- end address 2 -->
+
+			<!-- CITY, STATE, ZIP - "VIEW mode" -->
+			<h:panelGroup styleClass="rowCont FL" rendered="#{not editMode}">
+				<span class="fdNm">
+					<!-- keep this place holder -->
+				</span>
+				<span class="fd1">
+					<span class="FL">
+						<h:outputText styleClass="pad5rt" rendered="#{not empty address.city}"
+							value="#{address.city}," />
+					</span>
+					<span class=" FL pad5rt">
+						<h:outputText
+							value="#{address.state}" />
+					</span>
+					<span class="FL">
+						<h:outputText
+							value="#{address.zip}" />
+					</span>
+				</span>
+			</h:panelGroup>
+			<!-- end city state zip "VIEW mode" -->
+
+			<!-- CITY, STATE, ZIP - "EDIT mode" -->
+			<h:panelGroup rendered="#{editMode}">
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:outputText value="City:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd1">
+							<ace:textEntry maxlength="30" styleClass="city"
+								value="#{address.city}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:outputText value="State:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_state">
+							<h:selectOneMenu styleClass="state"
+								value="#{address.state}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateDL[address.country]}" />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+					<span class="fdNm_zip">
+						<h:outputText value="Zip:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_zip">
+							<ace:textEntry maxlength="10" styleClass="zip"
+								value="#{address.zip}" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup><!-- end city, state zip "EDIT mode" -->
+
+			<!-- COUNTRY -->
+			<h:panelGroup
+				rendered="#{not editMode and (not empty address.country)
+					and (address.country ne 'US')}">
+				<span class="fdNm">
+					<h:outputText value="Country:" />
+				</span>
+				<span class="fd1">
+					<h:outputText
+						value="#{address.country}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup
+				rendered="#{editMode}"
+				styleClass="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Country:" />
+				</span>
+				<span class="fd1">
+					<h:panelGroup>
+						<h:selectOneMenu
+							value="#{address.country}" styleClass="country">
+							<f:selectItems
+								value="#{applicationScopeBean.countryDL}" />
+								<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</span>
+			</h:panelGroup><!-- end country -->
+
+		</h:panelGroup>
+
+</ui:composition>

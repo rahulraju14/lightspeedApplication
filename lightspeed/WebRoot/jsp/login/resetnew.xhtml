@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<title>#{headerViewBean.domainTabTitle} New Registration</title>
+
+<!-- This page is presented to users who have been "invited" by another user
+as a result of adding them via the Cast+Crew page.  The new user receives an
+email with a link to this page that includes an encrypted key value tying it
+to a specific User account.  PasswordResetBean is the main backing bean for this
+page. -->
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('loginForm:password').focus();
+}
+</script>
+
+</h:head>
+<h:body styleClass="loginCont" style="min-height:560px;">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	doFocus();
+});
+</script>
+
+<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+<div id="pnlLogin" class="BKwhite">
+
+	<div class="topBdrCont FL">
+		<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+	</div>
+
+	<div class="ltrtBdr rowCont BKwhite">
+
+		<ui:include src="topLogo.xhtml" />
+
+		<h:panelGroup rendered="#{not passwordResetBean.keyValid}">
+			<div id="resetloginCont" class="pad8tp rowDivider">
+
+<h:form id="msgForm">
+
+				<h:panelGroup styleClass="FL rowCont">
+					<div class="MA W100percnt pad20tp">
+						<div class="pad80lt txt16 B">
+							<h:outputText rendered="#{passwordResetBean.message eq 'Expired'}"
+									value="E-Mail Link Expired"/>
+							<h:outputText rendered="#{passwordResetBean.message eq 'Invalid'}"
+									value="E-Mail Link Invalid"/>
+							<h:outputText rendered="#{passwordResetBean.message eq 'EmailFailed'}"
+									value="Unable to send E-Mail"/>
+						</div>
+						<div class="MA W70percnt pad40tp">
+							<h:panelGroup styleClass="" rendered="#{passwordResetBean.message eq 'Invalid'}">
+								<h:outputText escape="false" value="#{msg.NewAcctKeyInvalid}"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="" rendered="#{passwordResetBean.message eq 'Expired'}">
+								<h:outputText escape="false" value="#{passwordResetBean.messageText}"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="" rendered="#{passwordResetBean.message eq 'EmailFailed'}">
+								<h:outputText escape="false" value="#{msg.Reset_email_failed}"/>
+							</h:panelGroup>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="CB">&#160;</div>
+
+				<h:panelGroup styleClass="MA W360 pad50tp"
+						rendered="#{passwordResetBean.message ne 'Invalid'}">
+					<span class="FL W120 pad3tp">
+						&#160;
+					</span>
+					<span class="btnPriHotLt" />
+					<span>
+						<ace:linkButton value="Request New Link"
+							action="#{passwordResetBean.actionNewLink}"
+							styleClass="btnPriHotCt btnTxt">
+						</ace:linkButton>
+					</span>
+					<span class="btnPriHotRt" />
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="MA W360 pad50tp"
+						rendered="#{passwordResetBean.message eq 'Invalid' or passwordResetBean.message eq 'Expired'}">
+					<span class="FL W120 pad3tp">
+						&#160;
+					</span>
+					<span class="btnPriHotLt" />
+					<span>
+						<ace:linkButton value="Return to Login"
+							action="login"
+							styleClass="btnPriHotCt btnTxt">
+						</ace:linkButton>
+					</span>
+					<span class="btnPriHotRt" />
+				</h:panelGroup>
+
+<h:inputHidden value="#{passwordResetBean.userId}" />
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{passwordResetBean.keyValid}">
+			<div id="resetloginCont" class="pad8tp rowDivider">
+
+<h:form id="loginForm">
+				<div class="FL rowCont">
+					<div class="MA W630 pad20tp">
+						<div class="txt16 B pad30lt">
+							New Registration
+						</div>
+						<div class="loginTxt pad15tp">
+							<h:outputText value="#{newAccountBean.welcomeText}"/>
+							<p/>
+							<h:outputText value="#{newAccountBean.postRegisterText}"/>
+						</div>
+					</div>
+				</div>
+
+				<h:panelGroup styleClass="FL rowCont" rendered="#{(not empty passwordResetBean.message)}">
+					<div class="MA W100percnt">
+						<div id="loginErrMsgCont">
+							<div class="loginErrTitleBar">
+								<span class="FL loginErrMsgTxt">
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'Required'}">
+										<h:outputText value="#{msg.Password_Required}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'UserInvalid'}">
+										<h:outputText value="#{msg.Password_UserInvalid}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'ConfirmNotMatched'}">
+										<h:outputText value="#{msg.Password_ConfirmNotMatched}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'TooLong'}">
+										<h:outputText value="#{msg.Password_TooLong}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'TooShort'}">
+										<h:outputText value="#{msg.Password_TooShort}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'MissingAlpha'}">
+										<h:outputText value="#{msg.Password_MissingAlpha}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'MissingNumber'}">
+										<h:outputText value="#{msg.Password_MissingNumber}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'AcceptTerms'}">
+										<h:outputText value="#{msg.Account_AcceptTerms}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'EmailFailed'}">
+										<h:outputText value="#{msg.Reset_email_failed}"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="login_error" rendered="#{passwordResetBean.message eq 'NoEmail'}">
+										<h:outputText value="#{msg.Reset_email_failed}"/>
+									</h:panelGroup>
+								</span>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="FL rowCont pad30tp pad5lt">
+					<div class="CB MA W360 pad15tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="Name:"
+								styleClass="txt12 B" />
+						</span>
+						<div class="FL W210" style="min-width:210px;display:block;">
+							<h:outputText
+								value="#{passwordResetBean.user.firstNameLastName}"/>
+						</div>
+					</div>
+					<div class="CB MA W360 pad35tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="Email Address:"
+								styleClass="txt12 B" />
+						</span>
+						<div class="FL bx_output W210">
+							<h:outputText
+								value="#{passwordResetBean.user.emailAddress}"/>
+						</div>
+					</div>
+					<div class="CB MA W360 pad80tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="New Password:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputSecret id="password"
+							styleClass="bx_input W210"
+							maxlength="20"
+							value="#{passwordResetBean.password}"
+							required="false"
+							tabindex="1"
+							redisplay="true">
+						</h:inputSecret>
+					</div>
+					<div class="MA W360 pad10tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="Confirm Password:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputSecret id="confirmpassword"
+							styleClass="bx_input W210"
+							value="#{passwordResetBean.confirmPassword}"
+							required="false"
+							tabindex="2"
+							redisplay="true" maxlength="20">
+						</h:inputSecret>
+
+						<div style="width:380px;">
+							<div class="infoTxtnopad pad10tp" style="width:100%;">About Passwords:</div>
+								<div class="txt12 pad5tp">
+								The password must be at least 8 characters long and no more than 20.
+								<br/>It must contain at least one lowercase letter, 
+								<br/>one capital letter, one number, and one special character.
+						</div>
+					</div>
+
+					</div>
+				</div>
+
+				<div class="FL rowCont pad5lt">
+					<div class="MA W360 pad20tp">
+						<div class="txt12 pad20tp pad50lt">
+						<h:panelGroup
+								rendered="#{passwordResetBean.user.status eq 'PENDING'}">
+							<span class="ckbx">
+								<h:selectBooleanCheckbox tabindex="3"
+										styleClass="FL "
+										value="#{passwordResetBean.acceptTerms}">
+								</h:selectBooleanCheckbox>
+							</span>
+							<span class="ckbxTxtLbl pad2tp"> &#160;
+							I agree to the &#160;
+							<a href="#{msg.Legal_TermsOfUse_Url}"
+								target="lightspeed_terms">Terms of Use</a>.
+							</span>
+						</h:panelGroup>
+						</div>
+						<div class="txt12 pad20tp">
+							<span class="FL W120 pad3tp">
+								&#160;
+							</span>
+							<span class="FL">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton id="login" value="Create My Account"
+										tabindex="4"
+										action="#{passwordResetBean.actionNewPassword}"
+										styleClass="btnPriHotCt btnTxt" />
+								</span>
+								<span class="btnPriHotRt" />
+							</span>
+						</div>
+					</div>
+				</div>
+
+<h:inputHidden value="#{passwordResetBean.userId}" />
+</h:form>
+
+			</div>
+		</h:panelGroup>
+				<div class="rowBtnLogin pad40tp">
+					<div class="rowBtnBdr"></div>
+					<div class="FL rowCont CT">
+						<ui:include src="../common/footercont.xhtml" />
+					</div>
+				</div>
+	</div>
+
+	<div class="btmBdrCont FL">
+		<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+	</div>
+
+</div>
+
+</h:body>
+</html>

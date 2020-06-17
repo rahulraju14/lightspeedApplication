@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{exhibitGViewBean.showAddCast}"
+				header="Add to Cast List"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{exhibitGViewBean.actionCloseAddCast}"/>	
+			<div id="popBdy">
+				<div id="addroleCont">
+					<div class="popup_main">
+
+						<h:panelGroup rendered="#{exhibitGViewBean.project.hasUnits}">
+							<span class="infoTxtnopad rowCont padPop40tp">
+								Select the Unit associated with this cast entry:
+							</span>
+							<span class="rowCont pad15lt padPop20tp">
+								<span class="FL">
+									 <h:outputText styleClass="fdNm B" value="Unit:"/>
+								</span>
+								<span class="fd FL">
+									<h:selectOneMenu 
+										valueChangeListener="#{roleSelectBean.changeUnit}"
+										value="#{roleSelectBean.unitId}" styleClass="selRole">
+										<f:selectItems value="#{roleSelectBean.unitDL}" />
+										<f:ajax execute="@this" render="@all"/>
+									</h:selectOneMenu>
+								</span>
+							</span>
+						</h:panelGroup>
+
+						<span class="infoTxtnopad rowCont padPop40tp">
+							Select a Person to be added to the Cast list:
+						</span>
+						<span class="rowCont pad15lt padPop20tp">
+							<span class="FL">
+								 <h:outputText styleClass="fdNm B" value="Person:" />
+							</span>
+							<span class="fd FL">
+								<h:selectOneMenu
+									value="#{exhibitGViewBean.newContact}" styleClass="selRole">
+									<f:converter converterId="lightspeed.ContactConverter" />
+									<f:selectItems value="#{roleSelectBean.contactDL}" />
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="rowCont padPop20tp infoTxtnopad">
+							<h:outputText styleClass="B" rendered="#{empty roleSelectBean.contactDL}"
+								value="Everyone from the Cast department in that Unit is already listed."/>
+						</span>
+					</div>
+				</div>
+
+				<div class="popBtnCont padPop20tp">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{exhibitGViewBean.actionCloseAddCast}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<h:panelGroup styleClass="FR pad5rt" rendered="#{not empty roleSelectBean.contactDL}">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Add"
+							action="#{exhibitGViewBean.actionAddCast}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

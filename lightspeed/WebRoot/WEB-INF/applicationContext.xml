@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="jdbcUrl" value="jdbc:mysql://${com.lightspeedeps.mysql.url}:3306/${com.lightspeedeps.mysql.databaseName}"/>
+			<!-- see web.xml for URL and databaseName -->
+		<property name="user" value="${com.lightspeedeps.mysql.user}"/><!-- see web.xml -->
+		<property name="password" value="root"/>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+		<property name="initialPoolSize" value="3"/> <!-- default=3 -->
+		<property name="maxPoolSize" value="200"/> <!-- default=15 -->
+		<property name="minPoolSize" value="3"/> <!-- default=3 -->
+		<property name="acquireIncrement" value="5"/> <!-- default=3 -->
+		<property name="acquireRetryAttempts" value="60"/> <!-- default=30 -->
+		<property name="acquireRetryDelay" value="1000"/> <!-- default=1000 (milliseconds) -->
+		<property name="maxIdleTimeExcessConnections" value="1800"/> <!-- default=0 (seconds) -->
+		<property name="testConnectionOnCheckin" value="false"/> <!-- default=false -->
+		<property name="idleConnectionTestPeriod" value="600"/> <!-- default=0 (seconds) -->
+		<property name="preferredTestQuery" value="select count(id) from color_name;"/> <!-- default=null -->
+	</bean>
+
+	<import resource="applicationContextPart1.xml"/><!-- Has the DAOs and most other non-UI beans -->
+
+	<import resource="applicationContextScheduler.xml"/><!-- beans only used by scheduled tasks -->
+	
+	<import resource="applicationContextMongo.xml"/><!-- Mongo related DAOs beans and  -->	
+
+	<bean id="quartz_ls"
+			class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="clearDoodMapJobTrigger" />
+				<ref bean="databaseCheckTrigger" />
+				<ref bean="dueOverdueCheckTrigger" />
+				<ref bean="eventLogSummaryTrigger" />
+				<ref bean="failedLogonJobTrigger" />
+				<ref bean="scriptPagesCheckTrigger" />
+				<ref bean="timecardCreatorTrigger" />
+				<ref bean="formI9CheckTrigger" />
+			</list>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.scheduler.instanceName">scheduler_ls</prop>
+				<prop key="org.quartz.threadPool.threadCount">2</prop>
+				<prop key="org.quartz.scheduler.threadsInheritContextClassLoaderOfInitializer">true</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

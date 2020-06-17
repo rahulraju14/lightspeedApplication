@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="locRept" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="553" leftMargin="30" rightMargin="29" topMargin="20" bottomMargin="20" uuid="08c356d4-20de-4077-a2aa-2692968e4079">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="1952"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT img.content as content, rw.Name, rw.id, rw.phone, a.Addr_Line1, a.Addr_Line2, a.City, a.State,  a.Zip, rw.Phone, rw.Special_Instructions, rw.Parking FROM  real_world_element rw  left outer join address a on (rw.Address_Id = a.id)  left outer join image img on( rw.map_id = img.id) WHERE rw.id <= 83"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="content" class="java.io.InputStream"/>
+	<field name="Name" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="Addr_Line1" class="java.lang.String"/>
+	<field name="Addr_Line2" class="java.lang.String"/>
+	<field name="City" class="java.lang.String"/>
+	<field name="State" class="java.lang.String"/>
+	<field name="Zip" class="java.lang.String"/>
+	<field name="parking" class="java.lang.String"/>
+	<variable name="constant" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[ReportsConstants.locationDet]]></initialValueExpression>
+	</variable>
+	<background>
+		<band height="735" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="297e8deb-d4e4-41de-9fbf-057ff05208d0" key="rectangle-5" x="0" y="0" width="552" height="734"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="42784e59-2509-4285-8928-66ef6436fc81" key="subreport-1" x="0" y="0" width="552" height="55"/>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$V{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="679" splitType="Immediate">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d5512ede-e8e9-4106-b259-ce6493e920d7" key="textField-1" x="66" y="18" width="199" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3a05913d-1b55-4841-8cbc-5fec1c3c8942" key="textField-2" x="66" y="29" width="199" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{Addr_Line1}!=null ? $F{Addr_Line1} :"" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d721e0f0-9565-4b16-97d7-9b6162468101" key="textField-3" x="66" y="40" width="199" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{Addr_Line2} == null) || ($F{Addr_Line2}.equals("")) ? ($F{City}+", "+$F{State}+", "+$F{Zip}) : $F{Addr_Line2})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="952cf4c2-311d-4d63-aadd-528e7895cc8b" key="textField-4" x="66" y="51" width="199" height="12">
+					<printWhenExpression><![CDATA[((($F{Addr_Line2} == null) || ($F{Addr_Line2}.equals(""))) ? Boolean.FALSE : Boolean.TRUE)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{City}+", "+$F{State}+", "+$F{Zip}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5ba593a6-dd32-426a-950e-1df9ecbe44a0" key="textField-7" x="275" y="18" width="166" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="3bd3383b-833d-48bc-b67f-41a7f4985afc" key="textField-16" x="1" y="18" width="65" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.location]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement uuid="d9be278b-dbed-42cd-aecd-edeaf7e0bbd8" key="image-1" positionType="Float" x="0" y="79" width="275" height="266" isRemoveLineWhenBlank="true"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+				<imageExpression><![CDATA[$F{content}]]></imageExpression>
+			</image>
+			<subreport isUsingCache="true">
+				<reportElement uuid="d5e4746b-7154-4e80-87ef-c4d24cfe9b54" key="directions" positionType="Float" x="276" y="80" width="276" height="520"/>
+				<subreportParameter name="location">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/locReptdirectionSubrept.jasper"]]></subreportExpression>
+			</subreport>
+			<frame>
+				<reportElement uuid="45eb165a-5670-43ba-b7b3-c9e535391f6a" positionType="FixRelativeToBottom" x="0" y="600" width="552" height="79"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<staticText>
+					<reportElement uuid="6ea9f112-b8f3-4ccf-a99c-ab8b56c4e3a5" key="textField-18" positionType="Float" x="1" y="0" width="140" height="12"/>
+					<textElement markup="none">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<text><![CDATA[Points of Interests]]></text>
+				</staticText>
+				<subreport isUsingCache="true">
+					<reportElement uuid="3691d4ad-ce8a-4500-a8b7-bcb145bbd508" key="hospital" x="6" y="14" width="546" height="63"/>
+					<subreportParameter name="location">
+						<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/locReptPoiSubrept.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement uuid="477ebf4c-1bea-47e8-868b-35994dfc4a01" x="0" y="345" width="275" height="255"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="74321d9a-e15e-4589-92d6-f9ec5ba998f1" key="textField-17" x="1" y="0" width="65" height="14"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.parking]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="0fd27d0e-75e2-4d5b-9603-d9ace4b97102" key="textField-8" x="66" y="0" width="209" height="255"/>
+					<textElement markup="html">
+						<font fontName="Arial" isBold="false" pdfFontName="Times-Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{parking}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<line>
+				<reportElement uuid="6a73351f-eaa4-4b47-9036-2c6f295a26c9" x="275" y="80" width="1" height="520"/>
+			</line>
+			<line>
+				<reportElement uuid="fd127465-fa32-4285-8086-dbd6bee6d0cd" x="0" y="79" width="552" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="4882fb0d-1021-46a9-8a2d-1e8b8eac8ad9" key="subreport-1" x="1" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="f8ca51e6-31a2-4dfd-bfbd-e4f4b9736b32" key="textField" x="522" y="0" width="30" height="17"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0b7b4931-8b19-4e32-a450-a54e3797da40" key="staticText-1" x="191" y="14" width="168" height="17"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Data as per your Query Criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

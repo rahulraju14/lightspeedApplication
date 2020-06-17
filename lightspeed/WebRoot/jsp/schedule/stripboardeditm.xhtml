@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Stripboard Editor page 
+Note that custom JS functions are included from the stripboardm.js file.
+A number of these functions are invoked due to onclick() and onmousedown() attributes
+on the strips within the stripboard lists.
+-->
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Stripboard Edit</title>
+<meta http-equiv="X-UA-Compatible" content="chrome=1" /><!-- Use Chrome Frame if installed -->
+
+<!-- include Google Tag Manager - Global site tag (gtag.js) - for Google Analytics -->
+<ui:include src="../common/tagmanager.xhtml" />
+
+<!-- Include standard (compressed) CSS file from resources folder -->
+<h:outputStylesheet name="global.css"  /><!-- may not be needed for stripboard editor page! -->
+<h:outputStylesheet name="stripboard.css"  /><!-- unique CSS for stripboard editor page -->
+
+<!-- Optionally include mobile-only compressed CSS file -->
+<h:outputStylesheet name="global_m.css" rendered="#{headerViewBean.mobile}" /> 
+<h:outputStylesheet name="stripboard_m.css" rendered="#{headerViewBean.mobile}" /><!-- unique CSS for stripboard editor on mobile device -->
+
+<!-- Include standard (compressed) JS file from resources folder -->
+<h:outputScript name="stripboardm.js" /><!-- additional JS for stripboard editor page -->
+<h:outputScript name="script.js" />
+
+<!-- include next line if prompting for Chrome Frame is wanted.
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js" />
+ -->
+
+<script language="javascript" type="text/javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+		resizeOne('LL', 355, 259);
+		resizeOne('RL', 355, 259);
+	</c:if>
+}
+function resizeOne(idx, diff, minimum) {
+	x = document.getElementById(idx);
+	maxht = (document.documentElement.clientHeight - diff);
+	if ( ! (maxht > minimum)) {
+		maxht = minimum;
+	}
+	x.style.maxHeight = maxht + "px";
+	x.style.height = maxht + "px";
+}
+
+/** override standard getScrollDiv, since our scroll box is a div, not a dataTable. */
+function getScrollDiv(id) {
+	var scrollDiv;
+	scrollDiv = document.getElementById(id);
+	//console.log('id=' + id + ', scrollDiv=' + scrollDiv);
+	return scrollDiv;
+}
+
+var formname = "se";
+var mainListId = "LL";
+
+</script>
+<style>
+._dragging { /* style applied to strip while it is dragged */
+	opacity: 0.5;
+	border: #666666 2px solid;
+	color: Transparent;
+}
+.emptyPlaceMarker { /* item displayed at drop target */
+	height: 0px;
+	margin-left: 7px;
+	border: none;
+	border-top: red 2px solid;
+	border-bottom: red 2px solid;
+	z-index: 1;
+}
+.dropmarker {
+/* drag-drop code refers to this for "ghosting" case but has no apparent effect. */
+}
+</style>
+</h:head>
+<h:body>
+
+<style>
+<c:if test="#{stripBoardEditBean.layout ne 'THIN'}">
+/* these changes override the settings in stripboard.css when in "thick" mode */
+.h_a, .h_aRow1 {
+height:30px; /* double strip height in thick mode */
+}
+.h_aCol1 {
+	margin-top:8px;
+}
+.bannerPnlStrip {
+margin-top: 0px;/* no padding on top if thick drag source strips */
+}
+.c_th { /* vertical align end-of-day info in thick mode */
+	top: 8px;
+}
+</c:if>
+</style>
+
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript" type="text/javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+	/* Include this to prompt for Chrome Frame installation:
+	CFInstall.check({ mode: "overlay" });
+	*/
+});
+</script>
+</c:if>
+
+<h:form id="se">
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="stripboardview" />
+</h:outputText>
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<div id="pnlFull" class="MA">
+
+					<h:panelGroup styleClass="pad16tp">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<div class="pnlHdrTxt FL">
+								<h:outputText
+										value="#{stripBoardEditBean.stripboard.description}" />
+								<h:outputText value=": #{stripBoardEditBean.unit.name}"
+										rendered="#{stripBoardEditBean.currentProject.hasUnits}"/>
+							</div>
+					 		<div class="pnlHdrTxt FL pad5lt #{stripBoardEditBean.unit.number gt 1 ? 'hdrUnitIcon' : ''}">
+								<h:outputText
+									rendered="#{stripBoardEditBean.unit.number gt 1}"
+									styleClass="hdrUnitNumber"
+									value="#{stripBoardEditBean.unit.number}" />
+							</div>
+							<h:panelGroup>
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<h:commandLink
+										value="Edit"
+										styleClass="btnPriDisCt" />
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<h:commandLink
+										value="Auto-Schedule"
+										action="#{stripBoardEditBean.actionAutoSchedule}"
+										styleClass="btnPriHotCt">
+									</h:commandLink>
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+							<div class="FR pad10rt pad5tp">
+								<span class="fdNm_sm">Layout:</span>
+								<h:selectOneListbox value="#{stripBoardEditBean.layout}"
+										valueChangeListener="#{stripBoardEditBean.listenSelectedLayout}"
+										size="1">
+									<f:selectItem itemValue="THIN" itemLabel="Thin"></f:selectItem>
+									<f:selectItem itemValue="THICK" itemLabel="Thick"></f:selectItem>
+									<ace:ajax />
+								</h:selectOneListbox>
+							</div>
+						</div>
+						<div class="centerFullTb">
+							<div class="rowCont rowDivider rowGradient pad5tp">
+								<div id="sbEditTopOptions">
+									<div class="FL pad5lt">
+										<span class="FL fdnm B">
+											Strip board Name:&#160;
+										</span>
+										<ace:textEntry styleClass="fd_xlg" value="#{stripBoardEditBean.stripboard.description}"
+												style="top:-2px;" maxlength="35" />
+									</div>
+									<div class="FL pad15lt">
+										<span class="fd_xlg">
+											<h:outputText
+												value="#{stripBoardEditBean.unitScheduledCount[stripBoardEditBean.unitIndex]}" />
+											<b>of&#160;</b>
+											<h:outputText
+												value="#{stripBoardEditBean.totalStripsCount}" />
+											<b>strips scheduled</b>
+										</span>
+									</div>
+									<div class="FL pad15lt">
+										<span class="fdNm_sm">Starts:</span>
+										<span class="fd">
+											<h:outputText
+													value="#{stripBoardEditBean.projectStartDate}">
+												<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+									 </span>
+									</div>
+									<div class="FL pad10lt">
+										<span class="fdNm_sm">Ends:</span>
+										<h:outputText styleClass="fd"
+												value="#{stripBoardEditBean.projectEndDate}">
+											<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+										</h:outputText>
+									</div>
+									<div class="FL pad15lt">
+										<span class="fdNm_lg">Shooting Days:</span>
+										<span class="fd_sm">
+											<h:outputText
+												value="#{stripBoardEditBean.shootingDaysList[stripBoardEditBean.unit.number]}" />
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+<div class="centerFullTb2 MA">
+
+	<!-- LEFT half of page -->
+	<div id="sbSchStripsLt" class="FL blueLegendContWrap">
+		<div class="blueLegendCont">
+			<span class="legendHdg">Scheduled Strips</span>
+			<h:panelGroup styleClass="btn_legend pad10rt">
+				<span class="btnMiniLtHot" />
+				<h:commandLink value="Edit Banner"
+						onclick="if (editBanner()) return;" disabled="false"
+						actionListener="#{stripBoardEditBean.actionShowBannerPopup}"
+						styleClass="btnMiniCt" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="btn_legend pad10rt"
+				rendered="#{not empty authBean.pgFields['6.1.2,omit_strip']}">
+				<span class="btnMiniLtHot" />
+				<h:commandLink value="Omit"
+						onclick="if (omitRecord()) return;" disabled="false"
+						action="#{stripBoardEditBean.actionOmit}"
+						styleClass="btnMiniCt" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+
+			<!-- BANNER + END OF DAY SOURCE LIST -->
+			<div class="rowCont tblCtrlsLeft">
+				<ace:list styleClass="bannerPnl" id="bl"
+						compact="true" itemClass="bannerPnlStrip"
+						dropGroup="sbEditor"
+						value="#{stripBoardEditBean.dragBannerList}" var="strip">
+					<ace:ajax event="migrate" render="@all" />
+					<h:panelGroup styleClass="bannerPnlStrip">
+						<h:panelGrid styleClass="g2 h_a #{strip.colorClass} W100percnt"
+								id="source" columns="1">
+							<h:outputText styleClass="pad2lt" value="#{strip.stripText} " />
+						</h:panelGrid>
+					</h:panelGroup>
+				</ace:list>
+			</div>
+
+			<!-- HEADER FOR SCHEDULE LIST -->
+			<ace:dataTable value="#{stripBoardEditBean.scheduleList}"
+					selectionMode="single" singleSort="true"
+					var="strip" rows="1" width="100%"
+					styleClass="bk_sl_grid hide_row">
+				<ace:columnGroup type="header">
+					<ace:row>
+						<ace:column headerText="Scn" styleClass="c_s" />
+						<ace:column headerText="I/E" styleClass="c_i" />
+						<ace:column headerText="D/N" styleClass="c_d" />
+						<ace:column headerText="S/d" styleClass="c_y" />
+						<ace:column headerText="Location / Synopsis" styleClass="c_l" />
+						<ace:column headerText="Pages" styleClass="c_p" />
+						<ace:column headerText="Ids" styleClass="c_c" />
+					</ace:row>
+				</ace:columnGroup>
+				<ace:column colspan="7"></ace:column>
+			</ace:dataTable>
+	
+			<!-- **************************************   LEFT LIST   *************************************** -->
+			<div class="sb_pan" id="LL">
+
+				<ace:list id="sl" itemClass="sbStrip"
+						compact="true"
+						dropGroup="sbEditor"
+						selectionMode="multiple"
+						value="#{stripBoardEditBean.scheduleList}" 
+						var="strip" varStatus="listStatus">
+	
+					<ace:ajax event="move" listener="#{stripBoardEditBean.listenMoveScheduledLeft}" render="@all" />
+					<ace:ajax event="migrate" listener="#{stripBoardEditBean.listenMigrateScheduledLeft}" render="@all" />
+					<ace:ajax event="select" listener="#{stripBoardEditBean.listenSelectScheduledLeft}" render="@all" />
+	
+					<!-- the following are all problematic/unreliable:
+						selections="#{stripBoardEditBean.selectedScheduledLeftList}"
+						selectionListener="#{stripBoardEditBean.listenSelectedScheduledLeft}"
+					 -->
+	
+					<!-- ONE STRIP -->
+					<h:panelGroup id="lr"
+							styleClass="h_a g2 #{strip.colorClass} w100 #{(strip.selected ? 'st_sel' : '')
+								} #{(stripBoardEditBean.scheduleList[listStatus.index+1].selected ? 'st_sel_above' : '')}"
+							onmousedown="md(event);"
+							onclick="#{strip.type eq 'END_STRIPBOARD' ? '' : 'sl('}
+	#{strip.type eq 'END_STRIPBOARD' ? '' : listStatus.index}
+	#{strip.type eq 'END_STRIPBOARD' ? '' :',event);'}" >
+	
+						<!-- NORMAL STRIP -->
+						<h:panelGroup rendered="#{strip.type eq 'BREAKDOWN'}">
+							<h:outputText styleClass="c_t" value="#{strip.stripText}"/>
+							<h:outputText rendered="#{stripBoardEditBean.layout eq 'THICK'}">
+								<div>
+									<h:outputText styleClass="c_t" value="#{strip.synopsis}" rendered="#{strip.synopsis!=null}"/>
+								</div>
+							</h:outputText>
+						</h:panelGroup>
+	
+						<!-- END OF DAY STRIP -->
+						<h:panelGroup rendered="#{strip.type eq 'END_OF_DAY'}">
+							<div class="c_el">
+								<div class="c_th">
+									<h:outputText value="#{strip.comment}" />
+									<h:outputText value="#{strip.endOfDayDate}" >
+										<f:convertDateTime pattern=" - MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+									</h:outputText>
+								</div>
+							</div>
+							<div class="c_ep">
+								<h:outputText value="#{strip.pageLength}" />
+							</div>
+							<div class="c_er">
+						 		<h:outputText value="#{strip.endOfDayDate}" >
+									<f:convertDateTime pattern="MMM d" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</div>
+						</h:panelGroup>
+	
+						<!-- BANNER STRIP -->
+						<h:panelGroup rendered="#{strip.type eq 'BANNER'}">
+							<div class="c_b">
+								<h:outputText id="bnr" value="#{strip.comment}" />
+							</div>
+						</h:panelGroup>
+	
+						<!-- LAST STRIP (BOTTOM BORDER) -->
+						<h:panelGroup rendered="#{strip.type eq 'END_STRIPBOARD'}">
+							<h:outputText id="eob" styleClass="#{strip.colorClass} eob CB" value="Drop strips above this bar" />
+						</h:panelGroup>
+						<div style="clear:both;"></div>
+	
+					</h:panelGroup>
+					<!-- END OF ONE STRIP -->
+	
+				</ace:list>
+	
+			</div>
+		</div>
+	</div>
+
+	<!-- RIGHT half of page -->
+	<div id="sbSchStripsRt" class="FR blueLegendContWrap">
+		<div class="blueLegendCont">
+			<span class="legendHdg">Unscheduled Strips</span><!-- no heading on right side -->
+			<h:panelGroup styleClass="btn_legend pad5rt"
+					rendered="#{not empty authBean.pgFields['6.1.2,restore_strip']}">
+				<span class="btnMiniLtHot" />
+				<ace:linkButton value="Restore"
+						onclick="if (restoreOmit()) return;" disabled="false"
+						action="#{stripBoardEditBean.actionRestore}"
+						styleClass="btnMiniCt" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="btn_legend pad5rt"
+					rendered="#{not empty authBean.pgFields['6.1.2,omit_strip']}">
+				<span class="btnMiniLtHot" />
+				<ace:linkButton value="Omit"
+						onclick="if (omitRecord()) return;" disabled="false"
+						action="#{stripBoardEditBean.actionOmit}"
+						styleClass="btnMiniCt" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+
+			<div class="rowCont tblCtrls">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="10%" height="34px"><!-- remove this TD when the 2 TD's below are restored. -->
+							&#160;
+						</td>
+						<!-- 4/5/18 TODO remove selection for scheduled until ace:list is fixed
+						<td width="8%" height="34px">
+							<b>Show:&#160;</b>
+						</td>
+						<td width="18%">
+							<h:selectOneListbox
+									value="#{stripBoardEditBean.selectedSchedule}"
+									partialSubmit="true"
+									valueChangeListener="#{stripBoardEditBean.listenSelectedSchedule}"
+									size="1">
+								<f:selectItem itemValue="Unscheduled" itemLabel="Unscheduled"></f:selectItem>
+								<f:selectItem itemValue="Scheduled" itemLabel="Scheduled"></f:selectItem>
+								<ace:ajax />
+							</h:selectOneListbox>
+						</td>
+						 -->
+						<td width="16%" align="right" class="B">
+							Include: &#160; I/E&#160;
+						</td>
+						<td width="11%">
+							<h:selectOneListbox
+									value="#{stripBoardEditBean.filterIE}"
+									onmouseup="filterChange();"
+									valueChangeListener="#{stripBoardEditBean.listenSelectedFilterIntExt}"
+									size="1"
+									disabled="#{stripBoardEditBean.selectedSchedule eq 'Scheduled'}">
+								<f:selectItem itemValue="INTERIOR" itemLabel="Int"></f:selectItem>
+								<f:selectItem itemValue="EXTERIOR" itemLabel="Ext"></f:selectItem>
+								<f:selectItem itemValue="All" itemLabel="All"></f:selectItem>
+								<ace:ajax />
+							</h:selectOneListbox>
+						</td>
+						<td width="8%" align="right" class="B">
+							D/N:&#160;
+						</td>
+						<td width="10%">
+							<h:selectOneListbox
+									value="#{stripBoardEditBean.filterDN}"
+									onmouseup="filterChange();"
+									valueChangeListener="#{stripBoardEditBean.listenSelectedFilterDayNight}"
+									size="1"
+									disabled="#{stripBoardEditBean.selectedSchedule eq 'Scheduled'}">
+								<f:selectItem itemValue="All" itemLabel="All"></f:selectItem>
+								<f:selectItem itemValue="DAY" itemLabel="Day"></f:selectItem>
+								<f:selectItem itemValue="NIGHT" itemLabel="Night"></f:selectItem>
+								<ace:ajax />
+							</h:selectOneListbox>
+						</td>
+						<td width="auto" class="B" valign="middle">
+							<h:selectBooleanCheckbox styleClass="pad20lt"
+								value="#{stripBoardEditBean.omittedFlag}"
+								disabled="#{stripBoardEditBean.selectedSchedule eq 'Scheduled'}"
+								valueChangeListener="#{stripBoardEditBean.listenOmittedListener}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+							Omitted
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<ace:dataTable value="#{stripBoardEditBean.unScheduleList}"
+					var="strip" rows="1"
+					styleClass="bk_sl_grid hide_row" style="width:100%;max-width:100%;"
+					rendered="#{stripBoardEditBean.selectedSchedule eq 'Unscheduled'}">
+				<ace:columnGroup type="header">
+					<ace:row>
+						<ace:column headerText="Scn" styleClass="c_s" />
+						<ace:column headerText="I/E" styleClass="c_i" />
+						<ace:column headerText="D/N" styleClass="c_d" />
+						<ace:column headerText="S/d" styleClass="c_y" />
+						<ace:column headerText="Location / Synopsis" styleClass="c_lr" />
+						<ace:column headerText="Pages" styleClass="c_p" />
+						<ace:column headerText="Ids" styleClass="c_c" />
+						<!-- 
+						<ace:column headerText="Scn" styleClass="c_s" sortBy="#{stripBoardEditBean.sceneColumnName}" />
+						<ace:column headerText="I/E" styleClass="c_i" sortBy="#{stripBoardEditBean.IEColumnName}" />
+						<ace:column headerText="D/N" styleClass="c_d" sortBy="#{stripBoardEditBean.DNColumnName}" />
+						<ace:column headerText="S/d" styleClass="c_y" sortBy="#{stripBoardEditBean.scriptDayColumnName}" />
+						<ace:column headerText="Location / Synopsis" styleClass="c_lr" sortBy="#{stripBoardEditBean.locationColumnName}" />
+						<ace:column headerText="Pages" styleClass="c_p" sortBy="#{stripBoardEditBean.pageLengthColumnName}" />
+						<ace:column headerText="Ids" styleClass="c_c" sortBy="#{stripBoardEditBean.idsColumnName}" />
+						 -->
+					</ace:row>
+				</ace:columnGroup>
+				<ace:column colspan="7"></ace:column>
+			</ace:dataTable>
+
+			<ace:dataTable
+					selectionMode="single" singleSort="true"
+					value="#{stripBoardEditBean.scheduleListRight}"
+					var="strip" rows="1" style="width:100%;max-width:100%;"
+					styleClass="bk_sl_grid hide_row"
+					rendered="#{stripBoardEditBean.selectedSchedule eq 'Scheduled'}">
+				<ace:columnGroup type="header">
+					<ace:row>
+						<ace:column headerText="Scene" styleClass="c_s">
+						</ace:column>
+						<ace:column headerText="I/E" styleClass="c_i">
+						</ace:column>
+						<ace:column headerText="D/N" styleClass="c_d">
+						</ace:column>
+						<ace:column headerText="S/d" styleClass="c_y">
+						</ace:column>
+						<ace:column headerText="Location / Synopsis" styleClass="c_lr">
+						</ace:column>
+						<ace:column headerText="Pages" styleClass="c_p">
+						</ace:column>
+						<ace:column headerText="Ids" styleClass="c_c">
+						</ace:column>
+					</ace:row>
+				</ace:columnGroup>
+				<ace:column colspan="7"></ace:column>
+			</ace:dataTable>
+
+			<!-- **************************************   RIGHT LIST   *************************************** -->
+
+
+			<div class="sb_panr" id="RL">
+
+				<!-- RIGHT STRIP LIST for UN-SCHEDULED strips -->
+				<ace:list id="us" itemClass="sbStrip"
+						compact="true"
+						dropGroup="sbEditor"
+						selectionMode="multiple"
+						value="#{stripBoardEditBean.unScheduleList}"
+						var="strip" varStatus="listStatus"
+						rendered="#{stripBoardEditBean.selectedSchedule eq 'Unscheduled'}">
+					<!-- 
+						selections="#{stripBoardEditBean.selectedUnscheduledList}"
+						selectionListener="#{stripBoardEditBean.listenSelectedUnscheduled}"
+					 -->
+	
+					<ace:ajax event="move" listener="#{stripBoardEditBean.listenMoveUnscheduled}" render="@form" />
+					<ace:ajax event="migrate" listener="#{stripBoardEditBean.listenMigrateUnscheduled}" render="@form" />
+	
+					<!-- ONE STRIP -->
+					<h:panelGroup id="ru"
+							styleClass="h_a g2 #{strip.colorClass} w100 #{(strip.selected ? 'st_sel' : '')
+								} #{(stripBoardEditBean.unScheduleList[listStatus.index+1].selected ? 'st_sel_above' : '')}"
+							onmousedown="md(event);"
+							onclick="#{strip.type eq 'END_STRIPBOARD' ? '' : 'sr('}
+#{strip.type eq 'END_STRIPBOARD' ? '' : listStatus.index}
+#{strip.type eq 'END_STRIPBOARD' ? '' :',event);'}">
+	
+						<h:panelGroup rendered="#{strip.type eq 'BREAKDOWN'}">
+							<!-- NORMAL STRIP -->
+							<h:panelGroup rendered="#{strip.status ne 'OMITTED'}">
+								<h:outputText styleClass="c_t" value="#{strip.stripText}"></h:outputText>
+								<h:outputText rendered="#{stripBoardEditBean.layout eq 'THICK'}" >
+									<div>
+										<h:outputText styleClass="c_t" value="#{strip.synopsis}" rendered="#{strip.synopsis!=null}"/>
+									</div>
+								</h:outputText>
+							</h:panelGroup>
+	
+							<!-- OMITTED STRIP -->
+							<h:panelGroup styleClass="#{(strip.selected ? 'sc_os' : 'sc_o')}" rendered="#{strip.status eq 'OMITTED'}">
+								<h:outputText styleClass="c_t" value="#{strip.stripText}"></h:outputText>
+								<h:outputText rendered="#{stripBoardEditBean.layout eq 'THICK'}" >
+									<div>
+										<h:outputText styleClass="c_t" value="#{strip.synopsis}" rendered="#{strip.synopsis!=null}"/>
+									</div>
+								</h:outputText>
+							</h:panelGroup>
+						</h:panelGroup>
+	
+						<!-- LAST STRIP (BOTTOM BORDER) -->
+						<h:panelGroup styleClass="c_t" rendered="#{strip.type eq 'END_STRIPBOARD'}">
+							<h:outputText id="eob2" styleClass="#{strip.colorClass} eob CB" value="Drop strips above this bar" />
+						</h:panelGroup>
+						<div style="clear:both;"></div>
+	
+					</h:panelGroup>
+					<!-- END ONE STRIP -->
+	
+				</ace:list>
+
+				<!-- RIGHT STRIP LIST for SCHEDULED strips -->
+				<ace:list id="ss" compact="true" itemClass="sbStrip"
+						dropGroup="sbEditor"
+						selectionMode="multiple"
+						value="#{stripBoardEditBean.scheduleListRight}"
+						var="strip" varStatus="listStatus"
+						rendered="#{stripBoardEditBean.selectedSchedule eq 'Scheduled'}">
+						
+						<!-- 
+						selections="#{stripBoardEditBean.selectedScheduledRightList}"
+						selectionListener="#{stripBoardEditBean.listenSelectedScheduledRight}">
+						 -->
+	
+					<ace:ajax event="move" listener="#{stripBoardEditBean.listenMoveScheduledRight}" render="@all" />
+					<ace:ajax event="migrate" listener="#{stripBoardEditBean.listenMigrateScheduledRight}" render="@all" />
+	
+					<h:panelGroup styleClass="g2 #{strip.colorClass} #{(strip.selected ? 'st_sel' : '')} w100" id="rs"
+						onmousedown="md(event);" onclick="ss(#{listStatus.index},event);" >
+						<h:panelGroup styleClass="h_a" rendered="#{strip.type eq 'BREAKDOWN'}">
+							<h:outputText styleClass="c_t" value="#{strip.stripText}"/>
+							<h:outputText rendered="#{stripBoardEditBean.layout eq 'THICK'}" >
+								<div>
+									<h:outputText styleClass="c_t" value="#{strip.synopsis}" rendered="#{strip.synopsis!=null}"/>
+								</div>
+							</h:outputText>
+						</h:panelGroup>
+						<h:panelGroup styleClass="h_a" rendered="#{strip.type eq 'END_OF_DAY'}">
+							<div class="c_s c_elr">
+								<div class="c_th">
+									<h:outputText value="#{strip.comment}" />
+									<h:outputText value="#{strip.endOfDayDate}" >
+										<f:convertDateTime pattern=" - MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+									</h:outputText>
+								</div>
+							</div>
+							<div class="c_ep">
+								<h:outputText value="#{strip.pageLength}" />
+							</div>
+							<div class="c_c c_er">
+								<h:outputText value="#{strip.endOfDayDate}" >
+									<f:convertDateTime pattern="MMM d" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup styleClass="h_a" rendered="#{strip.type eq 'BANNER'}">
+							<div class="c_br">
+								<h:outputText id="bnr2" value="#{strip.comment}" />
+							</div>
+						</h:panelGroup>
+						<h:panelGroup styleClass="h_a" rendered="#{strip.type eq 'END_STRIPBOARD'}">
+							<h:outputText id="eob3" styleClass="#{strip.colorClass} eob CB" value="Drop strips above this bar" />
+						</h:panelGroup>
+						<div style="clear:both;"></div>
+					</h:panelGroup>
+				</ace:list>
+			</div>
+		</div><!-- end blueLegendCont -->
+	</div><!-- end sbSchStripsRt -->
+</div><!-- end centerFullTb -->
+
+			<!-- this 'button' is 'clicked' by the sl() function in stripboardm.js -->
+			<h:commandButton id="leftButton" style="visibility:hidden;height:0px;"
+					action="#{stripBoardEditBean.actionSelectLeft}" />
+
+			<!-- this 'button' is 'clicked' by the sr() function in stripboardm.js -->
+			<h:commandButton id="ruButton" style="visibility:hidden;height:0px;"
+						action="#{stripBoardEditBean.actionSelectUnscheduled}" />
+
+			<!-- this 'button' is 'clicked' by the ss() function in stripboardm.js -->
+			<h:commandButton id="rsButton" value="" style="visibility:hidden;"
+					action="#{stripBoardEditBean.actionSelectScheduledRight}" />
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL MA rowCont">
+								<h:panelGroup>
+									<span class="FR pad10rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton
+												action="#{stripBoardEditBean.actionReturn}"
+												value="Return"
+												styleClass="btnSecHotCt">
+												<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+												<f:setPropertyActionListener value="#{stripBoardEditBean.stripboard.id}" target="#{jumpBean.value}"/>
+												<f:setPropertyActionListener value="com.lightspeedeps.stripboardUnitId" target="#{jumpBean.attribute}"/>
+												<f:setPropertyActionListener value="#{stripBoardEditBean.unit.id}" target="#{jumpBean.value}"/>
+											</ace:linkButton>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+<!-- The following fields are updated by JS methods in stripboardm.js -->
+<h:inputHidden id="selectLeftScheduled"
+	value="#{stripBoardEditBean.selectLeftScheduled}" />
+<h:inputHidden id="selectRightUnscheduled"
+	value="#{stripBoardEditBean.selectRightUnscheduled}" />
+<h:inputHidden id="selectRightScheduled"
+	value="#{stripBoardEditBean.selectRightScheduled}" />
+<h:inputHidden id="omitValue"
+	value="#{stripBoardEditBean.omitValue}" />
+<h:inputHidden id="stripStatus"
+	value="#{stripBoardEditBean.stripStatus}" />
+<h:inputHidden id="selectedRow"
+	value="#{stripBoardEditBean.selectedRow}" />
+<h:inputHidden id="shiftCtrl"
+	value="#{stripBoardEditBean.selectedRow}" />
+</h:form>
+
+<ui:include src="editbanner.xhtml" />
+<ui:include src="autoschedule.xhtml" />
+
+</h:body>
+</html>

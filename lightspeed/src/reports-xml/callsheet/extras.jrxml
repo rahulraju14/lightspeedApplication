@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="extras" columnCount="2" printOrder="Horizontal" pageWidth="540" pageHeight="1008" whenNoDataType="AllSectionsNoDetail" columnWidth="270" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="a117fa8c-7604-4cf0-9594-242b347c2c14">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="callsheetId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[176]]></defaultValueExpression>
+	</parameter>
+	<parameter name="shortTimeFormat" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("h:mma", $P{REPORT_LOCALE}, $P{productionTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select oc.* from other_call oc
+where oc.callsheet_id = $P{callsheetId}
+order by id;]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Line_Number" class="java.lang.Integer"/>
+	<field name="Description" class="java.lang.String"/>
+	<field name="Count" class="java.lang.Integer"/>
+	<field name="Time" class="java.sql.Timestamp"/>
+	<field name="Callsheet_Id" class="java.lang.Integer"/>
+	<variable name="totalStandIns" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Count}]]></variableExpression>
+	</variable>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="10">
+			<staticText>
+				<reportElement uuid="a65ceaa3-a8f6-417e-8fee-31aaab705092" key="element-90" style="csDefBoxBold" mode="Opaque" x="0" y="0" width="540" height="10" forecolor="#330033" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[BACKGROUND / Stand-Ins]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8f47af05-e4ac-46f5-9a81-af50c26a464c" key="element-90" style="csDefBoxBold" mode="Opaque" x="0" y="0" width="27" height="10" forecolor="#330033" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a65ceaa3-a8f6-417e-8fee-31aaab705092" key="element-90" style="csDefBoxBold" mode="Opaque" x="27" y="0" width="207" height="10" forecolor="#330033" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a7cc4a8c-6b39-4b80-8781-f116574cfae3" key="element-90" style="csDefBoxBold" mode="Opaque" x="234" y="0" width="36" height="10" forecolor="#330033" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Call]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="d5846d86-c157-4434-a160-55ef354b517c" key="textField" style="csDefBox" x="0" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="9de7c866-1d9c-47d6-ab0f-18c7651683ca" key="textField" style="csDefBox" x="27" y="0" width="207" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="ac89a032-9969-482d-b4b3-5f34be0f2f29" key="textField" style="csDefBox" x="234" y="0" width="36" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatShortTime($P{shortTimeFormat},$F{Time})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="10" splitType="Stretch">
+			<printWhenExpression><![CDATA[false]]></printWhenExpression>
+			<staticText>
+				<reportElement uuid="81696abe-9c8d-4d8b-84cc-1a29955355ff" key="staticText-1" style="csDefBox" x="0" y="0" width="67" height="10"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Total Extras:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="130ee12f-dc78-4801-bd57-ea312e7a3895" key="textField" style="csDefBox" x="67" y="0" width="120" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{totalStandIns}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

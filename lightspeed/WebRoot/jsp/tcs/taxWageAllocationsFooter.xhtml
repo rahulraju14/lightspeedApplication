@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Contents of Tax Wage Allocation form footer -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	<c:set var="form" value="#{bean.allocationForm}" />
+	<c:set var="editable" value="#{bean.editMode}" />
+
+	<div> <!-- Start of Page div -->
+		<div class="W100percnt"> <!-- Panel Container -->
+			<div class="FL W70percnt"> <!-- Left Panel -->
+				<table class="pad15lt taxWageTable W95percnt">
+					<tr style="height:26px;"> <!-- Cash Advance -->
+						<td class="W50percnt">
+							<h:outputText styleClass="B" value="#{msg.Tours_Allocation_Cash_Advance_Deduction}" />
+						</td>
+						<td class="W25percnt RT">
+							<h:outputText value="#{form.cashAdvanceDeduction}" rendered="#{not editable}" styleClass="pad3rt" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2" />
+							</h:outputText>
+							<ace:textEntry styleClass="W90percnt pad3rt RT" value="#{form.cashAdvanceDeduction}" rendered="#{editable}" tabindex="281" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+							</ace:textEntry>
+						</td>
+						<td class="W25percnt txt10">
+							<h:outputText value="#{msg.Tours_Allocation_Taken_After_Net}" />
+						</td>
+					</tr>
+					<tr style="height:26px;"> <!-- Retirement Deduction -->
+						<td class="W50percnt">
+							<h:outputText styleClass="B" value="#{msg.Tours_Allocation_401K_Deduction}" />
+						</td>
+						<td class="W25percnt RT">
+							<h:outputText value="#{form.retirementDeduction}" rendered="#{not editable}" styleClass="pad3rt" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2" />
+							</h:outputText>
+							<ace:textEntry styleClass="W90percnt pad3rt RT" value="#{form.retirementDeduction}" rendered="#{editable}" tabindex="282" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+							</ace:textEntry>
+						</td>
+						<td class="W25percnt txt10">
+							<h:outputText value="#{msg.Tours_Allocation_Pre_Tax_Deduction}" />
+						</td>
+					</tr>
+					<tr style="height:26px;"> <!-- Fringe -->
+						<td class="W50percnt">
+							<h:outputText styleClass="B" value="#{msg.Tours_Allocation_Fringe}" />
+						</td>
+						<td class="W25percnt RT">
+							<h:outputText value="#{form.fringe}" rendered="#{not editable}" styleClass="pad3rt" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2" />
+							</h:outputText>
+							<ace:textEntry styleClass="W90percnt pad3rt RT" value="#{form.fringe}" rendered="#{editable}" tabindex="283" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+							</ace:textEntry>
+						</td>
+						<td class="W25percnt txt10">
+							<h:outputText value="#{msg.Tours_Allocation_Full_Taxable}" />
+						</td>
+					</tr>
+					<tr style="height:26px;"> <!-- Share Holder Insurance -->
+						<td class="W50percnt">
+							<h:outputText styleClass="B" value="#{msg.Tours_Allocation_Shareholder_Insurance}" />
+						</td>
+						<td class="W25percnt RT">
+							<h:outputText value="#{form.shareholderInsurance}" rendered="#{not editable}" styleClass="pad3rt" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2" />
+							</h:outputText>
+							<ace:textEntry styleClass="W90percnt pad3rt RT" value="#{form.shareholderInsurance}" rendered="#{editable}" tabindex="284" >
+								<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+							</ace:textEntry>
+						</td>
+						<td class="W25percnt txt10">
+							<h:outputText value="#{msg.Tours_Allocation_FIT_SIT_Taxable}" />
+						</td>
+					</tr>
+					<tr style="height:26px;"> <!-- Net Zero Check -->
+						<td class="W50percnt">
+							<h:outputText styleClass="B" value="#{msg.Tours_Allocation_Net_Zero_Check}" />
+							<h:selectBooleanCheckbox disabled="#{not editable}" styleClass="pad10lt" value="#{form.netZeroCheck}" tabindex="285"/>
+							<h:outputText styleClass="B pad2kt" value="YES" />
+						</td>
+						<td class="W25percnt" style="border-style:none;">
+							<h:outputText value="" />
+						</td>
+						<td class="W25percnt" style="border-style:none;">
+							<h:outputText value="" />
+						</td>
+					</tr>
+				</table>
+				<div class="rowCont">&#160;</div>
+				<!-- Special Instructions -->
+				<div class="pad15lt">
+					<h:panelGroup styleClass="FL">
+						<h:outputText styleClass="B" value="#{msg.Tours_Allocation_Column_Header_Special_Instructions}:" />
+					</h:panelGroup>
+					<h:panelGroup>
+						<ace:textAreaEntry styleClass="pad2lt stdTxtArea" maxlength="1000" disabled="#{not editable}"
+							style="height:60px;width:95%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;font-size:11px;resize:none;"
+							value="#{form.specialInstructions}" tabindex="286"/>
+					</h:panelGroup>
+				</div> <!-- End of Special Instructions -->
+			</div> <!-- End of Left Panel -->
+			<!-- Right Panel -->
+			<div class="FL W28percnt">
+				<h:panelGrid styleClass="W100percnt" columns="1" border="1" >
+					<h:panelGroup styleClass="txt11 I">
+							<h:outputText styleClass="B FL" value="#{msg.Tours_Allocation_General_Instructions_Title}" />
+							<h:outputText styleClass="FL" value="#{msg.Tours_Allocation_General_Instructions_1}" />
+							<h:outputText styleClass="FL" value="#{msg.Tours_Allocation_General_Instructions_2}" />
+							<h:outputText styleClass="FL" value="#{msg.Tours_Allocation_General_Instructions_3}" />
+							<h:outputText styleClass="FL" value="#{msg.Tours_Allocation_General_Instructions_4}" />
+					</h:panelGroup>
+				</h:panelGrid>
+			</div>  <!-- End of Right Panel -->
+		</div> <!-- End of Panel Container -->
+		<div class="rowCont">&#160;</div>
+		<div class="W95percnt CT">
+			<h:outputText styleClass="txt10 B" value="#{msg.Tours_Allocation_TEAM_Address}" />
+		</div>
+	</div> <!-- End of Page div -->
+</ui:composition>

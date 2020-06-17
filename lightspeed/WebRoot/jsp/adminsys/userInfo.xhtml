@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Info mini-tab of the Prod Admin / Users page -->
+
+	<ace:tabPane label="Info">
+
+		<div id="personalCont" class="rowGradient">
+
+			<div class="rowCont FL pad10tp pad5lt">
+				<span class="fdNm"><h:outputText value="Last login:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm">
+				<h:outputText value="#{userListBean.lastLogin}">
+					<f:convertDateTime pattern="h:mm a, EEE, M/d/yy" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<div class="rowCont FL pad5tp">
+				<div class="subSecHdgpersonal pad5lt">Productions</div>
+
+				<!-- data list container for productions -->
+				<div class="rowCont ltrtBdr">
+					<ace:dataTable styleClass="gradTbl2"
+							selectionMode="single" singleSort="true"
+							style="width:98%;max-width:98%;"
+							value="#{userListBean.productionList}" var="item"
+							scrollHeight="#{headerViewBean.mobile ? '' : '200'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+						<c:set var="owned" value="#{item.owningAccount eq userListBean.user.accountNumber}" />
+
+						<ace:column styleClass="W8Percnt" headerText="Id">
+							<ace:linkButton value="#{item.prodId}" action="adminproductions"
+									title="Jump to Production entry">
+								<f:setPropertyActionListener value="com.lightspeedeps.ProductionViewKey" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{item.prodId}" target="#{jumpBean.value}"/>
+							</ace:linkButton>
+						</ace:column>
+						<ace:column styleClass="W36Percnt" headerText="Name">
+							<h:outputText style="#{owned ? 'color:red;' : ''}"
+								value="#{item.title}"/>
+						</ace:column>
+						<ace:column styleClass="W20Percnt" headerText="Studio">
+							<h:outputText
+								value="#{item.studio}"/>
+						</ace:column>
+						<ace:column styleClass="W12Percnt" headerText="Owner">
+							<ace:linkButton value="#{item.owningAccount}" action="adminusers"
+									title="Jump to User entry">
+								<f:setPropertyActionListener value="com.lightspeedeps.userListAccount" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{item.owningAccount}" target="#{jumpBean.value}"/>
+							</ace:linkButton>
+						</ace:column>
+						<ace:column styleClass="W12Percnt" headerText="Status">
+							<h:outputText
+								value="#{item.status.label}"/>
+						</ace:column>
+						<ace:column styleClass="W12Percnt" headerText="Order">
+							<h:outputText
+								value="#{item.orderStatus.label}"/>
+						</ace:column>
+					</ace:dataTable>
+				</div><!-- end poiListCont -->
+
+			</div>
+
+			<div class="rowCont FL pad5tp">
+				<div class="subSecHdgpersonal pad5lt">Timecards</div>
+
+				<!-- data list container for productions -->
+				<div class="rowCont ltrtBdr">
+
+					<!-- TIMECARD LIST container -->
+					<ace:dataTable
+							selectionMode="single" singleSort="true"
+							style="width:100%;max-width:100%;"
+							styleClass="gradTbl2"
+							value="#{userListBean.timecardList}" var="timecard"
+							scrollHeight="#{headerViewBean.mobile ? '' : '300'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+						<!-- WEEK-ENDING DATE -->
+						<ace:column styleClass="CT W10Percnt">
+							<f:facet name="header">
+								<h:outputText value="W/E Date" />
+							</f:facet>
+							<span class="FL">
+								<h:outputText value="#{timecard.endDate}"
+										styleClass="#{timecard.status eq 'VOID' ? 'tcVoid' : ''}" >
+									<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+								<h:outputText rendered="#{timecard.adjusted}" value="-ADJ" styleClass="tcAdj" />
+							</span>
+						</ace:column>
+
+						<!-- PRODUCTION, + PROJECT for COMMERCIAL PRODUCTIONS -->
+						<ace:column styleClass="W50Percnt">
+							<f:facet name="header">
+								<div class="CT">
+									<h:outputText value="Prod/Project  "/>
+								</div>
+							</f:facet>
+							<span>
+								<h:outputText value="#{timecard.prodName}" />
+								<h:outputText
+										rendered="#{timecard.startForm ne null and timecard.startForm.project ne null}"
+										value=" / #{timecard.startForm.project.title}" />
+							</span>
+						</ace:column>
+
+						<ace:column  styleClass="W15Percnt">
+							<f:facet name="header">
+								<div class="CT">
+									<h:outputText value="Hours  "/>
+								</div>
+							</f:facet>
+							<span>
+								<h:outputText value="#{timecard.totalHours}" style="margin-right:20%;">
+									<f:convertNumber type="number" pattern="#0.00" />
+								</h:outputText>
+							</span>
+						</ace:column>
+
+						<ace:column styleClass="W25Percnt">
+							<f:facet name="header">
+								<div class="LT">
+									<h:outputText value="Status  "/>
+								</div>
+							</f:facet>
+							<span class="FL">
+								<h:outputText value="#{timecard.status.label}" />
+							</span>
+						</ace:column>
+
+					</ace:dataTable>
+
+				</div>
+			</div>
+
+		</div>
+
+	</ace:tabPane><!--  End Info mini-Tab   -->
+
+</ui:composition>

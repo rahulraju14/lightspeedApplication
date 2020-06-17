@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- On Production Elements page, associate a Point of Interest with a Location element -->
+
+<h:form>
+	<ace:dialog visible="#{realElementBean.showInterest}"
+			header="Add Point of Interest to Location"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{realElementBean.actionCloseInterest}"/>
+
+		<div id="popAddElemBdy">
+
+			<div id="addElemCont">
+				<div class="mandatory CT poprowCont">
+					<!-- no error messages are generated on this popup -->
+				</div>
+				<div class="popup_main">
+					<div class="stdTxt poprowAddElemInfoCont padPop5tp">
+						<span class="FL">To link
+							<h:outputText value=" #{realElementBean.element.name} " />
+							with a Point of Interest, select the
+							<span style="position:relative;padding-left:3px;">
+								<h:graphicImage value="../../i/icon_plusGry.gif" alt="" />
+							</span>symbol next to the Point of Interest.  Select Close when finished.
+						</span>
+					</div>
+
+					<div class="poprowCont padPop5tp">
+						 <ace:dataTable 
+								styleClass="bk_sl_grid BKwhite B_false"
+								scrollable="true" scrollHeight="208"
+								value="#{realElementBean.pointsOfInterest}"
+								var="element">
+							<ace:column id="column1" style="padding-left:3px;" styleClass="bk_sl_scene">
+								<h:commandLink value=""
+										action="#{realElementBean.actionAddInterest}">
+									<h:graphicImage value="../../i/icon_plusGry.gif" alt="" />
+									<f:setPropertyActionListener value="#{element.id}" target="#{realElementBean.addId}" />
+								</h:commandLink>
+							</ace:column>
+							<ace:column headerText="Name" styleClass="bk_sl_scene">
+								<h:outputText styleClass="txt11" value="#{element.name}" />
+							</ace:column>
+							<ace:column headerText="Type" styleClass="bk_sl_scene">
+								<h:outputText styleClass="txt11" value="#{element.type}"/>
+							</ace:column>
+							<ace:column headerText="Address" styleClass="bk_sl_scene">
+								<h:panelGroup styleClass="txt11">
+									<h:outputText value="#{element.address.addrLine1},"/>
+									<h:outputText value=" #{element.address.city}"/>
+								</h:panelGroup>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+
+				</div>
+			</div>
+			<div class="popBtnCont padPop10tp">
+				<span class="FR padPop25rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Close"
+							action="#{realElementBean.actionCloseInterest}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

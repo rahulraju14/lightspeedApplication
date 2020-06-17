@@ -1,0 +1,274 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+	
+	<div class="txt12 W1000 FL">
+		<!-- Categories -->
+		<div class="FL" style="width:495px;">
+			<div class="CT" style="color:white;background-color:black;height:25px">
+				<h:outputText styleClass="B txt16" value="Allowances"/>
+			</div>
+			<div class="FL sfFormBorder1">
+				<div class="FL W280">
+					<div class="FL sfFormBorder1">
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="FL ckbx" id="trvlWithinZone"
+									value="" disabled="#{!editable}"/>
+							<div class="pad5tp FL">
+								<h:outputText value="Travel within Studio Zone ($8.00) Payable"/>
+							</div>
+						</div>
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="FL ckbx" id="flightIns"
+									value="" disabled="#{!editable}"/>
+							<div class="pad5tp FL">
+								<h:outputText value="Flight Insurance ($12.63) Payable"/>
+							</div>
+						</div>
+					</div>
+					<!-- Wardrobe -->
+					<div class="FL pad10tp pad5lt">
+						<div class="FL pad2tp">
+							<h:outputText styleClass="txt14 B" value="Wardrobe to be furnished by:"/>
+						</div>
+						<div class="FL pad40lt B">
+							<h:selectBooleanCheckbox styleClass="FL ckbx" id="wardrobeProducer"
+									value="" disabled="#{!editable}"/>
+							<div class="pad5tp FL">
+								<h:outputText value="Producer"/>
+							</div>						
+						</div>
+						<div class="FL pad20lt B">
+							<h:selectBooleanCheckbox styleClass="FL ckbx" id="wardrobePerformer"
+									value="" disabled="#{!editable}"/>
+							<div class="pad5tp FL">
+								<h:outputText value="Performer"/>
+							</div>						
+						</div>
+						<div class="FL pad5tp">
+							<h:outputText value="If furnished by Extra Performer," />
+							<h:outputText styleClass="FL pad5tp" value="# of Costumes requested by Producer:" />
+							<h:outputText styleClass="FL pad10tp" value="Non-Evening Wear" />
+							<div class="pad2tp pad15lt FL W260">
+								<h:outputText styleClass="FL pad7tp pad5rt" value="@ $19.21 X" />
+								<ace:textEntry styleClass="FL W25" value="" maxlength="4" id="nonEveningWearNum" />
+								<h:outputText styleClass="FL pad7tp pad5lt" value="(#)" />
+							</div>
+						</div>
+						<div class="FL pad5tp">
+							<h:outputText styleClass="FL pad2tp" value="Evening Wear" />
+							<div class="pad2tp pad15lt FL W260">
+								<h:outputText styleClass="FL pad7tp pad5rt" value="@ $31.99 X" />
+								<ace:textEntry styleClass="FL W25" value="" maxlength="4" id="eveningWearNum" />
+								<h:outputText styleClass="FL pad7tp pad5lt" value="(#)" />
+							</div>
+						</div>	
+						<div class="rowCont"></div>
+						<div class="FL pad25tp pad2bm">
+							<h:outputText styleClass="txt14 B" value="Total Wardrobe fee:"/>
+							<h:outputText styleClass="txt14" value="$" />
+						</div>
+					</div>
+				</div>
+				<div class="FL sfFormBorder1" style="width:211px;">
+					<div class="CT pad5tp" style="width:211px;">
+						<h:outputText value="Vehicle &amp; Type"/>
+					</div>
+					<!-- Moped -->
+					<div class="FL W190">
+						<h:selectBooleanCheckbox styleClass="FL ckbx pad15lt" id="allowMoped"
+								value="" disabled="#{!editable}"/>
+						<div class="pad5tp FL B">
+							<h:outputText value="Moped ($20.17)"/>
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Type:" />
+							<ace:textEntry id="mopedType" value="" maxlength="15" styleClass="W155" disabled="#{not editable}" />
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Tolls $:" />
+							<ace:textEntry id="mopedTollAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Mileage $:" />
+							<ace:textEntry id="mopedMileageAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>						
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Parking $:" />
+							<ace:textEntry id="mopedParkingAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>	
+					</div>
+					<!--Auto -->
+					<div class="FL W190 pad5bm">
+						<h:selectBooleanCheckbox styleClass="FL ckbx pad15lt" id="allowAuto"
+								value="" disabled="#{!editable}"/>
+						<div class="pad5tp FL">
+							<h:outputText styleClass="B" value="Automobile ($40.29)"/>
+							<br/>
+							<h:outputText styleClass="txt11 I" value="incl: trailer/motorcycle"/>
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Type:" />
+							<ace:textEntry id="autoType" value="" maxlength="15" styleClass="W155" disabled="#{not editable}" />
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Tolls $:" />
+							<ace:textEntry id="autoTollAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Mileage $:" />
+							<ace:textEntry id="autoMileageAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>						
+						<div class="W200 FL pad3lt pad2tp">
+							<h:outputText styleClass="FL pad5tp pad3rt" value="Parking $:" />
+							<ace:textEntry id="autoParkingAmt" value="" maxlength="15" styleClass="W70" disabled="#{not editable}" />
+						</div>	
+					</div>					
+				</div>		
+			</div>
+		</div>
+
+		<!-- Props -->
+		<div class="FL sfFormBorder1" style="width:495px;">
+			<div class="CT" style="color:white;background-color:black;height:25px">
+				<h:outputText styleClass="B txt16" style="vert-alignmiddle;" value="Props"/>
+			</div>
+			<div class="FL W240 pad9bm">
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propBike"
+							value="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Bicycle ($13.48)"/>
+					</div>
+				</div>
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propGlasses"
+							value="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Binoculars or"/>
+						<br/>
+						<h:outputText value="Opera Glass ($6.15)"/>
+					</div>
+				</div>						
+				<div class="FL W230 pad8tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propBooks"
+							value=""  disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Books ($2.78 each)"/>
+					</div>
+				</div>
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propCamera"
+							value=""  disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Camera ($6.15)"/>
+					</div>
+				</div>						
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propCell"
+							value="" tabOrder="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Cell Phone or PDA ($6.15)"/>
+					</div>
+				</div>		
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propGolfClubs"
+							value="" tabOrder="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Golf Clubs &amp; Bag ($13.43)"/>
+					</div>
+				</div>		
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propIpod"
+							value="" tabOrder="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="iPod or other MP3"/>
+						<br/>
+						<h:outputText value="Player ($6.15)" />
+					</div>
+				</div>		
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propLaptop"
+							value="" tabOrder="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Laptop ($6.15)"/>
+					</div>
+				</div>		
+				<div class="FL W230 pad5tp pad10bm">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propLuggage"
+							value="" tabOrder="" disabled="#{!editable}">
+						<ace:ajax />
+					</h:selectBooleanCheckbox>
+					<div class="pad5tp FL">
+						<h:outputText value="Luggage ($6.15 ea. piece)"/>
+						<br/>
+						<h:outputText styleClass="txt11" value="includes book bags &amp; briefcases"/>
+					</div>
+				</div>	
+			</div>
+			<div class="FL W240">
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propPet"
+							value="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Pet ($25.68)"/>
+					</div>
+				</div>
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propRadio"
+							value="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Radio - Large portable ($6.15)"/>
+					</div>
+				</div>						
+				<div class="FL W230 pad8tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propSkates"
+							value=""  disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Skates or Skateboard ($10.11)"/>
+					</div>
+				</div>
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propSkis"
+							value=""  disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Skis ($13.43)"/>
+						<br/>
+						<h:outputText styleClass="txt11 I" value="includes poles &amp; boots"/>
+					</div>
+				</div>						
+				<div class="FL W230 pad5tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propTennis"
+							value="" tabOrder="" disabled="#{!editable}"/>
+					<div class="pad5tp FL">
+						<h:outputText value="Tennis Racquet ($6.15)"/>
+						<h:outputText styleClass="pad2lt txt11 I" value="if not" />
+						<br/>
+						<h:outputText styleClass="txt11 I" value="already paid as part of wardrobe"/>
+					</div>
+				</div>		
+				<div class="FL W230 pad10tp">
+					<h:selectBooleanCheckbox styleClass="FL ckbx" id="propOther"
+							value="" tabOrder="" disabled="#{!editable}">
+						<ace:ajax/>
+					</h:selectBooleanCheckbox>
+					<div class="pad5tp FL">
+						<h:outputText styleClass="FL pad3rt" value="Other"/>
+					</div>
+					<ace:textEntry id="propOtherDesc" styleClass="FL W100" maxlength="100" value="" />
+					<div class="pad20lt pad5tp FL W230">
+						<div class="pad5tp FL">
+							<h:outputText styleClass="FL pad3rt" value="Fee $"/>
+						</div>
+						<ace:textEntry id="propOtherFee" styleClass="FL W70" maxlength="10" value="" />
+					</div>
+				</div>		
+			</div>			
+		</div>		
+	</div>
+</ui:composition>	

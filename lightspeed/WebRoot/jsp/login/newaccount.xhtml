@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<title>#{headerViewBean.domainTabTitle} New Registration</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('loginForm:firstname').focus();
+}
+</script>
+
+</h:head>
+<h:body styleClass="loginCont" style="min-height:620px;" onkeyup="if(event.keyCode==13){lSubmit(event,'loginForm:enterkey');};">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	doFocus();
+});
+</script>
+<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+<div id="pnlLogin" class="BKwhite">
+
+	<div class="topBdrCont FL">
+		<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+	</div>
+
+	<div class="ltrtBdr rowCont BKwhite">
+
+		<ui:include src="topLogo.xhtml" />
+
+			<div id="loginCont" class="pad8tp rowDivider">
+
+<h:form id="loginForm">
+				<div class="FL rowCont">
+					<div class="MA W630 pad20tp">
+						<div class="txt16 B pad30lt">
+							New Registration
+						</div>
+						<div class="loginTxt pad15tp">
+							<h:outputText value="#{newAccountBean.welcomeText}"/>
+							<p/>
+							<h:outputText value="#{newAccountBean.postRegisterText}"/>
+						</div>
+					</div>
+				</div>
+
+				<h:panelGroup styleClass="FL rowCont" rendered="#{not empty newAccountBean.messageText}">
+					<div class="MA W100percnt">
+						<div id="loginErrMsgCont">
+							<div class="loginErrTitleBar">
+								<span class="FL loginErrMsgTxt">
+									<h:outputText value="#{newAccountBean.messageText}"></h:outputText>
+								</span>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="FL rowCont pad20tp pad5lt">
+					<div class="MA W360 pad15tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="First Name:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputText id="firstname"
+							styleClass="bx_input W210"
+							value="#{newAccountBean.user.firstName}"
+							tabindex="1" maxlength="30">
+						</h:inputText>
+					</div>
+					<div class="MA W360 pad10tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="Last Name:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputText
+							styleClass="bx_input W210"
+							value="#{newAccountBean.user.lastName}"
+							tabindex="2" maxlength="30">
+						</h:inputText>
+					</div>
+				</div>
+
+				<div class="FL rowCont pad10tp pad5lt">
+					<div class="MA W360">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="E-mail Address:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputText
+							styleClass="bx_input W210"
+							value="#{newAccountBean.emailAddr}"
+							tabindex="3" maxlength="100">
+						</h:inputText>
+					</div>
+					<!-- LS-3335 TTCO Self-Registration, Added New Field, "Account Type"  -->
+					<div class="MA W360 pad10tp">
+						<span class="FL W120 pad7tp"> <h:outputText
+								value="Account Type:" styleClass="txt12 B" /><span
+							class="mandatory">*</span>
+						</span>
+						<h:selectOneRadio id="accountType"
+							value="#{newAccountBean.accountType}" layout="lineDirection"
+							styleClass="h_radio W150">
+							<f:selectItem itemValue="USA" itemLabel="USA" />
+							<f:selectItem itemValue="Canada" itemLabel="Canada" />
+							<ace:ajax />
+						</h:selectOneRadio>
+					</div>
+						<div class="MA W360 pad30tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="New Password:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputSecret id="password"
+								styleClass="bx_input W210"
+								maxlength="20"
+								value="#{newAccountBean.password}"
+								required="false"
+								tabindex="4"
+								redisplay="true">
+						</h:inputSecret>
+					</div>
+					<div class="MA W360 pad10tp">
+						<span class="FL W120 pad3tp">
+							<h:outputText
+								value="Confirm Password:"
+								styleClass="txt12 B" /><span class="mandatory">*</span>
+						</span>
+						<h:inputSecret id="confirmpassword"
+								styleClass="bx_input W210"
+								value="#{newAccountBean.confirmPassword}"
+								required="false"
+								tabindex="5"
+								redisplay="true" maxlength="20">
+						</h:inputSecret>
+
+						<div style="width:380px;">
+							<div class="infoTxtnopad pad10tp" style="width:100%;">About Passwords:</div>
+								<div class="txt12 pad5tp">
+									Your password must be 8 to 20 characters in length, 
+									and must contain at least one lowercase letter, 
+									one capital letter, one number, and one special character.
+								</div>
+						</div>
+						<div class="txt12 pad15tp pad50lt">
+							<span class="ckbx">
+							<h:selectBooleanCheckbox tabindex="6"
+									styleClass="FL "
+									value="#{newAccountBean.acceptTerms}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+							</span>
+							<span class="ckbxTxtLbl pad2tp"> &#160;
+							I agree to the &#160;
+							<a href="#{msg.TermsOfUse_Url}"
+								target="lightspeed_terms">Terms of Use</a>.
+							</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="FL rowCont pad5lt">
+					<div class="MA W360 pad15tp">
+						<span class="FL W120 pad3tp">
+							&#160;
+						</span>
+						<span class="FL">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton value="Create My Account"
+										tabindex="7"
+										action="#{newAccountBean.actionSubmit}"
+										styleClass="btnPriHotCt btnTxt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</span>
+						<!-- Need to Check  -->
+						<h:commandButton id="enterkey" value="enter" tabindex="9"
+							style="visibility:hidden" action="#{newAccountBean.actionSubmit}"/>
+						<span class="FL pad15lt">
+							<span class="btnPriEnbLt" />
+							<span>
+								<ace:linkButton value="Cancel"
+										tabindex="8"
+										action="login"
+										styleClass="btnPriEnbCt btnTxt" />
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+					</div>
+				</div>
+
+</h:form>
+
+				<div class="rowBtn pad55tp">
+					<div class="rowBtnBdr"></div>
+					<div class="FL rowCont CT">
+						<ui:include src="../common/footercont.xhtml" />
+					</div>
+				</div>
+
+			</div>
+	</div>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+	<div class="btmBdrCont FL">
+		<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+	</div>
+
+</div>
+
+
+
+</h:body>
+</html>

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Start Forms tab of Dashboard page -->
+
+	<c:set var="show" value="#{not empty authBean.pgFields['9.2,view']}" />
+
+	<ace:tabPane label="#{show ? 'Start Forms' : ''}" disabled="#{not show}">
+		<h:outputText style="visibility:hidden;display:none;" value="#{startFormListBean.setUp(show)}"/>
+		<div class="rowCont">&#160;</div>
+		<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+			<ui:include src="startListNonTours.xhtml">
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{headerViewBean.production.type.tours}">
+			<ui:include src="startListTours.xhtml">
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:panelGroup>
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

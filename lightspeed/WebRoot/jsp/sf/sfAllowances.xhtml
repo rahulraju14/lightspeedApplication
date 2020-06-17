@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Allowances table, part of rates/accounts section of Start Payroll form -->
+
+<!-- Uses params:
+		aicp 		: true if AICP Start Form / Commercial production 
+		v30			: true if this is the 3.0 (Non-On-Boarding) style page
+-->
+
+	<table class="gradTbl2 pad10tp BKwhite" style="width:100%;"
+			cellpadding="0" cellspacing="0">
+		<thead class="gradTbl2ScrlHdrTbl CT txt11"><tr>
+			<th></th>
+			<th>Pay</th>
+			<th>Studio</th>
+			<th>Distant</th>
+			<th>Max</th>
+			<th>Sep.</th>
+			<th>
+				<h:outputText value="#{aicp ? '&#160;' : 'Account'}" />
+			</th>
+			<h:panelGroup rendered="#{aicp}">
+				<th></th>
+			</h:panelGroup>
+		</tr>
+		</thead>
+		<thead class="gradTbl2ScrlHdrTbl CT txt11"><tr>
+			<th class="LT">&#160;Allowances</th>
+			<th>Freq</th>
+			<th>Rate</th>
+			<th>Rate</th>
+			<th>Ceiling</th>
+			<th>Chk</th>
+			<th>
+				<h:panelGroup rendered="#{! aicp}"  styleClass="W100percnt">
+					<div class="acLoc acHdr">Loc</div>
+					<div class="acPrd acHdr">Prd/Ep</div>
+					<div class="acDtl acHdr">Detail</div>
+					<div class="acSub acHdr">Sub</div>
+					<div class="acSet acHdr">Set</div>
+					<div class="acFr1 acHdr">F1</div>
+					<div class="acFr acHdr">F2</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{aicp}">
+					<div>Account #</div>
+				</h:panelGroup>
+			</th>
+			<h:panelGroup rendered="#{aicp}">
+			<th>Free</th>
+			</h:panelGroup>
+		</tr>
+		</thead>
+
+		<!-- BOX RENTAL -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Box Rental" />
+			<ui:param name="rate" value="#{startFormBean.form.boxRental}" />
+			<ui:param name="studio" value="true" />
+			<ui:param name="location" value="true" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="true" />
+			<ui:param name="sepcheck" value="true" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- CAR ALLOWANCE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Car Allowance" />
+			<ui:param name="rate" value="#{startFormBean.form.carAllow}" />
+			<ui:param name="studio" value="true" />
+			<ui:param name="location" value="true" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="true" />
+			<ui:param name="sepcheck" value="true" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- MEAL ALLOWANCE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Meal Allowance" />
+			<ui:param name="rate" value="#{startFormBean.form.mealAllow}" />
+			<ui:param name="studio" value="true" />
+			<ui:param name="location" value="true" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="true" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- MEAL PENALTY -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Meal Penalty" />
+			<ui:param name="rate" value="#{startFormBean.form.mealPenalty}" />
+			<ui:param name="studio" value="false" />
+			<ui:param name="location" value="false" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- PER DIEM NON-TAXABLE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Per Diem - Non-Tax" />
+			<ui:param name="rate" value="#{startFormBean.form.perdiemNtx}" />
+			<ui:param name="studio" value="false" />
+			<ui:param name="location" value="false" />
+			<ui:param name="perdiem" value="true" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- PER DIEM TAXABLE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Per Diem - Txbl" />
+			<ui:param name="rate" value="#{startFormBean.form.perdiemTx}" />
+			<ui:param name="studio" value="false" />
+			<ui:param name="location" value="false" />
+			<ui:param name="perdiem" value="true" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- PER DIEM ADVANCE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Per Diem Advance" />
+			<ui:param name="rate" value="#{startFormBean.form.perdiemAdv}" />
+			<ui:param name="studio" value="false" />
+			<ui:param name="location" value="false" />
+			<ui:param name="perdiem" value="true" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- MEAL MONEY -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Meal Money" />
+			<ui:param name="rate" value="#{startFormBean.form.mealMoney}" />
+			<ui:param name="studio" value="true" />
+			<ui:param name="location" value="true" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- MEAL MONEY ADVANCE -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Meal Money Advance" />
+			<ui:param name="rate" value="#{startFormBean.form.mealMoneyAdv}" />
+			<ui:param name="studio" value="true" />
+			<ui:param name="location" value="true" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+		<!-- FRINGE ACCOUNT CODES -->
+		<ui:include src="sfAllowanceRow.xhtml">
+			<ui:param name="title" value="Fringes" />
+			<ui:param name="rate" value="#{startFormBean.form.fringe}" />
+			<ui:param name="studio" value="false" />
+			<ui:param name="location" value="false" />
+			<ui:param name="perdiem" value="false" />
+			<ui:param name="max" value="false" />
+			<ui:param name="sepcheck" value="false" />
+			<ui:param name="v30" value="#{v30}" />
+		</ui:include>
+
+	</table>
+
+
+</ui:composition>

@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- My Account page: Payroll information section -->
+	<c:set var="featureLockSNN" value="#{fFApplicationScopeBean.useFeature('TTCO_LOCK_SSN')}" scope="request" />
+	<c:set var="ssnLocked" value="#{userViewBean.user.ssnLocked}" scope="request" />
+	<div class="rowCont pad10tp pad15lt">
+		<div class="FL pad10tp W50percnt">
+			<h:outputText styleClass="FL B txt13 W80percnt" value="PAYROLL INFORMATION:" />
+		</div>
+		<div class="FL W45percnt">
+			<div class="FR">
+				<h:outputText styleClass="FL" escape="false"
+						value="&lt;strong&gt;&lt;u&gt;Tip:&lt;/u&gt;&lt;/strong&gt; &#160;
+			 			You can automatically fill out &lt;strong&gt; Start Forms &lt;/strong&gt; using&lt;br/&gt;
+						&#160; &#160; &#160; &#160; &#160; your information from this &lt;strong&gt; My Account &lt;/strong&gt; page." />
+			</div>
+		</div>
+	</div>
+	<div class="FL pad40lt" style="width:580px;">
+		<!-- SOCIAL SECURITY -->
+		<div class="rowCont FL pad15tp">
+			<span class="fdNm">
+				<h:outputText value="Soc Sec #:"/>
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode or (featureLockSNN and ssnLocked)}">
+				<div class="pad4tp">
+					<span class="fd_xsm">
+						<h:outputText value="#{userViewBean.user.viewSSN}" />
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not featureLockSNN}">
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_xsm">
+						<ace:textEntry maxlength="11" id="empSSN"
+							style="margin-left:-2px;"
+							value="#{userViewBean.user.socialSecurity}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>	
+			</h:panelGroup>
+			<h:panelGroup rendered="#{featureLockSNN}">
+				<h:panelGroup rendered="#{userViewBean.editMode and not ssnLocked}">
+					<span class="fd_xsm">
+						<ace:textEntry maxlength="11" id="empSSNLock"
+							style="margin-left:-2px;"
+							value="#{userViewBean.user.socialSecurity}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</h:panelGroup>
+		</div>
+
+		<!-- GENDER -->
+		<div class="rowCont FL">
+			<span class="fdNm"><h:outputText value="Gender:"/>
+			</span>
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu styleClass="FL" disabled="#{not userViewBean.editMode}"
+						value="#{userViewBean.user.gender}" id="empGender"
+						valueChangeListener="#{userViewBean.listenGenderChange}">
+						<f:converter converterId="lightspeed.GenderConverter"/>
+					<f:selectItems value="#{enumList.genderShortList}" />
+					<f:ajax execute="@this" render="@all" />
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+		</div>
+
+		<!-- CITIZEN -->
+		<div class="rowCont FL">
+			<span class="fdNm"><h:outputText value="Citizenship:" />
+			</span>
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu styleClass="FL" disabled="#{not userViewBean.editMode}"
+					id="empCitizenStatus" value="#{userViewBean.user.citizenStatus}"
+					valueChangeListener="#{userViewBean.listenCitizenshipChange}">
+					<f:selectItems value="#{userViewBean.citizenStatusItems}"  />
+					<ace:ajax/>
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+			<!-- Alien Authorzied to Work country LS-3412 -->
+			<h:panelGroup rendered="#{isAddrUnification}">
+				<h:panelGroup rendered="#{userViewBean.user.citizenStatus eq 'a'}" styleClass="FL pad5lt">
+					<span class="FL B pad4tp">
+						<h:outputText value="Country of Origin:" />
+					</span>
+					<div class="FL pad5lt">
+						<h:panelGroup rendered="#{not userViewBean.editMode}">
+							<div class="FL pad4tp">
+								<span class="fd_sm">
+									<h:outputText value="#{userViewBean.user.alienAuthCountryCode}" />
+								</span>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userViewBean.editMode}" styleClass="FL">
+							<span class="fd">
+								<h:panelGroup
+									rendered="#{not (empty authBean.pgFields['3.1.1,country'] and userViewBean.hidden)}">
+									<h:selectOneMenu  id="alienAuthCountry"
+										style="width:200px;"
+										value="#{userViewBean.user.alienAuthCountryCode}" styleClass="country">
+										<f:selectItems value="#{applicationScopeBean.countryDL}" />
+										<ace:ajax />
+									</h:selectOneMenu>
+								</h:panelGroup>
+							</span>
+						</h:panelGroup><!-- end Alien Authorzied to Work country -->
+					</div>
+					</h:panelGroup>
+			</h:panelGroup>
+		</div>
+		<h:panelGroup rendered="#{! isAddrUnification}">
+			<!-- STATE OF RESIDENCE + MINOR + AGENT -->
+			<div class="rowCont FL">
+				<span class="fdNm_w"><h:outputText value="State of Residence:" />
+				</span>
+				<h:selectOneMenu styleClass="txt12 FL" disabled="#{not userViewBean.editMode}"
+					id="empResidentState" value="#{userViewBean.user.stateOfResidence}">
+					<f:selectItems value="#{applicationScopeBean.stateCodeDL[userViewBean.user.homeAddress.country]}" />
+				</h:selectOneMenu>
+			</div>
+		</h:panelGroup>
+		<!-- BIRTH DATE -->
+		<div class="rowCont FL">
+			<span class="fdNm pad2rt"><h:outputText value="Date of Birth:" />
+			</span>
+			<h:outputText rendered="#{not userViewBean.editMode}"
+				styleClass="LH22 pad5lt" value="#{userViewBean.user.birthdate}">
+				<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+			</h:outputText>
+			<ace:dateTimeEntry rendered="#{userViewBean.editMode}" tabindex="0"
+				value="#{userViewBean.user.birthdate}" id="empDob"
+				renderAsPopup="true">
+				<f:converter converterId="lightspeed.MultiDateConverter"/>
+			</ace:dateTimeEntry>
+		</div>
+
+		<!-- STATE OF RESIDENCE + MINOR + AGENT -->
+		<div class="rowCont FL">
+			<span class="fdNm"><h:outputText value="Minor:"/>
+			</span>
+				<h:selectBooleanCheckbox styleClass="FL pad3lt txt11 LH18"
+					id="empIsMinor" value="#{userViewBean.user.minor}"
+					disabled="#{! userViewBean.editMode}" />
+		</div>
+
+	</div>
+
+	<div class="FL">
+		<!-- Ethnic Code -->
+		<div class="rowCont FL pad20tp pad120lt">
+			<span class="fdNm_sm" style="width:85px;">
+				<h:outputText styleClass="pad10lt pad1rt" value="Ethnic Code:" />
+			</span>
+			<h:panelGroup 
+				rendered="#{not userViewBean.editMode}">
+				<div class="pad4tp">
+					<span class="fd_sm" style="width:20px;min-width:20px;">
+						<h:outputText value="#{userViewBean.user.ethnicCode}" />
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup
+				rendered="#{userViewBean.editMode}">
+				<span class="fd_xsm" style="width:20px;">
+					<ace:textEntry maxlength="2" style="width:20px;"
+						id="empEthnicCode" value="#{userViewBean.user.ethnicCode}" />
+				</span>
+			</h:panelGroup>
+		</div>
+		<div class="pad120lt">
+			<div class="B pad30tp pad10lt">Ethnic Codes:</div>
+			<div class="pad10lt">
+				<span class="pad3lt"> 01 - Asian/Pacific </span>
+				<span class="pad30lt"> 03 - White/Caucasian </span>
+				<span class="pad30lt"> 05 - Native American </span> <br/>
+				<span class="pad3lt"> 02 - Black </span>
+				<span class="pad70lt"> 04 - Hispanic/Latino </span>
+			</div>
+		</div>
+	</div>
+
+	<!-- ADDRESS INFORMATION -->
+	<ui:include src="acctAddress.xhtml" >
+		<ui:param name="isAddrUnification" value="#{isAddrUnification}"/>
+	</ui:include>
+
+	<!-- EMERGENCY CONTACT -->
+	<ui:include src="acctEmerg.xhtml" />
+
+</ui:composition>

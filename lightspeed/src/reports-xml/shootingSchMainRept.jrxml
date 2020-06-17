@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="shootingSchMainRept" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="0d71b2c0-8633-4bc3-8d3e-d98e308d5961">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="19"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<style name="defFont" isDefault="true" fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT if (type='BREAKDOWN','scene',cast(sp.id as char)) as grouping,   sce.hint as scene_hint, sce.Script_Day, sce.id as scene_id,   sp.scene_Numbers scene_number, sce.Synopsis, sp.Elapsed_Time,   sp.Sheet_Number,  sce.IE_Type scne_IET, sce.DN_Type scene_DNT,   IF(sp.length>=8, concat(cast(truncate(sp.length/8,0) as char), if(sp.length%8=0,'',concat(' ',cast(sp.length%8 as char),'/8'))), concat(cast(sp.length as char),'/8')) page_length,   sce.page_num_str scene_page_number, sp.type, sp.status, sp.orderNumber,   unit.number unit_number, unit.name unit_name FROM project proj, scene sce, strip sp left join unit on sp.unit_id = unit.id WHERE  proj.current_stripboard_id=sp.Stripboard_Id and   (sp.Type='BREAKDOWN' or sp.type='end_of_day') and   (concat(sp.scene_numbers, ',' ) like concat(sce.number, ',%' ) or sp.scene_numbers is null) and   sce.Script_Id=proj.Current_Script_Id  and proj.id = 5  and sp.Status <> 'OMITTED'  group by ordernumber, unit_number  order by sp.Status, sp.Unit_id, sp.OrderNumber;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="breakdownOrder" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="shootDates" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="scene_hint" class="java.lang.String"/>
+	<field name="Script_Day" class="java.lang.String"/>
+	<field name="scene_id" class="java.lang.Integer"/>
+	<field name="scene_number" class="java.lang.String"/>
+	<field name="Synopsis" class="java.lang.String"/>
+	<field name="Elapsed_Time" class="java.lang.Integer"/>
+	<field name="Sheet_Number" class="java.lang.Integer"/>
+	<field name="scne_IET" class="java.lang.String"/>
+	<field name="scene_DNT" class="java.lang.String"/>
+	<field name="page_length" class="java.lang.String"/>
+	<field name="scene_page_number" class="java.lang.String"/>
+	<field name="unit_number" class="java.lang.Number"/>
+	<field name="unit_name" class="java.lang.String"/>
+	<variable name="rowFirst" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="rowNumHR" class="java.lang.Integer" resetType="None" incrementType="Page" calculation="Highest">
+		<variableExpression><![CDATA[$V{PAGE_COUNT}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<group name="unit_number" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{unit_number}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Prevent"/>
+		</groupHeader>
+	</group>
+	<background>
+		<band height="752" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="a4087100-8964-41b4-8811-9c15cdb16ece" key="rectangle-1" x="0" y="0" width="552" height="732"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="55" splitType="Prevent">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="b4957d0e-e1f0-4bfe-8fea-58ab05b186d6" key="textField" positionType="Float" x="6" y="2" width="279" height="18" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{productionName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="fe3ec903-be60-4244-b9a6-3e772e684a5b" key="textField" positionType="Float" x="6" y="25" width="279" height="18"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{projectName}==null ? "" : $P{projectName})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="835ff2f4-3279-461b-9002-6d2e949c1cd7" key="textField-2" x="327" y="1" width="222" height="22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ShootingSchedule]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="a21f4b0b-a539-4e44-99d9-409324c0f1b3" key="line-2" x="0" y="53" width="552" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="656d296c-5cf7-4473-a1ce-6a3e93f2b561" key="textField-5" x="461" y="23" width="88" height="11"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{breakdownOrder}.equals("schedule") ? "" : ReportsConstants.SceneOrder]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="MM/dd/yyyy" isBlankWhenNull="false">
+				<reportElement uuid="5d6297cf-96dc-4156-a1a9-2518d602c649" key="textField" x="411" y="34" width="138" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[("Date: ") + new SimpleDateFormat("MM/dd/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="82" splitType="Prevent">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="83b44d90-b496-4893-9add-a849af2efc29" key="textField" positionType="Float" x="74" y="6" width="134" height="18"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{scene_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="3b93fe84-186f-42ad-be31-4a378bf1b9b3" key="textField-4" x="14" y="6" width="61" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[ReportsConstants.Scene]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement uuid="523073cb-ff65-41a4-8d6b-616682bf4531" key="textField" x="25" y="42" width="500" height="12"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[( $F{Synopsis}!=null ?$F{Synopsis} : "" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="8c0f55a3-152d-44bb-983f-369c15a102c2" key="textField" positionType="Float" x="491" y="7" width="29" height="18"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{page_length}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="dee97eed-91ba-415f-b460-6c41f314a0b6" key="textField" positionType="Float" x="279" y="7" width="34" height="18"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{scene_page_number}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="e026f74f-d6fd-4b6e-b769-40e6a77355a1" key="Cast" positionType="Float" x="14" y="70" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/castSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="78d0b3f5-3d54-407e-bc34-46fd5a500140" key="Wardrode" positionType="Float" x="14" y="71" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/wardrobeSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="360663fb-c3e5-4a5c-bccb-dc8146f7904e" key="Vehicle" positionType="Float" x="14" y="72" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/vehicleSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="eb59539b-7721-4dde-8217-51929febda2d" key="Music" positionType="Float" mode="Transparent" x="14" y="73" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/musicSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3c5e34be-53ae-4e9a-941d-a2e3c6f58d1b" key="Optical Fx" positionType="Float" x="14" y="74" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/opticalSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="b5329e76-0a7c-48ca-80cd-c9f4ef01640c" key="Extra" positionType="Float" x="145" y="70" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/extraSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="502c1cf2-d854-4778-8488-bea7b754c9eb" key="SetDecor" positionType="Float" mode="Transparent" x="145" y="71" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/setDecorSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="56800954-4689-4e4c-b7ad-385253d03675" key="Animal" positionType="Float" x="145" y="72" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/livestockSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="df46d35e-2a46-4aa5-b5e7-59d2f454cefe" key="Sound" positionType="Float" x="145" y="73" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/soundSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="06a1c385-8d1d-4a32-a605-2ef0bf9deb7c" key="Mechanical FX" positionType="Float" x="145" y="74" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/mechanicalSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="e4668433-8923-413a-83e2-1fa1f0c4f5e4" key="Prop" positionType="Float" x="276" y="70" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/propSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="b1da80e3-7580-4f69-b922-ffe2e4096ce8" key="Stunt" positionType="Float" x="276" y="71" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/stuntSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ce4d727a-11a1-4cc0-a9bb-d544805ddbc9" key="Handler" positionType="Float" x="276" y="72" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/handlerSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="947c6c68-d076-4332-9490-71f3f1ff8081" key="Equip" positionType="Float" x="276" y="73" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/equipSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="7609d52b-034b-423f-b9f7-c47c1f11755e" key="Security" positionType="Float" x="276" y="74" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/securitySubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="cda0128c-04ad-436b-acaa-83932f888cf6" key="Makeup" positionType="Float" x="407" y="70" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/makeupSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="72ae64af-9979-4259-a43e-de6d0b40cd97" key="SpecialEffect" positionType="Float" x="407" y="71" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/specialEffectSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="6c43d395-92bd-4cbf-8309-adac67ec9374" key="Greenery" positionType="Float" x="407" y="72" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/greenerySubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="e1b40b31-aecb-4c12-a51f-4c66488c68d4" key="Addl Labor" positionType="Float" x="407" y="73" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/addlLaborSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="17f8ae80-1cc9-4748-badc-7207bb7607ef" key="Misc" positionType="Float" x="407" y="74" width="131" height="1" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/miscSubRept.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="926a5996-7931-4ecc-9a9b-10694828f84f" key="textField-6" x="432" y="7" width="65" height="18"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[ReportsConstants.PageLength]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="8a1a3a66-0307-4906-8feb-9d5e8052c32f" key="textField-7" x="208" y="7" width="68" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[ReportsConstants.Pages]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="0c67b91d-0c05-4721-af2e-6b9984bdd560" key="line-3" positionType="Float" x="14" y="79" width="512" height="1"/>
+			</line>
+			<subreport isUsingCache="true">
+				<reportElement uuid="716b9b46-5936-4324-b18f-8a1c4e039bbf" key="subreport-11" x="25" y="25" width="500" height="18"/>
+				<subreportParameter name="sceneid">
+					<subreportParameterExpression><![CDATA[$F{scene_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/shootsch/sceneLocationSubRept.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="acee1950-8f99-4e9c-8aeb-5c8bcea5b30e" key="subreport-1" x="1" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="3df96113-c14b-4c1f-9f89-3669162b0992" key="textField" x="522" y="0" width="30" height="17"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="31f37696-fc54-4250-afd1-5e8379bdb101" key="staticText-1" x="175" y="14" width="216" height="17"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[No scenes met your selection criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

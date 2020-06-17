@@ -1,0 +1,597 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"	
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- LOAN-OUT portion of Start Payroll form -->
+	<!-- LS-2723 Mandatory labels will always be red for Team clients. Highlight mandatory fields when empty and in edit mode.-->
+
+	<!-- passed parameters:
+		isAddrUnif : 		FF4J setting of TTCO_ADDR_UNIF_PAYROLL_START
+		isEnhancedLoanOut : FF4J setting of TTCO_ENHANCED_LOAN_OUT
+		isTeamPayroll :		true if this production is processed by Team
+		done :				true if this form has been 'finalized'
+	-->
+
+	<div class="FR W100percnt">
+		<c:set var="edit" value="#{startFormBean.editMode}" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted and not v30}" />
+		
+		<h:panelGroup rendered="#{(not isTeamPayroll) or (not isEnhancedLoanOut) or
+				(not empty startFormBean.form.paidAs and startFormBean.form.paidAs.loanOut)}">
+			<div class="rowCont FL" style="height:12px;">
+				<hr style="height:2px;background:black;border:0;margin-right:-3px;margin-top:3px;" />
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{(not isTeamPayroll) or (not isEnhancedLoanOut)}">
+			<!-- Only show for non Team clients LS-2562 -->
+			<h:panelGroup styleClass="FR pad5rt" rendered="#{not startFormBean.showLoanOut}">
+				<span class="btnMiniLtHot" />
+				<ace:linkButton styleClass="btnMiniCt" value="Show Loan-Out" id="showLoanOut"
+						action="#{startFormBean.actionShowLoanOut}" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="FR pad5rt" rendered="#{startFormBean.showLoanOut}">
+				<span class="btnMiniLtHot" />
+				<ace:linkButton styleClass="btnMiniCt" value="Hide Loan-Out" id="hideLoanOut"
+						action="#{startFormBean.actionHideLoanOut}" />
+				<span class="btnMiniRtHot" />
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{not startFormBean.showLoanOut}">
+				<h:outputText styleClass="FL B txt14 pad5lt" style="line-height:20px"	value="LOAN-OUT CORPORATION:" />
+				<h:outputText styleClass="FL B txt14 pad5lt" style="line-height:20px"
+						rendered="#{startFormBean.form.loanOutCorpName ne null}"
+						value="#{startFormBean.form.loanOutCorpName}"/>
+				<h:outputText styleClass="FL B txt14 pad5lt" style="line-height:20px" value="N/A"
+								rendered="#{startFormBean.form.loanOutCorpName eq null}" />
+			</h:panelGroup>
+		</h:panelGroup>
+	</div>
+
+	<div class="CB pad5tp"></div>
+
+	<h:panelGroup rendered="#{(isTeamPayroll and isEnhancedLoanOut and
+			(not empty startFormBean.form.paidAs and startFormBean.form.paidAs.loanOut)) or startFormBean.showLoanOut}"><!-- hide rest of loan out if "collapsed" -->
+		<h:panelGroup rendered="#{isTeamPayroll and isEnhancedLoanOut}">
+		<!-- Tax classification section LS-2562 -->
+			<div class="W95percnt">
+				<h:outputText styleClass="FL B txt14 pad5lt" style="line-height:20px"	value="LOAN-OUT CORPORATION:" />
+				<div class="pad5lt FL B pad4tp rowCont">
+					<h:outputText styleClass="#{empty startFormBean.form.paidAs ? 'mandatory' : ''}" value="Tax Classification:"/>
+					<span class="mandatory">*</span>
+				</div>
+				<div class="pad15lt FL pad4tp rowCont">
+					<h:outputText styleClass="" value="Select one of the following tax classifications:"/>
+				</div>
+				<div class="pad7lt FL pad4tp rowCont">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectOneRadio id="taxClass" styleClass="h_radio FL pad1tp"
+						disabled="#{submitted or done or not edit}" value="#{startFormBean.form.taxClassification}"
+						valueChangeListener="#{startFormBean.listenTaxClassChange}"
+						layout="lineDirection">
+						<f:selectItem itemLabel="C Corporation" itemValue="C" />
+						<f:selectItem itemLabel="S Corporation"  itemValue="S" />
+						<f:selectItem itemLabel="Limited liability company. Enter the tax classification (C=C corporation, S=S corporation)" itemValue="L" />
+						<f:converter converterId="lightspeed.TaxClassificationConverter" />
+						<ace:ajax />
+					</h:selectOneRadio>
+					</icecore:setEventPhase>
+					<h:graphicImage styleClass="FL pad6tp" url="../../i/right_blackArrow.png" value="" alt=""  width="12px" height="12px"/>
+					<ace:textEntry maxlength="1" styleClass="FL pad5lt" style="width:10px;"
+						id="llcType" value="#{startFormBean.form.llcType}" disabled="{not startFormBean.form.taxClassification.lLC}" rendered="#{edit}"/>
+					<div class="pad2lt pad6tp FL">
+						<h:outputText value="#{startFormBean.form.llcType}" rendered="#{submitted or done or not edit}" />
+					</div>
+				</div>
+				<div class="pad15lt FL pad4tp B rowCont">
+					<h:outputText value="Note that TTC can only process payroll for S or C Corps. If the corp tax is not listed above, please contact your hiring manager."/>
+				</div>
+			</div>
+			<div class="rowCont"></div>
+		</h:panelGroup>
+		<!-- LEFT: name & numbers -->
+		<div class="W34percnt FL pad6tp">
+
+			<!-- LOAN-OUT CORP -->
+			<div class="rowCont FL">
+				<span class="fdNm_w pad15lt" style="width:100px;"><h:outputText style="width:95px" value="Loan-Out Corp:" />
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm" style="width:135px;">
+						<h:outputText value="#{startFormBean.form.loanOutCorpName}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="35" style="width:150px;" id="sfCorpName"
+							value="#{startFormBean.form.loanOutCorpName}"
+							disabled="#{submitted or done or not edit}">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- FEDERAL ID # -->
+			<div class="rowCont FL">
+				<span class="fdNm_w pad15lt">
+					<h:outputText styleClass="#{(isTeamPayroll and isEnhancedLoanOut) ? 'mandatory' : ''}" value="Federal ID #:" />
+					<h:panelGroup rendered="#{isTeamPayroll and isEnhancedLoanOut}">
+						<span class="mandatory">*</span>
+					</h:panelGroup>
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.federalTaxId}" >
+							<f:converter converterId="lightspeed.FedIdConverter" />
+						</h:outputText>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="11" id="sfFeinNum"
+							value="#{startFormBean.form.federalTaxId}"
+							disabled="#{submitted or done or not edit}"
+							style="width:100px;"
+							styleClass="#{(empty startFormBean.form.federalTaxId and isTeamPayroll and isEnhancedLoanOut) ? 'requiredDiv' : ''}"> 
+							<f:converter converterId="lightspeed.FedIdConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- STATE OF INCORPORATION -->
+			<div class="rowCont FL">
+				<span class="fdNm_w pad15lt" style="width:100px;" >State of Incorp.:
+				</span>
+				<h:selectOneMenu styleClass="fd_sm pad10lt" disabled="#{submitted or done or not edit}"
+						value="#{startFormBean.form.incorporationState}" id="sfCorpState">
+					<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+					<ace:ajax/>
+				</h:selectOneMenu>
+			</div>
+
+			<!-- STATE ID # -->
+			<div class="rowCont FL">
+				<span class="fdNm pad15lt">State ID #:
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.stateTaxId}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm pad15lt">
+						<ace:textEntry maxlength="12" disabled="#{submitted or done or not edit}"
+								value="#{startFormBean.form.stateTaxId}" style="width:149px;" 
+								id="sfCorpStateId">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- INCORPORATION DATE -->
+			<div class="rowCont FL LH22">
+				<span class="fdNm pad15lt" style="width:92px;"><h:outputText value="Date of Incorp:" />
+				</span>
+				<h:outputText rendered="#{not edit}"
+					styleClass="fd_sm" value="#{startFormBean.form.incorporationDate}">
+					<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+				<ace:dateTimeEntry rendered="#{edit}" styleClass="fd_sm" tabindex="0"
+					value="#{startFormBean.form.incorporationDate}" title="Incorporation date"
+					renderAsPopup="true" disabled="#{submitted or done or not edit}"
+					id="sfCorpDate">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<ace:ajax event="dateTextChange"/>
+				</ace:dateTimeEntry>
+			</div>
+
+		</div><!-- end top left -->
+		
+		<!-- MIDDLE: address -->
+		<div class="#{(not isAddrUnif or not isTeamPayroll) ? 'W33percnt' : 'W15percnt'} FL pad6tp">
+			<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+				<!-- ADDRESS LINE 1 -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value="Address:"/>
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.loanOutAddress.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="50" id="sfCorpAddressAddr1"
+								value="#{startFormBean.form.loanOutAddress.addrLine1}"
+								disabled="#{submitted or done or not edit}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- ADDRESS LINE 2 -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value=" "/>
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.loanOutAddress.addrLine2}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="50" id="sfCorpAddressAddr2"
+								value="#{startFormBean.form.loanOutAddress.addrLine2}"
+								disabled="#{submitted or done or not edit}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- CITY -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value="City:"/>
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.loanOutAddress.city}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="35" id="sfCorpAddressCity"
+								value="#{startFormBean.form.loanOutAddress.city}"
+								disabled="#{submitted or done or not edit}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- STATE + ZIP -->
+				<div class="rowCont FL">
+					<span class="fdNm">State:
+					</span>
+					<h:selectOneMenu styleClass="FL" disabled="#{submitted or done or not edit}"
+							value="#{startFormBean.form.loanOutAddress.state}" id="sfCorpAddressState">
+						<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+					<span class="fdNm" style="width:45px;">
+						<h:outputText styleClass="pad15lt pad2rt" value="Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText value="#{startFormBean.form.loanOutAddress.zip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm">
+							<ace:textEntry maxlength="10" size="7" style="width:57px;"
+								value="#{startFormBean.form.loanOutAddress.zip}"
+								disabled="#{submitted or done or not edit}"
+								id="sfCorpAddressZip">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- PHONE -->
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:outputText value="Phone:"></h:outputText>
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.loanOutPhone}" >
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</h:outputText>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="25" value="#{startFormBean.form.loanOutPhone}"
+									disabled="#{submitted or done or not edit}" id="sfCorpPhoneNum">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+		</div>
+		<!-- RIGHT: misc -->
+		<div class="W30percnt FL pad6tp">
+
+			<div class="rowCont FL B">
+				<h:outputText value="Loan-Out is Qualified to do Business in:"/>
+				<h:selectBooleanCheckbox styleClass="pad15lt ckbx" id="sfCAQualified"
+					value="#{startFormBean.form.loanOutQualifiedCa}"
+					disabled="#{submitted or done or not edit}" >
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<span class="pad5lt ckbxTxtLbl_B">
+					<h:outputText value="CA"/>
+				</span>
+				<h:selectBooleanCheckbox styleClass="pad20lt ckbx" id="sfNYQualified"
+					value="#{startFormBean.form.loanOutQualifiedNy}"
+					disabled="#{submitted or done or not edit}" >
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<span class="pad5lt ckbxTxtLbl_B">
+					<h:outputText value="NY"/>
+				</span>
+			</div>
+			<div class="rowCont FL">&#160;
+			</div>
+			<!-- OTHER QUALIFIED STATES -->
+			<div class="rowCont FL">
+				<span class="B">
+					<h:outputText value="List ALL OTHER States in which Loan-Out is Qualified to do Business:" />
+				</span>
+			</div>
+			<div class="rowCont FL LH22">
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.loanOutQualifiedStates}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="200" size="60" style="width:236px; margin-top:5px;"
+								value="#{startFormBean.form.loanOutQualifiedStates}"
+								disabled="#{submitted or done or not edit}"  id="sfOtherQualifiedStates">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+		</div><!-- end top right -->
+		<h:panelGroup rendered="#{isAddrUnif and isTeamPayroll}">	
+			<!-- PHONE -->
+			<div class="rowCont FL pad15lt">
+				<span class="fdNm">
+					<h:outputText value="Phone:"></h:outputText>
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText value="#{startFormBean.form.loanOutPhone}" >
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<div class="W100">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="25" value="#{startFormBean.form.loanOutPhone}"
+								disabled="#{submitted or done or not edit}" id="sfCorpPhoneNum2">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+					</div>
+				</h:panelGroup>
+			</div>
+			<div class="rowCont FL">
+				<!-- CORP ADDRESS -->
+				<div class="W45percnt FL pad10tp pad15lt">
+					<div class="rowCont">
+						<span class="B FL"><h:outputText value="Corporation Address (W-9):"/></span>
+					</div>
+					<!-- ADDRESS LINE 1 -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value="Address:"/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutAddress.addrLine1}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" id="sfCorpAddressAddr1-2"
+									value="#{startFormBean.form.loanOutAddress.addrLine1}"
+									disabled="#{submitted or done or not edit}" >
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- ADDRESS LINE 2 -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value=" "/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutAddress.addrLine2}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" id="sfCorpAddressAddr2-2"
+									value="#{startFormBean.form.loanOutMailingAddress.addrLine2}"
+									disabled="#{submitted or done or not edit}">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- CITY -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value="City:"/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutAddress.city}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="35" id="sfCorpAddressCity-2"
+									value="#{startFormBean.form.loanOutAddress.city}"
+									disabled="#{submitted or done or not edit}">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- STATE + ZIP -->
+					<div class="rowCont FL">
+						<span class="fdNm">State:
+						</span>
+						<h:selectOneMenu styleClass="FL" disabled="#{submitted or done or not edit or isTeamPayroll}"
+								value="#{startFormBean.form.loanOutAddress.state}" id="sfCorpAddressState-2">
+							<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+							<ace:ajax/>
+						</h:selectOneMenu>
+						<span class="fdNm" style="width:45px;">
+							<h:outputText styleClass="pad15lt pad2rt" value="Zip:" />
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm" style="width:20px;min-width:20px;">
+								<h:outputText value="#{startFormBean.form.loanOutAddress.zip}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm">
+								<ace:textEntry maxlength="10" size="7" style="width:57px;"
+									value="#{startFormBean.form.loanOutAddress.zip}"
+									disabled="#{submitted or done or not edit}"
+									id="sfCorpAddressZip-2">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>			
+				</div>
+				<!-- CORP MAILING ADDRESS -->
+				<div class="W45percnt FL pad10tp pad20lt">
+					<div class="rowCont">
+						<span class="B FL"><h:outputText value="Corporation Mailing Address:"/></span>
+					</div>
+					<!-- ADDRESS LINE 1 -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value="Address:"/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutMailingAddress.addrLine1}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" id="sfCorpMailingAddressAddr1"
+									value="#{startFormBean.form.loanOutMailingAddress.addrLine1}"
+									disabled="#{submitted or done or not edit}" >
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- ADDRESS LINE 2 -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value=" "/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutMailingAddress.addrLine2}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50" id="sfCorpMailingAddressAddr2"
+									value="#{startFormBean.form.loanOutMailingAddress.addrLine2}"
+									disabled="#{submitted or done or not edit}">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- CITY -->
+					<div class="rowCont FL">
+						<span class="fdNm"><h:outputText value="City:"/>
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm">
+								<h:outputText value="#{startFormBean.form.loanOutMailingAddress.city}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="35" id="sfCorpMailingAddressCity"
+									value="#{startFormBean.form.loanOutMailingAddress.city}"
+									disabled="#{submitted or done or not edit}">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>
+
+					<!-- STATE + ZIP -->
+					<div class="rowCont FL">
+						<span class="fdNm">State:
+						</span>
+						<h:selectOneMenu styleClass="FL" disabled="#{submitted or done or not edit or isTeamPayroll}"
+								value="#{startFormBean.form.loanOutMailingAddress.state}" id="sfCorpMailingAddressState">
+							<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+							<ace:ajax/>
+						</h:selectOneMenu>
+						<span class="fdNm" style="width:45px;">
+							<h:outputText styleClass="pad15lt pad2rt" value="Zip:" />
+						</span>
+						<h:panelGroup rendered="#{not edit or isTeamPayroll}">
+							<span class="fd_sm" style="width:20px;min-width:20px;">
+								<h:outputText value="#{startFormBean.form.loanOutMailingAddress.zip}" />
+							</span>
+						</h:panelGroup>
+<!--						
+						<h:panelGroup rendered="#{edit}">
+							<span class="fd_sm">
+								<ace:textEntry maxlength="10" size="7" style="width:57px;"
+									value="#{startFormBean.form.loanOutMailingAddress.zip}"
+									disabled="#{submitted or done or not edit}"
+									id="sfCorpMailingAddressZip">
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+-->						
+					</div>			
+				</div>	
+			</div>
+		</h:panelGroup>
+	</h:panelGroup>
+
+</ui:composition>

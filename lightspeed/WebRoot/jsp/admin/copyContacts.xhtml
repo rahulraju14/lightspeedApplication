@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Copy Contacts and Timecards mini-tab on Admin page -->
+<ace:tabPane label="Copy Data" id="importtab">
+
+	<div class="rowCont pad15tp">
+		<h:outputText styleClass="pnlHdrTxt" value="A Reminder" />
+		<h:outputText styleClass="pnlHdrTxt RED" value=" - ** PLEASE READ ** " />
+		<h:panelGroup styleClass="rowCont">
+			<div class="pad5tp pad20lt W40percnt">
+					Prior to copying Contacts or Timecards, be sure to set your Payroll Preferences
+					(such as Work City and State) as well
+					as the Production Company name (on the Project page),
+				<h:outputText styleClass="B RED" value="as this information will be set in the copied Start Forms." />
+			</div>
+		</h:panelGroup>
+	</div>
+
+	<div class="rowCont pad15tp">
+		<!-- PRODUCTION LIST -->
+		<h:panelGroup rendered="#{not empty copyContactsBean.productionDL}" >
+			<h:outputText styleClass="pnlHdrTxt" style="top:0px;" value="Source Production: " />
+			<h:selectOneMenu styleClass="pad20lt pad3tp"
+					style="max-width:50%;"
+					valueChangeListener="#{copyContactsBean.listenProduction}"
+					value="#{copyContactsBean.sourceProdId}">
+				<f:selectItems value="#{copyContactsBean.productionDL}" />
+				<ace:ajax />
+			</h:selectOneMenu>
+		</h:panelGroup>
+	</div>
+
+	<div class="rowCont">
+		<h:panelGroup rendered="#{copyContactsBean.sourceProd.type.episodic}">
+			<h:outputText styleClass="B pad10lt" value="Source Project: "/>
+			<h:outputText styleClass="pad10lt" rendered="#{copyContactsBean.sourceProject ne null}"
+					value="#{copyContactsBean.sourceProject.title}"/>
+		</h:panelGroup>
+	</div>
+
+	<div class="rowCont pad15tp pad20lt">
+		<h:panelGroup rendered="#{copyContactsBean.sourceProd ne null}">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Copy contacts"
+					action="#{copyContactsBean.actionCopyContacts}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{copyContactsBean.sourceProd eq null}">
+			<span class="btnPriDisLt"/>
+			<ace:linkButton value="Copy contacts"
+					styleClass="btnPriDisCt" type="text" onclick="return false;" />
+			<span class="btnPriDisRt"/>
+		</h:panelGroup>
+		<h:panelGroup styleClass="pad10lt DIB pad5tp">
+			This includes Start Forms.
+		</h:panelGroup>
+	</div>
+
+	<div class="rowCont pad15tp pad20lt">
+		<h:panelGroup rendered="#{copyContactsBean.sourceProd ne null}">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Copy Timecards"
+				  action="#{copyContactsBean.actionCopyTimecards}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{copyContactsBean.sourceProd eq null}">
+			<span class="btnPriDisLt"/>
+			<ace:linkButton value="Copy Timecards"
+				  styleClass="btnPriDisCt" type="text" onclick="return false;" />
+			<span class="btnPriDisRt"/>
+		</h:panelGroup>
+
+		<h:selectBooleanCheckbox value="#{copyContactsBean.overWriteTc}"
+				styleClass="pad20lt">
+		</h:selectBooleanCheckbox>
+		Overwrite existing timecards
+	</div>
+
+	<div class="rowCont pad10tp pad30lt">
+		<h:panelGroup styleClass="pad15rt">
+			 	First week-ending date to be included:
+		</h:panelGroup>
+		<ace:dateTimeEntry styleClass="cal_date"
+				value="#{copyContactsBean.copyStartDate}" renderAsPopup="true">
+			<f:converter converterId="lightspeed.MultiDateConverter"/>
+		</ace:dateTimeEntry>
+	</div>
+	<div class="rowCont pad10tp pad30lt">
+		<h:panelGroup styleClass="pad15rt">
+			Last week-ending date to be included:
+		</h:panelGroup>
+		<ace:dateTimeEntry styleClass="cal_date"
+				value="#{copyContactsBean.copyEndDate}" renderAsPopup="true">
+			<f:converter converterId="lightspeed.MultiDateConverter"/>
+		</ace:dateTimeEntry>
+	</div>
+
+	<!-- CONTACT LIST -->
+	<div class="pad20tp pad20lt W60percnt">
+		<div class="rowCont FL">
+			<h:outputText styleClass="B" rendered="#{copyContactsBean.sourceProd.type.episodic}"
+					value="Contacts in source project:"/>
+			<h:outputText styleClass="B" rendered="#{not copyContactsBean.sourceProd.type.episodic}"
+					value="Contacts in source production:"/>
+		</div>
+		<div class="rowCont FL pad5tp">
+			<ace:dataTable id="contactList"
+					singleSort="true"
+					styleClass="bk_sl_grid"
+					value="#{copyContactsBean.contacts}" var="contact"
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '368'}"> <!-- 368 -->
+
+				<ace:column headerText="Name" style="width:35%;"
+						sortBy="#{contact.user.lastName} #{contact.user.firstName}">
+					<h:outputText value="#{contact.user.lastName}, #{contact.user.firstName}" />
+				</ace:column>
+
+				<ace:column headerText="Department" style="width:25%;"
+						sortBy="#{contact.role.department.name}">
+					<h:outputText value="#{contact.role.department.name}"/>
+				</ace:column>
+
+				<ace:column headerText="Role" style="width:40%;"
+						sortBy="#{contact.roleName}">
+					<h:outputText value="#{contact.roleName}" />
+				</ace:column>
+			</ace:dataTable>
+		</div>
+	</div><!-- end contactListCont -->
+
+</ace:tabPane>
+
+</ui:composition>

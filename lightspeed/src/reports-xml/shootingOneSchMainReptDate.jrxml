@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="shootingOneSchMainReptDate" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b6e5d7cf-847b-49e9-b6df-bd9991026118">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="defFont" isDefault="true" markup="none" fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT *, LENGTH(cast_ids) length FROM stripboard_report  where report_id ='5-141229144941'  and type <> 'BANNER'  and script_order between 100 and 500  order by script_order;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="shootDates" class="java.util.List">
+		<defaultValueExpression><![CDATA[Arrays.asList(
+"Sep 15, 2014", "Sep 15, 2014", "Sep 16, 2014", "Sep 16, 2014"
+)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="breakdownOrder" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="report_id" class="java.lang.String"/>
+	<field name="segment" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="sequence" class="java.lang.Integer"/>
+	<field name="sheet" class="java.lang.Integer"/>
+	<field name="scenes" class="java.lang.String"/>
+	<field name="int_ext" class="java.lang.String"/>
+	<field name="day_night" class="java.lang.String"/>
+	<field name="script_day" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="synopsis" class="java.lang.String"/>
+	<field name="pages" class="java.lang.String"/>
+	<field name="cast_ids" class="java.lang.String"/>
+	<field name="background_rgb" class="java.lang.Integer"/>
+	<field name="text_rgb" class="java.lang.Integer"/>
+	<field name="istatus" class="java.lang.Integer"/>
+	<field name="length" class="java.lang.Integer"/>
+	<variable name="rowNum" class="java.lang.Integer" resetType="Group" resetGroup="pgbrk" calculation="Count">
+		<variableExpression><![CDATA[Boolean.TRUE]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="dayCount" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[($F{type}.equals("END_OF_DAY") ? Boolean.TRUE : null)]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<group name="pgbrk">
+		<groupExpression><![CDATA[$F{istatus}]]></groupExpression>
+		<groupHeader>
+			<band height="1"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="1">
+				<break>
+					<reportElement uuid="809b8db2-8eff-4668-a79b-0c8ec302936a" x="0" y="0" width="551" height="1">
+						<printWhenExpression><![CDATA[new Boolean($F{istatus} != null)]]></printWhenExpression>
+					</reportElement>
+				</break>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="scriptday" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="100">
+		<groupExpression><![CDATA[$F{type}]]></groupExpression>
+		<groupHeader>
+			<band height="19" splitType="Prevent">
+				<printWhenExpression><![CDATA[$F{type}.equals("BREAKDOWN")]]></printWhenExpression>
+				<textField evaluationTime="Group" evaluationGroup="scriptday" isBlankWhenNull="true">
+					<reportElement uuid="24969464-584a-4901-a97e-122e22c5cce6" key="textField-1" x="0" y="0" width="551" height="17">
+						<printWhenExpression><![CDATA[$F{type}.equals("END_OF_DAY")||$F{status}.equals("UNSCHEDULED")?Boolean.FALSE:Boolean.TRUE]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Shoot Date: " + $P{shootDates}.get($V{dayCount}.intValue()*2)]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="scriptday" isBlankWhenNull="true">
+					<reportElement uuid="34ed2bb4-4d0e-410d-bff0-1a8ee8fa3243" key="textField-1" x="0" y="0" width="551" height="17">
+						<printWhenExpression><![CDATA[new Boolean($F{status}.equals("UNSCHEDULED"))]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Shoot Date: Unscheduled"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="3b412d6d-13a1-4894-8d52-15a513b0ceba" key="line-2" mode="Transparent" x="12" y="18" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement uuid="badb4f8d-3f06-41bb-ab6f-deff6de0c862" x="355" y="0" width="100" height="18"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{scriptday_COUNT}.intValue()==0 ? "" : "(Cont'd)")]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="19" splitType="Prevent">
+				<printWhenExpression><![CDATA[($F{type}.equals("END_OF_DAY")) && (! $F{pages}.equals("0"))]]></printWhenExpression>
+				<textField>
+					<reportElement uuid="67a57f86-5aa0-49bb-83f0-06bad52959a5" isPrintRepeatedValues="false" x="501" y="0" width="50" height="17" printWhenGroupChanges="scriptday"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Times-Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{pages}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="scriptday" isBlankWhenNull="true">
+					<reportElement uuid="d01eb472-1f4a-42ea-9c3b-bd547894ff90" key="textField-1" x="2" y="0" width="549" height="17"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Times-Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA["End Of Day: "+ $P{shootDates}.get(($V{dayCount}.intValue()-$V{scriptday_COUNT}.intValue())*2)]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="2caf3682-ae6d-41a9-bcb9-4a80bf37fb1b" key="line-2" mode="Transparent" x="12" y="18" width="530" height="1"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<line direction="BottomUp">
+				<reportElement uuid="ac16fbfe-9273-49ca-83a0-7309600109a6" key="line-2" x="0" y="51" width="552" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="0e8499ed-f63f-4d2b-83b5-f44679309b67" key="textField" positionType="Float" x="2" y="0" width="279" height="18" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{productionName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="6cc74e0a-c5f0-4311-ae4e-d4a490b02f1f" key="textField" positionType="Float" x="2" y="23" width="279" height="18"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($P{projectName}==null ? "" : $P{projectName})+" "+($P{showUnit}.booleanValue() && (! $F{status}.equals("UNSCHEDULED")) ? "- "+$F{status} : ""))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="c4c3b9c6-b846-496d-b814-575bc73ec957" key="textField-2" x="323" y="-1" width="222" height="22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ShootingSchedule]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="69a302e0-d380-4e24-84ce-fd1f9b535fcf" key="textField-5" x="457" y="21" width="88" height="11"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{breakdownOrder}.equals("schedule") ? "" : ReportsConstants.SceneOrder]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="MM/dd/yyyy" isBlankWhenNull="false">
+				<reportElement uuid="4cbf3428-89bc-4b49-9b75-864a49d61d18" key="textField" x="407" y="32" width="138" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[("Date: ") + new SimpleDateFormat("MM/dd/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="53" splitType="Prevent">
+			<printWhenExpression><![CDATA[$F{type}.equals("BREAKDOWN")]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ed3c1f06-f63b-4a7a-bbb3-f4e5c0053585" key="textField" positionType="Float" stretchType="RelativeToBandHeight" x="1" y="0" width="94" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Scene(s):"+ $F{scenes}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="790bdb9e-a3ac-491b-b528-5ea3b96d703a" key="textField" positionType="Float" stretchType="RelativeToBandHeight" x="95" y="0" width="34" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{int_ext}+"."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0f8466a9-f5e2-433f-9b4c-c9de58b4f44f" key="textField" positionType="Float" x="142" y="0" width="359" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{location}+" - "+$F{day_night}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1bf2f0ec-b20f-4ba3-be22-6f4af61049ad" key="textField" positionType="Float" stretchType="RelativeToBandHeight" x="500" y="0" width="50" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{pages}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="3c3028b2-5d92-40e9-9306-86399411c6ba" key="textField" positionType="Float" x="142" y="35" width="359" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Cast: "+ $F{cast_ids}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="73dd3ad6-5509-40ae-a271-2b39c79c02c4" key="textField" x="142" y="17" width="359" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[! $F{type}.equals("END_OF_DAY")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{synopsis}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="6c692281-c7ad-4d9f-b9aa-82dd38d6ff58" key="line-2" positionType="Float" mode="Transparent" x="12" y="52" width="530" height="1">
+					<printWhenExpression><![CDATA[$F{type}.equals("END_OF_DAY")?Boolean.FALSE:Boolean.TRUE]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="3ed15c65-3add-4cef-b1c8-a27f654bc330" key="subreport-1" x="1" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="e4d859e3-5a88-4be2-9196-2ac713f82a8d" key="textField" x="522" y="0" width="30" height="17"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="fd9ca00f-c588-4bdb-9a5d-b9a3b2307ee8" key="staticText-9" x="88" y="3" width="286" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[No scenes met your selection criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

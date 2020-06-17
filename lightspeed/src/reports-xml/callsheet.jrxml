@@ -1,0 +1,1386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="callsheet" pageWidth="612" pageHeight="1008" whenNoDataType="NoDataSection" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="20" bottomMargin="0" uuid="c38bc012-48dc-4e62-9685-f86972303008">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="1822"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="boarder" forecolor="#000000" backcolor="#000000">
+		<pen lineWidth="0.5"/>
+		<box leftPadding="0">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="productionLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["My Production"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="episodic" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[Passed to 'scene' subreport to control display of 'episode' column]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT cs.*, production.*, address.*, if (cs.status='PUBLISHED','FINAL','PRELIM') as pubStatus, " +
+"log.meal catering_1, log.meal_count catering_2, log.vendor catering_3, log.note catering_4 " +
+"FROM callsheet cs, production, project, address, catering_log log " +
+"WHERE cs.project_id = project.id and project.production_id = production.id and production.address_id = address.id and log.id = cs.catering_log_id " +
+" and cs.id = 266 " +
+"order by cs.id desc limit 1;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="column1dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="column2dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="column3dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="unitNumber" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dateTimeFormat1" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("M/d/yyyy h:mm a", $P{REPORT_LOCALE}, $P{productionTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timeFormat1" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("h:mm a", $P{REPORT_LOCALE}, $P{reportTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Date" class="java.sql.Timestamp"/>
+	<field name="Updated" class="java.sql.Timestamp"/>
+	<field name="Shoot_Day" class="java.lang.Integer"/>
+	<field name="Shoot_Days" class="java.lang.Integer"/>
+	<field name="Call_Time" class="java.sql.Timestamp"/>
+	<field name="Rehearse_Time" class="java.sql.Timestamp"/>
+	<field name="Shoot_Time" class="java.sql.Timestamp"/>
+	<field name="Stripboard_Id" class="java.lang.Integer"/>
+	<field name="Pages" class="java.lang.String"/>
+	<field name="Advance_Days" class="java.lang.Integer"/>
+	<field name="Status" class="java.lang.String"/>
+	<field name="Sunrise" class="java.sql.Timestamp"/>
+	<field name="Sunset" class="java.sql.Timestamp"/>
+	<field name="Weather" class="java.lang.String"/>
+	<field name="Project_Id" class="java.lang.Integer"/>
+	<field name="Prod_Id" class="java.lang.String"/>
+	<field name="Studio" class="java.lang.String"/>
+	<field name="Title" class="java.lang.String"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Max_Projects" class="java.lang.Integer"/>
+	<field name="Max_Logon_Attempts" class="java.lang.Integer"/>
+	<field name="Lock_Out_Delay" class="java.lang.Integer"/>
+	<field name="Start_Date" class="java.sql.Timestamp"/>
+	<field name="End_Date" class="java.sql.Timestamp"/>
+	<field name="Contact_Name" class="java.lang.String"/>
+	<field name="Address_Id" class="java.lang.Integer"/>
+	<field name="Phone" class="java.lang.String"/>
+	<field name="Fax" class="java.lang.String"/>
+	<field name="Repository_Id" class="java.lang.Integer"/>
+	<field name="Time_Zone" class="java.lang.String"/>
+	<field name="pubStatus" class="java.lang.String"/>
+	<field name="Addr_Line1" class="java.lang.String"/>
+	<field name="Addr_Line2" class="java.lang.String"/>
+	<field name="City" class="java.lang.String"/>
+	<field name="State" class="java.lang.String"/>
+	<field name="Zip" class="java.lang.String"/>
+	<field name="catering_1" class="java.lang.String"/>
+	<field name="catering_2" class="java.lang.String"/>
+	<field name="catering_3" class="java.lang.String"/>
+	<field name="catering_4" class="java.lang.String"/>
+	<variable name="unitNumber" class="java.lang.Integer">
+		<variableExpression><![CDATA[$P{unitNumber}==null? $V{firstUnit} : $P{unitNumber}]]></variableExpression>
+	</variable>
+	<variable name="firstUnit" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[new Integer(1)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band height="988" splitType="Stretch">
+			<image>
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="968" width="117" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} == null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportsTemplate}+"/common/LightSpeedEPSLogo.png"]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="968" width="117" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement uuid="0dd1ef0b-c1b5-4785-ad56-c61874905ec2" key="rectangle-22" x="0" y="0" width="540" height="968"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="155e5b0c-6d81-48cf-8c6f-ad0ac498463b" key="textField" x="117" y="968" width="260" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["&#169; 2020 The Team Companies, LLC. All Rights Reserved."]]></textFieldExpression>
+			</textField>
+		</band>
+	</background>
+	<detail>
+		<band height="160" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="50b1d34a-c30a-4f99-bc3f-a2a3d95eed11" key="rectangle-1" mode="Transparent" x="0" y="0" width="540" height="160"/>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="27131caa-3f9f-4591-8633-79a10af55b97" x="0" y="0" width="405" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3f4beb9b-9f0b-48a4-881b-28aced47c6ca" style="csDefBox" x="405" y="0" width="135" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Call Sheet - "+$F{pubStatus}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="a0fad121-dbb9-427c-a5a4-e01d84966e51" key="executive" stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="20" width="180" height="60"/>
+				<subreportParameter name="callid">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/executive.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement uuid="55860aa0-12a2-4327-8b36-a265dfed784d" key="textField" mode="Transparent" x="405" y="20" width="135" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a2a79b5-ea93-4116-9c48-14605d5eaab0" key="textField" mode="Transparent" x="405" y="40" width="135" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isItalic="true" pdfFontName="Times-Italic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Updated: "+ $P{dateTimeFormat1}.format($F{Updated})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="5a4074bf-5da8-455a-b1e6-1d449a9ed252" key="staticText-8" mode="Transparent" x="423" y="60" width="27" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Day]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7dc49ce9-3e80-494b-a7c2-32568d5b2c3a" key="textField" mode="Transparent" x="450" y="60" width="18" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Day}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="e99fa396-13a5-4231-a1e7-ea12a590ec00" key="staticText-9" mode="Transparent" x="468" y="60" width="9" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Of]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="918a63e9-99ce-430a-97f8-b7c9d41fca79" key="textField" mode="Transparent" x="477" y="60" width="27" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Days}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6bfe983a-11e1-4141-a1ed-7b1b5e2ffcfb" key="staticText-7" mode="Transparent" x="0" y="80" width="45" height="10"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isItalic="false" pdfFontName="Times-Italic"/>
+				</textElement>
+				<text><![CDATA[Prod Off:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="48f7d9b1-f0c7-4343-8d0b-70fd8beefbe8" key="textField-2" x="45" y="80" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Studio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="48f7d9b1-f0c7-4343-8d0b-70fd8beefbe8" key="textField-2" x="46" y="90" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Addr_Line1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="706e83cb-b18a-4ebc-b472-387f630cb843" key="textField-44" x="46" y="100" width="135" height="10">
+					<printWhenExpression><![CDATA[($F{Addr_Line2} != null && ! $F{Addr_Line2}.equals(""))]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Addr_Line2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="706e83cb-b18a-4ebc-b472-387f630cb843" key="textField-44" x="45" y="100" width="135" height="10">
+					<printWhenExpression><![CDATA[($F{Addr_Line2} == null || $F{Addr_Line2}.equals(""))]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{City}+", "+$F{State}+" "+$F{Zip}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="63bf7727-34bc-49eb-8280-7937b7129bdc" key="staticText-1" x="0" y="110" width="45" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.tel]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b817ad8c-d7a4-4a2c-a83e-09eef9868652" key="textField-8" x="45" y="110" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Phone} + ($F{Fax} != null && ! $F{Fax}.equals("") ? " Fax: " + $F{Fax} : "")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d31c4fa4-12de-4f85-9257-81ffe5384588" key="staticText-10" mode="Transparent" x="405" y="70" width="45" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SUNRISE]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="54a42bdc-fb95-4bdd-bb02-031a66076958" key="textField" mode="Transparent" x="450" y="70" width="90" height="10">
+					<printWhenExpression><![CDATA[$F{Sunrise} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{timeFormat1}.format($F{Sunrise})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="84ee936a-3f86-433b-9ff2-771e6f3b857a" key="staticText-11" mode="Transparent" x="405" y="80" width="45" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SUNSET]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="969311e9-9100-4751-8155-6256d50aeccd" key="textField-1" mode="Transparent" x="450" y="80" width="90" height="10">
+					<printWhenExpression><![CDATA[$F{Sunset} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{timeFormat1}.format($F{Sunset})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="588f560c-d1ea-4c54-9fa1-5b155bc80441" key="staticText-12" mode="Transparent" x="405" y="90" width="45" height="30"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.WEATHER]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="26113845-e87d-4926-8206-ba61bb8c6a27" key="textField-2" mode="Transparent" x="450" y="90" width="90" height="30"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Weather}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="180" y="20" width="180" height="50"/>
+				<imageExpression><![CDATA[$P{productionLogo}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d6a6ecce-5c06-4269-a535-2a3ecf3be003" key="staticText-13" style="csDefBox" mode="Transparent" x="180" y="70" width="81" height="30"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.CrewCall]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="e6d7f79d-25e1-4332-87bb-6e7d0b72cc68" key="textField" style="csDefBoxBold" mode="Transparent" x="261" y="70" width="99" height="30"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d096849f-059b-4f5d-ac3a-9066077dc176" key="staticText-14" style="csDefBox" mode="Transparent" x="180" y="100" width="81" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ShootingCall]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="ebfb9a4d-940a-41b7-ba25-e4053f17d610" key="textField" style="csDefBoxBold" mode="Transparent" x="261" y="100" width="99" height="20"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Time}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="c5d95ecb-9153-4b7c-a551-6f21c5b371b4" key="breakfast" mode="Transparent" x="0" y="120" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[0]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="4c396835-1a53-4442-bdbd-d1049f7c5c0a" key="forced" mode="Transparent" x="0" y="140" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="30" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="60a3aadb-c45e-461e-a4aa-1eb84d07008f" key="scene" mode="Transparent" x="0" y="0" width="540" height="20"/>
+				<subreportParameter name="sqlQry">
+					<subreportParameterExpression><![CDATA["select sc.* from scene_call sc where sc.callsheet_id = " + $F{Id} + " order by line_number"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/scene.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="30" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="0f662fdb-61b2-4487-84c7-6be980782e40" key="cast" positionType="Float" mode="Transparent" x="0" y="0" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionTimeZone">
+					<subreportParameterExpression><![CDATA[$P{productionTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/cast.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="30" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="705f5b4d-7d19-43ea-a789-831790eae9aa" key="standing" positionType="Float" mode="Transparent" x="0" y="0" width="540" height="30"/>
+				<subreportParameter name="productionTimeZone">
+					<subreportParameterExpression><![CDATA[$P{productionTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/extras.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="110" splitType="Prevent">
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="18cb68ec-3e63-4cac-9557-ea803cc1b2ea" key="staticText-15" style="csDefBoxBold" positionType="Float" mode="Opaque" x="0" y="0" width="540" height="10" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SpecialRequirements]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="94872033-3d3b-487c-947a-9e4a7fd90765" key="production" positionType="Float" mode="Transparent" x="0" y="10" width="540" height="10" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[2]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="bbc05f80-a163-41dc-b9d7-68300314370c" key="props" positionType="Float" mode="Transparent" x="0" y="20" width="540" height="10" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[3]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="e19d1aa9-ef9d-4204-b809-79f527210ce1" key="setdressing" positionType="Float" mode="Transparent" x="0" y="30" width="540" height="10" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[4]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ee1915ef-f17d-4f1a-a9fa-3ee12d37f3c0" key="sfx" positionType="Float" x="0" y="40" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[5]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="da9e22a6-e620-4f6f-83ae-9bc62b9f072c" key="costumes" positionType="Float" x="0" y="50" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[6]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="75ec7531-93eb-4fed-b6d7-e3c6a46884aa" key="makeup" positionType="Float" x="0" y="60" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[7]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="4aa9c6c0-4945-407e-8cc0-79ee400a0775" key="lighting" positionType="Float" x="0" y="70" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[8]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ede14d98-db8a-431e-9fda-a3cf1083976a" key="vehicles" positionType="Float" x="0" y="80" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[9]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3a87e161-b8ab-46cc-b560-36ab268f88bb" key="spequip" positionType="Float" x="0" y="90" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[10]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="30" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement uuid="60a3aadb-c45e-461e-a4aa-1eb84d07008f" key="scene" positionType="Float" mode="Transparent" x="0" y="0" width="540" height="30"/>
+				<subreportParameter name="sqlQry">
+					<subreportParameterExpression><![CDATA["select sc.* from scene_call sc where sc.advance_id = " + $F{Id} +
+" order by date, line_number"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="advance">
+					<subreportParameterExpression><![CDATA[true]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/scene.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="892" splitType="Stretch">
+			<frame>
+				<reportElement uuid="08d9d454-2258-4287-843e-05a6c34e4a6f" x="0" y="0" width="540" height="891"/>
+				<elementGroup>
+					<rectangle>
+						<reportElement uuid="5ee8a7da-2b1e-4eff-a488-fe930821f857" key="rectangle-3" mode="Transparent" x="0" y="0" width="540" height="40" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</rectangle>
+					<textField isBlankWhenNull="false">
+						<reportElement uuid="4a1e03b4-314a-4f9c-a9ed-111d24ad8681" key="staticText-25" style="csDefBoxBold" mode="Opaque" x="0" y="0" width="225" height="10" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF"/>
+						<textElement/>
+						<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+					</textField>
+					<textField pattern="EEE MMMM d, yyyy" isBlankWhenNull="false">
+						<reportElement uuid="82ba331f-5093-4b92-8b9f-ebb6a26a4d07" key="textField-8" style="csDefBoxBold" x="0" y="10" width="135" height="10" isPrintWhenDetailOverflows="true"/>
+						<textElement/>
+						<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement uuid="6bfe983a-11e1-4141-a1ed-7b1b5e2ffcfb" key="staticText-7" style="csDefBox" mode="Transparent" x="135" y="10" width="90" height="10"/>
+						<textElement/>
+						<text><![CDATA[]]></text>
+					</staticText>
+					<textField isBlankWhenNull="false">
+						<reportElement uuid="5a4074bf-5da8-455a-b1e6-1d449a9ed252" key="staticText-8" style="csDefault" mode="Transparent" x="135" y="10" width="27" height="10"/>
+						<textElement textAlignment="Right">
+							<paragraph rightIndent="2"/>
+						</textElement>
+						<textFieldExpression><![CDATA[ReportsConstants.Day]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement uuid="7dc49ce9-3e80-494b-a7c2-32568d5b2c3a" key="textField" style="csDefBold" mode="Transparent" x="162" y="10" width="18" height="10"/>
+						<textElement textAlignment="Center"/>
+						<textFieldExpression><![CDATA[$F{Shoot_Day}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="false">
+						<reportElement uuid="e99fa396-13a5-4231-a1e7-ea12a590ec00" key="staticText-9" style="csDefBold" mode="Transparent" x="180" y="10" width="9" height="10"/>
+						<textElement/>
+						<textFieldExpression><![CDATA[ReportsConstants.Of]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement uuid="918a63e9-99ce-430a-97f8-b7c9d41fca79" key="textField" style="csDefBold" mode="Transparent" x="189" y="10" width="27" height="10"/>
+						<textElement>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{Shoot_Days}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="false">
+						<reportElement uuid="479047ca-7a05-4a6e-81d7-921307548ed3" key="staticText-26" style="csDefBoxBold" x="225" y="0" width="81" height="20" isPrintWhenDetailOverflows="true"/>
+						<textElement textAlignment="Center">
+							<font size="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[ReportsConstants.CREWCALL]]></textFieldExpression>
+					</textField>
+					<textField pattern="h:mm a" isBlankWhenNull="false">
+						<reportElement uuid="5b2c5598-9220-446a-9e39-0fa5b04ea674" key="textField-3" style="csDefBoxBold" x="306" y="0" width="99" height="20" isPrintWhenDetailOverflows="true"/>
+						<textElement textAlignment="Center">
+							<font size="16"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement uuid="3f4beb9b-9f0b-48a4-881b-28aced47c6ca" style="csDefBox" x="405" y="0" width="135" height="20"/>
+						<textElement>
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Call Sheet - "+$F{pubStatus}]]></textFieldExpression>
+					</textField>
+					<subreport isUsingCache="true">
+						<reportElement uuid="c5d95ecb-9153-4b7c-a551-6f21c5b371b4" key="breakfast" mode="Transparent" x="0" y="20" width="540" height="20"/>
+						<subreportParameter name="section">
+							<subreportParameterExpression><![CDATA[25]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+					</subreport>
+				</elementGroup>
+				<elementGroup>
+					<line>
+						<reportElement uuid="42525cde-564b-4818-a8bd-f2b264ff185f" x="18" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fa0c2932-bb03-4e61-a4ae-acef3d8a6fd7" x="81" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="5d909acf-539c-48f8-9c4a-b92b905a905c" x="144" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="78abc559-cf54-4bd7-83d8-170c5d801e0a" x="180" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="4c0df292-baee-4bed-b113-42af563f63d5" x="198" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="36d880a5-170b-4736-ae80-56c6610ad681" x="261" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="ae151f1c-f083-4e32-81e0-d706ee1a8c5c" x="324" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="d08545f2-b5d7-4f78-a5d1-445afa1dcdf8" x="360" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="02a744ab-462c-48d9-942f-4fd0646d5440" x="378" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b5d80e0c-405a-48c0-8ba2-a7f85b0309f0" x="441" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="6120ab28-7423-41f4-8a00-c67716fdc885" x="504" y="40" width="1" height="850" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+				</elementGroup>
+				<elementGroup>
+					<line>
+						<reportElement uuid="aba195a3-aca2-4eba-aab5-deb5ffea2c95" x="0" y="50" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="2fc37ad1-d772-4729-b37d-2a18755394e4" x="0" y="60" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="2b336490-4a71-44b7-98fa-5a54db7b7160" x="0" y="70" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="44a04832-50c9-4aff-905b-5b6207b9e29c" x="0" y="80" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fe3b23ed-4693-4266-a9ec-84f54ffba70d" x="0" y="90" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="9cb91eff-80d1-40af-8410-b21dd27bf4e3" x="0" y="100" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="98a3dae0-a721-4461-8196-146dbe2e64d7" x="0" y="110" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="74474624-ffdd-416d-b446-248e3d9f45ce" x="0" y="120" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="6a1ebfe2-25fa-4bd9-affe-86372d79a333" x="0" y="130" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="f1dc05a7-06a2-4a45-915d-819517bdfb85" x="0" y="140" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="8d2ad79d-f8be-43a7-a004-e3162d2e382c" x="0" y="150" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="c24b7f3e-be68-46f9-9244-df8c83fd6f44" x="0" y="160" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="e88b487d-2150-4c65-995a-ec0adb9f9cd5" x="0" y="170" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="dd82ffc0-c545-47d9-bded-e7ade455e2e7" x="0" y="180" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fc563e03-f1ff-4c1e-9574-db42af039e0f" x="0" y="190" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="17653dfa-155a-48dd-804c-4fee0f4f0c4e" x="0" y="200" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b5eec2d6-dc8b-4973-b28f-bdf3d0ade165" x="0" y="210" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="13dface7-6817-4adf-966e-72f8c677b7f2" x="0" y="220" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="0d05b8a6-f2d9-439a-874f-1fcd1c0d86f5" x="0" y="230" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="d3908040-c39c-4f37-917d-a2cb147e5481" x="0" y="240" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="57032d94-14d3-40f9-86e6-dc9d94eaf6f6" x="0" y="250" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="ba58150b-d363-46ce-962c-b4a80d5cb3ac" x="0" y="260" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="bcad551f-1f26-474c-96d5-d31d4eafe8e9" x="0" y="270" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="60a3899c-369e-44fb-97b4-6a54f4fc2d9c" x="0" y="280" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="5bf1e74d-afdc-4f1c-a4af-758dc750f405" x="0" y="290" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b4ffc775-5e4e-42d8-8c3b-ae954d51ce4b" x="0" y="300" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="44104445-0914-48d7-ba72-79bfb3d7eeab" x="0" y="310" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="443c984b-9820-4b50-b394-0f5151b355a8" x="0" y="320" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="27d7bd93-43c8-45e4-82e2-037a9de836d2" x="0" y="330" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="0060f06a-e641-49ae-a885-7b3b849dea9f" x="0" y="340" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="307f9154-10fe-487b-a6e6-f1f6848a6cb4" x="0" y="350" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="d908e0b8-600f-409b-8d8c-dd099035ec44" x="0" y="360" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b4eb9b37-eb36-4d84-bb4c-8201530c50bd" x="0" y="370" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="67e01d6f-5c6f-4bf7-8c3b-d931359c0993" x="0" y="380" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="84eabc8d-a626-49e0-993b-1b3308d315b5" x="0" y="390" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="94257993-b8d6-4758-bb96-f7b7762d64c9" x="0" y="400" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="1df0d498-d160-4a2f-876c-b18d1092a1ce" x="0" y="410" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fbf9bd2a-820d-4d21-a6f9-fde02ce4ee2e" x="0" y="420" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="e975d0bf-a92c-44e8-a047-1586e01de1c5" x="0" y="430" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="c1187d07-b8cc-4563-a27e-aa7f8eee6467" x="0" y="440" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="e6f985fe-7131-41b3-bfaf-29c868793ea3" x="0" y="450" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="f3dbdb69-0891-47f3-a643-7a4b6713c2f0" x="0" y="460" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="ee6c80b1-b3a0-4832-93da-66c59fe3a0f5" x="0" y="470" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="87b69ed5-67a1-46e0-877a-1bacb79519a5" x="0" y="480" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="ed2911db-8b9d-4d92-a340-e1b6eba90142" x="0" y="490" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="38ebb29c-2ce4-4480-9a6e-e2547f01d938" x="0" y="500" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="3c41622e-7936-46f0-8ffb-c65764c63c73" x="0" y="510" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="1abc0939-7228-48fe-b7b7-d89e443bf89b" x="0" y="520" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="50097fb5-4578-40a3-8186-e02da6eecf51" x="0" y="530" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="4bac2f6f-d093-4ffb-b85b-6bca1dedfb65" x="0" y="540" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="4bd8275f-25b9-4370-9845-760705edce50" x="0" y="550" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="5a756832-343d-432a-a85a-77c2107f816f" x="0" y="560" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="4ce9e93a-5a2b-4922-b7a8-afecf17b36f4" x="0" y="570" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b00fe199-8360-4a24-9a34-b76caf04ec39" x="0" y="580" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="d139cbc4-b1b6-47b5-bc22-6028217cb5ac" x="0" y="590" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="137e6d55-e986-4d95-b6d9-bff4a544afb5" x="0" y="600" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="03c76830-13fb-4b94-b335-4eba3ba07342" x="0" y="610" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="9500a529-9a64-49f1-9b94-80b7df2a681c" x="0" y="620" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="36097093-3caa-4bc9-92d8-e17c7deb59ba" x="0" y="630" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="01eb9651-a5ff-4b95-ab24-957f479a6922" x="0" y="640" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="176bdb9a-cb21-47a0-8b26-392d63b06fea" x="0" y="650" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="992af98a-8b42-4c57-a9ff-576668e6f7e4" x="0" y="660" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="b03283b0-aeae-4b80-a427-b47d2e6c8dbb" x="0" y="670" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="7748ef31-d21e-44a7-ad5c-aa94d763d141" x="0" y="680" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="983b299d-af6a-4f7f-802b-4436deeb2676" x="0" y="690" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="ba13a7d4-0e6e-471d-b91f-fd1a010923bf" x="0" y="700" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="1c0ca861-df4d-49c0-b02a-2c5b1d7f8dd5" x="0" y="710" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="8aa8eb8a-c7b0-4b40-ac12-d6fd445aa141" x="0" y="720" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="f37ccb37-f982-4721-96b2-4d9e7c33be1f" x="0" y="730" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="f1e8b036-9f0b-427d-adf8-f5c6a14533b5" x="0" y="740" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="e30c2ccc-b7c1-4af5-8012-9e2b962ba2b8" x="0" y="750" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="79431a38-1677-4aab-93c9-b47267b86dc8" x="0" y="760" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="9bb56ab2-0e97-43fc-9908-5b09e1a20f1b" x="0" y="770" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="e37e93ca-5f3f-46dc-b7a9-47c0857688bc" x="0" y="780" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fc390687-6c46-4bc9-8001-2801d22809dd" x="0" y="790" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="129d4e13-8a50-4997-a571-22385cafe474" x="0" y="800" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="78b604c7-1e2d-40be-8ae6-6e144613949a" x="0" y="810" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="0d069dbe-3142-499e-a51f-b89a2178878d" x="0" y="820" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="aeaa1271-ec40-42e6-a77c-45bc54788351" x="0" y="830" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="389d2159-cdcd-40e9-a341-6acc9846a6fc" x="0" y="840" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="1890ab5a-dc51-4e11-9c37-1d43fc81189a" x="0" y="850" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="3bf51def-979e-49d6-ba31-5a1a3e1ba664" x="0" y="860" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="fc2560ae-c91c-4158-8451-bf1efb6a74ff" x="0" y="870" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="3b928598-e2e3-4b8a-a522-1d79cb060e30" x="0" y="880" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+					<line>
+						<reportElement uuid="c201e283-7318-4312-a1c6-c82b6b28e9c1" x="0" y="890" width="540" height="1" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+						<graphicElement>
+							<pen lineWidth="0.5"/>
+						</graphicElement>
+					</line>
+				</elementGroup>
+				<elementGroup>
+					<subreport isUsingCache="true">
+						<reportElement uuid="ee080f95-6e4c-4fd2-9272-397e1e5fbea1" key="department1" positionType="Float" x="0" y="40" width="180" height="850"/>
+						<subreportParameter name="callsheetDate">
+							<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="columnDcIds">
+							<subreportParameterExpression><![CDATA[$P{column1dcIds}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="projectId">
+							<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_1">
+							<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_2">
+							<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_3">
+							<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_4">
+							<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+					</subreport>
+					<subreport isUsingCache="true">
+						<reportElement uuid="b4a9b659-7095-4a19-b008-784b4aae0fef" key="department2" positionType="Float" x="180" y="40" width="180" height="850"/>
+						<subreportParameter name="callsheetDate">
+							<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="columnDcIds">
+							<subreportParameterExpression><![CDATA[$P{column2dcIds}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="projectId">
+							<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_1">
+							<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_2">
+							<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_3">
+							<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_4">
+							<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+					</subreport>
+					<subreport isUsingCache="true">
+						<reportElement uuid="3cfdcb05-23f9-4ba5-b49c-7e2e47675396" key="department3" positionType="Float" mode="Transparent" x="360" y="40" width="180" height="850"/>
+						<subreportParameter name="callsheetDate">
+							<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="columnDcIds">
+							<subreportParameterExpression><![CDATA[$P{column3dcIds}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="projectId">
+							<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_1">
+							<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_2">
+							<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_3">
+							<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+						</subreportParameter>
+						<subreportParameter name="catering_4">
+							<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+						</subreportParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+					</subreport>
+				</elementGroup>
+			</frame>
+		</band>
+		<band height="46" splitType="Immediate">
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="cf009718-488d-4f85-b37f-aebb55c9cd30" key="note" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="540" height="46"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/note.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="817aeb05-1d79-4a8e-86ad-275a8d144030" key="upm" stretchType="RelativeToBandHeight" x="0" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[21]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="f48b3d1f-f958-413e-a473-20159daaae36" key="upm" stretchType="RelativeToBandHeight" x="135" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[22]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="1b51ef45-4d65-43be-b7a6-618b777021e8" key="upm" stretchType="RelativeToBandHeight" x="270" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[23]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0a218f27-1697-4ce7-964a-382212bb8026" key="upm" stretchType="RelativeToBandHeight" x="405" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[24]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="bb0c0804-c91a-4ba6-92aa-945af687e3b5" key="staticText-1" x="0" y="20" width="540" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Requested Call Sheet was not found]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+			<h:panelGroup rendered="#{(facesContext.maximumSeverity ne null) and (facesContext.maximumSeverity.ordinal gt 1)}">
+				<div class="popErrMsgCont">
+					<div class="popErrTitleBar">
+						<h:outputText value="Error" />
+					</div>
+					<h:messages />
+					<ace:linkButton styleClass="errorCloseIcon" title="Close error message" value="X"
+						onclick="hidePopErrors();">
+					</ace:linkButton>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{(facesContext.maximumSeverity ne null) and (facesContext.maximumSeverity.ordinal lt 2)}">
+				<div class="popInfoMsgCont">
+					<div class="infoTitleBar">
+						<h:outputText value="Information" />
+					</div>
+					<h:messages />
+					<ace:linkButton styleClass="infoCloseIcon" title="Close message" value="X"
+							onclick="hidePopInfo();">
+					</ace:linkButton>
+				</div>
+			</h:panelGroup>
+
+</ui:composition>

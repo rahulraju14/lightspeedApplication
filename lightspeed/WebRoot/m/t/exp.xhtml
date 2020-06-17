@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Expense</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('hours:date').focus();
+}
+
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form id="hours">
+
+		<!-- Set the JSF navigation value for the Back button. -->
+		<!-- The leading ? indicates the value is actually a Session attribute key. -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.hoursBackPage" />
+
+			<ui:include src="../common/headerExpense.xhtml" />
+
+			<h:panelGroup rendered="#{mobileTimecardBean.editRaw}">
+				<!-- call 'getLockIt()' to lock the timecard if in edit mode; always returns false -->
+				<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+			</h:panelGroup>
+
+			<div class="inBlock CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Weekly Expenses
+				</div>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id eq mobileTimecardBean.tcUser.id}">
+					<div class="txtL2">
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.occupation}" />
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id ne mobileTimecardBean.tcUser.id}">
+					<div class="prodTitle pad5tp">
+						<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<a id="default" /><!-- default scroll-to-top position -->
+
+				<div class="txtL2 inCtlRow">
+					<span class="midBtn weekEndText">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<!-- Confirmation fragment (to delete an entry) -->
+				<h:panelGroup rendered="#{mobileTimecardBean.showPopup}">
+					<ui:include src="../common/confirm.xhtml" />
+				</h:panelGroup>
+
+				<c:set var="isEmplExp" value="#{(mobileTimecardBean.payExpense.category eq null) or mobileTimecardBean.payExpense.categoryType.isEmplExpense}" />
+				<c:set var="disable" value="#{(! mobileTimecardBean.editRaw) or (! isEmplExp) or mobileTimecardBean.showPopup}" />
+
+				<!-- Rows for entering Expense data -->
+
+				<!-- CATEGORY -->
+				<div class="inMilesRow LT">
+					<h:outputText  styleClass="pad10lt" value="Item" />
+					<h:panelGroup rendered="#{isEmplExp}">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu tabindex="1" styleClass="FR pad15rt"
+									style="width:60%;text-align:left;"
+									valueChangeListener="#{mobileTimecardBean.listenExpenseChange}"
+									value="#{mobileTimecardBean.expCategory}"
+									disabled="#{disable}">
+								<f:selectItems value="#{mobileTimecardBean.emplExpCategoryDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</h:panelGroup>
+					<h:outputText rendered="#{not isEmplExp}" styleClass="expText"
+							value="#{mobileTimecardBean.payExpense.category}">
+					</h:outputText>
+				</div>
+
+				<!-- QUANTITY -->
+				<div class="inMilesRow LT">
+					<h:outputText styleClass="pad10lt" value="Quantity" />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:textEntry tabindex="2"
+							disabled="#{disable}" styleClass="FR pad15rt W25percnt"
+							valueChangeListener="#{mobileTimecardBean.listenExpenseChange}"
+							value="#{mobileTimecardBean.payExpense.quantity}" maxlength="11">
+						<f:convertNumber type="number" pattern="#,##0.00" />
+						<ace:ajax />
+					</ace:textEntry>
+					</icecore:setEventPhase>
+				</div>
+
+				<!-- RATE -->
+				<div class="inMilesRow LT">
+					<h:outputText styleClass="pad10lt" value="Rate" />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:textEntry tabindex="3"
+							disabled="#{disable}" styleClass="FR pad15rt W25percnt"
+							valueChangeListener="#{mobileTimecardBean.listenExpenseChange}"
+							value="#{mobileTimecardBean.payExpense.rate}" maxlength="11">
+						<f:convertNumber type="number" pattern="#,##0.00" />
+						<ace:ajax />
+					</ace:textEntry>
+					</icecore:setEventPhase>
+				</div>
+
+				<!-- TOTAL -->
+				<div class="inMilesRow LT">
+					<h:outputText styleClass="pad10lt" value="Total" />
+					<ace:textEntry tabindex="-1"
+							disabled="true" styleClass="FR pad15rt W25percnt"
+							value="#{mobileTimecardBean.payExpense.total}" maxlength="11">
+						<f:convertNumber type="number" pattern="#,##0.00" />
+					</ace:textEntry>
+				</div>
+				<!-- END rows for entering daily times (call, meals, wrap) -->
+
+				<!-- Buttons -->
+				<div class="inCtlRow pad15tp">
+
+					<h:panelGroup styleClass="FL inBlock"
+							rendered="#{mobileTimecardBean.editRaw and (! mobileTimecardBean.showPopup) and (! disable)}">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="Delete Entry" onclick="queueClick(this,event);"
+								action="#{mobileTimecardBean.actionDeleteExpense}" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+
+					<span class="CT inBlock">
+					</span>
+
+					<h:panelGroup styleClass="FR inBlock"
+							rendered="#{mobileTimecardBean.editRaw and ! mobileTimecardBean.showPopup}">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="#{disable ? 'Return' : 'Enter'}"
+									onclick="queueClick(this,event);"
+									action="#{mobileTimecardBean.actionEnterExpense}" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR inBlock"
+							rendered="#{(! mobileTimecardBean.editRaw and ! mobileTimecardBean.showPopup)}">
+						<span class="FL btnPriDisLt"></span>
+						<span>
+							<h:commandLink value="Enter" type="text" styleClass="btnPriDisCt" />
+						</span>
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+				</div>
+
+				<div class="CB"></div>
+				<div class="inCtlRow pad15tp">
+				</div>
+
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

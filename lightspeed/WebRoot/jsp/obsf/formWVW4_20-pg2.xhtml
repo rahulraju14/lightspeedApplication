@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+
+	<div class="miniTab pad25lt">
+		<div class="txt11">
+			<div class="w4_WV_20_2" style="width: 830px; height: 1200px;">
+				<div class="FL" style="margin-top: 879px;">
+					<!-- Legal state of resident -->
+					<div class="FL" style="width: 810px;">
+						<div class="FL W100" style="margin-left:245px;">
+							<h:selectOneMenu styleClass="FL W60 pad5bm"
+								id="wvW4ResidentState" value="#{form.legalStateOfRes}"
+								style="margin-left:5px; height:18px;" disabled="#{!editable}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateCodeDL['US']}" />
+							</h:selectOneMenu>
+						</div>	
+					</div>
+					<!-- Employee Personal Info - Step 1 section -->
+					<!-- Row 1 -->
+					<div class="FL" style="margin-top: 22px; width: 810px;">
+						<div class="FL" style="width: 300px;">
+							<ace:textEntry value="#{form.nonResidentFullName}" disabled="#{!editable}"
+								styleClass="W220" maxlength="50"
+								id="wvW4NonResidentFullName" style="height:12px;margin-left:53px;" />
+						</div>
+						<div class="FL">
+							<ace:textEntry value="#{form.nonResidentSocialSecurity}"
+								disabled="#{!editable}" styleClass="W120" maxlength="11"
+								id="wvW4NonResidentSsn" style="margin-left:140px;height:12px">
+								<f:converter converterId="lightspeed.SSNConverter" />
+							</ace:textEntry>
+						</div>
+					</div>
+					
+					<!-- Row 2 -->
+					<div class="FL rowCont" style="margin-top:3px; width: 810px;">
+						<div class="FL" style="width: 650px;">
+							<ace:textEntry value="#{form.nonResidentAddress.addrLine1}"
+								disabled="#{!editable}" styleClass="W90percnt" maxlength="60"
+								id="wvW4NonResidentStreetAddr"
+								style="margin-left:65px;height:10px" />
+						</div>
+					</div>
+					<!-- Row 3 -->
+					<div class="FL rowCont" style="margin-top:4px; width: 810px;">
+						<div class="FL" style="width: 270px;margin-left:42px;">
+							<ace:textEntry value="#{form.nonResidentAddress.city}"
+								disabled="#{!editable}" styleClass="W85percnt" maxlength="30"
+								id="wvW4NonResidentCityAddr"
+								style="height:10px" />
+						</div>
+						<div class="FL W100 pad5lt">
+							<h:selectOneMenu styleClass="FL W60 pad5bm"
+								id="wvW4NonResidentStateAddr" value="#{form.nonResidentAddress.state}"
+								style="margin-left:5px; height:18px;" disabled="#{!editable}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateCodeDL['US']}" />
+							</h:selectOneMenu>
+						</div>
+						<div class="FL pad20lt" style="width: 80px;">
+							<ace:textEntry value="#{form.nonResidentAddress.zip}"
+								disabled="#{!editable}" styleClass="W90percnt" maxlength="5"
+								id="wvW4NonResidentZipAddr"
+								style="margin-left:134px;height:10px" />
+						</div>
+					</div>
+					<!-- End of Employee Personal Info - Step 1 section -->
+					<!-- Legal state of resident 2 -->
+					<div class="FL" style="width: 810px;margin-top:9px;">
+						<div class="FL W100" style="margin-left:589px;">
+							<h:selectOneMenu styleClass="FL W60 pad5bm"
+								id="wvW4ResidentState2" value="#{form.certifiedLegalStateOfRes}"
+								style="margin-left:5px; height:18px;" disabled="#{!editable}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateCodeDL['US']}" />
+							</h:selectOneMenu>
+						</div>	
+					</div>
+
+					<!-- Signature Section -->
+					<!-- SIGNATURE VALUE -->
+					<!-- Display the most recent employee signature. LS-2768-->
+					<div class="FL"
+						style="margin-top: 94px; width: 810px;; height: 40px;">
+						<!-- SIGNATURE DATE -->
+						<div class="FL  txt12"
+							style="width: 210px; margin-left: 45px; margin-top: 14px;">
+							<h:panelGroup rendered="#{bean.contactDoc.empSignature ne null and form.showSecondSignature}">
+								<h:outputText styleClass="B" escape="false" />
+								<h:outputText value="#{bean.contactDoc.empSignature.date}">
+									<f:convertDateTime pattern="MM/dd/yyyy"
+										timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</h:panelGroup>
+						</div>
+						<div class="FL pad5lt" style="width: 540px;">
+							<span> <h:panelGroup escape="false"
+									styleClass="txt12" style="width:520;"
+									rendered="#{bean.contactDoc.empSignature ne null and form.showSecondSignature}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}"
+										styleClass="U B txtBlue" />
+									<h:outputText
+										value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br />
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+								</h:panelGroup>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup styleClass="FL"
+								rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend"
+									style="margin-top:15px; margin-right:10px;">
+									<h:panelGroup
+										rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											id="wvW4NonResidentSign"
+											action="#{contactFormBean.actionSecondEmployeeSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt" />
+										<span> <h:commandLink value="Sign &amp; Submit"
+												onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+						<!-- SIGNATURE ROW END -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ui:composition>

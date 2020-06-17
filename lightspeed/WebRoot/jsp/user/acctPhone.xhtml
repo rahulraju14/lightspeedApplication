@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: Phone number section -->
+
+	<!-- PHONE NUMBERS -->
+	<div class="rowCont pad20tp">
+
+		<div class="W100percnt">
+			<span class="B">Phone Numbers:
+				<h:panelGroup
+						rendered="#{(not userViewBean.editMode) and (
+							(not empty userViewBean.user.homePhone     and (userViewBean.user.primaryPhoneIndex eq 2)) or
+							(not empty userViewBean.user.cellPhone     and (userViewBean.user.primaryPhoneIndex eq 1)) or
+							(not empty userViewBean.user.businessPhone and (userViewBean.user.primaryPhoneIndex eq 0))
+						) }">
+					<span> (</span>
+					<span class="pad2tp">
+						<h:graphicImage value="" url="../../i/icon_check.gif" alt=""/>
+					</span>
+					<span class="pad5lt">&#160;-- Primary )</span>
+				</h:panelGroup>
+			</span>
+			<h:outputText rendered="#{userViewBean.editMode}" 
+					styleClass="B txt10" style="margin-left:155px;" value="Primary #" />
+		</div>
+
+		<div class="FL pad20rt pad5tp">
+			<!-- OFFICE PHONE -->
+			<h:panelGroup rendered="#{not showCanada}">
+				<div class="rowxCont LH20 pad20lt">
+					<span class="FL B LH18 W42 pad3lt">
+						<h:outputText value="Office:" />
+					</span>
+					<span class="FL LH20">
+						<h:panelGroup
+								rendered="#{(not userViewBean.editMode) and (not empty authBean.pgFields['0.1,account'])}">
+							<h:outputText styleClass="pad10lt FL W140" value="#{userViewBean.user.businessPhone}">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</h:outputText>
+							<h:panelGroup styleClass="FL pad-2tp" rendered="#{(not empty userViewBean.user.businessPhone) and
+									(userViewBean.user.primaryPhoneIndex eq 0)}">
+								<h:graphicImage value="../../i/icon_check.gif" alt="" />
+							</h:panelGroup>
+						</h:panelGroup>
+	
+						<h:panelGroup
+								rendered="#{userViewBean.editMode}">
+							<ace:textEntry styleClass="FL pad10lt"
+								id="businessPhoneNumber"
+								maxlength="25"
+								value="#{userViewBean.user.businessPhone}">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</ace:textEntry>
+						</h:panelGroup>
+					</span>
+				</div>
+			</h:panelGroup>
+
+			<!-- CELL PHONE -->
+			<div class="LH20 pad20lt pad2tp">
+				<span class="FL B LH18 W42 pad3lt">
+					<h:outputText value="Mobile" />
+				</span>
+				<span class="FL LH20">
+					<h:panelGroup
+						rendered="#{not userViewBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<h:outputText styleClass="pad10lt FL W140" value="#{userViewBean.user.cellPhone}" >
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+						<h:panelGroup styleClass="FL pad-2tp" rendered="#{(not empty userViewBean.user.cellPhone) and
+								(userViewBean.user.primaryPhoneIndex eq 1)}">
+							<h:graphicImage value="" url="../../i/icon_check.gif" alt="" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{userViewBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<ace:textEntry id="cellPhoneNumber" styleClass="FL pad10lt"
+								maxlength="25" value="#{userViewBean.user.cellPhone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</ace:textEntry>
+					</h:panelGroup>
+				</span>
+			</div>
+
+			<!-- HOME PHONE -->
+			<div class="LH20 pad20lt pad2tp pad6bm">
+				<span class="FL B LH18 W42 pad3lt">
+					<h:outputText value="Home:" />
+				</span>
+				<span class="FL LH20">
+					<h:panelGroup
+						rendered="#{not userViewBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<h:outputText styleClass="pad10lt FL W140" value="#{userViewBean.user.homePhone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+						<h:panelGroup styleClass="FL pad-2tp" rendered="#{(not empty userViewBean.user.homePhone) and
+								(userViewBean.user.primaryPhoneIndex eq 2)}">
+							<h:graphicImage value="" url="../../i/icon_check.gif"/>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{userViewBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<ace:textEntry id="homePhoneNumber" styleClass="FL pad10lt"
+								maxlength="25" value="#{userViewBean.user.homePhone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</ace:textEntry>
+					</h:panelGroup>
+				</span>
+			</div>
+		</div>
+
+		<!-- radio buttons to select default phone number -->
+		<div class="FL W25percnt pad5tp">
+			<h:panelGroup rendered="#{userViewBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+				<h:selectOneRadio id="primaryPh" styleClass="h_radio radioTxtLbl"
+						rendered="#{userViewBean.editMode}"
+						value="#{userViewBean.user.primaryPhoneIndex}"
+						layout="pageDirection">
+					<f:selectItems value="#{userViewBean.phoneItems}" />
+				</h:selectOneRadio>	
+			</h:panelGroup>
+		</div>
+
+	</div>
+
+</ui:composition>

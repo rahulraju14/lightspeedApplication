@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Header portion of Pay Breakdown tables (regular and 'Daily') - for Full Timecard page -->
+
+	<!-- parameters:
+					aicp: true if AICP/Commercial production
+	-->
+
+	<ace:columnGroup>
+		<ace:row>
+			<ace:column style="width:#{aicp ? '5%' : '5%'}">&#160;</ace:column>
+			<ace:column style="width:#{aicp ? '14%' : '0%'}" rendered="#{aicp}"></ace:column><!-- JOB # -->
+			<ace:column style="width:#{aicp ? '8%' : '38%'}">
+				<h:outputText rendered="#{not aicp}" value="Account" />
+			</ace:column>
+			<ace:column style="width:#{aicp ? '5%' : '0%'}" rendered="#{aicp}"></ace:column><!-- FREE -->
+			<ace:column style="width:#{aicp ? '24%' : '23%'}"></ace:column>
+			<ace:column style="width:#{aicp ? '9%' : '7%'}"></ace:column>
+			<ace:column style="width:#{aicp ? '8%' : '5%'}"></ace:column>
+			<ace:column style="width:#{aicp ? '12%' : '8%'}"></ace:column>
+			<ace:column style="width:#{aicp ? '15%' : '14%'}"></ace:column>
+		</ace:row>
+		<ace:row>
+			<ace:column style="width:#{aicp ? '5%' : '5%'}"></ace:column>
+			<ace:column style="width:#{aicp ? '14%' : '0%'}" rendered="#{aicp}">
+				<h:outputText value="Job #" />
+			</ace:column>
+			<ace:column style="width:#{aicp ? '8%' : '38%'}">
+				<h:panelGroup rendered="#{not aicp}">
+					<div class="W100percnt">
+						<div class="acLoc acHdr">Loc</div>
+						<div class="acPrd acHdr">Prd/Ep</div>
+						<div class="acDtl acHdr">Detail</div>
+						<div class="acSub acHdr">Sub</div>
+						<div class="acSet acHdr">Set</div>
+						<div class="acFr1 acHdr">F1</div>
+						<div class="acFr acHdr">F2</div>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{aicp}">
+					<h:outputText value="Acct #" />
+				</h:panelGroup>
+			</ace:column>
+			<ace:column style="width:#{aicp ? '5%' : '0%'}" rendered="#{aicp}">FREE</ace:column>
+			<ace:column style="width:#{aicp ? '24%' : '23%'}">Category</ace:column>
+			<ace:column style="width:#{aicp ? '9%' : '7%'}">Hrs/Qty</ace:column>
+			<ace:column style="width:#{aicp ? '8%' : '5%'}">X</ace:column>
+			<ace:column style="width:#{aicp ? '12%' : '8%'}">Rate</ace:column>
+			<ace:column style="width:#{aicp ? '15%' : '14%'}">Amount</ace:column>
+		</ace:row>
+	</ace:columnGroup>
+</ui:composition>

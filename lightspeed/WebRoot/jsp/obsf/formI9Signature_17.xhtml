@@ -1,0 +1,483 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL pad5lt">
+		<!-- Employee's Signature row Start -->
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="rowCont sfFormBorder1" style="min-height:49px; overflow:hidden; width:810px; ">
+
+			<!-- Help Text's Row 5 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '5'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- First block Start-->
+			<div class="W75percnt FL" style="margin-bottom:-3px;">
+				<!-- Signature of Employee field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+
+					<div class="fdNm_w2 pad5lt pad10tp FL" style="width:155px;">
+						<h:outputText styleClass="FL" value="Signature of Employee" />
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="employeeSign-6" tabindex="-1"
+							styleClass="FL pad3lt pad1tp i9InfoIcon"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Signature of Employee - Click for more information">
+						</h:commandButton>
+					</div>
+					<div class="pad8tp" style="margin-left:160px;">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.empSignature ne null}">
+							<h:outputText styleClass="U pad10tp" value="Electronically signed by" />
+							<h:outputText styleClass="U B txtBlue pad10tp" value=" #{formI9Bean.contactDoc.empSignature.name}" />
+							<h:outputText styleClass="pad10tp" value=" #{formI9Bean.contactDoc.empSignature.displayTime}" />
+							<br/>
+							<h:outputText value="# #{formI9Bean.contactDoc.empSignature.uuid}"/>
+						</h:outputText>
+					</div>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend_left pad15tp"
+						rendered="#{(formI9Bean.contactDoc.submitable) or (formI9Bean.contactDoc.status eq 'PENDING')}">
+						<h:panelGroup rendered="#{(formI9Bean.contactDoc.status ne 'PENDING') and (formI9Bean.empEdit or
+									(headerViewBean.user.id eq contactFormBean.contactDocument.contact.user.id))}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign &amp; Submit" id="EMPLOYEE_SIGN_1_17"
+									action="#{contactFormBean.actionSignature}"
+									title="Signature field"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{not (formI9Bean.empEdit or
+									(headerViewBean.user.id eq contactFormBean.contactDocument.contact.user.id))
+									or (formI9Bean.contactDoc.status eq 'PENDING')}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+				</div>
+				<!-- Signature of Employee field END -->
+			</div>
+			<!-- First block End-->
+
+			<!-- Second block-->
+			<div class="W25percnt FR" style="margin-bottom:-4px;">
+				<!-- Employee Signature Date Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad5lt" style="width:160px">
+						 <h:outputText escape="false" value="Today's Date &lt;em&gt;(mm/dd/yyyy)&lt;/em&gt;" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="employeeSignDate-6" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2lt pad3tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Today's Date - Click for more information">
+					</h:commandButton>
+					<h:outputText styleClass="pad5lt" value="#{formI9Bean.contactDoc.empSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Employee Signature Date End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- Help Text's Row 6 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '6'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+		</div>
+		<!-- Employee's Signature row End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="FL BKgrey sfFormBorder1 rowCont" style="min-height:70px; overflow:hidden; width:810px;">
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH3" value="&#160;" />
+			</div> -->
+			<span class="FL pad3tp"><h:outputText styleClass="FL pad5lt txt17" escape="false"
+				value="&lt;strong&gt; Preparer and/or Translator Certification (check one):&lt;/strong&gt;" /></span>
+			<!-- Help Icon/Button -->
+			<h:commandButton value="" id="preparer-7" tabindex="-1"
+				styleClass="FL i9InfoIcon pad3lt pad1tp"
+				actionListener="#{formI9Bean.listenShowHelp}"
+				title="Preparer/Translator - Click for more information">
+			</h:commandButton>
+			 <div class="FL rowCont pad3tp">
+				 <icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+							id="PREPARER_NOT_USED_17"
+							styleClass="iceSelBoolChkbx FL"
+							value="#{formI9Bean.form.preparerNotUsed}"
+							disabled="#{not formI9Bean.prepEdit}"
+							valueChangeListener="#{formI9Bean.listenChangePreparer}">
+						<ace:ajax execute="@form" />
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+				<span class="FL fdNm" style="width:210px; font-weight:normal;"> I did not use a preparer or translator. </span>
+				 <icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+							id="PREPARER_USED_17"
+							styleClass="iceSelBoolChkbx FL pad10lt"
+							value="#{formI9Bean.form.preparerUsed}"
+							disabled="#{not formI9Bean.prepEdit}"
+							valueChangeListener="#{formI9Bean.listenChangePreparer}">
+						<ace:ajax execute="@form" />
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+				<span class="FL fdNm" style="width:445px; font-weight:normal;">
+					A preparer(s) and/or translator(s) assisted the employee in completing Section 1.
+				</span>
+				<h:panelGroup rendered="#{formI9Bean.form.preparerUsed}">
+					<span class="FL fdNm" style="width:66px; font-weight:normal;">
+						How many?
+					</span>
+					<h:selectOneMenu styleClass="FL pad2lt"
+							id="NUMBER_OF_PREPARERS_17"
+							style="width:4%;"
+							disabled="#{not formI9Bean.prepEdit}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							value="#{formI9Bean.form.numberOfPreparers}" >
+						<f:selectItems value="#{formI9Bean.numberOfPreparerList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+
+			<div class="rowCont FL">
+				<h:outputText styleClass="pad5lt" escape="false"
+					value="&lt;em&gt;(Fields below must be completed and signed when preparers and/or
+						translators assist an employee in completing Section 1.)&lt;/em&gt;" />
+			</div>
+
+			<!-- Help Text's Row 7 -->
+			<h:panelGroup styleClass="FL pad4tp rowCont" rendered="#{formI9Bean.helpRow eq '7'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+		</div>
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+			value="I attest, under penalty of perjury, that I have assisted in the completion of Section 1
+				of this form and that to the best of my &lt;/br&gt; knowledge the information is true and correct." />
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+		</div>
+
+		<!-- Attest and signature from Preparer Start-->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp"
+			style="min-height:150px;overflow:hidden;width:810px;">
+
+			<!-- First Row Start -->
+			<!-- first block-->
+			<div class="W77percnt FL" style="margin-bottom:-2px;">
+				<!-- Signature of Preparer field Start -->
+				<div class="rowCont pad5rt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt pad10tp" style="width:210px;">
+						<h:outputText value="Signature of Preparer or Translator:" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="preparerSign-8" tabindex="-1"
+						styleClass="FL i9InfoIcon pad10tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Signature of Preparer or Translator - Click for more information">
+					</h:commandButton>
+					<span>
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.empPrepSignature ne null}">
+							<h:outputText value="Electronically signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.empPrepSignature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.empPrepSignature.displayTime}" />
+							<br/>
+							<h:outputText value="# #{formI9Bean.contactDoc.empPrepSignature.uuid}"/>
+						</h:outputText>
+					</span>
+
+					<!-- Sign Button  -->
+					<h:panelGroup styleClass="btn_legend_left pad22tp">
+						<!-- rendered="#{formI9Bean.prepEdit and formI9Bean.contactDoc.status ne 'PENDING'}" -->
+						<h:panelGroup rendered="#{false}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign" id="EMPLOYEE_SIGN_2_17"
+									action="#{contactFormBean.actionSignature}"
+									title="Signature field"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<!-- rendered="#{(not formI9Bean.prepEdit) or (formI9Bean.contactDoc.status eq 'PENDING')}" -->
+						<h:panelGroup rendered="#{true}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+				</div>
+				<!-- Signature of Preparer field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W22percnt FR" style="margin-bottom:-2px;">
+				<!--Preparer Signature Date Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2" style="width:156px;">
+						<h:outputText escape="false" value="Today's Date &lt;em&gt;(mm/dd/yyyy)&lt;/em&gt;" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="preparerSignDate-8" tabindex="-1"
+						styleClass="FL i9InfoIcon pad3lt pad2tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Today's Date - Click for more information">
+					</h:commandButton>
+					<h:outputText value="#{formI9Bean.contactDoc.empPrepSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Preparer Signature Date End -->
+			</div>
+			<!-- Second block End-->
+			<!-- First Row End -->
+
+			<hr class="rowCont FL pad-1tp"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Help Text's Row 8 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '8'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- Second Row Start -->
+			<div class="rowCont FL">
+
+				<!-- first block Start -->
+				<div class="W50percnt FL">
+					<!-- Preparer Last Name (Family Name) -->
+					<div class="rowCont pad5lt" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2"> <h:outputText escape="false" value="Last Name &lt;em&gt; (Family Name) &lt;/em&gt;" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="preparerLastName-9" tabindex="-1"
+							styleClass="FL i9InfoIcon pad3lt pad2tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Last Name (Family Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:96%;"
+									id="PREPARER_LAST_NAME_17" maxlength="35"
+									value="#{formI9Bean.form.preparerLastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{(not formI9Bean.prepEdit) or
+											(not formI9Bean.form.preparerUsed)}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="W45percnt FL">
+					<!-- Preparer First Name (Given Name) -->
+					<div class="rowCont pad15lt">
+						<span class="fdNm_w2"> <h:outputText escape="false" value="First Name &lt;em&gt; (Given Name) &lt;/em&gt;" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="preparerFirstName-9"
+							styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="First Name (Given Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:100%;"
+									id="PREPARER_FIRST_NAME_17" maxlength="35"
+									value="#{formI9Bean.form.preparerFirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{(not formI9Bean.prepEdit) or
+											(not formI9Bean.form.preparerUsed)}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- Second block End -->
+			</div>
+			<!-- Second Row End -->
+
+			<hr class="rowCont FL"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Help Text's Row 9 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '9'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- Third row Start -->
+			<div class="FL" style="margin-bottom:-3px;">
+				<!-- first block-->
+				<div class="W35percnt FL">
+					<!--Preparer Address field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w2 pad5lt" style="width:214px;">
+							<h:outputText escape="false" value="Address &lt;em&gt; (Street Number And Name) &lt;/em&gt;" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="prep_addr-10" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Address (Street Number And Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:94%;"
+									id="PREP_ADDR_STREET_17" maxlength="35"
+									value="#{formI9Bean.form.preparerAddress.addrLine1}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{(not formI9Bean.prepEdit) or
+											(not formI9Bean.form.preparerUsed)}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Address field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W33percnt FL">
+					<!--Preparer City or Town field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w pad8lt" style="width:78px;">
+							<h:outputText value="City or Town" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="prep_city-10" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="City or Town - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:92%;"
+									id="PREP_ADDR_CITY_17" maxlength="35"
+									value="#{formI9Bean.form.preparerAddress.city}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{(not formI9Bean.prepEdit) or
+											(not formI9Bean.form.preparerUsed)}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- City or Town field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- Third block Start-->
+				<div class="W15percnt FL">
+					<!--Preparer State Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_w pad8lt" style="width:33px"> <h:outputText value="State" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="prep_state-10" tabindex="-1"
+							styleClass="FL i9InfoIcon pad3lt pad1tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="State - Click for more information">
+						</h:commandButton>
+						<h:selectOneMenu id="PREP_ADDR_STATE_17"
+							styleClass="FL W80percnt pad8lt"
+							value="#{formI9Bean.form.preparerAddress.state}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							disabled="#{(not formI9Bean.prepEdit) or
+									(not formI9Bean.form.preparerUsed)}">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+					<!--State End -->
+				</div>
+				<!-- Third block End-->
+
+				<!-- Fourth block Start-->
+				<div class="W15percnt FL">
+					<!--Preparer Zip Code Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm pad8lt" style="width:54px"> <h:outputText value="ZIP Code" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="prep_zip-10" tabindex="-1"
+							styleClass="FL i9InfoIcon pad3lt pad1tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="ZIP Code - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:95%;"
+									id="PREP_ADDR_ZIP_17" maxlength="10"
+									value="#{formI9Bean.form.preparerAddress.zip}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{(not formI9Bean.prepEdit) or
+											(not formI9Bean.form.preparerUsed)}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!--Zip Code End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- Third row End -->
+
+			<!-- Help Text's Row 10 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '10'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+		</div>
+		<!-- Attest and signature from Preparer End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<h:graphicImage value="" style="width:810px;" alt=""
+			rendered="#{formI9Bean.i9Version eq 2}"
+			url="../../i/forms/formI9Footer_17.png">
+		</h:graphicImage>
+		<h:graphicImage value="" style="width:810px;" alt=""
+			rendered="#{formI9Bean.i9Version eq 3}"
+			url="../../i/forms/formI9Footer_1707.png" >
+		</h:graphicImage>
+	</div>
+
+</ui:composition>

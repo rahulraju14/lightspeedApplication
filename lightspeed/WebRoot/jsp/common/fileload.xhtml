@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+
+<!-- A generic file-load prompt dialog -->
+<!-- Currently only used on the Project / Import mini-tab. -->
+<h:form enctype="multipart/form-data">
+	<c:set var="bean" value="#{fileLoadBean}"></c:set>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popup">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+		<div id="popBdy">
+
+			<div id="popErrMsgCont">
+				<h:panelGroup rendered="#{(! empty bean.errorMessage) or
+					((facesContext.maximumSeverity ne null) and (facesContext.maximumSeverity.ordinal ne 0))}">
+					<div class="popErrMsgCont" style="margin-top:12px;">
+						<div class="popErrTitleBar">
+							<h:outputText styleClass="errTitleBarTxt" value="Error" />
+						</div>
+
+						<h:panelGroup rendered="#{empty bean.errorMessage}">
+							<h:messages styleClass="popErrMsgCont" errorClass="RED" infoClass="" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{! empty bean.errorMessage}">
+							<ul><li>
+								<h:outputText styleClass="popErrMsgCont"
+									value="#{bean.errorMessage}" />
+							</li></ul>
+							<!-- this prevents JSF from displaying the default error msg: -->
+							<h:messages style="display:none;" />
+						</h:panelGroup>
+						<ace:linkButton styleClass="errorCloseIcon" title="Close error message" value="X"
+								action="#{fileLoadBean.clearErrorMessage}"
+								onclick="hidePopErrors();">
+						</ace:linkButton>
+ 					</div>
+				</h:panelGroup>
+			</div>
+
+			<div class="popup_main MA pad10tp">
+				<br /><br /><br />
+				<div class="infoTxt FL pad10tp">
+					<h:outputText escape="false" value="#{bean.message}" />
+				</div>
+				<br /><br />
+				<div class="infoTxt FL pad20tp">
+					<div style="height:45px;">
+						<ace:fileEntry id="load_image" label="Import File"
+							fileEntryListener="#{bean.listenUpload}"
+							relativePath="upload"
+							maxFileSize="6291456"
+							required="true"
+							requiredMessage="Please select a file before clicking the ''Import File'' button."
+							useOriginalFilename="true" >
+						</ace:fileEntry>
+					</div>
+					<h:commandButton value="Import File" styleClass="btn" onclick="showPopErrors();" />
+				</div>
+			</div>
+
+			<div class="popBtnCont" style="position:relative;top:125px;">
+				<span class="FR pad10rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<h:commandLink value="Cancel" immediate="true"
+							action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

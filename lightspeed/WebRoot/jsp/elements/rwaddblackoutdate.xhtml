@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+<h:form>
+	<ace:dialog visible="#{realElementBean.showBlackout}"
+			header="Add Blackout Dates"
+			closable="true"
+			draggable="false"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{realElementBean.actionCancelBlackout}"/>
+
+				<div id="popBdy">
+
+					<div id="errMsgCont" class="CT rowCont FL"
+						style="margin-top:19px;margin-left:10px">
+						<ui:include src="../common/errorsPopup.xhtml" />
+					</div>
+
+					<div class="popup_main">
+						<div class="stdTxt padPop20tp">
+							<span class="infoTxt"> Add blackout dates for <h:outputText
+									value=" #{realElementBean.realElement.name}" />
+							</span>
+						</div>
+
+						<span class="FL poprowCont padPop15tp padPop30lt"> <h:panelGroup
+								styleClass="FL pad5tp W90">Start date:&#160;</h:panelGroup> <ace:dateTimeEntry
+								id="StartDate" required="true" tabindex="0"
+								value="#{realElementBean.blackoutStartDate}"
+								renderAsPopup="true">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</span> <span class="FL poprowCont padPop15tp padPop30lt"> <h:panelGroup
+								styleClass="FL pad5tp W90">End date:&#160;</h:panelGroup> <ace:dateTimeEntry
+								id="EndDate" required="true" tabindex="0"
+								value="#{realElementBean.blackoutEndDate}" renderAsPopup="true">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</span> <span class="FL poprowCont padPop20tp padPop30lt"> <h:panelGroup
+								styleClass="FL pad5tp W50">Reason:&#160;</h:panelGroup> <ace:textEntry
+								maxlength="1000" size="65"
+								value="#{realElementBean.blackoutReason}" />
+						</span>
+
+					</div>
+
+					<div class="FL popBtnCont T120">
+						<span class="FR padPop25rt"> <span class="btnPriEnbLt" />
+							<span> <ace:linkButton value="Close"
+									action="#{realElementBean.actionCancelBlackout}"
+									styleClass="btnPriEnbCt" />
+						</span> <span class="btnPriEnbRt" />
+						</span> <span class="FR pad5rt"> <span class="btnSecHotLt" /> <span>
+								<ace:linkButton value="Save"
+									action="#{realElementBean.actionSaveBlackout}"
+									styleClass="btnSecHotCt" />
+						</span> <span class="btnSecHotRt" />
+						</span>
+					</div>
+				</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

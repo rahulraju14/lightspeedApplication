@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Second Bank Account Information -->
+
+	<c:set var="second" value="#{formDepositBean.form.secondBank and formDepositBean.empEdit}" />
+	<c:set var="secondInit" value="#{formDepositBean.form.secondBank and contactFormBean.editAuth}" />
+
+	<div class="BKwhite" style="width:820px;">
+
+		<div class="rowCont FL pad18tp">
+			<span class="W40percnt pad15lt FL">
+				<h:outputText styleClass="FL B U I txt13" value="Second Bank Account Information (optional):" />
+			</span>
+			<span class="W40percnt">
+				<h:outputText styleClass="FL pad25lt" value="Initial here to authorize:" />
+			</span>
+			<!-- Initial Button  -->
+			<h:panelGroup styleClass="btn_legend_left pad8tp" style="float:left;"
+					rendered="#{formDepositBean.form.bankInitial2 eq null}">
+				<h:panelGroup rendered="#{secondInit}">
+					<span class="btnMiniLtHot" />
+					<ace:linkButton value="Initial"
+						styleClass="btnMiniCt"
+						action="#{formDepositBean.actionInitial}">
+						<f:setPropertyActionListener target="#{formDepositBean.initial}" value="#{false}" />
+					</ace:linkButton>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not secondInit}">
+					<span class="btnMiniLt"/>
+					<span>
+						<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					</span>
+					<span class="btnMiniRt"/>
+				</h:panelGroup>
+			</h:panelGroup>
+			<span class="pad5lt">
+				<h:outputText escape="false" styleClass="txt12" rendered="#{formDepositBean.form.bankInitial2 ne null}">
+					<h:outputText value=" #{formDepositBean.form.bankInitial2.initials}" styleClass="B txtBlue" />
+				</h:outputText>
+			</span>
+			<!-- Initial Button End -->
+		</div>
+
+		<div class="rowCont FL pad6tp"><!-- LS-3477: add percent/amount radio buttons and field -->
+			<h:selectOneRadio id="secondAmountPercent" styleClass="h_radio_np pad6lt B FL"
+					disabled="#{(not second)}"
+					value="#{formDepositBean.form.bankPercent2}"
+					layout="lineDirection">
+				<f:selectItem itemLabel="Amount or" itemValue="#{false}" />
+				<f:selectItem itemLabel="Percent" itemValue="#{true}" />
+				<ace:ajax />
+			</h:selectOneRadio>
+			<span class="B pad2lt">
+				<h:outputText styleClass="FL" value="to deduct from wages &amp; deposit to this account each pay period:" />
+			</span>
+			<ace:textEntry styleClass="pad5lt W90" disabled="#{not second}" style="margin-top:-6px;"
+					maxlength="11" value="#{formDepositBean.form.bankAmount2}">
+				<f:convertNumber pattern="#{formDepositBean.form.bankPercent2 ? '#0.#' : '#,##0.00#'}" />
+				<ace:ajax />
+			</ace:textEntry>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- ACCOUNT NAME 2 -->
+			<div class="W40percnt FL pad15lt">
+				<span class="fdNm" style="width:100px;">
+					<h:outputText styleClass="FL" value="Account Name:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" styleClass="FL" style="width:60%"
+							value="#{formDepositBean.form.accountName2}"
+							disabled="#{not second}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ACCOUNT TYPE 2 -->
+			<div class="FL" style="width:29%">
+				<span>
+					<h:outputText styleClass="FL B pad5lt pad3tp" value="TYPE:" />
+				</span>
+				<span class="FL pad1tp pad5lt #{second and (formDepositBean.form.accountType2 eq null) ? 'requiredDiv' : ''}">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:buttonGroup id="accountType2" mutuallyExclusive="true"
+						layout="lineDirection" styleClass="pad-1tp">
+						<span class="FL I">
+							<ace:radioButton group="accountType1" id="CHK2"
+								label="CHECKING" labelPosition="right"
+								value="#{formDepositBean.secondAcctType[0]}"
+								valueChangeListener="#{formDepositBean.listenSecondAccountType}"
+								disabled="#{not second}">
+								<ace:ajax execute="accountType2" event="activate" render="accountType2"/>
+							</ace:radioButton>
+						</span>
+						<span class="pad5lt FL I">
+							<ace:radioButton group="accountType2" id="SAV2"
+								label="SAVINGS" labelPosition="right"
+								disabled="#{not second}"
+								value="#{formDepositBean.secondAcctType[1]}"
+								valueChangeListener="#{formDepositBean.listenSecondAccountType}">
+								<ace:ajax execute="accountType2" event="activate" render="accountType2"/>
+							</ace:radioButton>
+						</span>
+					</ace:buttonGroup>
+				</icecore:setEventPhase>
+				</span>
+			</div>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- ACCOUNT NUMBER 2 -->
+			<div class="W35percnt FL pad15lt">
+				<span class="fdNm" style="width:101px;">
+					<h:outputText styleClass="FL" value="Account Number:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{second and (empty formDepositBean.form.accountNumber2) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="25" styleClass="FL"
+							value="#{formDepositBean.form.accountNumber2}"
+							disabled="#{not second}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ABA ROUTING 2 -->
+			<div class="W31percnt FL">
+				<span  class="fdNm pad10lt" style="width:90px;">
+					<h:outputText styleClass="FL" value="ABA Routing #:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{second and (empty formDepositBean.form.aBARouting2) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="10" styleClass="FL"
+							style="min-width:40%; width:56%;"
+							value="#{formDepositBean.form.aBARouting2}"
+							disabled="#{not second}">
+							<!-- <f:converter converterId="lightspeed.ABARoutingConverter" /> -->
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- BANK NAME 2 -->
+			<div class="W42percnt FL pad15lt">
+				<span class="fdNm" style="width:100px;">
+					<h:outputText styleClass="FL" value="Bank Name:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{second and (empty formDepositBean.form.bankName2) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="50" styleClass="FL" style="width:64%"
+							value="#{formDepositBean.form.bankName2}"
+							disabled="#{not second}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- BANK PHONE 2 -->
+			<div class="W26percnt FL">
+				<span  class="fdNm" style="width:70px;">
+					<h:outputText styleClass="FL" value="Telephone:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="25" styleClass="FL"
+							style="min-width:40%; width:54%;"
+							value="#{formDepositBean.form.bankPhone2}"
+							disabled="#{not second}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<!-- BANK ADDRESS 2 -->
+		<div class="W67percnt FL pad15lt pad5tp">
+			<span  class="fdNm"  style="width:100px;" >
+				<h:outputText styleClass="FL" value="Bank Address:" />
+			</span>
+			<h:panelGroup>
+				<span class="fd_sm2">
+					<ace:textEntry maxlength="100" styleClass="FL" style="width:78%"
+						value="#{formDepositBean.form.bankAddress2}"
+						disabled="#{not second}">
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+	</div>
+</ui:composition>

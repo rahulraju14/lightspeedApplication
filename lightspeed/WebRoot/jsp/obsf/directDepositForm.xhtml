@@ -1,0 +1,337 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="DIRECT DEPOSIT FORM"
+			rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+			<!-- rendered="#{(not empty authBean.pgFields['2.0,write_any'])}" -->
+
+		<c:set var="first" value="#{formDepositBean.form.firstBank}" />
+		<c:set var="second" value="#{formDepositBean.form.secondBank}" />
+		<c:set var="change" value="#{formDepositBean.form.changeAccount}" />
+		<c:set var="stop" value="#{formDepositBean.form.stopDeposit}" />
+
+		<div class="miniTab pad15lt" style="width:840px;">
+			<div class="scrollPnlTab BKwhite sfFormBorder1" >
+				<div class="pad10rt pad10tp" style="width:820px;margin-left:11px;">
+
+					<div class="rowCont FL">
+							<h:outputText style="margin-left:38%" styleClass="FL B pad5tp txt22" value="DIRECT DEPOSIT" />
+					</div>
+					<div class="rowCont FL pad 3tp">
+							<h:outputText style="margin-left:35%" styleClass="FL B pad5tp txt19" value="Set-Up or Change Request" />
+					</div>
+
+					<div class="rowCont FL pad15tp">
+						<span>
+							<h:outputText styleClass="FL B U pad5tp pad15lt" value="PLEASE CHECK:" />
+						</span>
+
+						<!-- Set Up Direct Deposit -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="first"
+									styleClass="iceSelBoolChkbx FL pad20lt"
+									value="#{formDepositBean.form.firstBank}"
+									valueChangeListener="#{formDepositBean.listenChangeDirectDepositType}"
+									disabled="#{not formDepositBean.empEdit}">
+									<!-- disabled="#{change or stop or (not formDepositBean.empEdit)}" -->
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:123px;"> Set Up Direct Deposit </span>
+
+						<!-- Set Up Second Account -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="second"
+									styleClass="iceSelBoolChkbx FL pad30lt"
+									value="#{formDepositBean.form.secondBank}"
+									valueChangeListener="#{formDepositBean.listenChangeDirectDepositType}"
+									disabled="#{not formDepositBean.empEdit}">
+									<!-- disabled="#{change or stop or (not formDepositBean.empEdit)}" -->
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:138px;"> Set Up Second Account </span>
+
+						<!-- Change Account -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="change"
+									styleClass="iceSelBoolChkbx FL pad30lt"
+									value="#{formDepositBean.form.changeAccount}"
+									valueChangeListener="#{formDepositBean.listenChangeDirectDepositType}"
+									disabled="#{not formDepositBean.empEdit}">
+									<!-- disabled="#{first or second or stop or (not formDepositBean.empEdit)}" -->
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:100px;"> Change Account </span>
+
+						<!-- Stop Direct Deposit -->
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox id="stop"
+									styleClass="iceSelBoolChkbx FL pad30lt"
+									value="#{formDepositBean.form.stopDeposit}"
+									valueChangeListener="#{formDepositBean.listenChangeDirectDepositType}"
+									disabled="#{not formDepositBean.empEdit}">
+									<!-- disabled="#{first or second or change or (not formDepositBean.empEdit)}" -->
+								<ace:ajax execute="@form" />
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:120px;"> Stop Direct Deposit </span>
+					</div>
+
+					<div class="FL pad15lt">
+					<div class="rowCont FL pad10tp">
+						<!-- EMPLOYEE NAME -->
+						<div class="W53percnt FL">
+							<span class="fdNm" style="width:100px;">
+								<h:outputText styleClass="FL" value="Employee Name:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formDepositBean.form.employeeName) ? 'requiredField' : ''}">
+									<ace:textEntry maxlength="60" id="EmployeeName" styleClass="FL" style="width:73%"
+										value="#{formDepositBean.form.employeeName}"
+										valueChangeListener="#{formDepositBean.listenChangeDirectDepositType}"
+										disabled="#{not formDepositBean.empEdit}">
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- CLIENT NAME -->
+						<div class="W47percnt FL">
+							<span  class="fdNm pad15lt" style="width:40px;">
+								<h:outputText styleClass="FL" value="Client:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="60" id="ClientName" styleClass="FL" style="width:73%"
+										value="#{formDepositBean.form.clientName}"
+										disabled="#{not formDepositBean.empEdit}">
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div class="rowCont FL pad5tp">
+						<!-- SOCIAL SECURITY NUMBER -->
+						<div class="W47percnt FL">
+							<span  class="fdNm_w" style="width:140px;" >
+								<h:outputText styleClass="FL" value="Social Security Number:" />
+							</span>
+							<h:panelGroup rendered="#{not formDepositBean.empEdit}">
+								<span class="fd_sm2 #{empty (formDepositBean.form.socialSecurity) ? 'requiredField' : ''}">
+									<ace:textEntry value="#{formDepositBean.form.viewSSN}" disabled="true"/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{formDepositBean.empEdit}">
+								<span class="fd_sm2 #{empty (formDepositBean.form.socialSecurity) ? 'requiredField' : ''}">
+									<ace:textEntry maxlength="11" id="SocialSecurityDD"
+										value="#{formDepositBean.form.socialSecurity}">
+										<f:converter converterId="lightspeed.SSNConverter" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- TELEPHONE -->
+						<div class="W52percnt FL">
+							<span class="fdNm pad10lt" style="width:65px;">
+								<h:outputText styleClass="FL" value="Telephone:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="25" id="EmployeePhone" styleClass="FL" style="width:73%"
+										value="#{formDepositBean.form.employeePhone}"
+										disabled="#{not formDepositBean.empEdit}">
+										<f:converter converterId="lightspeed.PhoneNumberConverter" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- LOAN-OUT NAME and associated FEIN -->
+					<div class="rowCont FL pad5tp">
+						<div class="W47percnt FL">
+							<span class="fdNm" style="width:172px;">
+								<h:outputText styleClass="FL" value="if Applicable, Loan-out Name:" />
+							</span>
+							<h:panelGroup>
+								<span>
+									<ace:textEntry maxlength="25" id="LoanOutName" styleClass="FL" style="width:51%"
+										value="#{formDepositBean.form.loanOutName}"
+										disabled="#{not formDepositBean.empEdit}">
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+						<div class="W52percnt FL">
+							<span class="fdNm pad40lt" style="width:34px;">
+								<h:outputText styleClass="FL" value="FEIN:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="25" id="DDFEIN" styleClass="FL" style="width:73%"
+										value="#{formDepositBean.form.fein}"
+										disabled="#{not formDepositBean.empEdit}">
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>					
+
+					<!-- EMAIL ADDRESS -->
+					<div class="rowCont FL pad5tp">
+						<span  class="fdNm"  style="width:90px;" >
+							<h:outputText styleClass="FL" value="Email Address:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="100" id="EmailAddress" styleClass="FL" style="width:83%"
+									value="#{formDepositBean.form.emailAddress}"
+									disabled="#{not formDepositBean.empEdit}">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:outputText styleClass="FL I" style="margin-left:100px;"
+							value="Your check stub will be sent to you electronically at the email address that you provide above."/>
+					</div>
+					</div>
+
+					<!-- CONFIRM REQUEST -->
+					<div class="rowCont FL pad10tp">
+						<span class="FL fdNm pad15lt" style="width:750px">
+							<h:outputText styleClass="FL B I txt13"
+								value="My signature below confirms my request to have my wages direct deposited to the account(s) that I have indicated
+										below. By requesting Direct Deposit, I am also agreeing to receive my check stub via email."/>
+						</span>
+					</div>
+
+					<!-- EMPLOYEE SIGNATURE START -->
+					<!-- SIGNATURE LABEL -->
+					<div class="W15percnt FL pad15lt pad25tp" style="height: 27px;">
+						<h:outputText styleClass="txt12 fdNm_w" value="Employee Signature:"/>
+					</div>
+
+					<!-- SIGNATURE VALUE -->
+					<div class="W48percnt FL pad15tp pad5lt" style="height: 27px; border-bottom: solid 1px;" >
+						<div class="rowCont">
+							<!-- Sign Button  -->
+							<h:panelGroup rendered="#{(formDepositBean.contactDoc.submitable) or (formDepositBean.contactDoc.status eq 'PENDING')}">
+
+								<h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;">
+									<h:panelGroup rendered="#{(formDepositBean.contactDoc.status ne 'PENDING') and (first or second or change)
+										and (formDepositBean.empEdit or (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{not (formDepositBean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (formDepositBean.contactDoc.status eq 'PENDING')
+											or (not (first or second or change))}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</h:panelGroup>
+							<!-- Sign Button End -->
+							<span>
+								<h:outputText escape="false" styleClass="txt12"
+									rendered="#{(formDepositBean.contactDoc.empSignature ne null) and (! stop)}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{formDepositBean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{formDepositBean.contactDoc.empSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{formDepositBean.contactDoc.empSignature.uuid}"/>
+								</h:outputText>
+							</span>
+						</div>
+					</div>
+
+					<!-- SIGNATURE DATE -->
+					<div class="W30percnt FL pad10lt pad30tp">
+						<h:outputText styleClass="B txt12" value="Date: "/>
+						<h:outputText value="#{formDepositBean.contactDoc.empSignature.date}" 
+							rendered="#{(formDepositBean.contactDoc.empSignature ne null) and (! stop)}">
+							<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+						</h:outputText>
+					</div>
+					<!-- EMPLOYEE SIGNATURE END -->
+
+					<div class="rowCont FL pad10tp">
+						<div class="FL pad15lt" style="width:430px;">
+							<span>
+								<h:outputText styleClass="FL B U pad5tp txt13" value="PLEASE ATTACH:" />
+							</span>
+							<h:outputText styleClass="FL pad10lt B" escape="false"
+									value="&amp;#9679; FOR CHECKING ACCOUNT, A VOIDED CHECK" />
+							<h:outputText styleClass="FL pad10lt B" escape="false"
+									value="&amp;#9679; FOR SAVINGS ACCOUNT, A DEPOSIT SLIP" />
+						</div>
+					</div>
+					<div class="rowCont FL pad5tp">
+						<span>
+							<h:outputText styleClass="FL B U pad5tp txt13 pad30lt" value="PLEASE NOTE:" />
+						</span>
+						<h:outputText styleClass="FL pad10lt B" escape="false"
+								value="&amp;#9679; Direct Deposit is NOT available to Money Market or Cash Management Accounts." />
+						<h:outputText styleClass="FL pad10lt B" escape="false"
+								value="&amp;#9679; If no Direct Deposit activity with TEAM for 6 months, please resubmit this form to reactivate." />
+					</div>
+
+					<!-- HORIZONTAL RULE -->
+					<div class="W97percnt FL pad5tp pad10lt" style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:3px;" />
+					</div>
+
+					<!-- Current Account details -->
+					<ui:include src="depositCurrentAcctInfo.xhtml"></ui:include>
+
+					<!-- Second Account details -->
+					<ui:include src="depositSecondAcctInfo.xhtml"></ui:include>
+
+					<!-- Change Account details -->
+					<ui:include src="depositChangeAcctInfo.xhtml"></ui:include>
+
+					<!-- HORIZONTAL RULE -->
+					<div class="W97percnt FL pad5tp pad10lt " style="height:12px;">
+						<hr style="height:4px;background:black;border:0;margin-top:3px;" />
+					</div>
+
+					<!-- Stop Account details -->
+					<ui:include src="depositStopInfo.xhtml"></ui:include>
+
+				</div> <!-- 820px form -->
+			</div> <!-- scrolldiv2 -->
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formDepositBean}" />
+						<ui:param name="events" value="#{formDepositBean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

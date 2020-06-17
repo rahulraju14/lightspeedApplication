@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="upm" pageWidth="135" pageHeight="20" columnWidth="135" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6fd0aa4a-1f93-44b5-ab3d-3cb068703b83">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="tag" markup="styled" fontName="Arial" pdfFontName="Times-Roman"/>
+	<parameter name="callsheetId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[188]]></defaultValueExpression>
+	</parameter>
+	<parameter name="section" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[21]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select cn.*
+	from call_note cn
+	where cn.callsheet_id = $P{callsheetId}
+	and cn.section = $P{section}
+	order by line_number;]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Section" class="java.lang.Integer"/>
+	<field name="Heading" class="java.lang.String"/>
+	<field name="Line_Number" class="java.lang.Integer"/>
+	<field name="Body" class="java.lang.String"/>
+	<field name="Callsheet_Id" class="java.lang.Integer"/>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b8ac9980-be68-4844-9041-f7a9c1b6b85c" key="textField" style="tag" stretchType="RelativeToBandHeight" x="0" y="0" width="135" height="20" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="8" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Body}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

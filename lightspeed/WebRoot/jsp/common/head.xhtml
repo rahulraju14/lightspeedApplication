@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<!-- include Google Tag Manager - Global site tag (gtag.js) - for Google Analytics -->
+<ui:include src="../common/tagmanager.xhtml" />
+
+<!-- Include standard (compressed) CSS file from resources folder -->
+<h:outputStylesheet name="global.css?v=#{applicationScopeBean.version}"  />
+
+<!-- Optionally include mobile-only compressed CSS file -->
+<h:outputStylesheet name="global_m.css?v=#{applicationScopeBean.version}" rendered="#{headerViewBean.mobile}" /> 
+
+<!-- Include standard (compressed) JS file from resources folder -->
+<h:outputScript name="script.js?v=#{applicationScopeBean.version}" />
+
+<!-- Include freshWidget JS, for Support popup. LS-4415 -->
+<h:outputScript name="freshwidget.js?v=#{applicationScopeBean.version}" />
+
+<script type="text/javascript">
+/* 'Support' button is placed off-screen (-1500px) to render it 'invisible' for TTCO. LS-4415. Add search window - LS-4743. */
+FreshWidget.init("", {"queryString": "&amp;widgetType=popup", "utf8": "✓", "widgetType": "popup",
+		"buttonType": "text", "buttonText": "Support", "buttonColor": "white", "buttonBg": "#092e6e", "alignment": "4",
+		"offset": "-1500px", "formHeight": "500px", "url": "https://help.ttconline.com"} );
+</script>
+
+</ui:composition>

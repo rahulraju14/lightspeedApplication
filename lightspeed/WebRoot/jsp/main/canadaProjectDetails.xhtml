@@ -1,0 +1,868 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<!-- This is the right-hand area of "Section A" of the ACTRA Contract form,
+		which includes all of the session information, and signatures.
+		
+		Params:
+			bean: the backing bean for the current form (e.g., projectViewBean)
+			editable: the projectViewBean editMode
+			cpd: projectViewBean.project.canadaProjectDetail
+	-->
+	<div>
+		<div style="width:745px;">
+		
+		<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" /> 
+		
+			<div class="FL">
+
+				<!-- Header section -->
+				<!-- Begin Agency/Employee Info Section -->
+				<div class="rowCont"></div>
+
+				<h:panelGrid columns="2" styleClass="txt11 actraPanel">
+					<!-- Row 1 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency -->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Agency:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyName}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdAgencyName" maxlength="150" styleClass="pad5lt FL W225 pad2tp" value="#{cpd.agencyName}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<h:panelGroup styleClass="FL B W110 pad5tp" layout="block">
+							<h:outputText value="Production House:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W185" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseName}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdProdHouseName" maxlength="150" styleClass="pad5lt FL W215 pad2tp" value="#{cpd.prodHouseName}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<!-- Row 2 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency Producer -->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Agency Producer:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyProducer}"/>
+							</h:panelGroup>
+							<ace:textEntry  id="cpdAgencyProducer" maxlength="100" styleClass="pad5lt FL W225 pad2tp" value="#{cpd.agencyProducer}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>	
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Director -->
+						<h:panelGroup styleClass="FL B W110 pad5tp" layout="block">
+							<h:outputText value="Director:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W185" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.directorName}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdDirectorName" maxlength="100" styleClass="pad5lt FL W215 pad2tp" value="#{cpd.directorName}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<!-- Row 3 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency Address Line 1-->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Agency Address:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyAddress.addrLine1}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdAgencyAddress" maxlength="100" styleClass="pad5lt FL W225 pad2tp" 
+								value="#{cpd.agencyAddress.addrLine1}"
+								rendered="#{editable}"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Production House Address Line 1-->
+						<h:panelGroup styleClass="FL B W115 pad5tp" layout="block">
+							<h:outputText value="Production Address:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W180" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseAddress.addrLine1}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdProdHouseAddress" maxlength="100" styleClass="FL W215 pad2tp" 
+								value="#{cpd.prodHouseAddress.addrLine1}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<!-- Row 4 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency Address City-->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="City:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyAddress.city}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdAgencyAddressCity" maxlength="50" styleClass="pad5lt FL W225 pad2tp" 
+								value="#{cpd.agencyAddress.city}"
+								rendered="#{editable}" />
+						</h:panelGroup>			
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Production House Address City-->
+						<h:panelGroup styleClass="FL B W115 pad5tp" layout="block">
+							<h:outputText value="City:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W180" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+							<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseAddress.city}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdProdHouseAddressCity" maxlength="50" styleClass="pad5lt FL W215 pad2tp" 
+								value="#{cpd.prodHouseAddress.city}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<!-- Row 5 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency Address Province-->
+						<h:panelGroup styleClass="FL B W50 pad5tp">
+							<h:outputText value="Province:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W80" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyAddress.state}" style="width: 84%;"/>
+							</h:panelGroup>
+							<h:selectOneMenu id="cpdAgencyAddressState" styleClass="state pad2lt pad2tp" value="#{cpd.agencyAddress.state}"
+								rendered="#{editable}" style="width:75px;">
+								<f:selectItems value="#{bean.agencyStateProvinceList}" />
+							</h:selectOneMenu>
+						</h:panelGroup>					
+						<!-- Agency Address Postal Code-->
+						<h:panelGroup styleClass="pad2lt FL B W70 pad5tp">
+							<h:outputText value="Postal Code:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W70" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyAddress.zip}" style="width: 100%;"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdAgencyAddresszip" maxlength="10" styleClass="pad5lt FL W75 pad2tp" 
+								value="#{cpd.agencyAddress.zip}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Production Home Province-->
+						<h:panelGroup styleClass="FL B W50 pad5tp">
+							<h:outputText value="Province:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W80" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+							<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseAddress.state}" style="width: 84%;"/>
+							</h:panelGroup>
+							<h:selectOneMenu id="cpdProdHouseAddressState" styleClass="state pad2lt pad2tp" value="#{cpd.prodHouseAddress.state}"
+								rendered="#{editable}" style="width:75px;">
+								<f:selectItems value="#{bean.prodStateProvinceList}" /> 
+							</h:selectOneMenu>
+						</h:panelGroup>					
+						<!-- Production Home Postal Code-->
+						<h:panelGroup styleClass="pad2lt FL B W70 pad5tp">
+							<h:outputText value="Postal Code:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W70" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseAddress.zip}" style="width: 100%;"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdProdHouseAddresszip" maxlength="10" styleClass="pad5lt FL W75 pad2tp" 
+								value="#{cpd.prodHouseAddress.zip}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					
+					<!-- Row 6 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Agency Address Country-->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Country:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W200percnt" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.agencyAddress.country}"/>
+							</h:panelGroup>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu id="cpdAgencyAddressCountry" styleClass="country pad2lt pad2tp" rendered="#{editable}"
+									style="width: 190px;" valueChangeListener="#{projectViewBean.listenCountryChange}"
+											value="#{cpd.agencyAddress.country}">
+									<f:selectItems value="#{applicationScopeBean.countryDL}" /> 
+									<ace:ajax/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</h:panelGroup>			
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Production House Address Country-->
+						<h:panelGroup styleClass="FL B W115 pad5tp" layout="block">
+							<h:outputText value="Country:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W180" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.prodHouseAddress.country}"/>
+							</h:panelGroup>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu id="cpdProdHouseAddressCountry" styleClass="country pad2lt pad2tp" rendered="#{editable}"
+									style="width: 198px;" valueChangeListener="#{projectViewBean.listenCountryChange}"
+											value="#{cpd.prodHouseAddress.country}">
+									<f:selectItems value="#{applicationScopeBean.countryDL}" /> 
+									<ace:ajax/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</h:panelGroup>							
+					</h:panelGroup>	
+					<!-- Row 7 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Sponsor-->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Sponsor:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.advertiserName}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdAdvertiserName" maxlength="100" styleClass="pad5lt FL W225 pad2tp" 
+								value="#{cpd.advertiserName}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>		
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Brand-->
+						<h:panelGroup styleClass="FL B W115 pad5tp" layout="block">
+							<h:outputText value="Brand:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W180" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.brandName}"/>
+							</h:panelGroup>
+							<ace:textEntry id="cpdBrandName" maxlength="150" styleClass="pad5lt FL W215 pad2tp" 
+								value="#{cpd.brandName}"
+								rendered="#{editable}"	/>
+						</h:panelGroup>				
+					</h:panelGroup>
+					<!-- Row 8 -->
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+						<!-- Branch Code -->
+						<h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+							<h:outputText value="Branch Code:"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+							<h:panelGroup styleClass="pad5tp" rendered="#{not editable}" layout="block">
+								<ace:textEntry disabled="#{not editable}" value="#{cpd.office.branchCode}"/>
+							</h:panelGroup>
+							<!-- No Longer used
+							<ace:textEntry id="cpdBranchCode" maxlength="20" styleClass="pad5lt FL W50 pad2tp" value="#{cpd.branchCode}"
+								rendered="#{editable}"	/> -->
+								<!-- LS-2194 Branch code droptown for project details and Actra contract -->
+							<span class="FL">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectOneMenu id="officeList" rendered="#{editable}"
+										styleClass="W86 pad10lt" value="#{cpd.office}"
+										valueChangeListener="#{projectViewBean.listenOfficeListChange}">
+										<f:selectItems value="#{bean.officeListDL}" />
+										<f:converter converterId="lightspeed.OfficeConverter" />
+										<ace:ajax execute="@form"/>
+									</h:selectOneMenu>
+								</icecore:setEventPhase>
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+		
+					</h:panelGroup>				
+				</h:panelGrid>
+				
+				<div class="rowCont"></div>		
+				
+				<h:panelGrid columns="1" styleClass="txt10 actraPanel">
+					<!-- ROW 1 -->
+					<h:panelGroup layout="block">
+						<h:panelGroup styleClass="FL" style="width:422px;" layout="block">
+							<h:panelGroup styleClass="FL" style="border-style:none solid none none;border-color:#000;border-width:1px;height:44px;" 
+								layout="block">
+								<h:panelGroup styleClass="FL txt11 W125" layout="block">
+									<h:panelGroup styleClass="FL B pad2tp">
+										<h:outputText value="NATIONAL-NUMBER OF" styleClass="txt11"/>
+									</h:panelGroup>
+									<h:panelGroup styleClass="FL B pad5tp">
+										<h:outputText value="COMMERCIALS" styleClass="txt11"/>
+									</h:panelGroup>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad10lt pad10tp W40" layout="block">
+									<h:outputText styleClass="B" value="TV" />
+									<h:panelGroup styleClass="pad4lt">
+										<ace:textEntry id="cpdNationalTv" maxlength="15" disabled="#{not editable}" styleClass="LT txt10 W15" value="#{cpd.nationalTv}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.nationalTv}" />
+									</h:panelGroup>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad10tp pad5lt W60" layout="block">
+									<h:outputText value="RADIO" styleClass="B" />
+									<h:panelGroup styleClass="pad4lt">
+										<ace:textEntry id="cpdNationalRadio" maxlength="15" disabled="#{not editable}" styleClass="LT txt10 W15" value="#{cpd.nationalRadio}"/>
+										<h:outputText rendered="#{false}"  value="#{cpd.nationalRadio}" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad20lt W150" layout="block">
+									<h:outputText value="DIGITAL MEDIA-VIDEO" styleClass="B"/>
+									<h:panelGroup styleClass="pad5lt">
+										<ace:textEntry id="cpdNationalDigitalMediaVideo" maxlength="15" disabled="#{not editable}" styleClass="LT pad2bm txt10 W15" value="#{cpd.nationalDigitalMediaVideo}"/>
+										<h:outputText rendered="#{false}"  value="#{cpd.nationalDigitalMediaVideo}" />
+									</h:panelGroup>
+									<h:panelGroup styleClass="pad2tp pad2bm" layout="block">
+										<h:outputText value="DIGITAL MEDIA-AUDIO" styleClass="B" />
+										<h:panelGroup styleClass="pad5lt">
+											<ace:textEntry id="cpdNationalDigitalMediaAudio" maxlength="15" disabled="#{not editable}" styleClass="LT txt10 W15" value="#{cpd.nationalDigitalMediaAudio}"/>
+											<h:outputText rendered="#{false}" value="#{cpd.nationalDigitalMediaAudio}" />
+										</h:panelGroup>	
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>	
+							
+							<!-- HORIZONTAL RULE -->
+							<hr class="FL" style="height:1px;background:black;border:0;margin-top:-1px;margin-left:-5px;width:415px" />
+							
+							<h:panelGroup styleClass="FL" layout="block"
+								 style="width:410px;border-style:none solid none none;border-color:#000;border-width:1px;margin-top:-5px;height:39px;" >
+								<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+									<h:outputText value="DEMO" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp W35 CT" layout="block">
+									<h:outputText styleClass="FL pad-3lt B" value="TV" />
+									<h:panelGroup styleClass="FL pad5tp pad3lt">
+										<ace:textEntry id="cpdDemoTv" maxlength="15" disabled="#{not editable}" styleClass="LT txt10" style="width:15px;" value="#{cpd.demoTv}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.demoTv}" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp W45 CT" layout="block">
+									<h:outputText value="RADIO" styleClass="B" />
+									<h:panelGroup styleClass="FL pad5tp pad10lt">
+										<ace:textEntry id="cpdDemoRadio" maxlength="15" disabled="#{not editable}" styleClass="LT txt10" style="width:15px;" value="#{cpd.demoRadio}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.demoRadio}" />
+									</h:panelGroup>
+								</h:panelGroup>		
+								<h:panelGroup styleClass="FL pad5tp W50 CT" layout="block">
+									<h:outputText value="DIGITAL" styleClass="B"/>
+									<h:panelGroup styleClass="FL pad5tp pad10lt">
+										<ace:textEntry id="cpdDemoDigital" maxlength="15" disabled="#{not editable}" styleClass="LT txt10" style="width:15px;" value="#{cpd.demoDigital}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.demoDigital}" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp W125 CT" layout="block">
+									<h:outputText value="PRESENTATION DEMO" styleClass="B" />
+									<h:panelGroup styleClass="FL pad5tp pad50lt">
+										<ace:textEntry id="cpdDemoPresentation" maxlength="15" disabled="#{not editable}" styleClass="LT txt10" style="width:15px;" value="#{cpd.demoPresentation}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.demoPresentation}" />
+									</h:panelGroup>
+								</h:panelGroup>								
+								<h:panelGroup styleClass="FL pad5tp pad10lt W80 CT" layout="block">
+									<h:outputText value="INFOMERCIAL" styleClass="B" />
+									<h:panelGroup styleClass="FL pad5tp pad30lt">
+										<ace:textEntry id="cpdDemoInfomercial" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" value="#{cpd.demoInfomercial}"/>
+										<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.demoInfomercial}" />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</h:panelGroup>							
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL" layout="block" style="width:285px;">
+							<h:panelGroup styleClass="FL RT W100 pad3lt pad20tp" layout="block">
+								<h:panelGroup styleClass="RT">
+									<h:outputText value="TAGS" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="pad15tp LT" layout="block" style="width:200px">
+									<h:panelGroup styleClass="LT" style="width:200px">
+										<h:outputText value="REGIONAL CHANGES" styleClass="B" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup styleClass="pad10tp" layout="block">
+									<h:panelGroup styleClass="RT">
+										<h:outputText value="PSA" styleClass="B"/>
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>	
+						
+							<h:panelGroup styleClass="FL CT pad2tp W25 pad10lt" layout="block">
+								<h:panelGroup>
+									<h:outputText value="TV" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad2bm">
+									<ace:textEntry id="cpdTagsTv" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.tagsTv}"/>
+									<h:outputText rendered="#{false}" value="#{cpd.tagsTv}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad2bm">
+									<ace:textEntry id="cpdRegionalChangesTv" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.regionalChangesTv}"/>
+									<h:outputText rendered="#{false}" value="#{cpd.regionalChangesTv}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad2bm">
+									<ace:textEntry id="cpdPsaTv" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.psaTv}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.psaTv}" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							
+							<h:panelGroup styleClass="FL CT pad2tp W45 pad5lt" layout="block">
+								<h:panelGroup>
+									<h:outputText value="RADIO" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad5tp pad2bm">
+									<ace:textEntry id="cpdTagsRadio" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.tagsRadio}"/>
+									<h:outputText rendered="#{false}" value="#{cpd.tagsRadio}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad2bm">
+									<ace:textEntry id="cpdRegionalChangesRadio" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.regionalChangesRadio}"/>
+									<h:outputText rendered="#{false}" value="#{cpd.regionalChangesRadio}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad2bm">
+									<ace:textEntry id="cpdPsaRadio" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.psaRadio}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.psaRadio}" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL CT pad2tp W85 pad5lt" layout="block">
+								<h:panelGroup>
+									<h:outputText value="DIGITAL MEDIA" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL CT W65">
+									<h:panelGroup styleClass="FL pad10lt pad5tp pad2bm">
+										<ace:textEntry id="cpdTagsDigitalMedia" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.tagsDigitalMedia}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.tagsDigitalMedia}" />
+									</h:panelGroup>
+									<h:panelGroup styleClass="FL pad10lt pad2bm">
+										<ace:textEntry id="cpdRegionalChangesDigitalMedia" maxlength="11" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.regionalChangesDigitalMedia}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.regionalChangesDigitalMedia}" />
+									</h:panelGroup>
+									<h:panelGroup styleClass="FL pad10lt pad2bm">
+										<ace:textEntry id="cpdPsaDigitalMedia" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.psaDigitalMedia}"/>
+										<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.psaDigitalMedia}" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>	
+						</h:panelGroup>	
+					</h:panelGroup>
+					<!-- ROW 2 -->
+					<h:panelGroup layout="block" style="height: 45px;">
+						<h:panelGroup styleClass="FL" layout="block">
+							<h:panelGroup styleClass="FL pad5tp W70" layout="block">
+								<h:outputText value="SEASONAL" styleClass="B" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W35" layout="block">
+							<h:panelGroup styleClass="FL pad5lt">
+								<h:outputText value="TV" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry id="cpdSeasonalTv" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalTv}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalTv}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="RADIO" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad3lt">
+								<ace:textEntry id="cpdSeasonalRadio" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalRadio}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalRadio}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad20lt W50" layout="block">
+							<h:panelGroup styleClass="CT">
+								<h:outputText value="DEALER" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry id="cpdSeasonalDealer" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalDealer}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalDealer}" />
+							</h:panelGroup>		
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad5tp W40" layout="block">
+							<h:panelGroup styleClass="FL pad10lt">
+								<h:outputText value="TV" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry id="cpdSeasonalDealerTv" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalDealerTv}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalDealerTv}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="RADIO" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry id="cpdSeasonalDealerRadio" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalDealerRadio}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalDealerRadio}" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad50lt pad5tp W90" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="DOUBLE SHOOT" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad15lt">
+								<ace:textEntry id="cpdSeasonalDoubleShoot" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalDoubleShoot}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalDoubleShoot}" />
+							</h:panelGroup>		
+						</h:panelGroup>						
+						<h:panelGroup styleClass="FL pad5tp W80 pad50lt" layout="block">
+							<h:panelGroup styleClass="CT">
+								<h:outputText value="JOINT PROMO" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad15lt">
+								<ace:textEntry id="cpdSeasonalJointPromo" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.seasonalJointPromo}"/>
+								<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.seasonalJointPromo}" />
+							</h:panelGroup>
+						</h:panelGroup>	
+					</h:panelGroup>
+					
+					<!-- ROW 3 -->
+					<h:panelGroup layout="block" style="height: 50px;">
+						<h:panelGroup styleClass="FL pad3tp" layout="block">
+							<h:outputText value="#{msg.Form_ActraContract_Text2}" styleClass="txt11" escape="false"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5lt pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad12tp W40" layout="block">
+								<h:panelGroup styleClass="FL pad10lt">
+									<h:outputText value="CAT #" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad5lt">
+									<ace:textEntry id="cpdLocalRegionalCategoryNum" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalCategoryNum}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalCategoryNum}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad12tp W40 pad30lt" layout="block">
+								<h:panelGroup styleClass="FL pad8lt">
+									<h:outputText value="TV" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad3lt">
+									<ace:textEntry id="cpdLocalRegionalTv" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalTv}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalTv}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad12tp W40" layout="block">
+								<h:panelGroup styleClass="CT">
+									<h:outputText value="RADIO" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp">
+									<ace:textEntry id="cpdLocalRegionalRadio" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalRadio}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalRadio}" />
+								</h:panelGroup>		
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad12tp W70" layout="block">
+								<h:panelGroup styleClass="FL pad5lt">
+									<h:outputText value="DIGITAL MEDIA" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad20lt">
+									<ace:textEntry id="cpdLocalRegionalDigitalMedia" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalDigitalMedia}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalDigitalMedia}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad12tp pad10lt W40" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="DEMO" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp">
+									<ace:textEntry id="cpdLocalRegionalDemo" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalDemo}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalDemo}" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad80lt pad2tp W75" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="DIGITAL MEDIA TO TV BROADCAST" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad15lt">
+									<ace:textEntry id="cpdLocalRegionalDigitalMediaBroadcast" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalDigitalMediaBroadcast}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalDigitalMediaBroadcast}" />
+								</h:panelGroup>		
+							</h:panelGroup>						
+							<h:panelGroup styleClass="FL pad2tp W75 pad15lt" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="TV BROADCAST TO DIGITAL MEDIA" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad15lt">
+									<ace:textEntry id="cpdLocalRegionalBroadcastDigitalMedia" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalBroadcastDigitalMedia}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalBroadcastDigitalMedia}" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad12tp pad15lt W30" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="OTHER" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad5lt">
+									<ace:textEntry id="cpdLocalRegionalOther" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalOther}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalOther}" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL W130 pad15lt pad2tp" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText escape="false" value="L&amp;R ACTRAonline OPPORTUNITY PILOT PROJECT" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad25lt">
+									<ace:textEntry id="cpdLocalRegionalPilotProject" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.localRegionalPilotProject}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.localRegionalPilotProject}" />
+								</h:panelGroup>
+							</h:panelGroup>							
+						</h:panelGroup>		
+					</h:panelGroup>
+					
+					<!-- ROW 4 -->
+					<h:panelGroup layout="block" style="height: 45px;">
+						<h:panelGroup styleClass="FL pad3tp" layout="block">
+							<h:outputText value="#{msg.Form_ActraContract_Text3}" styleClass="txt11 B" escape="false" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad3lt pad10tp W40" layout="block">
+								<h:outputText value="TV" styleClass="B"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="7 DAYS" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad2lt pad5tp">
+									<ace:textEntry id="cpdShortLifeTv7Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeTv7Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeTv7Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad7lt W50" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="14 DAYS" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad3lt">
+									<ace:textEntry id="cpdShortLifeTv14Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeTv14Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeTv14Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:panelGroup styleClass="CT">
+									<h:outputText value="31 DAYS" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad3lt pad5tp">
+									<ace:textEntry id="cpdShortLifeTv31Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeTv31Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeTv31Days}" />
+								</h:panelGroup>		
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:panelGroup styleClass="FL pad5lt">
+									<h:outputText value="45 DAYS" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad5lt">
+									<ace:textEntry id="cpdShortLifeTv45Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeTv45Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeTv45Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad10tp W100" layout="block"/>
+							<h:panelGroup styleClass="FL pad10tp pad10lt W40" layout="block">
+								<h:outputText value="RADIO" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp padlt10 W50" layout="block">
+								<h:panelGroup styleClass="FL pad10lt">
+									<h:outputText value="7 DAYS" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad5tp">
+									<ace:textEntry id="cpdShortLifeRadio7Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeRadio7Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeRadio7Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad7lt W50" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="14 DAYS" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad3lt">
+									<ace:textEntry id="cpdShortLifeRadio14Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeRadio14Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeRadio14Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:panelGroup styleClass="CT">
+									<h:outputText value="31 DAYS" styleClass="txt8 B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad3lt pad5tp">
+									<ace:textEntry id="cpdShortLifeRadio31Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeRadio31Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeRadio31Days}" />
+								</h:panelGroup>		
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:panelGroup styleClass="FL pad5lt">
+									<h:outputText value="45 DAYS" styleClass="txt8 B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad5lt">
+									<ace:textEntry id="cpdShortLifeRadio45Days" maxlength="15" disabled="#{not editable}" styleClass="W15 txt10" value="#{cpd.shortLifeRadio45Days}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.shortLifeRadio45Days}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>					
+					</h:panelGroup>
+					
+					<!-- ROW 5 -->
+					<h:panelGroup layout="block" style="height:50px;">
+						<h:panelGroup styleClass="FL pad5tp pad5lt W10" layout="block"/>
+						<h:panelGroup styleClass="FL pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad5tp W115" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="TV BROADCAST TO DIGITAL MEDIA" styleClass="B"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad30lt">
+									<ace:textEntry id="cpdTvBroadcastDigitalMedia" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" 
+										value="#{cpd.tvBroadcastDigitalMedia}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.tvBroadcastDigitalMedia}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>
+							<h:panelGroup styleClass="FL pad5tp W115" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="DIGITAL MEDIA BROADCAST TO TV" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad30lt" >
+									<ace:textEntry id="cpdDigitalMediaBroadcastTv" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" 
+										value="#{cpd.digitalMediaBroadcastTv}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.digitalMediaBroadcastTv}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+							<h:panelGroup styleClass="FL pad5tp W90" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="DIGITAL MEDIA TO OTHER MEDIA" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad30lt">
+									<ace:textEntry id="cpdDigitalMediaOther" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" 
+										value="#{cpd.digitalMediaOther}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.digitalMediaOther}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+							<h:panelGroup styleClass="FL pad5tp W80" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="RADIO TO DIGITAL MEDIA" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad15lt" >
+									<ace:textEntry id="cpdRadioDigitalMedia" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" value="#{cpd.radioDigitalMedia}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.radioDigitalMedia}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							
+							<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+							<h:panelGroup styleClass="FL pad5tp W160 pad10lt" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="ACTRAonline OPPORTUNITY PILOT PROJECT" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad30lt">
+									<ace:textEntry id="cpdActraOnline" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10" style="width:15px;" value="#{cpd.actraOnline}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.actraOnline}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+						</h:panelGroup>	
+					</h:panelGroup>	
+					
+					<!-- ROW 6 -->
+					<h:panelGroup layout="block" styleClass="" style="height:40px">
+						<h:panelGroup styleClass="FL pad3tp W60" layout="block">
+							<h:outputText value="US USE" styleClass="B" />
+						</h:panelGroup>				
+						<h:panelGroup styleClass="FL" layout="block">
+							<h:panelGroup styleClass="FL pad5tp pad2bm W65 CT" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="ARTICLE 2403" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad17lt">
+									<ace:textEntry id="cpdArticle2403" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10 W15" value="#{cpd.article2403}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.article2403}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad10lt pad2bm W65 CT" 
+								style="border-style:none solid none none;border-color:#000;border-width:1px;" layout="block">
+								<h:panelGroup styleClass="FL pad5tp">
+									<h:outputText value="ARTICLE 2404" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad17lt">
+									<ace:textEntry id="cpdArticle2404" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10 W15" value="#{cpd.article2404}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.article2404}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad5tp W160 CT" layout="block">
+								<h:outputText value="USE IN OTHER COUNTRIES" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W70" layout="block"/>
+							<h:panelGroup styleClass="FL pad5tp pad2bm W65 CT" layout="block">
+								<h:panelGroup styleClass="FL">
+									<h:outputText value="ARTICLE 2405" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad17lt">
+									<ace:textEntry id="cpdArticle2405" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10 W15" value="#{cpd.article2405}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.article2405}" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad10lt W65 CT pad2bm" layout="block">
+								<h:panelGroup styleClass="FL pad5tp">
+									<h:outputText value="ARTICLE 2406" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad5tp pad17lt">
+									<ace:textEntry id="cpdArticle2406" maxlength="15" disabled="#{not editable}" styleClass="LT pad2lt txt10 W15" value="#{cpd.article2406}"/>
+									<h:outputText rendered="#{false}" styleClass="pad2lt" value="#{cpd.article2406}" />
+								</h:panelGroup>
+							</h:panelGroup>			
+						</h:panelGroup>	
+					</h:panelGroup>
+					
+					<!-- ROW 7 -->
+					<h:panelGroup layout="block" style="height:43px;margin-bottom:-1px">
+						<h:panelGroup styleClass="FL pad-1tp" 
+							style="width:470px;border-style:none solid none none;border-color:#000;border-width:1px;height: 42px;" layout="block">
+							<h:panelGroup styleClass="FL pad2bm" layout="block">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText value="COMMERCIALS / NUMBERS / LENGTH" styleClass="B" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad3tp">
+									<ace:textEntry id="cpdCommercialName" maxlength="250" disabled="#{not editable}" styleClass="LT txt10" style="width:455px;" value="#{cpd.commercialName}"/>
+									<h:outputText rendered="#{false}" value="#{cpd.commercialName}" />
+								</h:panelGroup>	
+							</h:panelGroup>							
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5lt W125 pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad3tp">
+								<h:outputText value="DOCKET" styleClass="B" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad3tp">
+								<ace:textEntry id="cpdDocket" maxlength="50" disabled="#{not editable}" styleClass="LT txt10 W145" value="#{cpd.docket}" style="width:200px;"/>
+								<h:outputText rendered="#{false}" value="#{cpd.docket}" />
+							</h:panelGroup>					
+						</h:panelGroup>
+					</h:panelGroup>
+					
+					<!-- ROW 8 -->
+					<h:panelGroup layout="block" style="height:40px;margin-bottom:-1px">
+						<h:panelGroup styleClass="FL" style="width:470px;" layout="block">
+							<div class="FL" style="border-right: solid 1px;margin-top:-2px;padding-right:3px;height:38px;height: 42px;">
+								<h:panelGroup styleClass="FL pad2bm pad3tp" layout="block" style="width:467px;">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText value="ADDITIONAL TITLES" styleClass="B" />
+									</h:panelGroup>
+									<h:panelGroup styleClass="FL pad3tp">
+										<ace:textEntry id="cpdAdditionalTitles" maxlength="250" disabled="#{not editable}" styleClass="LT txt10" style="width:455px;" value="#{cpd.additionalTitles}"/>
+										<h:outputText rendered="#{false}" value="#{cpd.additionalTitles}" />
+									</h:panelGroup>	
+								</h:panelGroup>		
+							</div>					
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5lt W210 pad2bm" layout="block">
+			
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGrid>
+			</div>
+		</div>
+	</div>
+</ui:composition>

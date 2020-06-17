@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<title>Allocations</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+					resizeScrollable('allocation:empList', 190, 491);
+
+					var element = document.getElementById('scrolldiv');
+					resizeElement(element, 240, 360);
+
+					element = document.getElementById('listScrolldiv');
+					resizeElement(element, 155, 420);
+
+					/* controls size of right-hand tab area (i.e., everything below title/Edit-button bar).
+					INCREASE first parameter to decrease the size of the area! */
+					element = document.getElementById('allocation:miniView');
+					resizeElement(element, 179, 391);
+
+//					element = document.getElementById('taxWageAllocationListCont');
+//					resizeElement(element, 120, 391);
+
+//					resizeScrollable('allocation:mainlist', 186, 391);
+					// The onscroll setting on the table was lost when the table was rebuilt; this may be
+					// because it is within a tab. (We don't have this problem on usual left-side lists.)
+//					setMainScrollOn(mainListId); // (re)set the 'onscroll' function
+					if (scrollme > 0) { // scrollToPos was called...
+						scrollme = 0;
+						scrollToPos(); // re-do scroll after resize of div is done.
+					}
+				</c:if>
+			}
+
+			var formname = "allocation";
+			var scrollme = 0;
+			var mainListId = "allocation:empList"; // used by main list scrolling functions
+
+
+		</script>
+
+	</h:head>
+	<h:body>
+		<c:set var="bean" value="#{taxWageAllocationBean}" />
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+				initDomLoaded(mainListId); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+		<!-- Contents of Tax Wage Allocation TOURS production type -->
+		<h:form id="allocation">
+			<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+				<f:attribute name="tabid" value="toursallocation" />
+			</h:outputText>
+
+			
+			<ui:include src="taxWageAllocationsPage.xhtml" >
+				<ui:param name="bean" value="#{bean}" />
+			</ui:include>
+		</h:form>
+		
+		<ace:textEntry id="scrollPos" value="#{bean.scrollPos}" style="visibility:hidden"/>
+		<ui:include src="../common/releaseNotes.xhtml" />
+		<ui:include src="createAllocationContact.xhtml" />
+		<ui:include src="createAllocationFormRevision.xhtml" />
+
+		<c:if test="#{bean.showDeleteDialog}">
+			<ui:include src="../common/confirmpopup.xhtml" />
+		</c:if>
+		<c:if test="#{bean.showTransmitDialog}">
+			<ui:include src="transferAllocation.xhtml" />
+		</c:if>		
+	</h:body>
+</html>
+

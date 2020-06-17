@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<c:set var="bean" value="#{formActraIntentBean}" />
+	<c:set var="editable" value="#{bean.editMode}"/>
+	<c:set var="form" value="#{bean.form}" />
+
+	<!-- Canadian "INTENT TO PRODUCE form - mini-tab on Project page -->
+
+	<ace:tabPane label="Intent to Produce"
+			rendered="#{canada and (not empty authBean.pgFields['2.0,view_intent'])}">
+		<div class="pad10lt pad5tp" style="width:95%">
+			<!-- TRANSFER SECTION -->	
+			<h:panelGroup styleClass="FL">
+				<!-- TRANSFER BUTTON START -->
+				<h:panelGroup rendered="#{true}">
+					<h:panelGroup styleClass="btn_legend_left" style="margin-top:15px; margin-right:10px;margin-left:-1px;">
+						<h:panelGroup rendered="#{not editable}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Send to ACTRA office"
+								action="#{bean.actionTransferToActraOffice}"
+								title="Send to ACTRA office" styleClass="btnMiniCt">
+							</ace:linkButton>	
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{editable}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Send to ACTRA office" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				<!-- TRANSFER BUTTON END -->
+				<h:panelGroup styleClass="FL pad3tp">
+					<h:outputText styleClass="fdNm pad15lt" style="width:35px;" value="Office:" />
+					<h:selectOneMenu
+							styleClass="FL W50percnt pad10lt"
+							disabled="#{editable}"
+							value="#{bean.form.officeId}" valueChangeListener="#{bean.listenOfficeSelectChange}">
+						<f:selectItems value="#{bean.actraOfficeList}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</h:panelGroup>
+				
+				<!-- SENT STATUS -->
+				<h:panelGroup styleClass="pad3tp">
+					<div class="FR">
+					<!-- <h:outputText id="sentStatus1" style="margin-left:235px;width:180px;" rendered="#{bean.contactDoc.lastSent eq null}"
+						styleClass="fdNm" value="Form has not been transferred." />
+					<h:outputText id="sentStatus2" style="margin-left:118px;width:165px;" rendered="#{bean.contactDoc.lastSent ne null}"
+						styleClass="fdNm" value="Form was last transferred at" />
+					<h:outputText id="sentStatus3" rendered="#{bean.contactDoc.lastSent ne null}"
+						styleClass="fdNm" style="width:136px;" value="#{bean.contactDoc.lastSent}">
+							<f:convertDateTime pattern="h:mm a 'on' MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  
+					</h:outputText> -->
+					<h:outputText id="sentStatus" styleClass="fdNm" style="width:300px;" value="#{bean.transferStatus}" />
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>	
+			<!-- Clear Button Start LS-2070 -->
+			<h:panelGroup rendered="#{editable}">
+				<span class="FR pad5rt"> 
+				    <span class="btnSecHotLt" /> 
+				    <span>
+					    <ace:linkButton title="Clear all fields of Intent to Produce form." value="Clear"
+							action="#{bean.actionClear}" styleClass="btnSecHotCt" />
+				    </span> 
+				    <span class="btnSecHotRt" />
+				</span>
+			</h:panelGroup>
+			<!-- Clear Button End -->
+			<div id="scrollIntent" class="scrollPnlTab BKwhite rowCont" style="overflow-x:auto;" onscroll="setIntentScrollPos(this.scrollTop);">
+				<div class="BKwhite sfFormBorder1">
+					<div class="pad10lt pad10rt pad20tp">	
+						<div>
+							<ui:include src="formActraIntentHeader.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+							</ui:include>
+
+							<div class="rowCont">&#160;</div>
+
+							<ui:include src="formActraIntentAgencyProd.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+							</ui:include>
+
+							<div class="rowCont">&#160;</div>
+
+							<ui:include src="formActraIntentIntendedUse.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+							</ui:include>
+
+							<div class="rowCont">&#160;</div>
+
+							<ui:include src="formActraIntentCom.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+							</ui:include>
+
+							<div class="rowCont">&#160;</div>
+
+							<ui:include src="formActraIntentShootDetail.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+							</ui:include>
+
+							<div class="rowCont">&#160;</div>
+
+							<ui:include src="formActraIntentTalent.xhtml" >
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}" />
+								<ui:param name="beginIndex" value="0" />
+								<ui:param name="endIndex" value="#{bean.rowCount}" />
+							</ui:include>
+							
+							<div class="FL rowCont pad10tp">
+								<h:panelGroup styleClass="FL pad10tp" rendered="#{editable}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Add Lines" styleClass="btnPriHotCt" action="#{bean.actionAddMoreLines}" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10tp" rendered="#{not editable}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt"/>
+										<span>
+										<ace:linkButton value="Add Lines" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup>
+								
+								<!-- <h:panelGroup styleClass="FL pad10tp pad10lt" rendered="#{editable}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Remove Lines" styleClass="btnPriHotCt" action="#{bean.actionRemoveLines}" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10tp pad10lt" rendered="#{not editable}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt"/>
+										<span>
+										<ace:linkButton value="Remove Lines" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup> -->
+							</div>
+							<div class="rowCont">&#160;</div>
+
+						</div> <!-- end scroll div -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<ace:textEntry style="visibility:hidden" id="scrollPos" value="#{bean.scrollPos}"/>
+	</ace:tabPane>
+</ui:composition>

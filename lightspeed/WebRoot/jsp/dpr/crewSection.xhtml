@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Used for the DPR, this fragment outputs one department's crew information,
+		for the back page; it is invoked from crewtable.xhtml. -->
+
+	<div class="CT pad5tp">
+		<h:panelGroup rendered="#{not dprViewBean.editMode}">
+			<h:panelGroup styleClass="pad5tp CT B">
+				<h:outputText value="#{deptTime.department.name}" />
+			</h:panelGroup>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{dprViewBean.editMode}">
+			<div class="FL W80percnt">
+				<div class="CT B">
+					<h:outputText rendered="#{deptTime.department ne null}"
+							value="#{deptTime.department.name}" />
+					<ace:textEntry rendered="#{deptTime.department eq null}"
+							value="#{deptTime.deptName}" maxlength="50" />
+				</div>
+			</div>
+			<div class="FL W20percnt">
+				<h:commandLink value=" " styleClass="FR pad3tp pad10rt" rendered="#{deptTime.department ne null}"
+						action="#{dprViewBean.actionOpenAddCrew}">
+					<h:graphicImage value="" url="../../i/icon_plusGry.gif" alt="" />
+					<f:setPropertyActionListener value="#{deptTime.department.id}" target="#{dprViewBean.addDeptId}" />
+				</h:commandLink>
+			</div>
+		</h:panelGroup>
+	</div>
+
+	<ace:dataTable rowStyleClass="txt11 evenOddRow"
+		style="width:98%;max-width:98%;" id="crewTable"
+		styleClass="grid1e txt11" 
+		value="#{deptTime.timeCards}" var="timeCard">
+
+		<ace:columnGroup>
+			<ace:row styleClass="thinColHdr">
+				<ace:column styleClass="CT" rendered="#{dprViewBean.editMode}" style="width:2%;">
+				&#160;
+				</ace:column>
+				<ace:column styleClass="LT" style="width:5%;">
+				#
+				</ace:column>
+				<ace:column styleClass="LT" style="width:28%;">
+				&#160; Person
+				</ace:column>
+				<ace:column styleClass="CT" style="width:35%;">
+				&#160; Position
+				</ace:column>
+				<ace:column styleClass="CT" style="width:10%;">
+				In
+				</ace:column>
+				<ace:column styleClass="CT" style="width:10%;">
+				Out
+				</ace:column>
+				<ace:column colspan="2" styleClass="CT" style="width:10%;">
+				MPV
+				</ace:column>
+			</ace:row>
+		</ace:columnGroup>
+
+		<!-- "X" DELETE ICON -->
+		<ace:column styleClass="CT" rendered="#{dprViewBean.editMode}" style="width:2%;">
+			<h:commandLink value="" 
+			 		rendered="#{timeCard.department ne null}"
+					action="#{dprViewBean.actionDeleteCrewTimeCard(timeCard)}" title="Remove this person">
+				<f:setPropertyActionListener value="#{timeCard.department.id}" target="#{dprViewBean.addDeptId}"/>
+				<h:graphicImage value="" url="../../i/icon_deleteX.gif" alt="" />
+			</h:commandLink>
+			<h:commandLink value="" 
+			 		rendered="#{timeCard.department eq null}"
+					action="#{dprViewBean.actionDeleteCrewTimeCard(timeCard)}" title="Remove this person">
+				<f:setPropertyActionListener value="#{timeCard.department}" target="#{dprViewBean.addDeptId}"/>
+				<h:graphicImage value="" url="../../i/icon_deleteX.gif" alt="" />
+			</h:commandLink>
+		</ace:column>
+
+		<!-- COUNT (= 1) -->
+		<ace:column styleClass="CT" style="width:5%;">
+			<h:outputText value="1" />
+		</ace:column>
+
+		<!-- NAME -->
+		<ace:column styleClass="LT" style="width:28%;">
+			<h:outputText value="#{timeCard.contact.displayName}" />
+		</ace:column>
+
+		<!-- ROLE / OCCUPATION -->
+		<ace:column styleClass="CT" style="width:35%;">
+			<h:outputText value="#{timeCard.role}" />
+		</ace:column>
+
+		<!-- IN / CALL TIME -->
+		<ace:column styleClass="CT" style="width:10%;">
+			<h:outputText value="#{timeCard.callTime}" rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterOC" />
+				<f:attribute name="pattern" value="#0.0#" />
+			</h:outputText>
+			<ace:textEntry styleClass="tcEdHr" value="#{timeCard.callTime}" maxlength="7" rendered="#{dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterOC" />
+				<f:attribute name="pattern" value="#0.0#" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- OUT / WRAP TIME -->
+		<ace:column styleClass="CT" style="width:10%;">
+			<h:outputText value="#{timeCard.wrap}" rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+				<f:attribute name="pattern" value="#0.0#" />
+			</h:outputText>
+			<ace:textEntry styleClass="tcEdHr" value="#{timeCard.wrap}" maxlength="7" rendered="#{dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+				<f:attribute name="pattern" value="#0.0#" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- MPV 1 -->
+		<ace:column styleClass="CT" style="width:5%;">
+			<h:outputText value="#{timeCard.mpv1}" rendered="#{not dprViewBean.editMode}" />
+			<ace:textEntry styleClass="tcEdHr" value="#{timeCard.mpv1}" rendered="#{dprViewBean.editMode}" />
+		</ace:column>
+
+		<!-- MPV 2 -->
+		<ace:column styleClass="CT" style="width:5%;">
+			<h:outputText value="#{timeCard.mpv2}" rendered="#{not dprViewBean.editMode}" />
+			<ace:textEntry styleClass="tcEdHr" value="#{timeCard.mpv2}" rendered="#{dprViewBean.editMode}" />
+		</ace:column>
+
+	</ace:dataTable>
+
+	<!-- OPTIONAL CATERING INFORMATION -->
+	<h:panelGroup rendered="#{deptTime.department.id eq 115 or deptTime.department.standardDeptId eq 115}">
+		<ui:include src="catering.xhtml">
+			<ui:param name="dept" value="#{deptTime.department}" />
+			<ui:param name="logs" value="#{dprViewBean.dpr.cateringLogsList}" />
+			<ui:param name="editMode" value="#{dprViewBean.editMode}" />
+		</ui:include>
+	</h:panelGroup>
+
+</ui:composition>

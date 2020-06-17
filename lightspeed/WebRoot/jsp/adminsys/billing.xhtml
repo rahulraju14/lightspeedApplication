@@ -1,0 +1,371 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Timecard Billing report generation and export -->
+
+	<ace:tabPane label="Billing Reports" id="billingtab">
+		<!-- Select box for determening report type. Timecards or Documents -->
+		<div class="pad30tp pad10lt">
+			<h:outputText  value="Report Type:" />
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu styleClass="pad3lt" style="width:125px;"	value="#{billingReportBean.reportType}"
+					valueChangeListener="#{billingReportBean.listenReportTypeChange}">
+					<f:selectItem itemLabel="Timecard Report" itemValue="0"  />
+					<f:selectItem itemLabel="Document Report" itemValue="1"  />
+						<ace:ajax />
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+		</div>
+		<div class="FL pad30tp">
+
+			<span class="FL pad10lt pad5rt">Production ID#:</span>
+			<ace:textEntry styleClass="fd_40"
+					value="#{billingReportBean.productionId}"/>
+
+			<span class="FL pad10lt pad5rt">Payroll Service ID#:</span>
+			<ace:textEntry styleClass="fd_40"
+					value="#{billingReportBean.serviceId}"/>
+
+			<span class="FL pad10lt pad5rt">Production Company (pattern):</span>
+			<ace:textEntry styleClass="fd_100"
+					value="#{billingReportBean.prodCompPattern}"/>
+
+		</div>
+
+		<div class="CB"/>
+
+		<div class="FL pad10tp">
+			<span class="FL pad10lt pad5rt">Report period:</span>
+			<ace:textEntry styleClass="fd_75"
+					value="#{billingReportBean.yearMonth}"/>
+			<span class="FL pad10lt">(YYYY, YYYYMM, YYYYMMDD)</span>
+		</div>
+
+		<h:panelGroup styleClass="FL pad15tp">
+			<h:panelGroup rendered="#{billingReportBean.reportType eq 0}">
+				<span class="pad50lt FL">
+				  <span class="btnMiniLt"/>
+				  <span>
+					<ace:linkButton value="Create Timecard List"
+					  action="#{billingReportBean.actionGenerate}"
+					  styleClass="btnMiniCt">
+					</ace:linkButton>
+				  </span>
+				  <span class="btnMiniRt"/>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{billingReportBean.reportType eq 1}">
+				<span class="pad50lt FL">
+				  <span class="btnMiniLt"/>
+				  <span>
+					<ace:linkButton value="Create Document List"
+					  action="#{billingReportBean.actionGenerateDocList}"
+					  styleClass="btnMiniCt">
+					</ace:linkButton>
+				  </span>
+				  <span class="btnMiniRt"/>
+				</span>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="FL pad15tp" rendered="#{billingReportBean.reportType eq 0}">
+			<span class="pad20lt FL">
+				<span class="btnMiniLt"/>
+				<span>
+					<ace:linkButton value="Export Invoice"
+					action="#{billingReportBean.actionExport}"
+					styleClass="btnMiniCt">
+					</ace:linkButton>
+				</span>
+			  <span class="btnMiniRt"/>
+			</span>
+			<span class="pad20lt FL">
+				<span class="btnMiniLt"/>
+				<span>
+					<ace:linkButton value="Export Full"
+					action="#{billingReportBean.actionExportFull}"
+					styleClass="btnMiniCt">
+					</ace:linkButton>
+				</span>
+				<span class="btnMiniRt"/>
+			</span>
+		</h:panelGroup>
+		<h:panelGroup styleClass="FL pad15tp" rendered="#{billingReportBean.reportType eq 1}">
+			<span class="pad20lt FL">
+				<span class="btnMiniLt"/>
+				<span>
+					<ace:linkButton value="Export"
+					action="#{billingReportBean.actionExportDocList}"
+					styleClass="btnMiniCt">
+					</ace:linkButton>
+				</span>
+				<span class="btnMiniRt"/>
+			</span>
+		</h:panelGroup>
+		<div class="CB pad10bm"/>
+		<hr />
+		<hr />
+
+		<h:panelGroup rendered="#{billingReportBean.reportType eq 0}" >
+			<div class="rowCont pad20lt">
+				<h:panelGroup styleClass="FL">
+					<!-- <ice:dataPaginator for="tctable" paginator="true" fastStep="3" paginatorMaxPages="5">
+						<f:facet name="previous">
+							<h:graphicImage value="" url="../../i/previous.gif"
+								style="border:none;" title="Previous Page" />
+						</f:facet>
+						<f:facet name="next">
+							<h:graphicImage value="" url="../../i/next.gif"
+								style="border:none;" title="Next Page" />
+						</f:facet>
+					</zce:dataPaginator> -->
+					<!--
+					paginator="#{bean.paginate}"
+					paginatorAlwaysVisible="false"
+					paginatorPosition="top" pagesToSkip="5" pageCount="5"
+					paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"
+-->
+				</h:panelGroup>
+				<h:panelGroup styleClass="FL pad20lt B" rendered="#{not empty billingReportBean.weeklyTimecardList}">
+					<h:outputText value="#{billingReportBean.listSize} timecards matched; total is " />
+					<h:outputText value="#{billingReportBean.totalGross}" >
+						<f:convertNumber pattern="$#,##0.00"/>
+					</h:outputText>
+				</h:panelGroup>
+			</div>
+
+			<span>
+				<ace:dataTable styleClass="bk_sl_grid pad5tp" id="tctable"
+					selectionMode="single" singleSort="true"
+					value="#{billingReportBean.weeklyTimecardList}"
+					var="timecard"
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '200'}"
+					rows="100"
+					style="width:100%;max-width:100%;position:relative;float:left;z-index:100;overflow-x:hidden;" >
+
+					<ace:column headerText="ID">
+						<!-- <x:facet name="header">
+						<h:outputText value="ID" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.id}" />
+					 </ace:column>
+					<ace:column headerText="Prod Id">
+						<!-- <x:facet name="header">
+						<h:outputText value="Prod Id" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.prodId}" />
+					</ace:column>
+					<ace:column headerText="Prod Company">
+						<!-- <x:facet name="header">
+						<h:outputText value="Prod Company" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.prodCo}" />
+					</ace:column>
+					<ace:column headerText="Production Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="Production Name" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.prodName}" />
+					</ace:column>
+					<ace:column headerText="W/E date">
+						<!-- <x:facet name="header">
+						<h:outputText value="W/E date" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.endDate}">
+							<f:convertDateTime pattern="M/d/yy" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Batch">
+						<!-- <x:facet name="header">
+						<h:outputText value="Batch" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.weeklyBatch.name}" >
+						</h:outputText>&#160;
+					</ace:column>
+					<ace:column headerText="User">
+						<!-- <x:facet name="header">
+						<h:outputText value="User" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.userAccount}" >
+						</h:outputText>&#160;
+					</ace:column>
+					<ace:column headerText="Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="Name" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.lastNameFirstName}" />
+					</ace:column>
+					<ace:column headerText="SSN">
+						<!-- <x:facet name="header">
+						<h:outputText value="SSN"></h:outputText>
+						</f:facet> -->
+						<h:outputText value="#{timecard.viewSSNmin}" />
+					</ace:column>
+					<ace:column headerText="Union">
+						<!-- <x:facet name="header">
+						<h:outputText value="Union" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.unionNumber}" />
+					</ace:column>
+					<ace:column headerText="Occupation">
+						<!-- <x:facet name="header">
+						<h:outputText value="Occupation" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.occupation}" />
+					</ace:column>
+					<ace:column headerText="LoanOut Corp">
+						<!-- <x:facet name="header">
+						<h:outputText value="LoanOut Corp" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.loanOutCorp}" />
+					</ace:column>
+					<ace:column headerText="Fed Id">
+						<!-- <x:facet name="header">
+						<h:outputText value="Fed Id" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.fedCorpIdFmtd} " />
+					</ace:column>
+					<ace:column headerText="State Id">
+						<!-- <x:facet name="header">
+						<h:outputText value="State Id" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.stateCorpId} " >
+						</h:outputText>
+					</ace:column>
+
+					<ace:column headerText="Gross">
+						<!-- <x:facet name="header">
+						<h:outputText value="Gross" />
+						</f:facet> -->
+						<h:outputText escape="false" value="#{timecard.grandTotal}">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+						</h:outputText>
+					</ace:column>
+
+					<ace:column headerText="Status">
+						<!-- <x:facet name="header">
+						<h:outputText value="Status" />
+						</f:facet> -->
+						<h:outputText value="#{timecard.status} " />
+					</ace:column>
+				</ace:dataTable>
+			</span>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{billingReportBean.reportType eq 1}" >
+			<div class="rowCont pad20lt">
+				<h:panelGroup styleClass="FL">
+					<!-- <ice:dataPaginator for="docTable" paginator="true" fastStep="3" paginatorMaxPages="5">
+						<f:facet name="previous">
+							<h:graphicImage value="" url="../../i/previous.gif"
+								style="border:none;" title="Previous Page" />
+						</f:facet>
+						<f:facet name="next">
+							<h:graphicImage value="" url="../../i/next.gif"
+								style="border:none;" title="Next Page" />
+						</f:facet>
+					</zce:dataPaginator> -->
+					<!--
+					paginator="#{bean.paginate}"
+					paginatorAlwaysVisible="false"
+					paginatorPosition="top" pagesToSkip="5" pageCount="5"
+					paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"
+-->
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="FL pad20lt B" rendered="#{not empty billingReportBean.docList}">
+					<h:outputText value="#{billingReportBean.listSize} documents matched" />
+				</h:panelGroup>
+			</div>
+
+			<span id="timeshtCont">
+				<ace:dataTable styleClass="bk_sl_grid pad5tp" id="docTable"
+					selectionMode="single" singleSort="true"
+					value="#{billingReportBean.docList}"
+					var="doc" 
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '425'}"
+					rows="100"
+					style="width:100%;max-width:100%;position:relative;float:left;z-index:100;overflow-x:hidden;" >
+<!--
+					<ace:column headerText="zzz">
+						<!- - <x:facet name="header">
+						<h:outputText value="ID" />
+						</f:facet> - ->
+						<h:outputText value="#{doc.id}" />
+					 </ace:column>
+-->
+					<ace:column headerText="Prod Id">
+						<!-- <x:facet name="header">
+						<h:outputText value="Prod Id" />
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.production.prodId}" />
+					</ace:column>
+					<ace:column headerText="Prod Company">
+						<!-- <x:facet name="header">
+						<h:outputText value="Prod Company" />
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.production.studio}" />
+					</ace:column>
+					<ace:column headerText="Production Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="Production Name" />
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.production.title}" />
+					</ace:column>
+					<ace:column headerText="Issue date">
+						<!-- <x:facet name="header">
+						<h:outputText value="Issue date" />
+						</f:facet> -->
+						<h:outputText value="#{doc.delivered}">
+							<f:convertDateTime pattern="M/d/yy" />
+						</h:outputText>
+					</ace:column>
+					<ace:column headerText="Doc Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="Doc Name" />
+						</f:facet> -->
+						<h:outputText value="#{doc.document.name}" />
+
+					</ace:column>
+					<ace:column headerText="SSN">
+						<!-- <x:facet name="header">
+						<h:outputText value="SSN"></h:outputText>
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.startForms[0].viewSSN}" />
+					</ace:column>
+					<ace:column headerText="Last Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="Last Name" />
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.user.lastName}" />
+
+					</ace:column>
+					<ace:column headerText="First Name">
+						<!-- <x:facet name="header">
+						<h:outputText value="First Name" />
+						</f:facet> -->
+						<h:outputText value="#{doc.contact.user.firstName}" />
+					</ace:column>
+
+					<ace:column headerText="Occupation">
+						<!-- <x:facet name="header">
+						<h:outputText value="Occupation" />
+						</f:facet> -->
+						<h:outputText value="#{doc.employment.role.name}" />
+					</ace:column>
+					<ace:column headerText="Document Status">
+						<!-- <x:facet name="header">
+						<h:outputText value="Document Status" />
+						</f:facet> -->
+						<h:outputText value="#{doc.status.label} " />
+					</ace:column>
+				</ace:dataTable>
+			</span>
+		</h:panelGroup>
+	</ace:tabPane>
+</ui:composition>

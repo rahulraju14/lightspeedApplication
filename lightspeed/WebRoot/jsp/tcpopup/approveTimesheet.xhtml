@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Password/PIN confirmation dialog (message + pw entry + PIN entry + ok/cancel buttons) -->
+	<!-- This is based on the confirmpopupbig class (size). -->
+	<h:form>
+		<ace:dialog visible="#{pinPromptBean.askPin}"
+				header="#{pinPromptBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{pinPromptBean.actionCancel}"/>		
+			<h:panelGroup>
+				<div class="popupBdyAW">
+
+					<div id="popupContW" style="width:84%">
+						<div class="popup_main stdTxt pad10tp">
+
+							<h:outputText rendered="#{pinPromptBean.pinError}" styleClass="RED B" escape="false"
+									value="#{pinPromptBean.errorMsg}"/>
+							<h:outputText escape="false" value="#{pinPromptBean.message}" />
+
+							<div>
+								<span class="rowCont pad15tp">
+									<h:panelGroup rendered="#{!pinPromptBean.pinOnly}">
+										<span class="fdNm FL pad3tp">
+											<h:outputText value="Password:" />
+										</span>
+										<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+											<ace:textEntry secret="true" tabindex="1" maxlength="20" id="submit_focus"
+												action="#{pinPromptBean.actionOk}"
+												redisplay="true" value="#{pinPromptBean.password}" />
+										</span>
+									</h:panelGroup>
+								</span>
+								<span class="rowCont pad10tp">
+									<span class="fdNm FL pad3tp">
+										<h:outputText value="PIN:" />
+									</span>
+									<span class="fd FL">
+										<ace:textEntry secret="true" tabindex="2" maxlength="4" action="#{pinPromptBean.actionOk}"
+											redisplay="true" value="#{pinPromptBean.pin}" />
+									</span>
+								</span>
+								<h:panelGroup styleClass="rowCont pad15tp">
+									By providing my electronic signature I certify that the submitted information is <br/>
+									accurate and complete.
+								</h:panelGroup>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="popBtnCont4">
+						<h:panelGroup rendered="#{not empty pinPromptBean.buttonCancelLabel}">
+							<span class="FR pad5rt">
+								<span class="btnPriEnbLt"/>
+								<span>
+									<ace:linkButton value="#{pinPromptBean.buttonCancelLabel}" tabindex="4"
+											action="#{pinPromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt"/>
+							</span>
+						</h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="#{pinPromptBean.buttonOkLabel}" tabindex="3"
+										action="#{pinPromptBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

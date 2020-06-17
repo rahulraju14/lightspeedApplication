@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Side-Letters tab of the Payroll Contracts page (screen number 9.11) -->
+	<ace:tabPane label="Side Letters" style="overflow-x:hidden !important;"
+			rendered="#{not empty authBean.pgFields['9.11,view']}">
+		<h:outputText style="visibility:hidden;" value="#{sideLettersBean.setUp}"/>
+
+		<div id="sideLetterDiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+			<div class="rowCont">&#160;</div>
+			<div class="rowCont">&#160;</div>
+
+			<div id="scrollright" class="FL W100percnt scrollPnlTab" >
+				<div style="overflow-x:auto;" class="pad20lt">
+					<ace:dataTable styleClass="gradTbl2" id="contractsSideLettersTable"
+							rowIndexVar="rowIndex"
+							rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'evenRow' : 'oddRow'}"
+							style="z-index:1;position:relative;width:98%;"
+							scrollHeight="650"
+							scrollable="true"
+							value="#{sideLettersBean.rows}" var="sideLtr">
+
+						<c:forEach items="#{sideLettersBean.contractCodes}" var="contractCode" varStatus="colStatus">
+							<ace:column headerText="#{contractCode}" styleClass="B txt11" style="#{colStatus.index eq 0 ? 'text-align:right;' : ''}"
+									pinningOrder="#{sideLettersBean.pinningOrder[colStatus.index]}" >
+								<h:outputText rendered="#{colStatus.index eq 0}" value="#{sideLtr.name}" />
+								<h:selectBooleanCheckbox rendered="#{(colStatus.index gt 0) and sideLtr.contractValid[colStatus.index - 1]}" styleClass="ckbx CT"
+										disabled="#{! sideLettersBean.editMode}" value="#{sideLtr.sideLettersSelected[colStatus.index - 1]}"/>
+								<h:outputText rendered="#{(rowIndex mod 2) eq 0 and (colStatus.index gt 0) and (not sideLtr.contractValid[colStatus.index - 1])}" value="-" />
+								<!-- <h:outputText rendered="#{(rowIndex mod 2) ne 0 and (colStatus.index gt 0) and (not sideLtr.contractValid[colStatus.index - 1])}" value="-&#160;-" / -->
+							</ace:column>
+						</c:forEach>
+
+						<ace:column headerText="" style="width:auto;" styleClass="txt11"/>
+					</ace:dataTable>
+				</div>
+				<div class="CB"></div>
+
+			</div><!-- end scroll right div -->
+
+		</div><!-- end scrollable div -->
+
+	</ace:tabPane><!-- End mini-Tab -->
+</ui:composition>

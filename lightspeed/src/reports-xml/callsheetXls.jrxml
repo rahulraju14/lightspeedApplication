@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="callsheet" pageWidth="612" pageHeight="1008" whenNoDataType="NoDataSection" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="20" bottomMargin="0" uuid="c38bc012-48dc-4e62-9685-f86972303008">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="314"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="black" isDefault="true" forecolor="#000000" backcolor="#FFFFFF">
+		<pen lineWidth="1.0" lineColor="#000000"/>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="productionLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["My Production"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="episodic" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[Passed to 'scene' subreport to control display of 'episode' column]]></parameterDescription>
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT cs.*, production.*, address.*, if (cs.status='PUBLISHED','FINAL','PRELIM') as pubStatus, " +
+"log.meal catering_1, log.meal_count catering_2, log.vendor catering_3, log.note catering_4 " +
+"FROM callsheet cs, production, project, address, catering_log log " +
+"WHERE cs.project_id = project.id and project.production_id = production.id and production.address_id = address.id and log.id = cs.catering_log_id " +
+" and cs.id = 266 " +
+"order by cs.id desc limit 1;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="column1dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="column2dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="column3dcIds" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="unitNumber" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dateTimeFormat1" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("M/d/yyyy h:mm a", $P{REPORT_LOCALE}, $P{productionTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="timeFormat1" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("h:mm a", $P{REPORT_LOCALE}, $P{reportTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Date" class="java.sql.Timestamp"/>
+	<field name="Updated" class="java.sql.Timestamp"/>
+	<field name="Shoot_Day" class="java.lang.Integer"/>
+	<field name="Shoot_Days" class="java.lang.Integer"/>
+	<field name="Call_Time" class="java.sql.Timestamp"/>
+	<field name="Rehearse_Time" class="java.sql.Timestamp"/>
+	<field name="Shoot_Time" class="java.sql.Timestamp"/>
+	<field name="Stripboard_Id" class="java.lang.Integer"/>
+	<field name="Pages" class="java.lang.String"/>
+	<field name="Advance_Days" class="java.lang.Integer"/>
+	<field name="Status" class="java.lang.String"/>
+	<field name="Sunrise" class="java.sql.Timestamp"/>
+	<field name="Sunset" class="java.sql.Timestamp"/>
+	<field name="Weather" class="java.lang.String"/>
+	<field name="Project_Id" class="java.lang.Integer"/>
+	<field name="Prod_Id" class="java.lang.String"/>
+	<field name="Studio" class="java.lang.String"/>
+	<field name="Title" class="java.lang.String"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Max_Projects" class="java.lang.Integer"/>
+	<field name="Max_Logon_Attempts" class="java.lang.Integer"/>
+	<field name="Lock_Out_Delay" class="java.lang.Integer"/>
+	<field name="Start_Date" class="java.sql.Timestamp"/>
+	<field name="End_Date" class="java.sql.Timestamp"/>
+	<field name="Contact_Name" class="java.lang.String"/>
+	<field name="Address_Id" class="java.lang.Integer"/>
+	<field name="Phone" class="java.lang.String"/>
+	<field name="Fax" class="java.lang.String"/>
+	<field name="Repository_Id" class="java.lang.Integer"/>
+	<field name="Time_Zone" class="java.lang.String"/>
+	<field name="pubStatus" class="java.lang.String"/>
+	<field name="Addr_Line1" class="java.lang.String"/>
+	<field name="Addr_Line2" class="java.lang.String"/>
+	<field name="City" class="java.lang.String"/>
+	<field name="State" class="java.lang.String"/>
+	<field name="Zip" class="java.lang.String"/>
+	<field name="catering_1" class="java.lang.String"/>
+	<field name="catering_2" class="java.lang.String"/>
+	<field name="catering_3" class="java.lang.String"/>
+	<field name="catering_4" class="java.lang.String"/>
+	<variable name="unitNumber" class="java.lang.Integer">
+		<variableExpression><![CDATA[$P{unitNumber}==null? $V{firstUnit} : $P{unitNumber}]]></variableExpression>
+	</variable>
+	<variable name="firstUnit" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[new Integer(1)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band height="988" splitType="Stretch">
+			<image>
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="968" width="117" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} == null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportsTemplate}+"/common/LightSpeedEPSLogo.png"]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="968" width="117" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement uuid="0dd1ef0b-c1b5-4785-ad56-c61874905ec2" key="rectangle-22" x="0" y="0" width="540" height="968"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</background>
+	<detail>
+		<band height="928" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="50b1d34a-c30a-4f99-bc3f-a2a3d95eed11" key="rectangle-1" mode="Transparent" x="0" y="0" width="540" height="160"/>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="27131caa-3f9f-4591-8633-79a10af55b97" x="0" y="0" width="387" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3f4beb9b-9f0b-48a4-881b-28aced47c6ca" style="csDefBox" x="387" y="0" width="153" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Call Sheet - "+$F{pubStatus}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="a0fad121-dbb9-427c-a5a4-e01d84966e51" key="executive" stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="20" width="180" height="60"/>
+				<subreportParameter name="callid">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/executive.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement uuid="55860aa0-12a2-4327-8b36-a265dfed784d" key="textField" mode="Transparent" x="387" y="20" width="153" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a2a79b5-ea93-4116-9c48-14605d5eaab0" key="textField" mode="Transparent" x="387" y="40" width="153" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isItalic="true" pdfFontName="Times-Italic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Updated: "+ $P{dateTimeFormat1}.format($F{Updated})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="5a4074bf-5da8-455a-b1e6-1d449a9ed252" key="staticText-8" mode="Transparent" x="423" y="60" width="27" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Day]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7dc49ce9-3e80-494b-a7c2-32568d5b2c3a" key="textField" mode="Transparent" x="450" y="60" width="18" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Day}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="e99fa396-13a5-4231-a1e7-ea12a590ec00" key="staticText-9" mode="Transparent" x="468" y="60" width="9" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.Of]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="918a63e9-99ce-430a-97f8-b7c9d41fca79" key="textField" mode="Transparent" x="477" y="60" width="27" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Days}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6bfe983a-11e1-4141-a1ed-7b1b5e2ffcfb" key="staticText-7" mode="Transparent" x="0" y="80" width="45" height="10"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isItalic="false" pdfFontName="Times-Italic"/>
+				</textElement>
+				<text><![CDATA[Prod Off:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="48f7d9b1-f0c7-4343-8d0b-70fd8beefbe8" key="textField-2" x="45" y="80" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Studio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="48f7d9b1-f0c7-4343-8d0b-70fd8beefbe8" key="textField-2" x="45" y="90" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Addr_Line1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="706e83cb-b18a-4ebc-b472-387f630cb843" key="textField-44" x="45" y="100" width="135" height="10">
+					<printWhenExpression><![CDATA[($F{Addr_Line2} != null && ! $F{Addr_Line2}.equals(""))]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Addr_Line2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="706e83cb-b18a-4ebc-b472-387f630cb843" key="textField-44" x="45" y="100" width="135" height="10">
+					<printWhenExpression><![CDATA[($F{Addr_Line2} == null || $F{Addr_Line2}.equals(""))]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{City}+", "+$F{State}+" "+$F{Zip}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="63bf7727-34bc-49eb-8280-7937b7129bdc" key="staticText-1" x="0" y="110" width="45" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.tel]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b817ad8c-d7a4-4a2c-a83e-09eef9868652" key="textField-8" x="45" y="110" width="135" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Phone} + ($F{Fax} != null && ! $F{Fax}.equals("") ? " Fax: " + $F{Fax} : "")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d31c4fa4-12de-4f85-9257-81ffe5384588" key="staticText-10" mode="Transparent" x="405" y="70" width="45" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SUNRISE]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="54a42bdc-fb95-4bdd-bb02-031a66076958" key="textField" mode="Transparent" x="450" y="70" width="90" height="10">
+					<printWhenExpression><![CDATA[$F{Sunrise} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{timeFormat1}.format($F{Sunrise})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="84ee936a-3f86-433b-9ff2-771e6f3b857a" key="staticText-11" mode="Transparent" x="405" y="80" width="45" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SUNSET]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="969311e9-9100-4751-8155-6256d50aeccd" key="textField-1" mode="Transparent" x="450" y="80" width="90" height="10">
+					<printWhenExpression><![CDATA[$F{Sunset} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{timeFormat1}.format($F{Sunset})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="588f560c-d1ea-4c54-9fa1-5b155bc80441" key="staticText-12" mode="Transparent" x="405" y="90" width="45" height="30"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.WEATHER]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="26113845-e87d-4926-8206-ba61bb8c6a27" key="textField-2" mode="Transparent" x="450" y="90" width="90" height="30"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Weather}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d6a6ecce-5c06-4269-a535-2a3ecf3be003" key="staticText-13" style="csDefBox" mode="Transparent" x="180" y="70" width="81" height="30"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.CrewCall]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="e6d7f79d-25e1-4332-87bb-6e7d0b72cc68" key="textField" style="csDefBoxBold" mode="Transparent" x="261" y="70" width="99" height="30"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d096849f-059b-4f5d-ac3a-9066077dc176" key="staticText-14" style="csDefBox" mode="Transparent" x="180" y="100" width="81" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.ShootingCall]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="ebfb9a4d-940a-41b7-ba25-e4053f17d610" key="textField" style="csDefBoxBold" mode="Transparent" x="261" y="100" width="99" height="20"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Shoot_Time}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="c5d95ecb-9153-4b7c-a551-6f21c5b371b4" key="breakfast" mode="Transparent" x="0" y="120" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[0]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="4c396835-1a53-4442-bdbd-d1049f7c5c0a" key="forced" mode="Transparent" x="0" y="140" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="60a3aadb-c45e-461e-a4aa-1eb84d07008f" key="scene" mode="Transparent" x="0" y="160" width="540" height="20"/>
+				<subreportParameter name="sqlQry">
+					<subreportParameterExpression><![CDATA["select sc.* from scene_call sc where sc.callsheet_id = " + $F{Id} + " order by line_number"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/scene.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0f662fdb-61b2-4487-84c7-6be980782e40" key="cast" positionType="Float" mode="Transparent" x="0" y="190" width="540" height="20"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionTimeZone">
+					<subreportParameterExpression><![CDATA[$P{productionTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/cast.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="705f5b4d-7d19-43ea-a789-831790eae9aa" key="standing" positionType="Float" mode="Transparent" x="0" y="220" width="540" height="30"/>
+				<subreportParameter name="productionTimeZone">
+					<subreportParameterExpression><![CDATA[$P{productionTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/extras.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="18cb68ec-3e63-4cac-9557-ea803cc1b2ea" key="staticText-15" style="csDefBoxBold" positionType="Float" mode="Opaque" x="0" y="250" width="540" height="10" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ReportsConstants.SpecialRequirements]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="94872033-3d3b-487c-947a-9e4a7fd90765" key="production" positionType="Float" mode="Transparent" x="0" y="260" width="540" height="10" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[2]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="bbc05f80-a163-41dc-b9d7-68300314370c" key="props" positionType="Float" mode="Transparent" x="0" y="270" width="540" height="10" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[3]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="e19d1aa9-ef9d-4204-b809-79f527210ce1" key="setdressing" positionType="Float" mode="Transparent" x="0" y="280" width="540" height="10" isPrintInFirstWholeBand="true" backcolor="#FFFFFF"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[4]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ee1915ef-f17d-4f1a-a9fa-3ee12d37f3c0" key="sfx" positionType="Float" x="0" y="290" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[5]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="da9e22a6-e620-4f6f-83ae-9bc62b9f072c" key="costumes" positionType="Float" x="0" y="300" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[6]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="75ec7531-93eb-4fed-b6d7-e3c6a46884aa" key="makeup" positionType="Float" x="0" y="310" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[7]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="4aa9c6c0-4945-407e-8cc0-79ee400a0775" key="lighting" positionType="Float" x="0" y="320" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[8]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ede14d98-db8a-431e-9fda-a3cf1083976a" key="vehicles" positionType="Float" x="0" y="330" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[9]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3a87e161-b8ab-46cc-b560-36ab268f88bb" key="spequip" positionType="Float" x="0" y="340" width="540" height="10"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[10]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="60a3aadb-c45e-461e-a4aa-1eb84d07008f" key="scene" positionType="Float" stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="360" width="540" height="30"/>
+				<subreportParameter name="sqlQry">
+					<subreportParameterExpression><![CDATA["select sc.* from scene_call sc where sc.advance_id = " + $F{Id} +
+" order by date, line_number"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="advance">
+					<subreportParameterExpression><![CDATA[true]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/scene.jasper"]]></subreportExpression>
+			</subreport>
+			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="180" y="20" width="180" height="50"/>
+				<imageExpression><![CDATA[$P{productionLogo}]]></imageExpression>
+			</image>
+		</band>
+		<band height="892" splitType="Stretch">
+			<elementGroup>
+				<rectangle>
+					<reportElement uuid="5ee8a7da-2b1e-4eff-a488-fe930821f857" key="rectangle-3" mode="Transparent" x="0" y="0" width="540" height="40" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="4a1e03b4-314a-4f9c-a9ed-111d24ad8681" key="staticText-25" style="csDefBoxBold" mode="Opaque" x="0" y="0" width="225" height="10" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="false">
+					<reportElement uuid="82ba331f-5093-4b92-8b9f-ebb6a26a4d07" key="textField-8" style="csDefBoxBold" x="0" y="10" width="135" height="10" isPrintWhenDetailOverflows="true"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="6bfe983a-11e1-4141-a1ed-7b1b5e2ffcfb" key="staticText-7" style="csDefBox" mode="Transparent" x="135" y="10" width="90" height="10"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="5a4074bf-5da8-455a-b1e6-1d449a9ed252" key="staticText-8" style="csDefault" mode="Transparent" x="135" y="10" width="27" height="10"/>
+					<textElement textAlignment="Right">
+						<paragraph rightIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Day]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="7dc49ce9-3e80-494b-a7c2-32568d5b2c3a" key="textField" style="csDefBold" mode="Transparent" x="162" y="10" width="18" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Shoot_Day}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="e99fa396-13a5-4231-a1e7-ea12a590ec00" key="staticText-9" style="csDefBold" mode="Transparent" x="180" y="10" width="9" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[ReportsConstants.Of]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="918a63e9-99ce-430a-97f8-b7c9d41fca79" key="textField" style="csDefBold" mode="Transparent" x="189" y="10" width="27" height="10"/>
+					<textElement>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Shoot_Days}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="479047ca-7a05-4a6e-81d7-921307548ed3" key="staticText-26" style="csDefBoxBold" x="225" y="0" width="81" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.CREWCALL]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="false">
+					<reportElement uuid="5b2c5598-9220-446a-9e39-0fa5b04ea674" key="textField-3" style="csDefBoxBold" x="306" y="0" width="99" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Center">
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="3f4beb9b-9f0b-48a4-881b-28aced47c6ca" style="csDefBox" x="405" y="0" width="135" height="20"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Call Sheet - "+$F{pubStatus}]]></textFieldExpression>
+				</textField>
+				<subreport isUsingCache="true">
+					<reportElement uuid="c5d95ecb-9153-4b7c-a551-6f21c5b371b4" key="breakfast" mode="Transparent" x="0" y="20" width="540" height="20"/>
+					<subreportParameter name="section">
+						<subreportParameterExpression><![CDATA[25]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/callNote2.jasper"]]></subreportExpression>
+				</subreport>
+			</elementGroup>
+			<subreport isUsingCache="true">
+				<reportElement uuid="ee080f95-6e4c-4fd2-9272-397e1e5fbea1" key="department1" positionType="Float" x="0" y="40" width="180" height="850"/>
+				<subreportParameter name="callsheetDate">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="columnDcIds">
+					<subreportParameterExpression><![CDATA[$P{column1dcIds}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_1">
+					<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_2">
+					<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_3">
+					<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_4">
+					<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="b4a9b659-7095-4a19-b008-784b4aae0fef" key="department2" positionType="Float" x="180" y="40" width="180" height="850"/>
+				<subreportParameter name="callsheetDate">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="columnDcIds">
+					<subreportParameterExpression><![CDATA[$P{column2dcIds}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_1">
+					<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_2">
+					<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_3">
+					<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_4">
+					<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3cfdcb05-23f9-4ba5-b49c-7e2e47675396" key="department3" positionType="Float" mode="Transparent" x="360" y="40" width="180" height="850"/>
+				<subreportParameter name="callsheetDate">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="columnDcIds">
+					<subreportParameterExpression><![CDATA[$P{column3dcIds}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_1">
+					<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_2">
+					<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_3">
+					<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="catering_4">
+					<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/department.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="46" splitType="Immediate">
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement uuid="cf009718-488d-4f85-b37f-aebb55c9cd30" key="note" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="540" height="46"/>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/note.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="817aeb05-1d79-4a8e-86ad-275a8d144030" key="upm" stretchType="RelativeToBandHeight" x="0" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[21]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="f48b3d1f-f958-413e-a473-20159daaae36" key="upm" stretchType="RelativeToBandHeight" x="135" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[22]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="1b51ef45-4d65-43be-b7a6-618b777021e8" key="upm" stretchType="RelativeToBandHeight" x="270" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[23]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0a218f27-1697-4ce7-964a-382212bb8026" key="upm" stretchType="RelativeToBandHeight" x="405" y="0" width="135" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="callsheetId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="section">
+					<subreportParameterExpression><![CDATA[24]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/callsheet/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="bc2b8faa-9e95-4664-9d61-feac82811740" isPrintRepeatedValues="false" x="0" y="20" width="540" height="8"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/ruler.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="bb0c0804-c91a-4ba6-92aa-945af687e3b5" key="staticText-1" x="0" y="20" width="540" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Requested Call Sheet was not found]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

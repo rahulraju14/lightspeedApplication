@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div>
+
+		<div class="W75percnt FL">
+			<h2>
+
+				<h:outputText rendered="#{not callSheetViewBean.editMode}"
+						value="#{callSheetViewBean.callsheet.title}" />
+
+				<h:panelGroup rendered="#{callSheetViewBean.editMode}">
+					<ace:textEntry maxlength="100" styleClass="W90percnt txt16 B"
+							value="#{callSheetViewBean.callsheet.title}" />
+				</h:panelGroup>
+
+			</h2>
+		</div>
+
+		<div class="FL txt24 pad10tp">
+				Call Sheet -
+				<h:outputText value="FINAL"
+						rendered="#{callSheetViewBean.callsheet.status eq 'PUBLISHED'}" />
+				<h:outputText value="PRELIM"
+						rendered="#{callSheetViewBean.callsheet.status ne 'PUBLISHED'}" />
+		</div>
+
+	</div>
+
+</ui:composition>

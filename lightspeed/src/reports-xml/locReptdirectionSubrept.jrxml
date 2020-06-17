@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="locationDirections" pageWidth="277" pageHeight="802" columnWidth="277" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="82c79a97-6919-4b4c-9cf1-0d51e3e87a59">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<subDataset name="dataset1" uuid="e167baad-0b99-4bb5-8f45-88580a72fdb7"/>
+	<parameter name="location" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT r.directions  FROM real_world_element r where  r.id=$P{location};]]>
+	</queryString>
+	<field name="directions" class="java.lang.String"/>
+	<columnHeader>
+		<band height="12" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4a9e58ab-5800-47a7-bdc7-bca6b0ef6fa5" x="0" y="0" width="100" height="12"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Directions]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="ac876d5c-b396-4cca-82c1-fe7e004cafd0" key="textField" x="0" y="0" width="276" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{directions}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

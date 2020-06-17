@@ -1,0 +1,185 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<c:set var="show" value="#{not empty authBean.pgFields['10.1,view']}" />
+	<ace:tabPane label="#{show ? 'Students' : ''}" disabled="#{not show}">
+
+		<div class="container">
+			<!-- The below button is used to export only selected data -->
+			<ace:pushButton id="export" value="Export Selected  Data"
+				actionListener="#{studentBean.exportSelectedData()}"
+				style="position: relative; margin-left: 13px;"></ace:pushButton>
+			<ace:message for="export" class="infoMsgCont"></ace:message>
+
+			<!-- The below button is used to export all data -->
+			<ace:pushButton id="exportall" value="Export All Data"
+				actionListener="#{studentBean.exportAllData()}"
+				style="position: absolute; margin-left: 24px; margin-top:-19px;width: 110px; height: 28px;"></ace:pushButton>
+			<ace:message for="exportall" style="color:red;"></ace:message>
+
+
+
+			<!-- The below button is used for popup -->
+			<ace:pushButton
+				style="position: absolute; margin-left: 163px; margin-top:-19px;width: 110px; height: 28px;"
+				value="PopUp" type="button" action="#{studentBean.popUp()}">
+
+			</ace:pushButton>
+
+			<ace:dataTable var="sb" value="#{studentBean.studentList}"
+				class="ui-datatable" scrollable="true" selectionMode="single"
+				scrollHeight="310" filterListener="#{studentBean.onFilterChange}"
+				styleClass="bk_sl_grid" stateMap="#{studentBean.stateMap}">
+
+				<ace:column styleClass="">
+					<f:facet name="header">
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+
+							<h:selectBooleanCheckbox value="#{studentBean.checkedForAll}"
+								styleClass="iceSelBoolChkbx"
+								valueChangeListener="#{studentBean.masterCheckBoxListener}"
+								onclick="submit()">
+								<ace:ajax></ace:ajax>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+					</f:facet>
+					<div>
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+
+							<h:selectBooleanCheckbox value="#{sb.checked}"
+								styleClass="iceSelBoolChkbx"
+								valueChangeListener="#{studentBean.listenSingleCheck}">
+								<ace:ajax />
+								<f:attribute name="selectedRow" value="#{sb}"></f:attribute>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+					</div>
+				</ace:column>
+
+				<ace:column headerText="Student Id" filterBy="#{sb.id}"
+					filterMatchMode="contains" sortBy="#{sb.id}"
+					style="font-size: 13px;" styleClass="">
+					<h:outputText value="#{sb.id}"
+						style="font-size: 20px;text-align:center;"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="Students FirstName"
+					filterBy="#{sb.firstName}" filterMatchMode="contains"
+					sortBy="#{sb.firstName}" style="font-size: 13px;" styleClass="">
+					<h:outputText value="#{sb.firstName}"
+						style="font-size: 20px;text-align:center;"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="Student LastName " filterBy="#{sb.lastName}"
+					filterMatchMode="contains" sortBy="#{sb.lastName}"
+					style="font-size: 13px;" styleClass="">
+					<h:outputText value="#{sb.lastName}"
+						style="font-size: 20px;text-align:center;"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="Status" id="status"
+					styleClass="W10percnt CT">
+					<div style="width: 100%" class="FL BKgrey">
+
+						<div style="width: #{sb.percentageArray[0]}%" class="FL bkDocGreen">
+							<h:outputText>&#160;</h:outputText>
+						</div>
+
+						<div style="width: #{sb.percentageArray[1]}%" class="FL bkDocRed">
+							<h:outputText>&#160;</h:outputText>
+						</div>
+
+						<div style="width: #{sb.percentageArray[2]}%" class="FL bkDocBlack">
+							<h:outputText>&#160;</h:outputText>
+						</div>
+
+
+					</div>
+
+
+
+				</ace:column>
+
+
+				<ace:column headerText="Student EmailId " filterBy="#{sb.emailId}"
+					filterMatchMode="contains" sortBy="#{sb.emailId}"
+					style="font-size: 13px;" styleClass="">
+					<h:outputText value="#{sb.emailId}"
+						style="font-size: 20px;text-align: center;"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="Student MobileNo" filterBy="#{sb.mobileNo}"
+					filterMatchMode="contains" sortBy="#{sb.mobileNo}"
+					style="font-size: 13px;" styleClass="">
+					<h:outputText value="#{sb.mobileNo}"
+						style="font-size: 20px;text-align: center;"></h:outputText>
+				</ace:column>
+
+				<ace:column headerText="English" style="width:3%;" styleClass="CT">
+
+					<ace:pushButton
+						style="background: url('../../i/english.png'); width: 1px;height: 20px;"
+						actionListener="#{studentBean.stateTransfer}" action="toSubject">
+						<f:attribute name="data" value="#{sb.stId}"></f:attribute>
+					</ace:pushButton>
+
+
+				</ace:column>
+				<ace:column headerText="Math" style="width:3%;">
+					<ace:pushButton actionListener="#{studentBean.stateTransfer}"
+						action="toSubject"
+						style="background: url('../../i/math.png'); width: 1px;height: 20px;">
+						<f:attribute name="data" value="#{sb.stId}"></f:attribute>
+					</ace:pushButton>
+				</ace:column>
+				<ace:column headerText="Chemistry" style="width:3%;">
+					<ace:pushButton actionListener="#{studentBean.stateTransfer}"
+						action="toSubject"
+						style="background: url('../../i/chemistry.png'); width: 1px;height: 20px;">
+						<f:attribute name="data" value="#{sb.stId}"></f:attribute>
+					</ace:pushButton>
+				</ace:column>
+
+			</ace:dataTable>
+			<!-- <ace:panel style="position: absolute; margin-top: -148px;">
+				<h2>City:</h2>
+				<h:panelGroup rendered="#{zipCodeBean.display}">
+					<p
+						style="position: absolute; margin-top: -29px; margin-left: 70px; font-size: 20px;">#{zipCodeBean.city}</p>
+				</h:panelGroup>
+				<h2>Zip Code:</h2>
+				<h:panelGroup rendered="#{zipCodeBean.display}">
+					<p
+						style="position: absolute; margin-top: -30px; margin-left: 130px; font-size: 20px;">#{zipCodeBean.zipCode}</p>
+				</h:panelGroup>
+			</ace:panel> -->
+
+
+			<div class="rowBtnLgd">
+				<div class="FL pad2tp pad17lt">
+
+					<h:graphicImage styleClass="FL pad15lt" url="../../i/greenBox.png"
+						alt="" />
+					<h:outputText styleClass="FL pad5lt pad2tp" value="Passed" />
+					<h:graphicImage styleClass="FL pad15lt" url="../../i/redBox.png"
+						alt="" />
+					<h:outputText styleClass="FL pad5lt pad2tp" value="Failed" />
+					<h:graphicImage styleClass="FL pad5lt" url="../../i/blackBox.png"
+						alt="" />
+					<h:outputText styleClass="FL pad5lt pad2tp" value="Exam Not Given" />
+
+				</div>
+			</div>
+
+
+		</div>
+	</ace:tabPane>
+
+</ui:composition>

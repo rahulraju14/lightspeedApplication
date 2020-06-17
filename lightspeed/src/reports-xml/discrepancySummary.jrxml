@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="discrepancySummary" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="18" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select * from weekly_time_card where end_date = '2013-06-15' and prod_id='PT25' order by end_date, last_name;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Default Production Name"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sfDAO" class="com.lightspeedeps.dao.StartFormDAO" isForPrompting="false">
+		<parameterDescription><![CDATA[Needed by SSN scriptlet]]></parameterDescription>
+	</parameter>
+	<parameter name="weekEndDate" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Date("09/14/13")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="totalTcs" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[132]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aicp" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="end_date" class="java.sql.Date"/>
+	<field name="Last_Name" class="java.lang.String"/>
+	<field name="First_Name" class="java.lang.String"/>
+	<field name="Social_Security" class="java.lang.String"/>
+	<field name="Loan_Out_Corp" class="java.lang.String"/>
+	<field name="Prod_Name" class="java.lang.String"/>
+	<field name="Prod_Co" class="java.lang.String"/>
+	<field name="Job_Name" class="java.lang.String"/>
+	<field name="Dept_Name" class="java.lang.String"/>
+	<field name="Off_Production" class="java.lang.Boolean"/>
+	<field name="Occupation" class="java.lang.String"/>
+	<field name="Occ_Code" class="java.lang.String"/>
+	<field name="Union_Number" class="java.lang.String"/>
+	<field name="Rate" class="java.math.BigDecimal"/>
+	<field name="guar_hours" class="java.math.BigDecimal"/>
+	<field name="State_Worked" class="java.lang.String"/>
+	<field name="City_Worked" class="java.lang.String"/>
+	<field name="Fed_Corp_Id" class="java.lang.String"/>
+	<field name="State_Corp_Id" class="java.lang.String"/>
+	<field name="Account_Major" class="java.lang.String"/>
+	<field name="Account_Sub" class="java.lang.String"/>
+	<field name="Account_Dtl" class="java.lang.String"/>
+	<field name="Account_Set" class="java.lang.String"/>
+	<field name="Free" class="java.lang.String"/>
+	<field name="Free2" class="java.lang.String"/>
+	<field name="Private_Comments" class="java.lang.String"/>
+	<field name="Grand_Total" class="java.math.BigDecimal"/>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Comments" class="java.lang.String"/>
+	<field name="Adjusted" class="java.lang.Boolean"/>
+	<field name="Start_Form_Id" class="java.lang.Integer"/>
+	<variable name="pbLineCount" class="java.lang.Integer" calculation="System"/>
+	<variable name="sigLineCount" class="java.lang.Integer" calculation="System"/>
+	<group name="detailBreak">
+		<groupExpression><![CDATA[$F{Id}]]></groupExpression>
+	</group>
+	<background>
+		<band height="720" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="45d5a612-1a4e-42db-9dc2-96759fbf75b7" mode="Transparent" x="0" y="0" width="540" height="720"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c8c57c42-8562-445c-badc-683f9547b294" style="font12Bold" x="0" y="0" width="378" height="13"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Summary Discrepancy Report: Timecards and Production Reports]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="81" y="13" width="216" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{productionName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c8c57c42-8562-445c-badc-683f9547b294" style="font12Bold" x="378" y="0" width="81" height="26"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Week Ending:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="b220cbbc-f093-4fca-9ce6-00394c35247e" style="tcDefault" x="459" y="0" width="81" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weekEndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c8c57c42-8562-445c-badc-683f9547b294" style="font12Bold" x="459" y="0" width="81" height="13">
+					<printWhenExpression><![CDATA[$P{weekEndDate} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(All)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="0" y="13" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($P{aicp} ? "Production Co.:" : "Prod. Name:")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="13">
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBoxBold" mode="Opaque" x="0" y="0" width="27" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBoxBold" mode="Opaque" x="27" y="0" width="108" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBoxBold" mode="Opaque" x="162" y="0" width="81" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBoxBold" mode="Opaque" x="243" y="0" width="135" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Occupation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBoxBold" mode="Opaque" x="135" y="0" width="27" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[SS #]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" mode="Opaque" x="378" y="0" width="162" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{aicp} ? "Project Name" : "Account"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Prevent">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="0" y="0" width="27" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c1a48690-985a-4bb3-9886-1404f070c3ff" style="tcDefBox" x="27" y="0" width="108" height="13"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Last_Name} + ", " + $F{First_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="162" y="0" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Dept_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="243" y="0" width="135" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="135" y="0" width="27" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.startFormSSN4A($F{Start_Form_Id})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="378" y="0" width="162" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{aicp} ?
+$F{Job_Name} :
+($F{Account_Major}==null ? "" : $F{Account_Major}) +
+($F{Account_Dtl}==null || $F{Account_Dtl}.length()==0 ? "" :  " - " + $F{Account_Dtl}) +
+($F{Account_Sub}==null || $F{Account_Sub}.length()==0 ? "" :  " - " + $F{Account_Sub}) +
+($F{Account_Set}==null || $F{Account_Set}.length()==0 ? "" :  " - " + $F{Account_Set}) +
+($F{Free}==null || $F{Free}.length()==0 ? "" :  "  " + $F{Free}) +
+($F{Free2}==null || $F{Free2}.length()==0 ? "" :  "  " + $F{Free2})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="31864c06-8e8a-4d84-9002-ca661842e74c" x="0" y="0" width="135" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement uuid="494f17ca-f952-4bf9-a735-d28c3ecbb3c2" style="tcDefault" x="459" y="0" width="81" height="17">
+					<printWhenExpression><![CDATA[(
+  Math.max($V{pbLineCount}-20,0)
+  + Math.max(($V{sigLineCount}*2)-5,0)
+  ) > 9 ||
+$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="39" splitType="Prevent">
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefault" x="0" y="13" width="297" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="11" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Total timecards with discrepancies for week ending ]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy:" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="297" y="13" width="81" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weekEndDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="378" y="13" width="27" height="26"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefault" x="0" y="13" width="378" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="11" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Total timecards with discrepancies for All week-ending dates:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="405" y="13" width="135" height="26"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(out of " + $P{totalTcs} + ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="39">
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefault" x="0" y="13" width="297" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="11" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Total timecards with discrepancies for week ending ]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy: 0" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="297" y="13" width="135" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{weekEndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefault" x="0" y="13" width="378" height="26">
+					<printWhenExpression><![CDATA[$P{weekEndDate} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="11" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Total timecards with discrepancies for All week-ending dates: 0]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- All the columns of the timecard "daily hours" table for the Full Timecard page -->
+	<ace:columnGroup type="header">
+		<ace:row>
+			<ace:column style="width:6%;"></ace:column>
+			<ace:column style="width:3.8%;">Job</ace:column>
+			<ace:column style="width:2.8%;"></ace:column>
+			<ace:column style="width:3.8%;">Job</ace:column>
+			<ace:column style="width:2.8%;"></ace:column>
+			<ace:column style="width:3.7%;">Job</ace:column>
+			<ace:column style="width:2.8%;">Splt</ace:column>
+		</ace:row>
+		<ace:row>
+			<ace:column style="width:6%;">Date</ace:column>
+			<ace:column style="width:3.8%;">#</ace:column>
+			<ace:column style="width:2.8%;">Splt1</ace:column>
+			<ace:column style="width:3.8%;">#</ace:column>
+			<ace:column style="width:2.8%;">Splt2</ace:column>
+			<ace:column style="width:3.7%;">#</ace:column>
+			<ace:column style="width:2.8%;">Pct</ace:column>
+		</ace:row>
+	</ace:columnGroup>
+
+
+	<!-- Day & Date -->
+	<ace:column>
+		<h:outputText styleClass="FL pad2lt txt12" value="#{dailyTime.date}" style="font-weight: bold;">
+			<f:convertDateTime pattern="EE" timeZone="#{timezone}" />
+		</h:outputText>
+		<h:outputText styleClass="FR pad2rt txt12" value="#{dailyTime.date}">
+			<f:convertDateTime pattern="MM/dd" timeZone="#{timezone}" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- Job1 -->
+	<ace:column>
+		<h:panelGroup>
+			<h:selectOneMenu
+					style="width:90%;" 
+					valueChangeListener="#{fullTimecardBean.listenJobNumberChange}"
+					value="#{dailyTime.jobNum1}"
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}">
+				<f:selectItems value="#{fullTimecardBean.jobNumberDL}" />
+				<f:ajax execute="@this" render="@all"/>
+			</h:selectOneMenu>
+			<h:outputText
+					value="#{dailyTime.jobNum1}"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- split start 2 -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry id="JS_SPLIT1" styleClass="tcEdHr" maxlength="5"
+					value="#{dailyTime.splitStart2}" 
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}"
+					valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:convertNumber type="number" pattern="#0.##" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.splitStart2}"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}">
+				<f:convertNumber type="number" pattern="#0.##" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- job 2 -->
+	<ace:column>
+		<h:panelGroup>
+			<h:selectOneMenu
+					style="width:90%;" 
+					valueChangeListener="#{fullTimecardBean.listenJobNumberChange}"
+					value="#{dailyTime.jobNum2}"
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}">
+				<f:selectItems value="#{fullTimecardBean.jobNumberDL}" />
+				<f:ajax execute="@this" render="@all"/>
+			</h:selectOneMenu>
+			<h:outputText
+					value="#{dailyTime.jobNum2}"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}">
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- split start 3 -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry id="JS_SPLIT2" styleClass="tcEdHr" maxlength="5"
+					value="#{dailyTime.splitStart3}" 
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}"
+					valueChangeListener="#{fullTimecardBean.listenDailyChange}">
+				<f:convertNumber type="number" pattern="#0.##" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.splitStart3}"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}">
+				<f:convertNumber type="number" pattern="#0.##" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- job 3 -->
+	<ace:column>
+		<h:panelGroup>
+			<h:selectOneMenu
+					style="width:90%;" 
+					valueChangeListener="#{fullTimecardBean.listenJobNumberChange}"
+					value="#{dailyTime.jobNum3}"
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}">
+				<f:selectItems value="#{fullTimecardBean.jobNumberDL}" />
+				<f:ajax execute="@this" render="@all"/>
+			</h:selectOneMenu>
+			<h:outputText value="#{dailyTime.jobNum3}"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- Split by Percent -->
+	<ace:column>
+		<h:panelGroup>
+			<h:selectBooleanCheckbox id="JS_SPLIT_PCT"
+					value="#{dailyTime.splitByPercent}" 
+					valueChangeListener="#{fullTimecardBean.listenDailyChange}"
+					rendered="#{(fullTimecardBean.editHtg eq true) and !dailyTime.noStartForm}" >
+				<f:ajax execute="@this" render="@all"/>
+			</h:selectBooleanCheckbox>
+			<h:selectBooleanCheckbox
+					style="width:80%; text-align: center"
+					value="#{dailyTime.splitByPercent}" disabled="true"
+					rendered="#{dailyTime.noStartForm or ! fullTimecardBean.editHtg}" />
+		</h:panelGroup>
+	</ace:column>
+</ui:composition>

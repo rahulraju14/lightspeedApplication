@@ -1,0 +1,310 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- My Account page: Payroll information section -->
+
+	<div class="rowCont pad10tp pad15lt">
+		<div class="FL pad10tp W50percnt">
+			<h:outputText styleClass="FL B txt13 W80percnt" value="PAYROLL INFORMATION:" />
+		</div>
+		<div class="FL W45percnt">
+			<div class="FR">
+				<h:outputText styleClass="FL" escape="false"
+						value="&lt;strong&gt;&lt;u&gt;Tip:&lt;/u&gt;&lt;/strong&gt; &#160;
+			 			You can automatically fill out &lt;strong&gt; Commercial Contract Forms &lt;/strong&gt; using&lt;br/&gt;
+						&#160; &#160; &#160; &#160; &#160; your information from this &lt;strong&gt; My Account &lt;/strong&gt; page." />
+			</div>
+		</div>
+		<div class="FR W45percnt" style="margin-top: 8px;">
+			<!-- Send Documents to Email  -->
+			<div class="rowCont FL" style="margin-left: -4%;">
+				<span class="fdNm" style="width:156px;">
+					<h:outputText value="Send Documents to Email:" />
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="sendDocumentsToEmail_view" disabled="#{not userViewBean.editMode}" 
+								value="#{userViewBean.user.sendDocumentsToEmail}" style="width:43%;"/>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="sendDocumentsToEmail" value="#{userViewBean.user.sendDocumentsToEmail}" style="width:43%;"/>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+	</div>
+	
+	<div class="FL rowCont pad10tp">
+		<!-- COLUMN 1 -->
+		<div class="FL pad40lt W30percnt">
+		<!-- Corporate Name -->
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm" style="width: 100px;">
+					<h:outputText value="Corporate Name:" />
+				</span>
+				<h:panelGroup
+					rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp">
+						<h:outputText value="#{userViewBean.user.loanOutCorpName}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="loanOutCorpName" maxlength="35"
+							style="width:33%;"
+							value="#{userViewBean.user.loanOutCorpName}">
+								<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- SOCIAL SECURITY -->
+			<div class="rowCont FL pad15tp">
+				<span class="fdNm" style="width: 100px;">
+					<h:outputText value="SIN / SSN:"/>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_xsm FL pad2tp">
+						<h:outputText value="#{userViewBean.user.viewSSN}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="socialSecurity" maxlength="11"
+							style="width:33%;"
+							value="#{userViewBean.user.socialSecurity}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			
+			<!-- GST/HST # -->
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm" style="width: 100px;"> <h:outputText
+						value="GST/HST #:" />
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp"> <h:outputText
+							value="#{userViewBean.user.gstNumber}" />
+					</span>
+
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm"> 
+					  <ace:textEntry id="gstNumber"
+							style="width:33%" value="#{userViewBean.user.gstNumber}"
+							disabled="#{userViewBean.gstChkbox}">
+					        <ace:ajax execute="@this" render="@all"/>
+					  </ace:textEntry>
+						</span>
+					<icecore:setEventPhase events="ValueChangeEvent"
+						phase="INVOKE_APPLICATION">
+						<h:selectBooleanCheckbox styleClass="ckbx" id="gstCheckBox"  value="#{userViewBean.gstChkbox}"
+							valueChangeListener="#{userViewBean.listenGSTChange}"
+							disabled="#{! userViewBean.editMode}">
+							<ace:ajax render="gstNumber" />
+						</h:selectBooleanCheckbox>Not Registered
+					</icecore:setEventPhase>
+				</h:panelGroup>
+			</div>
+			<!-- QST # -->
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm" style="width: 100px;"> <h:outputText
+						value="QST #:" />
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp"> <h:outputText
+							value="#{userViewBean.user.qstNumber}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm"> 
+					  <ace:textEntry id="qstNumber"
+							style="width:33%;" value="#{userViewBean.user.qstNumber}"
+							disabled="#{userViewBean.qstChkbox}">
+							<ace:ajax execute="@this" render="@all"/>
+					  </ace:textEntry>
+					</span>
+					<icecore:setEventPhase events="ValueChangeEvent"
+						phase="INVOKE_APPLICATION">
+						<h:selectBooleanCheckbox styleClass="ckbx" id="qstCheckBox"  value="#{userViewBean.qstChkbox}"
+							valueChangeListener="#{userViewBean.listenQSTChange}"
+							disabled="#{! userViewBean.editMode}">
+							<ace:ajax render="qstNumber" />
+						</h:selectBooleanCheckbox>Not Registered
+					</icecore:setEventPhase>
+				</h:panelGroup>
+			</div>
+			<!-- Full Member # -->
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm" style="width:130px;">
+					<h:outputText value="ACTRA Member #:" /><!-- ACTRA Member # -->
+				</span>
+				<h:panelGroup
+					rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad5lt pad4tp">
+						<h:outputText value="#{userViewBean.user.fullMemberNum}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="fullMemberNum" style="width:33%;"
+							value="#{userViewBean.user.fullMemberNum}">
+						    <ace:ajax execute="@this" render="@all"/>
+						</ace:textEntry> 	 
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- Apprentice -->
+			<div class="rowCont FL pad5tp">
+				<span class="fdNm" style="width: 120px;">
+					<h:outputText value="ACTRA Apprentice #"/><!-- ACTRA Apprentice # -->
+				</span> 
+				<h:panelGroup
+					rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp">
+						<h:outputText value="#{userViewBean.user.apprentice}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="apprentice" maxlength="20"
+							style="width:33%;"
+							value="#{userViewBean.user.apprentice}">
+								<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+		
+		<!-- COLUMN 2 -->
+		<div class="FL pad15tp W30percnt pad10lt">
+			<!-- CITIZEN -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="Citizenship:" />
+				</span>
+				<h:selectOneMenu id="citizenStatus" styleClass="FL" 
+						style="margin-left:20px; width:35%"
+						disabled="#{not userViewBean.editMode}"
+						value="#{userViewBean.user.citizenStatus}">
+					<f:selectItems value="#{userViewBean.citizenStatusItems}"/>
+				</h:selectOneMenu>
+			</div>
+		
+			<!-- GENDER -->
+			<div class="rowCont FL">
+				<span class="fdNm" style="width:99px;"><h:outputText value="Gender:"/>
+				</span>
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				   <h:selectOneMenu id="gender" styleClass="FL" valueChangeListener="#{userViewBean.listenGenderChange}"
+						style="width:80px;"
+						disabled="#{not userViewBean.editMode}"
+						value="#{userViewBean.user.gender}">
+						<f:selectItems value="#{enumList.genderFullList}" />
+						<f:converter converterId="lightspeed.GenderConverter" />
+						<f:ajax  render="@all" />
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+				<!-- LS-1958 User Profile Gender Field -->
+				<h:panelGroup rendered="#{userViewBean.user.gender.other}">
+					<span class="fd_sm" style="margin-left: 7px; width: 20%;"> 
+					<ace:textEntry id="otherGenderDesc" maxlength="50" value="#{userViewBean.user.otherGenderDesc}" disabled="#{not userViewBean.editMode}"/>
+					</span>
+				</h:panelGroup>
+			</div>
+			
+			<!-- BIRTH DATE -->
+			<div class="rowCont FL pad5tp">
+				<h:panelGroup styleClass="FL">
+					<span class="fdNm pad2rt" style="width:99px;"><h:outputText value="Date of Birth:" />
+					</span>
+					<h:outputText rendered="#{not userViewBean.editMode}"
+						styleClass="LH22 FL" style="width:115px"
+						value="#{userViewBean.user.birthdate}">
+						<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+					<ace:dateTimeEntry id="birthdate" rendered="#{userViewBean.editMode}" tabindex="0"
+						value="#{userViewBean.user.birthdate}" style="width:110px;display: grid;"
+						renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax execute="@this" render="@all"/>
+					</ace:dateTimeEntry>
+				</h:panelGroup>
+				
+				<!-- MINOR -->
+				<h:panelGroup styleClass="FL #{userViewBean.editMode ? 'pad30lt' : 'pad15lt'}">
+					<span class="fdNm" style="width:36px;">
+						<h:outputText value="Minor:"/>
+					</span>
+						<h:selectBooleanCheckbox id="minorChkBx" styleClass="FL pad10lt txt11 LH18"
+							value="#{userViewBean.user.minor}"
+							disabled="#{! userViewBean.editMode}" />
+				</h:panelGroup>
+			</div>
+			
+			<!-- GUARDIAN NAME -->
+			<div class="rowCont FL pad3tp">
+				<span class="fdNm" style="width:99px;">
+					<h:outputText value="Guardian Name:" />
+				</span>
+				<h:panelGroup
+					rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp pad2lt">
+						<h:outputText value="#{userViewBean.user.guardianName}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry id="guardianName" style="width:65%;"
+							value="#{userViewBean.user.guardianName}">
+							<ace:ajax execute="@this" render="@all"/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<h:panelGroup rendered="#{fFApplicationScopeBean.useFeature('TTCO_SHOW_UDA')}">
+			<!-- UDA Member -->
+			<div class="rowCont FL pad3tp">
+				<span class="fdNm" style="width:99px;">
+					<h:outputText value="UDA Member #:" />
+				</span>
+				<h:panelGroup
+					rendered="#{not userViewBean.editMode}">
+					<span class="fd_sm FL pad4tp pad2lt">
+						<h:outputText value="#{userViewBean.user.udaMember}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry style="width:65%;" id="udaMemNum"
+							value="#{userViewBean.user.udaMember}" />
+					</span>
+				</h:panelGroup>
+			</div>
+			</h:panelGroup>
+		</div>
+		
+		<!-- COLUMN 3 -->
+		<div class="FL W30percnt">
+			<!-- EMERGENCY CONTACT -->
+			<ui:include src="acctCanadaEmerg.xhtml" />
+		</div>
+	</div>
+	
+	<!-- ADDRESS INFORMATION -->
+	<ui:include src="acctCanadaAddress.xhtml" />
+
+</ui:composition>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:panelGrid id="grid" columns="8" cellpadding="0" style="width:903px;"
+			styleClass="grid1r scenelistedit_#{sceneView.edit}"
+			onclick="sceneRowClicked('importreview:scenelist:' + #{sceneView.rowNumber} + ':editbtn', #{sceneView.scene.omitted});return false;"
+			columnClasses="columnExpand,columnSheet,columnScene,columnIntExt,columnLocation,columnDayNight,columnPages,columnScriptDay">
+
+		<ace:column>
+			<h:commandButton value="" style="height:15px;"
+					image="#{sceneView.showData ? '../../i/minus.gif' : '../../i/plus.gif'}"
+					action="#{scriptFinalReviewBean.expandTableListener}">
+				<f:setPropertyActionListener target="#{scriptFinalReviewBean.showRowNumber}"
+						value="#{sceneView.rowNumber}" />
+				<ace:ajax />
+			</h:commandButton>
+			<h:commandButton style="display:none;" action="#{scriptFinalReviewBean.actionEdit}" id="editbtn" value="n"
+					rendered="#{not sceneView.edit}">
+				<f:setPropertyActionListener target="#{scriptFinalReviewBean.showRowNumber}" value="#{sceneView.rowNumber}" />
+				<ace:ajax />
+			</h:commandButton>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText value="#{sceneView.sheetNumber}"/>
+		</ace:column>
+
+		<ace:column>
+			<div class="FL scc #{scriptFinalReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+				<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+			</div>
+			<h:panelGroup
+					style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+					styleClass="scc #{scriptFinalReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+				<a href="#" class="non_link" title="#{sceneView.sceneNumbers}">
+					<h:outputText styleClass="DB" value="#{sceneView.sceneNumbers}" />
+				</a>
+			</h:panelGroup>
+			<div class="FL scc #{scriptFinalReviewBean.colorClassMap[sceneView.scene.colorKey]} scc_del_#{sceneView.scene.omitted}">
+				<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+			</div>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText value="#{sceneView.scene.ieType}"
+					rendered="#{! sceneView.edit}" styleClass="columnIntExt"/>
+			<span class="FL pad1lt">
+				<h:selectOneListbox value="#{sceneView.scene.ieType}"
+						rendered="#{sceneView.edit}"
+						disabled="#{sceneView.scene.omitted}"
+						size="1">
+					<f:selectItems value="#{enumList.intExtList}"/>
+					<ace:ajax />
+				</h:selectOneListbox>
+			</span>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText value="#{sceneView.title}"
+					rendered="#{! sceneView.scene.omitted and ! sceneView.edit}" styleClass="columnLocation"/>
+			<h:outputText value="(Omitted)" rendered="#{sceneView.scene.omitted}"/>
+			<span class="FL pad1lt">
+				<h:selectOneListbox value="#{locationSelector.locationId}"
+						rendered="#{! sceneView.scene.omitted and sceneView.edit}"
+						valueChangeListener="#{locationSelector.actionLocationSelected}"
+						disabled="#{sceneView.scene.omitted}"
+						size="1">
+					<f:selectItems value="#{locationSelector.locationList}"/>
+					<ace:ajax />
+				</h:selectOneListbox>
+			</span>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText value="#{sceneView.scene.dnType}"
+					rendered="#{! sceneView.edit}" styleClass="columnDayNight"/>
+			<span class="FL pad1lt">
+				<h:selectOneListbox value="#{sceneView.scene.dnType}"
+						rendered="#{sceneView.edit}"
+						disabled="#{sceneView.scene.omitted}"
+						size="1">
+					<f:selectItems value="#{enumList.dayNightList}"/>
+					<ace:ajax />
+				</h:selectOneListbox>
+			</span>
+		</ace:column>
+
+		<ace:column rendered="#{not sceneView.scene.omitted}">
+			<ace:textEntry style="width:48px;" value="#{sceneView.scene.pageLength}"
+					autocomplete="off">
+				<ace:ajax />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column rendered="#{sceneView.scene.omitted}">
+			<h:outputText>&#160;</h:outputText>
+		</ace:column>
+
+		<ace:column rendered="#{not sceneView.scene.omitted}">
+			<ace:textEntry style="width:48px;" value="#{sceneView.scene.scriptDay}"
+					autocomplete="off">
+				<ace:ajax />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column rendered="#{sceneView.scene.omitted}">
+			<h:outputText>&#160;</h:outputText>
+		</ace:column>
+
+	</h:panelGrid>
+
+</ui:composition>

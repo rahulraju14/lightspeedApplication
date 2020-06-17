@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pw1DayHrs" pageWidth="40" pageHeight="842" columnWidth="40" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="53809bd2-534d-4401-9299-fdf8885b2a7e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="weeklyId" class="java.lang.String"/>
+	<parameter name="dayNum" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select sum(ifnull(hours_10,0) + ifnull(hours_15,0) +
+ifnull(hours_cust1,0) + ifnull(hours_cust2,0) +
+ifnull(hours_cust3,0) + ifnull(hours_cust4,0) ) as totalHours, dt.worked
+from weekly_time_card w, pay_job pj, pay_job_daily pjd, daily_time dt
+where w.id = $P{weeklyId} and pj.weekly_id = $P{weeklyId}
+and dt.weekly_id = $P{weeklyId}
+and dt.day_num = $P{dayNum}
+and pjd.job_id = pj.id
+and pjd.day_num = $P{dayNum};]]>
+	</queryString>
+	<field name="totalHours" class="java.math.BigDecimal"/>
+	<field name="worked" class="java.lang.Boolean"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement uuid="6ae5bc2a-032b-47d5-88eb-0fb83032769c" style="tcDefault" stretchType="RelativeToBandHeight" x="0" y="0" width="40" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{worked} ? null :
+($F{totalHours}.signum()==0 ? null : $F{totalHours})
+)]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="6ae5bc2a-032b-47d5-88eb-0fb83032769c" style="tcDefault" stretchType="RelativeToBandHeight" x="0" y="0" width="40" height="20">
+					<printWhenExpression><![CDATA[$F{worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["W"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

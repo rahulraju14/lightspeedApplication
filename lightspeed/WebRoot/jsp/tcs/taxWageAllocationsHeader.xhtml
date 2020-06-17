@@ -1,0 +1,224 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Header section for Tours Tax Wage Allocation page-->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	<c:set var="form" value="#{bean.allocationForm}" />
+	<c:set var="editable" value="#{bean.editMode}" />
+	<c:set var="columnOneWidth" value="width:13%;" />
+	<c:set var="columnTwoWidth" value="width:35%;" />
+	<c:set var="columnThreeWidth" value="width:20%;" />
+	<c:set var="columnFourWidth" value="width:32%;" />
+
+	<div>
+		<div class="W100percnt" style="height:20px;">
+			<!-- Title -->
+			<h:panelGroup styleClass="FL pad100lt txt16 B W70percnt CT" >
+				<h:outputText value="#{msg.Tours_Allocation_Title}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="W25percnt">
+				<h:panelGroup styleClass="FR pad40rt" rendered="#{not editable and bean.showNewRevisionBtn}">
+					<span class="btnMiniLtHot" />
+					<span><ace:linkButton value="Create New Revision"
+							title="Create new revision"
+							action="#{bean.actionCreateRevision}" styleClass="btnMiniCt" />
+					</span>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+			</h:panelGroup>
+		</div>
+		<div id="rowCont">&#160;</div>
+
+		<div id="rowCont">&#160;</div>
+		<div id="rowCont">&#160;</div>
+		<div class="pad15lt pad15rt">
+			<div class="W100percnt">
+				<table style="width:100%;">
+					<!-- Row 1 -->
+					<tr style="height:26px;">
+						<td style="#{columnOneWidth}">
+							<h:panelGroup styleClass="B">
+								<h:outputText value="#{msg.Tours_Allocation_EmployeeName}" />
+							</h:panelGroup>
+						</td>
+						<td style="#{columnTwoWidth}">
+							<h:outputText value="#{form.contact.displayName}" />
+						</td>
+						<td style="#{columnThreeWidth}">
+							<h:outputText value=" " />
+						</td>
+						<td style="#{columnFourWidth}">
+							<h:panelGroup styleClass="FL W25percnt">
+								<h:outputText value="#{msg.Tours_Allocation_Revision}" styleClass="B pad3rt"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL W70percnt">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectOneMenu styleClass="pad3lt W85percnt" id="revisions" style="font-size:11px;"
+										valueChangeListener="#{bean.listenRevisionChange}" disabled="#{editable}"
+										value="#{bean.revisionIndex}">
+										<f:selectItems value="#{bean.revisionsDL}" />
+										<ace:ajax/>
+									</h:selectOneMenu>
+								</icecore:setEventPhase>
+							</h:panelGroup>
+						</td>
+					</tr> <!-- End Row 1 -->
+					<!-- Row 2 -->
+					<tr style="height:26px;">
+						<td style="#{columnOneWidth}">
+							<h:panelGroup styleClass="B">
+								<h:outputText value="#{msg.Tours_Allocation_SSN}"/>
+								<h:outputText value="*" styleClass="pad2lt mandatory" style="font-size:16px;"/>
+							</h:panelGroup>
+						</td>
+						<td style="#{columnTwoWidth}">
+							<h:panelGroup>
+								<h:outputText rendered="#{not editable}" value="#{form.viewSSN}" >
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</h:outputText>
+								<ace:textEntry styleClass="W75" value="#{form.socialSecurity}" rendered="#{editable}" tabindex="1">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry>
+							</h:panelGroup>
+						</td>
+						<td style="#{columnThreeWidth}">
+
+						</td>
+						<td style="#{columnFourWidth}">
+							<h:panelGroup>
+								<h:panelGroup styleClass="FL W35percnt">
+									<h:outputText styleClass="B" value="#{msg.Tours_Allocation_RevisionName}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="W60percnt">
+									<ace:textEntry styleClass="W55percnt" maxLength="100" rendered="#{editable}" tabindex="6" value="#{form.revisionName}" />
+									<h:outputText rendered="#{not editable}" value="#{form.revisionName}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</td>
+					</tr><!-- End Row 2 -->
+					<!-- Row 3 -->
+					<tr style="height:26px;">
+						<td style="#{columnOneWidth}">
+							<h:panelGroup styleClass="B">
+								<h:outputText value="#{msg.Tours_Allocation_Resident_City}" />
+								<h:outputText value="*" styleClass="pad2lt mandatory" style="font-size:16px;"/>
+							</h:panelGroup>
+						</td>
+						<td style="#{columnTwoWidth}">
+							<h:panelGroup rendered="#{editable}">
+								<h:panelGroup>
+									<ace:textEntry size="32" value="#{form.residentCity}" rendered="#{editable}" disabled="#{bean.isNewYorkCity}"
+										id="residentCity" tabindex="2" />
+								</h:panelGroup>
+
+								<h:panelGroup  rendered="#{bean.isNewYorkState}">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox styleClass="pad3rt" disabled="#{not editable}" value="#{bean.isNewYorkCity}"
+											valueChangeListener="#{bean.listenNewYorkCityCheckChange}" id="newYorkCityCheckBox">
+											<ace:ajax/>
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+									<h:panelGroup styleClass="pad5tp">
+										<h:outputText value="#{msg.Tours_Allocation_Resident_New_York_City}" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not editable}" styleClass="FL" >
+								<h:outputText value="#{form.residentCity}" />
+							</h:panelGroup>
+						</td>
+						<td style="#{columnThreeWidth}">
+							<h:panelGroup rendered="#{editable}">
+									<h:outputText value="#{msg.Tours_Allocation_Resident_State}" styleClass="B"/>
+									<h:outputText value="*" styleClass="pad2lt mandatory" style="font-size:16px;"/>
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu styleClass="pad2tp pad3lt" style="font-size:11px;"
+											valueChangeListener="#{bean.listenResidentStateChange}" tabindex="3"
+											value="#{form.residentState}">
+											<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+											<ace:ajax/>
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not editable}">
+								<h:panelGroup>
+									<h:outputText value="#{msg.Tours_Allocation_Resident_State}" styleClass="B" />
+									<h:outputText value="*" styleClass="pad2lt mandatory" style="font-size:18px;"/>
+									<h:outputText value="#{form.residentState}"  styleClass="pad3lt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</td>
+						<td style="#{columnFourWidth}">
+							<h:panelGroup styleClass="FL W35percnt">
+								<h:outputText styleClass="B" value="#{msg.Tours_Allocation_ClientName}" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="W60percnt">
+								<ace:textEntry styleClass="W55percnt" maxLength="100" rendered="#{editable}" tabindex="7" value="#{form.clientName}" />
+								<h:outputText rendered="#{not editable}" value="#{form.clientName}" />
+							</h:panelGroup>
+						</td>
+					</tr> <!-- End Row 3 -->
+					<!-- Row 4 -->
+					<tr style="height:26px;">
+						<td style="#{columnOneWidth}">
+							<h:panelGroup styleClass="B">
+								<h:outputText value="#{msg.Tours_Allocation_Frequency}" />
+							</h:panelGroup>
+						</td>
+						<td style="#{columnTwoWidth}">
+							<h:panelGroup styleClass="FL">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectOneMenu rendered="#{editable}" value="#{form.frequency}" tabindex="4"
+										style="font-size:11px;">
+										<f:converter converterId="lightspeed.TaxWageAllocationFrequencyConverter" />
+										<f:selectItems value="#{bean.frequencyDL}" />
+									</h:selectOneMenu>
+								</icecore:setEventPhase>
+								<h:outputText value="#{form.frequency.label}" rendered="#{not editable}" >
+									<f:converter converterId="lightspeed.TaxWageAllocationFrequencyConverter" />
+								</h:outputText>
+							</h:panelGroup>
+							<h:panelGroup styleClass="pad20rt FR">
+								<h:outputText value="#{msg.Tours_Allocation_TaxYear}" styleClass="B"/>
+								<h:panelGroup rendered="#{editable}" styleClass="pad3lt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu style="height:75%;font-size:11px;" value="#{form.taxYear}"
+											styleClass="pad2lt" tabindex="5">
+											<f:selectItems value="#{bean.taxYearsDL}" />
+											<ace:ajax/>
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{not editable}" styleClass="pad3lt">
+									<h:outputText value="#{form.taxYear}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</td>
+						<td style="#{columnThreeWidth}">
+
+						</td>
+						<td style="#{columnFourWidth}">
+							<h:panelGroup>
+								<h:selectBooleanCheckbox disabled="#{not editable}"
+									value="#{form.reallocationWages}" tabindex="8"/>
+								<h:outputText value="#{msg.Tours_Allocation_Reallocation_Txt}" styleClass="pad5lt"  />
+							</h:panelGroup>
+						</td>
+					</tr> <!-- End Row 4 -->
+					<tr>
+						<td colspan="4">
+							<h:outputText value="*" styleClass="mandatory B" style="font-size:16px;"/>
+							<h:outputText value="Required fields." styleClass="pad2lt mandatory"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

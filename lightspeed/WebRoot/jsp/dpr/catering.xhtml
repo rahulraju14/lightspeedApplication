@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Used for the DPR and callsheet, this fragment outputs the
+		cateringLog data on the back page; it only renders for the Catering/Craft
+		department.  It is invoked from dpr/crewtable.xhtml and callsheet/.
+		Parameters:
+		dept: the Department object
+		logs: the CateringLogs array
+		editMode: true iff fields should be rendered for editing
+		-->
+
+
+	<!-- OPTIONAL CATERING INFORMATION -->
+		<ace:dataTable border="0" value="#{logs}" rows="1"
+			style="width:100%;max-width:100%;"
+			var="cateringLog" styleClass="grid1e">
+			<ace:column style="width:2%;" rendered="false">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:63%;">
+			</ace:column>
+			<ace:column style="width:20%;">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+		</ace:dataTable>
+		
+		<ace:dataTable border="0" value="#{logs}" rows="1"
+			style="width:100%;max-width:100%;"
+			var="cateringLog" styleClass="grid1e">
+			
+			<ace:column style="width:2%;" rendered="false">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:63%;" styleClass="RT">
+				<h:outputText rendered="#{not editMode}" value="#{cateringLog.meal}">&#160;
+				</h:outputText>
+				<ace:textEntry rendered="#{editMode}" value="#{cateringLog.meal}"
+						maxlength="50" styleClass="W98percnt" />
+			</ace:column>
+			<ace:column style="width:20%;" styleClass="CT">
+				<h:outputText rendered="#{not editMode}" value="#{cateringLog.mealCount}">&#160;
+				</h:outputText>
+				<ace:textEntry rendered="#{editMode}" value="#{cateringLog.mealCount}"
+						maxlength="10" styleClass="W98percnt" />
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+		</ace:dataTable>
+		<ace:dataTable border="0" value="#{logs}" rows="1"
+			style="width:100%;max-width:100%;"
+			var="cateringLog" styleClass="grid1e">
+			
+			<ace:column style="width:2%;" rendered="false">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:63%;" styleClass="RT">
+				<h:outputText rendered="#{not editMode}" value="#{cateringLog.vendor}">&#160;
+				</h:outputText>
+				<ace:textEntry rendered="#{editMode}" value="#{cateringLog.vendor}" styleClass="W98percnt" />
+			</ace:column>
+			<ace:column style="width:20%;" styleClass="CT">
+				<h:outputText rendered="#{not editMode}" value="#{cateringLog.note}">&#160;
+				</h:outputText>
+				<ace:textEntry rendered="#{editMode}" value="#{cateringLog.note}" styleClass="W98percnt" />
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+			<ace:column style="width:5%;">
+			</ace:column>
+		</ace:dataTable>
+
+</ui:composition>

@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Mileage section of the Weekly Payroll page (days.xhtml) -->
+
+	<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+	<a id="mileage" /><!-- mileage scroll-to-top position -->
+
+	<!-- "MILEAGE" bar (toggle button) -->
+	<div class="toggle">
+		<h:commandLink value="Mileage" styleClass="btnPriHotCt"
+				action="#{mobileTimecardBean.actionToggleMileage}" />
+	</div>
+
+	<!-- MILEAGE DATA FIELDS (hidden or displayed) -->
+	<h:panelGroup rendered="#{mobileTimecardBean.showMileage}">
+
+		<div class="MA B" style="max-width:350px;">
+			<h:panelGroup styleClass="mBtnCenter"
+					rendered="#{mobileTimecardBean.weeklyTimecard.mileage eq null and mobileTimecardBean.editRaw}">
+				<span class="FL btnPriHotLt"></span>
+				<span>
+					<h:commandLink value="Use Mileage Form"
+						action="#{mobileTimecardBean.actionCreateMileageForm}" styleClass="btnPriHotCt" />
+				</span>
+				<span class="FL btnPriHotRt"></span>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{mobileTimecardBean.weeklyTimecard.mileage ne null}">
+				<div class="inBlock txtL2 FR pad20rt">
+					<span class="inBlock pad5rt">
+						<h:outputText value="Miles" />
+					</span>
+					<span class="inBlock">
+						<h:outputText value="Tax" />
+					</span>
+				</div>
+				<div class="CB"></div>
+
+				<!-- List of existing mileage entries -->
+				<ui:repeat value="#{mobileTimecardBean.weeklyTimecard.mileage.mileageLines}" var="line">
+
+					<div class="MA pad4tp" style="width:98%;">
+						<span class="inBlock FL ltMar">
+							<span class="FL btnPriHotSmLt"/>
+							<span>
+								<h:commandLink action="mileagem" styleClass="btnPriHotSmCt mBtnLeft">
+									<h:outputText value="#{line.date}">
+										<f:convertDateTime pattern="EEE, M/d" timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+									<f:setPropertyActionListener value="com.lightspeedeps.mtcMileageId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{line.id}" target="#{jumpBean.value}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="pickdaym" target="#{jumpBean.value}"/>
+								</h:commandLink>
+							</span>
+							<span class="FL btnPriHotSmRt"/>
+						</span>
+						<span class="FR rtMar" style="width:45px;">
+							<h:selectBooleanCheckbox styleClass="ckbx LH22" value="#{line.taxable}" disabled="true" />
+						</span>
+					 	<h:outputText value="#{line.miles}" styleClass="unBoxMiles LH22">&#160;
+							<f:convertNumber type="number" pattern="#,##0.0" />
+					 	</h:outputText>
+					</div>
+					<div class="CB" />
+
+				</ui:repeat>
+
+				<div class="CT MA pad15tp" style="width:98%;">
+					<h:panelGroup styleClass="inBlock FL ltMar" rendered="#{mobileTimecardBean.editRaw}">
+						<span class="FL btnPriHotLt"/>
+						<span>
+							<h:commandLink value="Add New Entry"
+									action="#{mobileTimecardBean.actionAddMileage}" styleClass="btnPriHotCt mBtnLeft" />
+						</span>
+						<span class="FL btnPriHotRt"/>
+					</h:panelGroup>
+				</div>
+
+				<div class="CB" />
+
+				<!-- mileage totals -->
+				<div class="MA pad10tp" style="width:65%;">
+					<div class="LT">
+						<h:outputText styleClass="inBlock" style="width:60%;" value="Allowable:" />
+						<h:outputText styleClass="FR RT" style="width:30%;"
+								value="#{mobileTimecardBean.weeklyTimecard.mileage.nonTaxableMiles}">
+							<f:convertNumber type="number" pattern="#,##0.0" />
+						</h:outputText>
+					</div>
+					<div class="LT">
+						<h:outputText styleClass="inBlock" style="width:60%;" value="Taxable:" />
+						<h:outputText styleClass="FR RT" style="width:30%;"
+								value="#{mobileTimecardBean.weeklyTimecard.mileage.taxableMiles}">
+							<f:convertNumber type="number" pattern="#,##0.0" />
+						</h:outputText>
+					</div>
+				</div>
+
+				<div class="CB"/>
+				<h:panelGroup styleClass="CT inBlock pad10tp"
+						rendered="#{mobileTimecardBean.editRaw and mobileTimecardBean.weeklyTimecard.status eq 'OPEN'}">
+					<span class="FL btnPriHotLt"/>
+					<span>
+						<h:commandLink value="Delete Mileage Form"
+								action="#{mobileTimecardBean.actionDeleteMileageForm}" styleClass="btnPriHotCt" />
+					</span>
+					<span class="FL btnPriHotRt"/>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			<h:panelGroup styleClass="txt16 inCtlRow"
+					rendered="#{mobileTimecardBean.weeklyTimecard.mileage eq null and ! mobileTimecardBean.editRaw}" >
+				No mileage form submitted.
+			</h:panelGroup>
+		</div>
+
+	</h:panelGroup>
+
+</ui:composition>

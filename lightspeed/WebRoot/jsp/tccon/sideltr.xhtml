@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Contract Side Letters</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+	var element = document.getElementById('sideltr:miniView');
+	resizeElement(element, 180, 380);
+
+	/* resize Side Letter table */
+	resizeScrollable('sideltr:contractsSideLettersTable', 300, 80);
+
+	</c:if>
+
+}
+
+var formname = "sideltr";
+//var mainListId = "sideltr:tctable"; // used by main list scrolling functions
+</script>
+
+</h:head>
+<h:body>
+
+	<c:if test="#{not headerViewBean.mobile}">
+		<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+	</c:if>
+
+	<h:form id="sideltr">
+
+		<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+			<f:attribute name="tabid" value="sideletters" />
+		</h:outputText>
+		<!-- restore our saved mini-tab selection: -->
+		<h:outputText value="#{headerViewBean.checkMiniTab}" style="display:none;" />
+
+		<div id="main">
+
+			<ui:include src="../common/header2.xhtml" />
+			<div id="mainCont">
+				<div id="ctrCont">
+					<div id="pnlCont">
+						<!-- Begin Element Details - pnlFull -->
+						<div id="pnlFull" class="MA">
+
+							<div class="topBdrCont FL">
+								<div class="midTop">
+									<div class="ltTopCnr"></div>
+									<div class="rtTopCnr"></div>
+								</div>
+							</div>
+
+							<div class="rowCont FL ltrtBdr BKwhite"> <!-- Top header -->
+
+								<h:panelGroup styleClass="pad10tp" rendered="#{true}" >
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="rowCont">
+									<div class="W25percnt FL">
+										<h:outputText styleClass="pnlHdrTxt" value="Side Letters" />
+									</div>
+									<div class="W50percnt FL pad2tp ">
+										&#160;
+									</div>
+
+		 							<div class="FR">
+										<!-- SIDE LETTER MINI-TAB BUTTONS -->
+										<h:panelGroup rendered="#{headerViewBean.miniTab eq 0}" >
+											<h:panelGroup rendered="#{! sideLettersBean.editMode and (not empty authBean.pgFields['9.11,edit'])}">
+												<h:panelGroup styleClass="FR pad5rt">
+													<span class="btnPriHotLt"/>
+													<span>
+														<ace:linkButton value="Edit" action="#{sideLettersBean.actionEdit}"
+															styleClass="btnPriHotCt" />
+													</span>
+													<span class="btnPriHotRt"/>
+												</h:panelGroup>
+											</h:panelGroup>
+											<h:panelGroup rendered="#{sideLettersBean.editMode}">
+												<span class="FR pad5rt">
+													<span class="btnPriDisLt"/>
+													<span>
+														<ace:linkButton value="Edit" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+													</span>
+													<span class="btnPriDisRt"/>
+												</span>
+											</h:panelGroup>
+										</h:panelGroup>
+
+									</div>
+
+								</div><!-- End of Top header -->
+
+								<div class="centerFullPg2">
+
+									<h:panelGrid id="miniView" styleClass="miniPanel">
+
+										<!-- Tabs -->
+										<ace:tabSet id="tabs" selectedIndex="#{sideLettersBean.selectedTab}">
+
+											<!-- SIDE LETTERS tab -->
+											<ui:include src="sideLetters.xhtml" />
+
+										</ace:tabSet><!-- END TAB set -->
+									</h:panelGrid>
+									<!-- end miniView -->
+
+									<!-- secondary (bottom right corner) buttons -->
+									<!-- we have no buttons on this page, and need the space for the tables,
+									    so we make the bottom "button area" thinner than normal. -->
+									<div class="rowBtnFullPg">
+										<div class="rowBtnBdr"></div>
+										<div class="FL MA rowCont">
+											<!-- SIDE LETTER TAB -->
+											<h:panelGroup rendered="#{headerViewBean.miniTab eq 0}">
+												<!-- Cancel btn -->
+												<h:panelGroup rendered="#{sideLettersBean.editMode}">
+													<span class="FR pad10rt">
+														<span class="btnPriEnbLt"/>
+														<span>
+															<ace:linkButton styleClass="btnPriEnbCt"
+																onmouseup="showErrors();" onclick="queueClick(this,event);"
+																value="Cancel" action="#{sideLettersBean.actionCancel}" />
+														</span>
+														<span class="btnPriEnbRt"/>
+													</span>
+												</h:panelGroup>
+												<!-- end Cancel btn -->
+												<!-- Save btn -->
+												<h:panelGroup rendered="#{sideLettersBean.editMode}">
+													<span class="FR pad5rt">
+														<span class="btnSecHotLt"/>
+														<span>
+															<ace:linkButton value="Save"
+																onmouseup="showErrors();" onclick="queueClick(this,event);"
+																action="#{sideLettersBean.actionSave}" styleClass="btnSecHotCt" />
+														</span>
+														<span class="btnSecHotRt"/>
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+										</div>
+									</div>
+									<!-- end secondary buttons -->
+								</div>
+
+							</div><!-- end outer container -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm">
+									<div class="ltBtmCnr"></div>
+									<div class="rtBtmCnr"></div>
+								</div>
+							</div>
+						</div><!-- end pnlFull -->
+					</div>
+					<!-- end pnlCont -->
+				</div>
+				<!-- end ctrCont -->
+
+				<div class="CB"></div>
+				<!-- clears float for liquid layout -->
+
+			</div>
+			<!-- end mainCont -->
+
+			<div class="footerCont CT">
+				<ui:include src="../common/footercont.xhtml" />
+			</div>
+		</div><!-- end main -->
+	</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+</h:body>
+	</html>

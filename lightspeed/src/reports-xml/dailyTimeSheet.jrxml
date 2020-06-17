@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dailyTimeSheet" pageWidth="612" pageHeight="760" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="39"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tcMajor6" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Major}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Major}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcDetail6" style="tcDefBox">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Dtl}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Acct_Dtl}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select dt.*, w.First_Name, w.Last_Name, w.Occupation, w.Dept_Name " +
+" from daily_time dt, weekly_time_card w where w.id = dt.weekly_id and w.end_date > '2016-11-19' " +
+" and dt.day_Num = 1;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Nightmare on Oak Street"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="todaysDate" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Date("12/31/2012")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="forXlsExport" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weekly_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Day_Num" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Day_Num" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Call_Time" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="M1_Out" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="M1_In" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="M2_Out" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="M2_In" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Wrap" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="On_Call_Start" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="On_Call_End" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Hours" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Paid_Hours" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Worked" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Zone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Day_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Phase" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="No_Start_Form" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Opposite" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Off_Production" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Forced_Call" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Non_Deduct_Meal" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Non_Deduct_Meal2" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Non_Deduct_Meal_Payroll" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Non_Deduct_Meal2_Payroll" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ndb_End" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ndm_Start" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ndm_End" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Man_In" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mpv_User" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Grace1" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Grace2" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Camera_Wrap" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="French_Hours" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Location_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Episode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Re_Rate" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occ_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="City" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mpv1_Payroll" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mpv2_Payroll" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mpv3_Payroll" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Split_By_Percent" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Num1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Split_Start2" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Num2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Split_Start3" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Num3" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="First_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occupation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Dept_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="lastPage" class="java.lang.Integer" incrementType="Report" calculation="Highest">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<variable name="Employee_Name" class="java.lang.String">
+		<variableExpression><![CDATA[$F{First_Name}+ " " +$F{Last_Name}]]></variableExpression>
+	</variable>
+	<background>
+		<band height="542">
+			<rectangle>
+				<reportElement uuid="0a1c0dd7-989e-44b1-8fbe-d92137561f36" mode="Transparent" x="27" y="124" width="486" height="417"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement uuid="f3b350cd-f1b2-48e9-affb-b01f7e74d493" x="135" y="124" width="1" height="417"/>
+			</line>
+			<line>
+				<reportElement uuid="64a51ad6-a80e-4f89-8307-cd732868885b" x="270" y="124" width="1" height="417"/>
+			</line>
+			<line>
+				<reportElement uuid="5ec2eb17-b2c1-422d-8ba3-eb14432cda25" x="324" y="124" width="1" height="417"/>
+			</line>
+			<line>
+				<reportElement uuid="c191070f-dfca-4851-9000-4c44d585d47b" x="351" y="137" width="1" height="404"/>
+			</line>
+			<line>
+				<reportElement uuid="274c5797-ba05-439a-b14a-aa0187a5fad0" x="378" y="124" width="1" height="417"/>
+			</line>
+			<line>
+				<reportElement uuid="80c9697e-49db-4794-b3fd-787944bc4f31" x="405" y="137" width="1" height="404"/>
+			</line>
+			<line>
+				<reportElement uuid="858e346b-52a4-4359-851d-601bf7702cd4" x="432" y="124" width="1" height="417"/>
+			</line>
+			<line>
+				<reportElement uuid="1c05130e-4f1c-49d4-a463-8f12c333872b" x="486" y="124" width="1" height="417"/>
+			</line>
+			<rectangle>
+				<reportElement uuid="fb17bf05-0178-48ff-b6a8-7286b9d805f7" mode="Transparent" x="297" y="124" width="162" height="417"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement uuid="14f26700-349f-4e8e-a08c-16bd8cdbe04b" x="27" y="150" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="ea8710a0-f0e5-4ee2-b8a4-094cfcacd7eb" x="297" y="150" width="162" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="ab82a012-633d-4e28-a42a-ee076d3395f3" x="325" y="136" width="108" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="8f6befd4-b724-4ce2-a047-568e979a969d" x="27" y="176" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="d4114489-3a5c-4171-a563-07bd73035382" x="27" y="202" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="7dac667c-7540-4995-8eb7-3b14dde91730" x="27" y="228" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="d849fee1-d523-401f-a350-e35f0743b479" x="27" y="254" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="46e2e77c-7bd4-41ea-8512-a0e296ac1333" x="27" y="280" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="673a55b7-f3ae-40ae-bf5e-bb993e6b519d" x="27" y="306" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="c26af78d-7cec-4e12-a841-0262d386c79a" x="27" y="332" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="730a26c7-7d09-4499-939f-1c14c444374a" x="27" y="358" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="f8b16fd1-4eea-43a8-b049-4c3d30caeaba" x="27" y="384" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="3cba0ac3-85bb-46d2-ac70-0bd7179b7440" x="27" y="410" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="c849127e-4ba2-40db-81e2-e3e427b4d657" x="27" y="436" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="ac2d88f7-7d6d-43e6-95bd-5583f8b261d2" x="27" y="462" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="bf3b1ee1-1c01-4080-a383-dfd19547dc12" x="27" y="488" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="df9634b9-e1f0-4aeb-9582-92c1d6334337" x="27" y="514" width="486" height="1"/>
+			</line>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="150" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="font16" x="216" y="0" width="135" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{productionName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="85621ffd-df42-41b0-adf4-1b88329e5ee0" style="i9DefItalic" x="162" y="20" width="216" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Department Daily Time Sheet]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement uuid="ce7997c1-64e6-4a49-91fd-df4d71a9ad95" x="27" y="46" width="513" height="13" backcolor="#010101"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="e81d9c67-4e41-4ef4-a359-a254d34201b1" style="tcDefBold" x="142" y="46" width="323" height="13" forecolor="#F8ECEC" backcolor="#040202"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Please fill out and turn into production at wrap each day.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a89273a2-ddf1-4ec0-8c36-3ecec334bd62" style="tcDefault" x="118" y="59" width="323" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[This information will be submitted on the PR and checked against weekly timecards.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="068b7589-072c-4b5a-b436-4ecfd3ecbeed" style="tcDefBold" x="27" y="72" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Department:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8a99c0b2-8f15-4881-952f-7a39655417b6" style="tcDefBold" x="243" y="72" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Day of Week:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="222a5956-9397-411b-86c6-2889e4c18380" style="tcDefBold" x="405" y="72" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c8de937c-240d-4ea6-9241-ca39f9ce4fea" style="tcDefault" stretchType="RelativeToTallestObject" x="108" y="72" width="135" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Dept_Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="783add30-0804-4cbc-9a6a-92f97fdd60c2" style="tcDefault" stretchType="RelativeToTallestObject" x="324" y="72" width="81" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("EEE").format($F{Date}).toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="d820b85b-e110-4715-87c5-dc9532389cfb" style="tcDefault" stretchType="RelativeToTallestObject" x="432" y="72" width="108" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9d7e4f57-b3ef-45e5-bc22-b88308deda34" style="tcDefBold" x="100" y="98" width="323" height="13" forecolor="#FEFEFE" backcolor="#040202"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Please fill out and turn into production at wrap each day.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement uuid="d38d7152-5419-408c-a312-87481cd26d12" x="27" y="98" width="513" height="13" backcolor="#010101"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="7e84c4fe-b6f6-4ab6-9bcd-4cb9224b559f" style="tcDefBold" x="108" y="98" width="471" height="13" forecolor="#F8ECEC" backcolor="#040202"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Please indicate when a CALL time is different from the Call Sheet with an (*).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef3af1f7-cdaa-425e-bfbe-21c0128c5ea5" style="tcDefBold" x="27" y="124" width="108" height="26"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Employee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1696a1e2-c192-4cce-9565-02e74972f618" style="tcDefBold" x="135" y="124" width="135" height="26"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Occupation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4e7e526f-d183-49e1-8f28-2957ac5a88eb" style="tcDefBold" x="270" y="124" width="27" height="26"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Off
+Prod]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5e5118cf-9c2c-4e3a-ad92-a8cb371a60c0" style="tcDefBold" x="405" y="137" width="27" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f3bcd6c2-b040-4e97-9a31-1f4f6b89c685" style="tcDefBold" x="297" y="124" width="27" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Call]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b80277f2-ddc5-4ab1-9d95-a9b2fce02fe7" style="tcDefBold" x="432" y="124" width="27" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Wrap]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bd281fc6-28ea-43b5-a186-c3a36f401f76" style="tcDefBold" x="324" y="137" width="27" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0455ebbb-82b6-4787-b4e4-946801a3c7bc" style="tcDefBold" x="324" y="124" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Meal 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bb768fea-f2bf-4ebf-a7f2-8dc6bec01e4a" style="tcDefBold" x="378" y="124" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Meal 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bf1b3f10-370c-47cf-996c-87f03a32b3de" style="tcDefBold" x="378" y="137" width="27" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="86806009-0124-4e9d-a3dc-8385bf4fbade" style="tcDefBold" x="351" y="137" width="27" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bab41084-73f5-4b5e-bb7e-345deccb3964" style="tcDefBold" x="459" y="124" width="27" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Re - Rate]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="26">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="df4fb621-c163-4886-a63c-6dd6b08000ee" style="tcDefault" stretchType="RelativeToTallestObject" x="135" y="0" width="135" height="26"/>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="7e947e5a-e29e-4f93-a0b0-a8a7dacaf8b1" style="tcDefault" x="459" y="0" width="25" height="26">
+					<printWhenExpression><![CDATA[$F{Re_Rate}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagesPath} + "/checkMark.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="c96b91ac-f88d-402c-acf1-b2240cfeb90a" style="tcDefault" mode="Transparent" x="351" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[R]]></text>
+			</staticText>
+			<textField pattern="0.0#">
+				<reportElement uuid="53af0a82-5f2d-446c-b8e8-6a90ba82c3e6" style="tcDefault" x="324" y="0" width="27" height="26" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M1_Out}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="307035cc-49f7-44d6-9748-49b059e4857f" style="tcDefault" x="405" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M2_In}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3d099b3c-06be-4049-8cb7-7343197798f5" style="tcDefault" mode="Transparent" x="297" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[W]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bebf590e-32e3-49f7-ac3f-0b1547f0504b" style="tcDefault" x="459" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+			</textField>
+			<staticText>
+				<reportElement uuid="18648fc5-2ca7-4217-ad3f-a2e9f51af4c3" style="tcDefault" mode="Transparent" x="432" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[D]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="65122482-7f5f-4840-81dd-9431d017f8b3" style="tcDefault" mode="Transparent" x="405" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[E]]></text>
+			</staticText>
+			<textField pattern="0.0#">
+				<reportElement uuid="e4b5103d-625c-4302-934a-6b918e969ae1" style="tcDefault" x="351" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M1_In}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ace3793e-2c0c-4e1f-b331-0d30937b123a" style="tcDefault" mode="Transparent" x="324" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[O]]></text>
+			</staticText>
+			<textField pattern="0.0#">
+				<reportElement uuid="cd1add88-5f92-4294-bcf8-1952433e6656" style="tcDefault" x="432" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Wrap}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="933cddc1-1e1f-494e-838d-f4d8d3bfc113" style="tcDefault" mode="Transparent" x="378" y="0" width="27" height="26">
+					<printWhenExpression><![CDATA[$F{Worked}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<text><![CDATA[K]]></text>
+			</staticText>
+			<textField pattern="0.0#">
+				<reportElement uuid="d5270d6d-3d2c-4ad9-9725-9b1b2ccb5e43" style="tcDefault" x="297" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="496b2e66-4578-4f1b-8be3-54e623c4ef06" style="tcDefault" x="378" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M2_Out}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="bfc62afb-1c5c-47ce-a093-49130d33064a" style="tcDefault" x="270" y="0" width="25" height="26">
+					<printWhenExpression><![CDATA[$F{Off_Production}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagesPath} + "/checkMark.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="4e7c9d8e-28c5-46d2-9145-3d6f98f25d48" style="tcDefault" x="270" y="0" width="27" height="26"/>
+				<textElement textAlignment="Center"/>
+			</textField>
+			<textField>
+				<reportElement uuid="63292dc1-313e-4c69-ad5e-405be0064f00" style="tcDefault" x="0" y="0" width="24" height="26"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="562940ed-9990-4357-8111-532cef35e829" style="tcDefault" x="27" y="0" width="108" height="26"/>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Employee_Name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="167" splitType="Stretch">
+			<printWhenExpression><![CDATA[! $P{forXlsExport}]]></printWhenExpression>
+			<subreport>
+				<reportElement uuid="31864c06-8e8a-4d84-9002-ca661842e74c" x="1" y="148" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" x="525" y="146" width="27" height="17"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{lastPage}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2e3ba353-f5f2-404d-afef-2ae1c57f0e8c" style="tcDefBold" x="27" y="0" width="100" height="13"/>
+				<textElement/>
+				<text><![CDATA[COMMENTS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="efb23075-5f22-4cfc-93a1-d8849dde231c" style="tcDefBold" x="197" y="96" width="189" height="13"/>
+				<textElement/>
+				<text><![CDATA[All Re-Rates must be pre-approved]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="d7a9d5a1-badd-4f71-af88-ce5d4b16285e" x="27" y="27" width="486" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="5e9faeb6-13cd-4ad6-ba56-5188a74918b1" x="27" y="45" width="486" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="7793a5b0-74c9-49e4-be8c-53a1b7628088" style="tcDefault" x="81" y="112" width="463" height="13"/>
+				<textElement/>
+				<text><![CDATA[Turn in every day to UPM during prep hiatus, 2nd AD on production weeks. cc: Accounting and POC.]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f4225bdc-1543-41be-a146-2cc056bc7949" x="27" y="62" width="486" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

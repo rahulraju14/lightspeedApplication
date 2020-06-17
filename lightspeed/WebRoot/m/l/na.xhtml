@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} New Registration</title>
+
+<!-- This page is presented when a new user clicks the "Create New User Account" button
+	on the initial login page.
+ -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('loginForm:firstname').focus();
+}
+</script>
+
+</h:head>
+<h:body>
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	doFocus();
+});
+</script>
+
+	<div class=" ">
+
+		<ui:include src="../common/logo.xhtml" />
+
+		<h:form>
+			<div class="CT pad5tp">
+
+				<div class="txtL1">
+					New Registration
+				</div>
+
+				<h:panelGroup styleClass="rowCont CT pad5tp" rendered="#{not empty newAccountBean.messageText}">
+					<span class="loginErrMsgTxt">
+						<h:outputText value="#{newAccountBean.messageText}" />
+					</span>
+				</h:panelGroup>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="First Name:" />
+					</div>
+					<h:inputText styleClass="fdFname"
+							value="#{newAccountBean.user.firstName}"
+							tabindex="1" maxlength="30">
+					</h:inputText>
+				</div>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="Last Name:" />
+					</div>
+					<h:inputText styleClass="fdLname"
+							value="#{newAccountBean.user.lastName}"
+							tabindex="2" maxlength="30">
+					</h:inputText>
+				</div>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="E-mail Address:" />
+					</div>
+					<h:inputText styleClass="fdEmail"
+							value="#{newAccountBean.emailAddr}"
+							tabindex="3" maxlength="100">
+					</h:inputText>
+				</div>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="Account Type:" />
+					</div>
+					<div class="ckbx pad8tp">
+						<h:selectOneRadio id="accountType" tabindex="4"
+								value="#{newAccountBean.accountType}" layout="lineDirection"
+								styleClass="h_radio MA">
+							<f:selectItem itemValue="USA" itemLabel="USA" />
+							<f:selectItem itemValue="Canada" itemLabel="Canada" />
+							<ace:ajax />
+						</h:selectOneRadio>
+					</div>
+				</div>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="New Password:" />
+					</div>
+					<h:inputSecret  styleClass="fdPass"
+						maxlength="20"
+						value="#{newAccountBean.password}"
+						required="false" tabindex="5"
+						redisplay="true">
+					</h:inputSecret>
+				</div>
+
+				<div class="pad8tp">
+					<div class="txtL3-close">
+						<h:outputText value="Confirm Password:" />
+					</div>
+					<h:inputSecret styleClass="fdPass"
+						value="#{newAccountBean.confirmPassword}"
+						required="false"
+						tabindex="6"
+						redisplay="true" maxlength="20">
+					</h:inputSecret>
+				</div>
+
+				<div class="passInfo pad8tp">
+					Passwords must be at least 8 characters and less than 21 characters.
+					<br/>Passwords are case sensitive.
+				</div>
+
+			<div class="CB"></div>
+
+				<div class="txt12 pad10tp">
+					<span class="ckbx">
+						<h:selectBooleanCheckbox tabindex="7"
+							value="#{newAccountBean.acceptTerms}" >
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+					</span>
+					<span class="ckbxTxtTOS"> &#160;
+					I agree to the &#160;
+					<a href="#{msg.Legal_TermsOfUse_Url}"
+						target="lightspeed_terms">Terms of Use</a>.
+					</span>
+				</div>
+
+					<div class="twoBtnRow">
+						<span class="inBlock FL">
+							<span class="FL btnPriHotLt"></span>
+							<span>
+								<h:commandLink value="Create My Account"
+									tabindex="8" action="#{newAccountBean.actionSubmit}"
+									styleClass="btnPriHotCt" />
+							</span>
+							<span class="FL btnPriHotRt"></span>
+						</span>
+
+						<h:commandButton value="enter" tabindex="9"
+							style="visibility:hidden;" action="#{newAccountBean.actionSubmit}"/>
+
+						<span class="inBlock FR">
+							<span class="FL btnPriEnbLt"></span>
+							<span>
+								<h:commandLink value="Cancel"
+									tabindex="9"
+									action="loginm"
+									styleClass="btnPriEnbCt" />
+							</span>
+							<span class="FL btnPriEnbRt"></span>
+						</span>
+					</div>
+
+			</div>
+
+		</h:form>
+
+	<ui:include src="../common/loginfooter.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

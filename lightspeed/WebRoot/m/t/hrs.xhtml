@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Hours-entry page. Note that a number of input fields have iOS-only parameters
+		such as autocorrect="off", autocapitalize="off", spellcheck="false", and type="number" -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Time Entry</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	// we don't want focus on a partialSubmit=true field as that raises the 2-click issue.
+	document.getElementById('hours:mpv').focus();
+}
+
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form id="hours" autocomplete="off">
+
+		<!-- Set the JSF navigation value for the Back button. -->
+		<!-- The leading ? indicates the value is actually a Session attribute key. -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.hoursBackPage" />
+
+		<c:set var="aicp" value="#{mobileTimecardBean.production.type.aicp}" />
+
+			<ui:include src="../common/header.xhtml" />
+
+			<h:panelGroup rendered="#{mobileTimecardBean.editRaw and ! mobileTimecardBean.dailyTime.noStartForm}">
+				<!-- call 'getLockIt()' to lock the timecard if in edit mode; always returns false -->
+				<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+			</h:panelGroup>
+
+			<div class="inBlock CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Daily Time
+				</div>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id ne mobileTimecardBean.tcUser.id}">
+					<div class="prodTitle pad5tp">
+							<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+				</h:panelGroup>
+				<div class="infoText pad5tp">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+				</div>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<a id="default" /><!-- default scroll-to-top position -->
+
+				<c:set var="dailyTime" value="#{mobileTimecardBean.dailyTime}"/>
+
+				<div class="txtL2 inCtlRow">
+					<h:panelGroup styleClass="inBlock FL" rendered="#{mobileTimecardBean.hasPrevDay}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriHotCt" onclick="queueClick(this,event);"
+							action="#{mobileTimecardBean.actionPreviousDate}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FL" rendered="#{! mobileTimecardBean.hasPrevDay}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+					<span class="midBtn">
+						<h:outputText value="#{mobileTimecardBean.currentDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="EEEE, M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+					</span>
+
+					<h:panelGroup styleClass="inBlock FR" rendered="#{mobileTimecardBean.hasNextDay}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriHotCt" onclick="queueClick(this,event);"
+							action="#{mobileTimecardBean.actionNextDate}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FR" rendered="#{! mobileTimecardBean.hasNextDay}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+				</div>
+
+				<!--  DAY TYPE -->
+				<div class="dayType inCtlRow">
+					<span class="FL inBlock">
+						<h:panelGroup>
+							Day Type:
+							<h:selectOneMenu
+									title="#{dailyTime.dayType.label}"
+									value="#{dailyTime.dayType}"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}">
+								<f:selectItems value="#{mobileTimecardBean.dayTypeDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</span>
+
+					<!-- RE-RATE -->
+					<span class="FR inBlock fd3 LH22">
+						<h:selectBooleanCheckbox tabindex="11"
+								disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+								value="#{dailyTime.reRate}">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						<h:outputText value="Re-rate"/>
+					</span>
+
+				</div>
+
+				<c:set var="travWork" value="#{dailyTime.dayType eq 'TW'}"/>
+				<c:set var="workTrav" value="#{dailyTime.dayType eq 'WT'}"/>
+				<c:set var="normal" value="#{not (travWork or workTrav)}"/>
+
+				<!-- checkboxes & input fields (NDM, MPV, ...) -->
+				<div class="LT inCtlRow">
+
+					<!-- NDB -->
+					<h:panelGroup rendered="#{! mobileTimecardBean.weeklyTimecard.allowWorked}">
+						<span class="LT inBlock fd4">
+							<h:selectBooleanCheckbox tabindex="1" style="margin-left:0px;"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+									value="#{dailyTime.nonDeductMeal}">
+							</h:selectBooleanCheckbox>
+							<h:outputText value="NDB"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{mobileTimecardBean.weeklyTimecard.allowWorked}">
+						<h:selectBooleanCheckbox tabindex="1"
+								disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+								valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+								value="#{dailyTime.worked}" />
+						<span class="ckbxTxtLbl_B">Worked
+						</span>
+					</h:panelGroup>
+
+					<!-- NDM (NON-DEDUCTIBLE MEAL 2) -->
+					<span class="LT inBlock #{aicp ? 'fd3' : 'fd4'} ">
+						<h:outputText rendered="#{aicp}" value="" styleClass="pad20lt"/>
+						<h:panelGroup rendered="#{(! mobileTimecardBean.weeklyTimecard.allowWorked)}">
+							<h:selectBooleanCheckbox tabindex="2"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+									value="#{dailyTime.nonDeductMeal2}" />
+						<h:outputText value="NDM"/>
+						</h:panelGroup>
+					</span>
+
+					<!-- MPV -->
+					<h:panelGroup rendered="#{! mobileTimecardBean.weeklyTimecard.allowWorked}">
+						<span class="LT inBlock #{aicp ? 'FR fd3' : 'fd4'}">
+							<h:outputText rendered="#{aicp}" value="" styleClass="pad10lt"/>
+							<h:outputText value="MPV"/>
+							<ace:textEntry id="mpv" style="width:30%;"
+									tabindex="3" disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+									autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="number"
+									styleClass="CT" value="#{dailyTime.mpvUser}" size="1" maxlength="10">
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+
+					<!-- SET -->
+					<span class="FR inBlock  #{aicp ? ' ' : 'fd4'}">
+						<h:panelGroup rendered="#{(! aicp)}">
+							<h:outputText value="Set" />
+							<ace:textEntry tabindex="4" disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+								autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" 
+								styleClass="CT W35percnt" value="#{dailyTime.accountSet}" size="1" maxlength="5">
+							</ace:textEntry>
+						</h:panelGroup>
+					</span>
+				</div>
+
+				<!-- Rows for entering daily times (call, meals, wrap) -->
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="Call" rendered="#{not travWork}" />
+					<h:outputText styleClass="pad10lt" value="Travel Start Time" rendered="#{travWork}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="5" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.callTime}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="1st Meal Out" rendered="#{not travWork}" />
+					<h:outputText styleClass="pad10lt" value="Travel End Time" rendered="#{travWork}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="6" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.m1Out}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverter" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="1st Meal In" rendered="#{not travWork}" />
+					<h:outputText styleClass="pad10lt" value="Call (Start Work)" rendered="#{travWork}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="7" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.m1In}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="2nd Meal Out" rendered="#{normal}" />
+					<h:outputText styleClass="pad10lt" value="Meal Out" rendered="#{travWork}" />
+					<h:outputText styleClass="pad10lt" value="Wrap" rendered="#{workTrav}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="8" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.m2Out}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverter" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="2nd Meal In" rendered="#{normal}" />
+					<h:outputText styleClass="pad10lt" value="Meal In" rendered="#{travWork}" />
+					<h:outputText styleClass="pad10lt" value="Travel Start Time" rendered="#{workTrav}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="9" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.m2In}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<div class="inHrRow">
+					<h:outputText styleClass="pad10lt" value="Wrap" rendered="#{not workTrav}" />
+					<h:outputText styleClass="pad10lt" value="Travel End Time" rendered="#{workTrav}" />
+					<ace:textEntry styleClass="FR pad15rt W25percnt" tabindex="10" style="visibility:#{! dailyTime.worked ? 'visible' : 'hidden'}"
+							disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm or dailyTime.worked}"
+							autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+							valueChangeListener="#{mobileTimecardBean.listenDailyChange}"
+							value="#{dailyTime.wrap}" maxlength="6">
+						<f:converter converterId="lightspeed.DecimalTimeConverter" />
+						<ace:ajax />
+					</ace:textEntry>
+				</div>
+				<!-- END rows for entering daily times (call, meals, wrap) -->
+
+				<!-- total hours for day (output) -->
+				<div class="totalHrRow">
+					<h:outputText styleClass="pad10lt" value="Total" />
+					<h:outputText styleClass="totalHr" value="#{dailyTime.hours}">
+						&#160;
+					</h:outputText>
+				</div>
+
+				<!-- COMMENT bar (toggle) -->
+
+				<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+				<a id="comments" /><!-- comments scroll-to-top position -->
+
+				<div class="CT pad10tp">
+					<div class="mBtnFull inBlock">
+						<h:commandLink value="Comments" styleClass="btnPriHotCt mBtnFull"
+								action="#{mobileTimecardBean.actionToggleShowComment}" />
+					</div>
+				</div>
+
+				<!-- COMMENTS section (optional display) -->
+				<h:panelGroup rendered="#{mobileTimecardBean.showComment}">
+
+					<h:panelGroup styleClass="inCtlRow LT" rendered="#{mobileTimecardBean.editRaw and ! dailyTime.noStartForm}">
+						<span class="LT inBlock" style="width:75%;">
+							<ace:textEntry value="#{mobileTimecardBean.newComment}"
+									style="width:100%;" maxlength="500">
+							</ace:textEntry>
+						</span>
+						<h:panelGroup styleClass="inBlock FR">
+							<span class="FL btnPriHotSmLt"></span>
+							<h:commandLink value="Add" styleClass="btnPriHotSmCt"
+								action="#{mobileTimecardBean.actionAddComment}" />
+							<span class="FL btnPriHotSmRt"></span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<div class="inCtlRow">
+						<span class="LT">
+							<h:outputText value="#{mobileTimecardBean.weeklyTimecard.comments}"
+									styleClass="area1" escape="false"/>
+						</span>
+					</div>
+
+					<hr style="margin-bottom:0px;" />
+
+				</h:panelGroup><!-- END comments section -->
+
+				<!-- ADDITIONAL FIELDS bar (toggle) -->
+
+				<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+				<a id="moredaily" /><!-- "more daily fields" scroll-to-top position -->
+
+				<div class="CT pad10tp">
+					<div class="mBtnFull inBlock">
+						<h:commandLink value="Additional Fields" styleClass="btnPriHotCt mBtnFull"
+								action="#{mobileTimecardBean.actionToggleShowMoreDaily}" />
+					</div>
+				</div>
+
+				<!-- ADDITIONAL FIELDS section (optional display) -->
+				<h:panelGroup rendered="#{mobileTimecardBean.showMoreDaily}">
+					<div class="dayType inCtlRow">
+						<span class="FL inBlock">
+							<h:panelGroup>
+								Work Zone:
+								<h:selectOneMenu
+										title="#{dailyTime.workZone.label}"
+										value="#{dailyTime.workZone}"
+										disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}">
+									<f:selectItems value="#{mobileTimecardBean.workZoneDL}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</span>
+
+						<!-- unused -->
+						<span class="FR inBlock fd3 LH22">&#160;
+						</span>
+					</div>
+
+					<!-- GRACE 1 / 2 / CAMERA WRAP -->
+					<div class="LT inCtlRow">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+
+						<!-- GRACE 1 -->
+						<span class="LT inBlock fd3">
+							<h:outputText value="Grace1"/>
+							<ace:textEntry styleClass="CT pad3rt pad5lt" style="width:27%;"
+									value="#{dailyTime.grace1}" maxlength="4" type="number"
+									valueChangeListener="#{mobileTimecardBean.listenGraceChange}"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}">
+								<f:convertNumber type="number" pattern="0.0#" />
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+
+						<!-- GRACE 2 -->
+						<span class="LT inBlock fd3">
+							<h:outputText value="Grace2"/>
+							<ace:textEntry styleClass="CT pad3rt pad5lt" style="width:27%;"
+									value="#{dailyTime.grace2}" maxlength="4" type="number"
+									valueChangeListener="#{mobileTimecardBean.listenGraceChange}"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}">
+								<f:convertNumber type="number" pattern="0.0#" />
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+
+						<!-- CAMERA WRAP -->
+						<span class="RT FR inBlock fd3" style="width:auto;">
+							<h:selectBooleanCheckbox tabindex="22"
+									disabled="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}"
+									value="#{dailyTime.cameraWrap}" />
+							<h:outputText value="CamWrap"/>
+						</span>
+
+						</icecore:setEventPhase>
+					</div>
+
+					<div class="inInfoRow">
+						<h:outputText value="Work City:"/>
+						<ace:textEntry tabindex="2" style="width:50%;height: 100%;"
+								disabled="#{! (mobileTimecardBean.editRaw or mobileTimecardBean.editHtg)}"
+								autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+								value="#{dailyTime.city}" maxlength="50">
+						</ace:textEntry>
+					</div>
+
+					<div class="inInfoRow">
+						<h:outputText value="Work State:" />
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu tabindex="3" style="width:20%;"
+									value="#{dailyTime.state}"
+									rendered="#{(mobileTimecardBean.editRaw or mobileTimecardBean.editHtg)}">
+								<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+							<ace:textEntry value="#{dailyTime.state}"
+									disabled="true" style="width:15%;"
+									rendered="#{! (mobileTimecardBean.editRaw or mobileTimecardBean.editHtg)}" />
+						</icecore:setEventPhase>
+					</div>
+
+					<hr style="margin-bottom:0px;" />
+
+				</h:panelGroup>
+				<!-- END ADDITIONAL FIELDS -->
+
+
+				<!-- ENTER BUTTON -->
+				<div class="inCtlRow pad15tp">
+
+					<h:panelGroup styleClass="FR inBlock" rendered="#{mobileTimecardBean.editRaw and ! dailyTime.noStartForm}">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="Enter" onclick="queueClick(this,event);"
+								action="#{mobileTimecardBean.actionEnterTime}" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR inBlock" rendered="#{(! mobileTimecardBean.editRaw) or dailyTime.noStartForm}">
+						<span class="FL btnPriDisLt"></span>
+						<span>
+							<h:commandLink value="Enter" type="text" styleClass="btnPriDisCt" />
+						</span>
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+				</div>
+
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

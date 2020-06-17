@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Timecard List</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+
+<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.tcsBackPage" />
+
+		<c:set var="aicp" value="#{mobileTimecardBean.production.type.aicp}" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle">
+						Timecard List
+				</div>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<h:panelGroup rendered="#{not empty mobileTimecardBean.employeeDL}" >
+
+					<div>
+						<h:panelGroup styleClass="CT inBlock pad5tp"
+								rendered="#{not empty authBean.pgFields['0.2,tc_approval']}">
+							<span class="FL btnPriHotSmLt"></span>
+							<span>
+								<h:commandLink value="Approver Dashboard"
+									action="appdashboardm" styleClass="btnPriHotSmCt" />
+							</span>
+							<span class="FL btnPriHotSmRt"></span>
+						</h:panelGroup>
+					</div>
+
+					<h:outputText styleClass="pnlHdrTxt FL pad5lt pad5tp" value="View Timecards for:" />
+					<h:selectOneMenu styleClass="pad5tp"
+							valueChangeListener="#{mobileTimecardBean.listenEmployee}"
+							value="#{mobileTimecardBean.userId}">
+						<f:selectItems value="#{mobileTimecardBean.employeeDL}" />
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+
+				<ui:repeat value="#{mobileTimecardBean.paddedWeeklyTimecardList}" var="timecard" varStatus="status">
+
+					<h:panelGroup rendered="#{status.index==0 ||
+								mobileTimecardBean.weeklyTimecardList[status.index].endDate != mobileTimecardBean.weeklyTimecardList[status.index-1].endDate}">
+					<div class="CT" style="vertical-align: middle;">
+						<span class="weekEndBanner inBlock">
+							<span class="FL pad20lt">
+								<h:panelGroup styleClass=" #{timecard.selected ? 'selected2' : '' }">
+									<h:outputText value="#{timecard.startDate}">
+										<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+									<h:outputText value="#{timecard.endDate}">
+										<f:convertDateTime pattern="- M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+								</h:panelGroup>
+							</span>
+						</span>
+					</div>
+					</h:panelGroup>
+
+					<!-- NORMAL: OCCUPATION BUTTON and HOURS -->
+					<h:panelGroup rendered="#{timecard.id ge 0}">
+						<div class="CT mBtnOccupation">
+							<span class="inBlock">
+								<span class="FL btnPriHotLt" />
+								<span>
+									<h:commandLink action="pickdaym" styleClass="btnPriHotCt mBtnOccupation">
+										<h:panelGroup>
+											<h:outputText value="#{timecard.adjusted ? 'Adj ' : ''}" styleClass="tcAdj" />
+											<h:outputText value="#{timecard.occupationForButton}" />
+										</h:panelGroup>
+										<f:setPropertyActionListener value="com.lightspeedeps.timecardId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{timecard.id}" target="#{jumpBean.value}"/>
+									</h:commandLink>
+								</span>
+								<span class="FL btnPriHotRt" />
+							</span>
+							<span class="inBlock tclHours">
+									<h:outputText value="#{timecard.totalHours}" />
+							</span>
+						</div>
+					</h:panelGroup>
+
+					<!-- MISSING TIMECARD: OCCUPATION GRAY BUTTON and CREATE BUTTON -->
+					<h:panelGroup rendered="#{timecard.id lt 0}">
+						<div class="CT mBtnOccupation">
+
+							<div class="inBlock">
+								<span class="FL btnPriDisLt" />
+								<span>
+									<h:commandLink type="text" styleClass="btnPriDisCt mBtnOccupation">
+										<h:outputText value="#{timecard.occupationForButton}" />
+									</h:commandLink>
+								</span>
+								<span class="FL btnPriDisRt" />
+							</div>
+
+							<div class="inBlock pad5lt">
+								<span class="FL btnSecHotLt" />
+								<span>
+									<h:commandLink
+											action="#{mobileTimecardBean.actionCreateTimecard}"
+											styleClass="btnSecHotCt mBtnOccupation tclBtn">
+										<h:outputText value="Create" styleClass="tclBtn" />
+										<f:setPropertyActionListener value="com.lightspeedeps.StartFormId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{timecard.id}" target="#{jumpBean.value}"/>
+										<f:setPropertyActionListener value="com.lightspeedeps.weekEndDate" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{timecard.endDate}" target="#{jumpBean.value}"/>
+									</h:commandLink>
+								</span>
+								<span class="FL btnSecHotRt" />
+							</div>
+
+						</div>
+					</h:panelGroup>
+
+					<div class="CB" />
+
+				</ui:repeat>
+
+				<h:panelGroup rendered="#{empty mobileTimecardBean.weeklyTimecardList}">
+					<div class="pad10tp errorMsgTxt">
+						<h:outputText  rendered="#{empty mobileTimecardBean.employeeDL}"
+								value="#{aicp ? msg.Timecard_Mobile_NoneInProject : msg.Timecard_Mobile_NoneInProd}" />
+						<h:outputText rendered="#{not empty mobileTimecardBean.employeeDL}"
+								value="#{mobileTimecardBean.tcUser.displayName}
+									#{aicp ? msg.Timecard_Mobile_HasNoneInProject : msg.Timecard_Mobile_HasNoneInProd}" />
+					</div>
+				</h:panelGroup>
+
+			</div>
+
+			<div class="CB"></div>
+			<!--
+			<h:commandLink value="crash" rendered="#{not empty authBean.pgFields['2.0,write_any']}"
+					action="#{mobileTimecardBean.forceCrashNoSuchMethod}" styleClass="btnPriHotSmCt" />
+			 -->
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

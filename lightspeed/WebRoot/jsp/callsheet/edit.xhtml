@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<f:loadBundle var="msg" basename="com.lightspeedeps.util.app.messageResources"/>
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Call Sheet Edit</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+			<c:if test="#{not headerViewBean.mobile}">
+				function resize() {
+					element = document.getElementById('scrolldiv');
+					resizeElement(element, 190, 386);
+
+					if (scrollme > 0) { // scrollToPos was called...
+						scrollme = 0;
+						scrollToPos(); // re-do scroll after resize of div is done.
+					}
+				}
+			</c:if>
+
+			var formname = "callsheetForm";
+
+		</script>
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+		<h:form id="callsheetForm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="#{callSheetViewBean.headerTabId}" />
+			</h:outputText>
+
+			<div id="main">
+				<ui:include src="../common/header2.xhtml" />
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+
+							<div id="pnlFull" class="MA">
+
+								<!-- call "getLoadEdit()" to setup data for edit mode page; always returns false. -->
+								<h:outputText style="visibility:hidden" value="#{callSheetViewBean.loadEdit}" />
+
+								<h:panelGroup styleClass="errMsgContFull pad16tp" rendered="#{!callSheetViewBean.showAddCrewCall}">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="topBdrCont FL">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div id="callsheet" class="rowCont ltrtBdr BKwhite FL">
+
+									<ui:include src="topButtons.xhtml" />
+
+									<!--start body section-->
+									<div id="scrolldiv" class="callsheet rowDivider" onscroll="setScrollPos(this.scrollTop);">
+
+										<h:panelGroup rendered="#{callSheetViewBean.callsheet.id eq null}">
+											<span class="infoTxtnopad pad10tp">No Call Sheets have been created yet.</span>
+										</h:panelGroup>
+
+										<h:panelGroup rendered="#{callSheetViewBean.callsheet.id ne null}">
+
+											<!-- TITLE BAR -->
+											<ui:include src="title.xhtml" />
+
+											<!-- HEADER AREA (address, logo, call times, status, weather) -->
+											<div>
+												<!-- PRODUCER etc, ADDRESS -->
+												<div class="W35percnt FL txt14">
+													<div>
+														<ace:textAreaEntry rows="7" styleClass="stdTxtArea W90percnt"
+															value="#{callSheetViewBean.callsheet.executives}" />
+													</div>
+													<div>&#160;</div>
+
+													<ui:include src="address.xhtml" />
+
+												</div>
+
+												<!-- LOGO, CALL TIMES -->
+												<div class="W35percnt FL">
+													<div class="CT" style="height:100px;">
+														<h:panelGroup rendered="#{callSheetViewBean.production.logo ne null}">
+															<ace:graphicImage value="#{callSheetViewBean.production.logo.content}"
+																style="width:auto;height:100px;" />
+														</h:panelGroup>
+													</div>
+
+													<div class="rowCont">
+
+														<div class="W42percnt FL border">
+															<h2>Crew Call:</h2>
+														</div>
+														<div class="W56percnt FL border">
+															<h2 class="FL">
+																<ace:textEntry styleClass="txt14" size="6" maxlength="10"
+																		value="#{callSheetViewBean.callsheet.callTime}">
+																	<f:converter converterId="lightspeed.DateTimeConverterB"/>
+																</ace:textEntry>&#160;
+															</h2>
+															<h:panelGroup styleClass="FL pad10tp pad2rt">
+																<span class="btnPriHotLt" />
+																<span>
+																<ace:linkButton value="Crew Times..."
+																	action="#{callSheetViewBean.actionCrewCallOptions}"
+																	styleClass="btnPriHotCt" />
+																</span>
+																<span class="btnPriHotRt" />
+															</h:panelGroup>
+														</div>
+
+														<div class="W42percnt FL border">
+															<h3>Shooting Call:</h3>
+														</div>
+														<div class="W56percnt FL border">
+															<h3 class="FL">
+																<ace:textEntry styleClass="txt14" size="6" maxlength="10"
+																		value="#{callSheetViewBean.callsheet.shootTime}">
+																	<f:converter converterId="lightspeed.DateTimeConverterB"/>
+																</ace:textEntry>&#160;
+															</h3>
+															<span class="FL pad5tp pad2rt">
+																<span class="btnPriHotLt" />
+																<span>
+																	<ace:linkButton value="Cast Times..."
+																			action="#{callSheetViewBean.actionShootingCallOptions}"
+																			styleClass="btnPriHotCt" />
+																</span>
+																<span class="btnPriHotRt" />
+															</span>
+														</div>
+													</div>
+												</div>
+
+												<!-- SPACER -->
+												<div class="W5percnt FL">&#160;
+												</div>
+
+												<!-- DAYS / TIMES -->
+												<div class="W25percnt FL">
+													<div class="txt20 B">
+														<h:outputText value="#{callSheetViewBean.callsheet.date}">
+															<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}"
+																	pattern="EEE MMMM d, yyyy" />
+														</h:outputText>
+													</div>
+													<div class="I txt16"> Updated &#160;
+														<h:outputText value="#{callSheetViewBean.callsheet.updated}">
+															<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}"
+																	pattern="MM/dd/yy hh:mm a" />
+														</h:outputText>
+													</div>
+													<div class="txt16 B pad15tp CT">
+														<h:outputText value="Day #{callSheetViewBean.callsheet.shootDay}" />
+														<h:outputText value=" of #{callSheetViewBean.callsheet.shootDays}" />
+													</div>
+													<div class="txt14f LH20 pad15tp">
+														<div class="W30percnt FL">
+															SUNRISE:
+															<br/>
+															SUNSET:
+															<br/>
+															WEATHER:
+														</div>
+														<div class="W70percnt FL">
+															<ace:textEntry maxlength="10" styleClass="txt14f"
+																	value="#{callSheetViewBean.callsheet.sunrise}">
+																<f:converter converterId="lightspeed.DateTimeConverterB"/>
+																<f:attribute name="timeZone" value="#{callSheetViewBean.callsheet.timeZoneStr}" />
+															</ace:textEntry>
+															<br/>
+															<ace:textEntry maxlength="10" styleClass="txt14f"
+																	value="#{callSheetViewBean.callsheet.sunset}">
+																<f:converter converterId="lightspeed.DateTimeConverterB"/>
+																<f:attribute name="timeZone" value="#{callSheetViewBean.callsheet.timeZoneStr}" />
+															</ace:textEntry>
+															<br/>
+															<ace:textAreaEntry maxlength="1000"
+																	rows="3" styleClass="stdTxtArea14 W90percnt"
+																	value="#{callSheetViewBean.callsheet.weather}" />
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!-- 2 MESSAGE LINES -->
+											<div class="rowCont">
+												<div>
+													<div class="CT">
+														<ace:textEntry maxlength="120" styleClass="W98percnt txt14 CT B"
+																value="#{callSheetViewBean.callNotes[0]}" />
+													</div>
+												</div>
+												<div>
+													<div class="CT">
+														<ace:textEntry maxlength="120" styleClass="W98percnt txt14 CT B"
+																value="#{callSheetViewBean.callNotes[1]}" />
+													</div>
+												</div>
+											</div>
+
+											<!-- SCENE TABLE -->
+											<ui:include src="scenes.xhtml">
+												<ui:param name="scenes" value="#{callSheetViewBean.callsheet.sceneCalls}" />
+												<ui:param name="editMode" value="true"/>
+											</ui:include>
+
+											<!-- CAST TABLE -->
+											<ui:include src="cast.xhtml">
+												<ui:param name="editMode" value="true"/>
+											</ui:include>
+
+											<!-- EXTRAS TABLE -->
+											<ui:include src="extras.xhtml">
+												<ui:param name="editMode" value="true"/>
+											</ui:include>
+
+											<!-- SPECIAL REQUIREMENTS -->
+											<ui:include src="special.xhtml">
+												<ui:param name="editMode" value="true"/>
+											</ui:include>
+
+											<!-- ADVANCE SCHEDULE -->
+											<ui:include src="scenes.xhtml">
+												<ui:param name="scenes" value="#{callSheetViewBean.callsheet.advanceSceneCalls}" />
+												<ui:param name="advance" value="true" />
+												<ui:param name="editMode" value="true" />
+											</ui:include>
+
+											<!-- UPM/ETC CONTACT INFO -->
+											<div class="FL rowCont rowGradient rowDivider">
+												<div class="pad10tp LH26 CT">
+													<div class="FL W25percnt">
+														<ace:textAreaEntry rows="2" maxlength="500" styleClass="stdTxtArea W95percnt"
+																value="#{callSheetViewBean.callNotes[21]}" />
+													</div>
+													<div class="FL W25percnt">
+														<ace:textAreaEntry rows="2" maxlength="500" styleClass="stdTxtArea W95percnt"
+																value="#{callSheetViewBean.callNotes[22]}" />
+													</div>
+													<div class="FL W25percnt">
+														<ace:textAreaEntry rows="2" maxlength="500" styleClass="stdTxtArea W95percnt"
+																value="#{callSheetViewBean.callNotes[23]}" />
+													</div>
+													<div class="FL W25percnt">
+														<ace:textAreaEntry rows="2" maxlength="500" styleClass="stdTxtArea W95percnt"
+																value="#{callSheetViewBean.callNotes[24]}" />
+													</div>
+												</div>
+											</div>
+
+											<!-- ****** START OF BACK PAGE -->
+
+											<div class="pgDivider"></div>
+
+											<ui:include src="backPageHeader.xhtml" />
+
+											<div class="rowCont FL rowGradient pad20tp">
+												<div class="FL pad5lt" style="height:justify;width:33%;min-width:300px">
+													<ui:include src="editCrewCol.xhtml" >
+														<ui:param name="deptCalls" value="#{callSheetViewBean.deptCalls[0]}" />
+														<ui:param name="bound" value="#{callSheetRequestBean.crewTable0}" />
+													</ui:include>
+												</div>
+												<div class="FL pad5lt" style="height:justify;width:32%;min-width:300px">
+													<ui:include src="editCrewCol.xhtml" >
+														<ui:param name="deptCalls" value="#{callSheetViewBean.deptCalls[1]}" />
+														<ui:param name="bound" value="#{callSheetRequestBean.crewTable1}" />
+													</ui:include>
+												</div>
+												<div class="FL pad5lt" style="height:justify;width:33%;min-width:300px">
+													<ui:include src="editCrewCol.xhtml" >
+														<ui:param name="deptCalls" value="#{callSheetViewBean.deptCalls[2]}" />
+														<ui:param name="bound" value="#{callSheetRequestBean.crewTable2}" />
+													</ui:include>
+												</div>
+											</div>
+
+											<div class="rowCont FL pad40tp">
+												<div class="tblHdr_bk rowCont">
+													<span class="tblHdr_txt">
+														NOTES
+													</span>
+												</div>
+												<div class="MA CT" style="width:98%;">
+													<ace:textAreaEntry rows="3" maxlength="500" styleClass="stdTxtArea W95percnt pad5tp"
+															value="#{callSheetViewBean.callNotes[30]}" />
+												</div>
+												<br /><br />
+											</div>
+
+										</h:panelGroup><!-- callsheet exists -->
+
+									</div><!-- end callsheet cont -->
+
+									<div class="rowBtn">
+										<div class="rowBtnBdr"></div>
+										<div class="FL rowCont">
+											<h:panelGroup styleClass="FR pad10rt">
+												<span class="btnPriEnbLt"/>
+												<span>
+													<ace:linkButton styleClass="btnPriEnbCt"
+															value="Cancel" action="#{callSheetViewBean.actionCancel}" immediate="true" />
+												</span>
+												<span class="btnPriEnbRt"/>
+											</h:panelGroup>
+											<h:panelGroup styleClass="FR pad5rt">
+												<span class="btnSecHotLt"/>
+												<span>
+													<ace:linkButton value="Save" styleClass="btnSecHotCt"
+															onmouseup="showErrors();"
+															action="#{callSheetViewBean.actionSave}" >
+														<f:setPropertyActionListener value="com.lightspeedeps.headerTabId" target="#{jumpBean.attribute}"/>
+														<f:setPropertyActionListener value="#{callSheetViewBean.headerTabId}" target="#{jumpBean.value}"/>
+													</ace:linkButton>
+												</span>
+												<span class="btnSecHotRt"/>
+											</h:panelGroup>
+										</div>
+									</div>
+
+								</div><!-- end outermost rowCont -->
+
+								<div class="btmBdrCont FL">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+
+							</div><!-- end pnlFull -->
+						</div><!--  end pnlCont -->
+					</div><!-- end ctrCont -->
+
+					<div class="CB"></div><!-- clears float for liquid layout -->
+
+				</div><!-- end mainCont -->
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+
+			</div><!-- end main -->
+
+			<ace:textEntry id="scrollPos" value="#{callSheetViewBean.scrollPos}" style="visibilty:hidden"/>
+
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+
+		<ui:include src="addcrewcall.xhtml" />
+		<ui:include src="timeOptions.xhtml" />
+		<ui:include src="changelist.xhtml" />
+	</h:body>
+</html>

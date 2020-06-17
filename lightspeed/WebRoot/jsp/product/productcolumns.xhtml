@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+		<ace:column styleClass="W10percnt pill" style="min-width:118px;">
+			<f:facet name="header">
+				<h:outputText
+					value="Production Type" />
+			</f:facet>
+			<div class="FL #{item.buttonStyle}">
+				<h:graphicImage value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+			</div>
+			<h:panelGroup
+				styleClass="pill_center scc #{item.buttonStyle}">
+				<ace:linkButton  rendered="#{item.price ge 0}"
+						value="#{item.button}" title="Select #{item.button} Production"
+						action="#{productListBean.actionSelect}" styleClass="pill_center non_link">
+					<f:setPropertyActionListener value="#{item.id}" target="#{productListBean.productId}"/>
+				</ace:linkButton>
+				<div><h:outputText rendered="#{item.price lt 0}" value="#{item.button}" /></div>
+
+			</h:panelGroup>
+			<div class="FL #{item.buttonStyle}">
+				<h:graphicImage value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+			</div>
+		</ace:column>
+
+		<ace:column styleClass="W40percnt LT">
+			<f:facet name="header">
+				<h:outputText
+					value="Description" />
+			</f:facet>
+			<h:outputText
+				styleClass="FL pad5lt pad6tp pad6bm"
+				value="#{item.description}" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt16">
+			<f:facet name="header">
+				<h:outputText styleClass="CT" value="Max # of Users" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.button ne 'Indie' and item.maxUsers le 9999 and item.maxUsers ne 1000}"
+					value="#{item.maxUsers}" />
+			<h:outputText
+					rendered="#{item.button eq 'Indie' or item.maxUsers eq 1000}"
+					value="#{item.maxUsers}*" />
+			<h:outputText styleClass="CT txt14" rendered="#{item.maxUsers > 9999}"
+					value="Unlimited" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Duration" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.duration gt 1}"
+					value="#{item.duration} Months" />
+			<h:outputText
+					rendered="#{item.duration eq 1}"
+					value="Monthly" />
+			<h:outputText
+					rendered="#{item.duration eq 0}"
+					escape="false"
+					value="No&lt;br&gt;Expiration" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14" rendered="false">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Text Messaging" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.smsEnabled}"
+					value="Unlimited" />
+			<h:outputText
+					rendered="#{not item.smsEnabled}"
+					value="No" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Price" />
+			</f:facet>
+			<h:outputText rendered="#{item.price lt 0}">
+				Contact<br/>Us!
+			</h:outputText>
+			<h:outputText rendered="#{item.price gt 0}"
+					value="#{item.price}">
+				<f:convertNumber pattern="$#,##0 "/>
+			</h:outputText>
+			<h:outputText escape="false" rendered="#{item.duration eq 1}"
+					value="per&lt;br/>month" />
+			<h:outputText rendered="#{!(item.price gt 0 or item.price lt 0)}"
+					value="Free" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14">
+			<h:panelGroup rendered="#{item.price ge 0}" layout="block" styleClass="DIB">
+				<span class="btnPriHotLt" />
+				<ace:linkButton value="Select" title="Select #{item.button} Production"
+						action="#{productListBean.actionSelect}"
+						styleClass="btnPriHotCt btnTxt" >
+					<f:setPropertyActionListener value="#{item.id}" target="#{productListBean.productId}"/>
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+			<h:panelGroup rendered="#{item.price lt 0}"
+					style="width:65px;" styleClass="B">
+					(323)<br/>851-2000
+			</h:panelGroup>
+		</ace:column>
+
+</ui:composition>

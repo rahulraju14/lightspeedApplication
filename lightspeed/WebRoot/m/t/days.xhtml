@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Weekly Payroll</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form id="days">
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="timecardlistm" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Weekly Payroll
+				</div>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id eq mobileTimecardBean.tcUser.id}">
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id ne mobileTimecardBean.tcUser.id}">
+					<div class="prodTitle pad5tp">
+						<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<!-- Confirmation fragment -->
+				<h:panelGroup rendered="#{mobileTimecardBean.showPopup}">
+					<ui:include src="../common/confirm.xhtml" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{empty mobileTimecardBean.weeklyTimecard}">
+					<h:outputText styleClass="errorMsgTxt"
+							value="The timecard you were viewing is no longer available."/>
+				</h:panelGroup>
+
+				<!-- Start of everything that is hidden when the confirmation fragment is displayed -->
+				<h:panelGroup rendered="#{not mobileTimecardBean.showPopup and
+						not empty mobileTimecardBean.weeklyTimecard}">
+
+					<a id="default" /><!-- default scroll-to-top position -->
+
+					<div class="txtL2 inCtlRow">
+						<h:panelGroup styleClass="inBlock FL" rendered="#{mobileTimecardBean.hasPrevWeek}">
+							<span class="FL btnPriHotLt"/>
+							<h:commandLink value="&lt;" styleClass="btnPriHotCt"
+								action="#{mobileTimecardBean.actionPreviousWeekEndDate}" />
+							<span class="FL btnPriHotRt"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="inBlock FL" rendered="#{! mobileTimecardBean.hasPrevWeek}">
+							<span class="FL btnPriDisLt"/>
+							<h:commandLink value="&lt;" styleClass="btnPriDisCt" type="text" />
+							<span class="FL btnPriDisRt"/>
+						</h:panelGroup>
+						<span class="midBtn weekEndText">
+							W/E
+							<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad10lt">
+								<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+							<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+						</span>
+
+						<h:panelGroup styleClass="inBlock FR" rendered="#{mobileTimecardBean.hasNextWeek}">
+							<span class="FL btnPriHotLt"/>
+							<h:commandLink value="&gt;" styleClass="btnPriHotCt"
+								action="#{mobileTimecardBean.actionNextWeekEndDate}" />
+							<span class="FL btnPriHotRt"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="inBlock FR" rendered="#{! mobileTimecardBean.hasNextWeek}">
+							<span class="FL btnPriDisLt"/>
+							<h:commandLink value="&gt;" styleClass="btnPriDisCt" type="text" />
+							<span class="FL btnPriDisRt"/>
+						</h:panelGroup>
+
+					</div>
+
+					<div class="statusBannerP">
+						<div class="CT inBlock statusBannerP-text">
+							<h:outputText styleClass="pad10rt" value="Status:" />
+							<h:outputText value="#{mobileTimecardBean.weeklyTimecard.status.label}" />
+						</div>
+					</div>
+
+					<!-- RECALL BUTTON -->
+					<h:panelGroup styleClass="CT inBlock pad10tp"
+							rendered="#{mobileTimecardBean.recallAuth}">
+						<span class="FL btnSecHotSmLt"/>
+						<span>
+							<h:commandLink value="Recall Timecard"
+									action="#{mobileTimecardBean.actionRecall}" styleClass="btnSecHotSmCt" />
+						</span>
+						<span class="FL btnSecHotSmRt"/>
+					</h:panelGroup>
+
+					<!-- START INFO section -->
+					<ui:include src="daysInfo.xhtml" />
+
+					<!-- TIMECARD section (list of days) -->
+					<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+					<a id="timecard" /><!-- timecard (day list) scroll-to-top position -->
+
+					<ui:include src="../common/errors.xhtml" />
+
+					<!-- Timecard bar / toggle button -->
+					<div class="CT pad5tp">
+						<div class="mBtnFull inBlock">
+							<h:commandLink value="Timecard" styleClass="btnPriHotCt mBtnFull"
+									action="#{mobileTimecardBean.actionToggleDays}" />
+						</div>
+					</div>
+
+					<!-- Timecard / Days section -->
+					<h:panelGroup rendered="#{mobileTimecardBean.showDays}">
+
+						<!-- COPY LAST WEEK BUTTON -->
+						<h:panelGroup styleClass="mBtnCenter"
+								rendered="#{mobileTimecardBean.hasPrevWeek and
+										mobileTimecardBean.editRaw and mobileTimecardBean.showCopyPrior}">
+							<span class="FL btnSecHotLt"/>
+							<span>
+								<h:commandLink value="Copy from Last Week"
+									action="#{mobileTimecardBean.actionCopyWeek}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="FL btnSecHotRt"/>
+						</h:panelGroup>
+
+						<!-- Hours/MPV HEADING -->
+						<div class="MA txtL2" style="margin-bottom:-8px;margin-left:5px;">
+							<span class="inBlock" style="width:120px;"></span>
+							<span class="wkHours">
+								<h:outputText styleClass="unBoxDayHdr" value="DayType" />
+								<h:outputText styleClass="unBoxDayHdr" value="Hours" style="margin-left:20px;" />
+							</span>
+						</div>
+						<div class="CB"></div>
+
+						<!-- LIST OF DAYS plus hours & other columns -->
+						<ui:repeat value="#{mobileTimecardBean.weeklyTimecard.dailyTimes}" var="daytime">
+
+							<div class="MA pad6tp" style="width:98%;">
+								<span class="inBlock">
+									<span class="FL btnPriHotLt"/>
+									<span>
+										<h:commandLink action="hoursm" styleClass="btnPriHotCt mBtnDay">
+											<h:outputText value="#{daytime.date}"
+												styleClass="#{daytime.selected ? 'selected' : '' }">
+												<f:convertDateTime pattern="EEE, M/d" timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+											<f:setPropertyActionListener value="com.lightspeedeps.mtcDate" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="#{daytime.date}" target="#{jumpBean.value}"/>
+											<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="pickdaym" target="#{jumpBean.value}"/>
+										</h:commandLink>
+									</span>
+									<span class="FL btnPriHotRt"/>
+								</span>
+								<span class="wkHrRow">
+									<!-- DAY TYPE -->
+								 	<h:outputText
+								 			value="#{(daytime.dayType==null) ? '--' : daytime.dayType.shortLabel}"
+								 			styleClass="unBoxDayType" />
+									<!-- HOURS or "W" -->
+									<h:panelGroup rendered="#{! mobileTimecardBean.weeklyTimecard.allowWorked}" styleClass="unBoxVal">
+									 	<h:outputText value="#{daytime.hours==null ? 0 : daytime.hours}"
+									 			styleClass="unBoxVal">
+											<f:convertNumber type="number" pattern="0.0#" />
+									 	</h:outputText>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{mobileTimecardBean.weeklyTimecard.allowWorked}">
+									 	<h:outputText rendered="#{daytime.worked}" value="W" styleClass="unBoxMpv" />
+									 	<h:outputText rendered="#{! daytime.worked}" value="#{daytime.hours==null ? '--' : daytime.hours}"
+									 			styleClass="unBoxVal">
+											<f:convertNumber type="number" pattern="0.0#" />
+									 	</h:outputText>
+									</h:panelGroup>
+								</span>
+							</div>
+							<div class="CB" />
+
+						</ui:repeat>
+
+						<div class="MA txtTotal" style=" ">
+							<span class="wkTotalLabel">Total:</span>
+							<span class="wkHours">
+									<h:outputText styleClass="unBoxValTotal" value="#{mobileTimecardBean.weeklyTimecard.totalHours}">
+										<f:convertNumber type="number" pattern="0.0#" />
+									</h:outputText>
+							</span>
+						</div>
+
+						<!-- CLONE BUTTON -->
+						<h:panelGroup styleClass="CT inBlock pad10tp"
+								rendered="#{mobileTimecardBean.cloneAuth and ! mobileTimecardBean.editMileage}">
+							<span class="FL btnSecHotLt"/>
+							<span>
+								<h:commandLink value="Clone Timecard"
+									action="#{mobileTimecardBean.actionGoClone}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="FL btnSecHotRt"/>
+						</h:panelGroup>
+
+					</h:panelGroup>
+					<!-- END Timecard / Days section -->
+
+					<!-- BOX RENTAL section -->
+					<ui:include src="daysBox.xhtml" />
+
+					<!-- MILEAGE section -->
+					<ui:include src="daysMileage.xhtml" />
+
+					<!-- EXPENSES section -->
+					<h:panelGroup rendered="#{mobileTimecardBean.payrollPref.allowEmployeeExpense}">
+						<ui:include src="daysExpense.xhtml" />
+					</h:panelGroup>
+
+					<hr class="pad15tp"/>
+
+					<!-- SUBMIT BUTTON - enabled -->
+					<h:panelGroup styleClass="CT inBlock pad5tp" rendered="#{mobileTimecardBean.editRaw and ! mobileTimecardBean.editMileage}">
+						<span class="FL btnPriHotSmLt"/>
+						<span>
+							<h:commandLink value="Submit Timecard"
+								action="#{mobileTimecardBean.actionGoSubmit}" styleClass="btnPriHotSmCt" />
+						</span>
+						<span class="FL btnPriHotSmRt"/>
+					</h:panelGroup>
+
+					<!-- SUBMIT BUTTON - disabled -->
+					<h:panelGroup styleClass="CT inBlock pad10tp" rendered="#{mobileTimecardBean.editMileage or ! mobileTimecardBean.editRaw}">
+						<span class="FL btnPriDisSmLt"/>
+						<span>
+							<h:commandLink value="Submit Timecard" type="text" styleClass="btnPriDisSmCt" />
+						</span>
+						<span class="FL btnPriDisSmRt"/>
+					</h:panelGroup>
+
+				</h:panelGroup>
+				<!-- END of all the page that is hidden when the "confirmation" fragment is displayed -->
+
+			</div>
+
+			<div class="pad20tp CB"/>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

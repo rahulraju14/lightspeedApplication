@@ -1,0 +1,269 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div class="rowCont">
+
+	<c:set var="pendingApp" value="#{(contactFormBean.contactDocument.status eq 'PENDING' and
+												(contactFormBean.isApprover or contactFormBean.isEditor))}" />
+	<c:set var="submittedApp" value="#{((! formG4Bean.contactDoc.submitable) and contactFormBean.isApprover)}" />
+
+		<!-- STEP 7 START -->
+		<h:outputText styleClass="FL pad15lt pad10tp B" value="7. LETTER USED" />
+		<h:outputText styleClass="FL pad5lt pad10tp" value="(Marital Status A, B, C, D, or E)" />
+		<h:panelGroup>
+			<span class="fd_sm pad2lt pad5tp">
+				<ace:textEntry maxlength="1" id="maritalLetter"
+					disabled="#{true}"
+					value="#{formG4Bean.form.maritalLetter}"
+					styleClass="pad6tp FL pad5lt"
+					style="min-width:8%; width:12%; border-bottom:solid 1px;height:12px" />
+			</span>
+		</h:panelGroup>
+
+		<h:outputText styleClass="FL pad35lt pad10tp B" value="TOTAL ALLOWANCES" />
+		<h:outputText styleClass="FL pad5lt pad10tp" value="(Total of Lines 3 - 5)" />
+		<h:panelGroup>
+			<span class="fd_sm pad2lt pad5tp">
+				<ace:textEntry id="totalAllowances" maxlength="1"
+					styleClass="pad6tp FL pad5lt" disabled="#{true}"
+					value="#{formG4Bean.form.totalAllowances}"
+					style="min-width:8%; width:12%; border-bottom:solid 1px;height:12px" />
+			</span>
+		</h:panelGroup>
+	</div>
+	<div class="FL rowCont">
+		<h:outputText styleClass="FL pad15lt pad5tp" value="(Employer: The letter indicates the tax tables in Employer&apos;s Tax Guide)" />
+	</div>
+	<!-- STEP 7 END -->
+
+	<!-- HORIZONTAL RULE -->
+	<div class="W95percnt FL" style="height:3px;">
+		<hr style="height:3px;background:black;border:0;margin-right:-3px; margin-top:5px; margin-left:15px" />
+	</div>
+
+	<!-- STEP 7 START -->
+	<div class="rowCont">
+		<h:outputText styleClass="FL pad15lt pad10tp B" value="8. EXEMPT:" />
+		<h:outputText styleClass="FL pad5lt pad10tp" value="(Do not complete Lines 3 - 7 if claiming exempt)" />
+		<h:outputText styleClass="FL pad5lt pad10tp B" value="Read the Line 8 instructions on page 2 before completing this section." />
+	</div>
+	<div class="pad15lt">
+		<h:outputText styleClass="FL pad3tp rowCont"
+			value="a) I claim exemption from withholding because I incurred no Georgia income tax liability last year and I do not expect to" />
+		<h:outputText styleClass="FL pad3tp" value="have a Georgia income tax liability this year." />
+		<h:outputText styleClass="FL pad3tp B pad10lt" value="Check here" />
+
+		<!-- EXEMPT CHECKBOX 1 -->
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+		<h:selectBooleanCheckbox
+			disabled="#{not formG4Bean.empEdit}"
+			value="#{formG4Bean.form.noGAIncome}"
+			valueChangeListener="#{formG4Bean.listenExemptChecked}"
+			styleClass="FL iceSelBoolChkbx pad2tp pad15lt">
+			<ace:ajax execute="@form" />
+		</h:selectBooleanCheckbox>
+		</icecore:setEventPhase>
+		<h:outputText styleClass="FL pad3tp rowCont"
+			value="b) I certify that I am not subject to Georgia withholding because I meet the conditions set forth under the Servicemembers" />
+		<div class="rowCont FL">
+		<h:outputText styleClass="FL pad3tp"
+			value="Civil Relief Act as provided on page 2. My state of residence is" />
+			<h:panelGroup>
+				<span class="fd_sm">
+					<h:selectOneMenu styleClass="FL pad2tp W95percnt"
+						disabled="#{not formG4Bean.empEdit}"
+						value="#{formG4Bean.form.myState}"
+						style="min-width:8%; width:14%; height:18px; ">
+						<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+						<ace:ajax render="@this exemptBox" />
+					</h:selectOneMenu>
+				</span>
+			</h:panelGroup>
+			<h:outputText styleClass="FL pad3lt pad5tp" value=". My spouse’s (servicemember) state" />
+			</div>
+			<h:outputText styleClass="FL pad5tp" value="of residence is" />
+			<h:panelGroup>
+				<span class="fd_sm pad5lt">
+					<h:selectOneMenu styleClass="FL pad2tp W95percnt"
+						disabled="#{not formG4Bean.empEdit}"
+						value="#{formG4Bean.form.spouseState}"
+						style="min-width:8%; width:14%; height:18px; ">
+						<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+						<ace:ajax render="@this exemptBox" />
+					</h:selectOneMenu>
+				</span>
+			</h:panelGroup>
+			<h:outputText styleClass="FL pad3lt pad5tp" value=". The states of residence " />
+		<h:outputText styleClass="FL pad3lt pad5tp" value=" must be the same to be exempt." />
+		<h:outputText styleClass="FL pad5tp B pad10lt" value="Check here" />
+
+		<!-- EXEMPT CHECKBOX 2 -->
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+		<h:selectBooleanCheckbox id="exemptBox"
+			disabled="#{(not formG4Bean.empEdit) or (empty formG4Bean.form.myState) or (formG4Bean.form.myState eq '  ')
+				or (empty formG4Bean.form.spouseState) or (formG4Bean.form.spouseState eq '  ')
+				or (formG4Bean.form.myState ne formG4Bean.form.spouseState)}"
+			value="#{formG4Bean.form.sameExemptStates}"
+			valueChangeListener="#{formG4Bean.listenExemptChecked}"
+			styleClass="FL iceSelBoolChkbx pad2tp pad15lt">
+			<ace:ajax execute="@form"/>
+		</h:selectBooleanCheckbox>
+		</icecore:setEventPhase>
+	</div>
+	<!-- STEP 8 END -->
+
+	<!-- HORIZONTAL RULE -->
+	<div class="W95percnt FL" style="height:5px;">
+		<hr style="height:3px;background:black;border:0;margin-right:-3px; margin-top:-2px; margin-left:15px" />
+	</div>
+
+	<!-- SIGNATURE START -->
+	<div class="rowCont pad15lt">
+		<h:outputText styleClass="FL pad1tp"
+			value="I certify under penalty of perjury that I am entitled to the number of withholding allowances or the exemption from withholding status" />
+		<h:outputText styleClass="FL pad3tp" value="claimed on this Form G-4. Also, I authorize my employer to deduct per pay period the additional amount listed above." />
+	</div>
+
+	<div class="rowCont pad15lt">
+		<!-- SIGNATURE LABEL -->
+		<div class="W18percnt FL pad20tp" style="height: 27px;">
+			<h:outputText styleClass="txt12 " style="font-weight:normal;width: 123px;" value="Employee&apos;s Signature:"/>
+		</div>
+
+		<!-- SIGNATURE VALUE -->
+		<div class="W45percnt FL pad10tp pad5lt" style="height:38px;border-bottom: solid 1px;width: 408px;font-size: 11px;" >
+			<div class="rowCont">
+				<!-- Sign Button  -->
+				<h:panelGroup rendered="#{(formG4Bean.contactDoc.submitable) or (formG4Bean.contactDoc.status eq 'PENDING')}">
+				<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+					<h:panelGroup rendered="#{(formG4Bean.contactDoc.status ne 'PENDING') and (formG4Bean.empEdit or
+							(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton value="Sign &amp; Submit"
+							action="#{contactFormBean.actionSubmit}"
+							title="Signature field" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not (formG4Bean.empEdit or
+							(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+							or (formG4Bean.contactDoc.status eq 'PENDING')}">
+						<span class="btnMiniLt"/>
+						<span>
+							<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+						</span>
+						<span class="btnMiniRt"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				</h:panelGroup>
+				<!-- Sign Button End -->
+				<span class="FL">
+					<h:outputText escape="false" styleClass="txt12" rendered="#{formG4Bean.contactDoc.empSignature ne null}">
+						<h:outputText value="E-signed by" styleClass="U" />
+						<h:outputText value=" #{formG4Bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+						<h:outputText value=" #{formG4Bean.contactDoc.empSignature.displayTime}" />
+						<br/>
+						<h:outputText value="# #{formG4Bean.contactDoc.empSignature.uuid}"/>
+					</h:outputText>
+				</span>
+			</div>
+		</div>
+
+		<!-- SIGNATURE DATE -->
+		<div class="W30percnt FL pad10lt" style="height:27px; ">
+			<span class="FL pad22tp"><h:outputText styleClass="txt12" value="Date: "/></span>
+			<div class="W80percnt FL pad22tp pad5lt" style="height:26px;border-bottom:solid 1px;">
+				<span class="FL pad3lt">
+					<h:outputText value="#{formG4Bean.contactDoc.empSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</span>
+			</div>
+		</div>
+		<!-- EMPLOYEE SIGNATURE END -->
+	</div>
+	<!-- SIGNATURE END -->
+
+	<!-- HORIZONTAL RULE -->
+	<div class="W95percnt FL" style="height:5px;">
+		<hr style="height:3px;background:black;border:0;margin-right:-3px; margin-top:-2px; margin-left:15px" />
+	</div>
+
+	<!-- STEP 9 START -->
+	<div class="rowCont pad15lt">
+		<h:outputText styleClass="FL pad1tp B"
+			value="Employer: Complete Line 9 and mail entire form only if the employee claims over 14 allowances or exempt from withholding." />
+		<div class="rowCont" style="min-height:30px;">
+			<h:outputText styleClass="FL pad3tp"
+				value="If necessary, mail form to: Georgia Department of Revenue, Withholding Tax Unit, 1800 Century Blvd NE, Suite 8200, Atlanta, GA 30345." />
+			<!-- Employer's  -step 5 section   -->
+					<div class="FL B" style="margin-top: 6px;margin-left: 0px;font-size: 12px;margin-bottom: 5px;">
+						<h:outputText value="Employer section to be completed by TEAM."
+							style="color:red" />
+					</div>
+		</div>
+	</div>
+
+	<div class="rowCont pad15lt pad-12tp">
+		<div class="FL W45percnt">
+			<h:outputText styleClass="FL pad10tp B " value="9. EMPLOYER&apos;S NAME AND ADDRESS:" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="60"
+						styleClass="fd_sm pad10lt pad3tp"
+						disabled="#{true}"
+						value=""
+						style="min-width:20%;width:92%; border-bottom:solid 1px;height:13px;"/>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="100"
+						styleClass="fd_sm pad10lt pad3tp"
+						disabled="#{true}"
+						value=""
+						style="min-width:20%;width:92%; border-bottom:solid 1px;height:13px;"/>
+				</span>
+			</h:panelGroup>
+		</div>
+		<div class="FL W53percnt">
+			<div class="FL rowCont pad15tp pad10lt">
+				<h:outputText styleClass="FL B" value="EMPLOYER&apos;S FEIN:" />
+				<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="fd_sm pad5lt pad-3tp"
+						disabled="#{true}"
+						value=""
+						style="min-width:20%;width:40%; border-bottom:solid 1px;height:13px;"/>
+				</span>
+				</h:panelGroup>
+			</div>
+			<div class="FL rowCont pad20tp pad10lt">
+				<h:outputText styleClass="FL B" value="EMPLOYER&apos;S WH#:" />
+				<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="fd_sm pad5lt pad-3tp"
+						disabled="#{true}"
+						value=""
+						style="min-width:20%;width:40%; border-bottom:solid 1px;height:13px;"/>
+				</span>
+				</h:panelGroup>
+			</div>
+		</div>
+	</div>
+	<!-- STEP 9 END -->
+
+	<div class="rowCont pad15lt pad10tp">
+		<h:outputText styleClass="FL pad3tp B"
+			value="Do not accept forms claiming additional allowances unless the worksheet has been completed. Do not accept forms" />
+		<h:outputText styleClass="FL pad3tp B"
+			value="claiming exempt if numbers are written on Lines 3 - 7." />
+	</div>
+
+</ui:composition>

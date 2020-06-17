@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Clone Timecard page - prompt for cloning selections and options. -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Clone Timecard</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="pickdaym" />
+
+		<ui:include src="../common/header.xhtml" />
+			<!-- calls 'getLockIt()' to lock the timecard; always returns false -->
+			<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+			<!-- force CloneTimecardBean initialization: -->
+			<h:outputText style="visibility:hidden;" value="#{cloneTimecardBean.selectAllDays}" />
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Clone Timecard
+				</div>
+
+				<h:panelGroup>
+					<div class="prodTitle pad5tp">
+						<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<!-- WEEK ENDING DATE -->
+				<div class="pad10tp">
+					<span class="weekEndTextMed">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad5lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<div class="infoText pad10tp">
+					<div class="LT MA" style="width:80%;">
+					<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+						Clone times, NDMs and MPVs from this timecard
+						<h:outputText value="(#{ mobileTimecardBean.tcUser.lastNameFirstName})" />
+						to other people's timecards for the same week ending.
+					</h:panelGroup>
+					<h:panelGroup styleClass="errorMsgTxt" rendered="#{! mobileTimecardBean.locked}">
+						This timecard is being updated by another user, and may not
+						be cloned at this time.  Please try again later.
+					</h:panelGroup>
+					</div>
+				</div>
+
+				<!-- Start of everything that is hidden when the lock failed -->
+				<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+
+					<a id="default" /><!-- default scroll-to-top position -->
+
+					<!-- SELECT DAYS BANNER -->
+					<div class="statusBannerP">
+						<div class="CT inBlock">
+							<h:outputText styleClass="pad10rt" value="Select Days to Copy" />
+						</div>
+					</div>
+
+					<!-- DAY CHECK BOXES -->
+					<div class="inCtlRow">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<div class="twoColumn">
+							<h:panelGroup styleClass="ckbx">
+									<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectAllDays}"
+											valueChangeListener="#{cloneTimecardBean.listenSelectAllDays}" >
+										<ace:ajax />
+									</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl_B pad3lt">
+									Select All Days<br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[0]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}" >
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[0]}" /><br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[1]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[1]}" /><br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[2]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[2]}" />
+								</span>
+							</h:panelGroup>
+						</div>
+						<div class="twoColumn">
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[3]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[3]}" /><br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[4]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[4]}" /><br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[5]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[5]}" /><br/>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[6]}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+								<span class="ckbxTxtLbl pad3lt">
+									<h:outputText value="#{cloneTimecardBean.timecardDays[6]}" />
+								</span>
+							</h:panelGroup>
+						</div>
+						</icecore:setEventPhase>
+					</div>
+
+					<!-- SELECT RECIPIENTS BANNER + "ALL" CHECKBOX -->
+					<div class="statusBannerP pad20tp">
+						<div class="CT inBlock">
+							<h:outputText styleClass="pad10rt" value="Select Recipients" />
+						</div>
+					</div>
+
+					<div class="inCtlRow LT pad10tp">
+						<h:panelGroup styleClass="ckbx">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectAllTargets}"
+										valueChangeListener="#{cloneTimecardBean.listenSelectAllTargets}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+							<span class="ckbxTxtLbl_B pad3lt">
+								Select All Recipients
+							</span>
+						</h:panelGroup>
+					</div>
+
+					<!-- SELECT RECIPIENTS LIST -->
+					<div class="inCtlRow LT">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<ui:repeat value="#{cloneTimecardBean.recipients}" var="recip">
+								<div>
+									<!-- Checkbox -->
+										<h:selectBooleanCheckbox styleClass="ckbx pad10tp"
+												valueChangeListener="#{cloneTimecardBean.listenSelectTarget}"
+												value="#{recip.checked}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									<!-- Name -->
+								 	<h:outputText styleClass="pad10lt ckbxTxtLbl" value="#{recip.name}" />
+								</div>
+							</ui:repeat>
+						</icecore:setEventPhase>
+					</div>
+
+					<!-- OPTIONS BANNER -->
+					<div class="statusBannerP pad20tp">
+						<div class="CT inBlock">
+							<h:outputText styleClass="pad10rt" value="Options" />
+						</div>
+					</div>
+
+						<div class="inCtlRow LT pad10tp">
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.cloneOverwriteTimes}"/>
+								<span class="ckbxTxtLbl pad3lt">
+									Overwrite existing times, NDMs and<br/>
+									<h:outputText styleClass="pad30lt"
+										value="MPVs on recipient timecards." />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div class="inCtlRow LT pad10tp">
+							<h:panelGroup styleClass="ckbx">
+								<h:selectBooleanCheckbox value="#{cloneTimecardBean.cloneCopySet}" />
+								<span class="ckbxTxtLbl pad3lt">
+									Copy <b>Set</b> to recipient timecards.
+								</span>
+							</h:panelGroup>
+						</div>
+
+					<ui:include src="../common/errors.xhtml" />
+
+				</h:panelGroup>
+				<!-- END of all the page that is hidden when the timecard lock failed -->
+
+				<div class="twoBtnRow pad30tp">
+					<h:panelGroup rendered="#{mobileTimecardBean.locked}">
+					<span class="inBlock FL">
+						<span class="FL btnSecHotLt"/>
+						<span>
+							<h:commandLink value="Clone"
+								tabindex="4" action="#{cloneTimecardBean.actionMobileClone}"
+								styleClass="btnSecHotCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnSecHotRt"/>
+					</span>
+					</h:panelGroup>
+
+					<span class="inBlock FR">
+						<span class="FL btnPriEnbLt"/>
+						<span>
+							<h:commandLink value="Cancel"
+								tabindex="4" action="#{cloneTimecardBean.actionCancelMobileClone}"
+								styleClass="btnPriEnbCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnPriEnbRt"/>
+					</span>
+				</div>
+
+			</div>
+
+			<div class="pad20tp CB"/>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- admin mini-tab of the Cast & Crew page -->
+
+	<!--  admin tab   -->
+	<ace:tabPane label="Admin" id="admintab"
+		rendered="#{not empty authBean.pgFields['3.1,all']}">
+		<div class="miniTab">
+			<div class="rowCont FL pad10lt">
+
+				<div class="adminCkBxs pad10tp">
+					<span class="fdNm_w"><!-- placeholder --></span>
+					<span class="fd pad15rt">
+						<h:selectBooleanCheckbox disabled="#{not contactViewBean.editMode}"
+							value="#{contactViewBean.contact.minor}" styleClass="ckbx" />
+						<span class="ckbxTxtLbl">Minor</span>
+					</span>
+				</div>
+
+				<!-- enable login -->
+				<div class="adminCkBxs">
+					<span class="fdNm_w"><!-- placeholder --></span>
+					<span class="fd pad15rt">
+						<h:selectBooleanCheckbox
+							disabled="#{(not contactViewBean.editMode) or
+							(contactViewBean.contact.status eq 'BLOCKED') or
+							(contactViewBean.contact.isCast and empty authBean.pgFields['3.1,edit_cast']) or
+							(not contactViewBean.contact.isCast and empty authBean.pgFields['3.1,edit_crew']) or
+							(empty authBean.pgFields['3.1.1,login_status']) or
+							((empty contactViewBean.contact.employments) and (not contactViewBean.contact.loginAllowed))}"
+							value="#{contactViewBean.loginEnabled}" styleClass="ckbx" />
+						<span class="ckbxTxtLbl">#{contactViewBean.productionLbl} Access Enabled</span>
+						<h:outputText styleClass="B pad10lt" value="User currently locked out"
+							rendered="#{contactViewBean.contact.user.lockedOut}" />
+					</span>
+				</div>
+
+				<!-- user locked out
+				<div class="adminCkBxs">
+					<span class="fdNm_w"><!- - placeholder - -></span>
+					<span class="fd pad15rt">
+						<h:selectBooleanCheckbox
+							disabled="#{not contactViewBean.editMode or (empty authBean.pgFields['3.1.1,login_locked'])}"
+							value="#{contactViewBean.contact.user.lockedOut}" styleClass="ckbx" />
+						<span class="ckbxTxtLbl">User Locked Out</span>
+					</span>
+				</div>
+					-->
+
+				<!-- user hidden -->
+				<div class="adminCkBxs">
+					<span class="fdNm_w"><!-- placeholder --></span>
+					<span class="fd pad15rt">
+						<h:selectBooleanCheckbox
+							disabled="#{not contactViewBean.editMode or (empty authBean.pgFields['3.1.1,hidden'])}"
+							value="#{contactViewBean.contact.hidden}" styleClass="ckbx" />
+						<span class="ckbxTxtLbl">Hidden User</span>
+					</span>
+				</div>
+
+				<!-- FILE ACCESS -->
+				<div class="rowCont pad15tp">
+					<span class="fdNm_w">File Access:</span>
+					<span class="fd">
+						<h:selectOneMenu disabled="#{(not contactViewBean.editMode) or
+							(contactViewBean.contact.isCast and empty authBean.pgFields['3.1,edit_cast']) or
+							(not contactViewBean.contact.isCast and empty authBean.pgFields['3.1,edit_crew'])}"
+								value="#{contactViewBean.contact.fileAccess}"
+								style="width:140px" styleClass="select">
+								<f:selectItems value="#{contactViewBean.fileAccessTypeDL}" />
+						</h:selectOneMenu>
+					</span>
+				</div>
+
+				<!-- PSEUDONYM -->
+				<div class="rowCont FL fd_btmPad">
+					<span class="fdNm_w">Pseudonym:</span>
+					<h:panelGroup
+						rendered="#{not contactViewBean.editMode and (not (empty authBean.pgFields['3.1,pseudonym'] and contactViewBean.contact.hidden))}">
+						<span class="fd">
+							<h:outputText
+								rendered="#{not empty contactViewBean.contact.pseudonym}"
+								value="#{contactViewBean.contact.pseudonym}" />
+							<h:outputText value="NA"
+								rendered="#{empty contactViewBean.contact.pseudonym}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{contactViewBean.editMode and (not (empty authBean.pgFields['3.1.1,pseudonym'] and contactViewBean.contact.hidden))}">
+						<span class="fd">
+							<ace:textEntry maxlength="35" styleClass="address"
+								value="#{contactViewBean.contact.pseudonym}" />
+						</span>
+					</h:panelGroup>
+				</div><!-- end personal pseudonym -->
+
+			</div><!-- end rowCont -->
+		</div><!-- end admin miniTab container -->
+
+	</ace:tabPane><!--  end admin tab    -->
+
+</ui:composition>

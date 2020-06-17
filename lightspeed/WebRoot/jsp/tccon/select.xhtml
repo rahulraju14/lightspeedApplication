@@ -1,0 +1,239 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Contract Selection tab of the Payroll Contracts page (screen number 9.11) -->
+
+<ace:tabPane label="Contract Selection"
+		rendered="#{not empty authBean.pgFields['9.11,view']}">
+
+	<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" />
+
+	<!-- left half of controls area -->
+	<div class="pad10tp FL pad5lt W65percnt" style="height:60px;">
+		<div class="FL W35percnt">
+			<div class="FL W100percnt">
+				<h:outputText styleClass="txt12 B" value="Production:" />
+				<h:outputText styleClass="txt12 B pad20lt" value="#{headerViewBean.production.title}" />
+			</div>
+			<div class="FL pad15tp W100percnt">
+				<h:outputText styleClass="txt12 B" value="Production Company:" />
+				<h:outputText styleClass="txt12 B pad20lt" value="#{headerViewBean.production.studio}" />
+			</div>
+		</div>
+
+		<div class="FL W25percnt">
+			<h:selectBooleanCheckbox styleClass="ckbx"
+				value="#{contractsBean.production.payrollPref.use30Htg}"
+				disabled="#{not contractsBean.editMode}" />
+			<h:outputText styleClass="ckbxTxtLbl_B" value="Use Contracts"  />
+			<br/>
+			<h:selectBooleanCheckbox styleClass="ckbx"
+				value="#{contractsBean.production.payrollPref.usePriorYearRates}"
+				disabled="#{not contractsBean.editMode}" />
+			<h:outputText styleClass="ckbxTxtLbl_B" value="Use prior year rates" />
+		</div>
+
+		<div class="FL W39percnt">
+			<h:outputText rendered="#{! aicp}">
+				<h:selectBooleanCheckbox styleClass="ckbx"
+					value="#{contractsBean.production.payrollPref.showOnCallFields}"
+					disabled="#{not contractsBean.editMode}" />
+				<h:outputText styleClass="ckbxTxtLbl_B" value="Use On-Call fields on non-union hourly timecards" />
+			</h:outputText>
+			<br/>
+			<h:selectBooleanCheckbox styleClass="ckbx"
+				value="#{contractsBean.production.payrollPref.ignoreGuarHrsAfterMeal2}"
+				title="If checked, guaranteed hours after meal 2 will be ignored"
+				disabled="#{not contractsBean.editMode}" />
+			<h:outputText styleClass="ckbxTxtLbl_B" value="Producer pays for meals (Union only)" />
+		</div>
+	</div>
+
+	<!-- right half of controls area -->
+	<div class="pad10tp FR W30percnt" >
+
+		<div class="W100percnt FL pad2tp">
+			<!-- YEAR FILTER -->
+			<h:outputText styleClass="txt12 B pad5rt" value="Year:" />
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu immediate="true" disabled="#{false}"
+						value="#{contractsBean.year}"
+						valueChangeListener="#{contractsBean.listenSelYearChange}">
+					<f:selectItems value="#{contractsBean.selectYearDL}"/>
+					<ace:ajax />
+				</h:selectOneMenu>
+				<!--
+				<div class="rowCont pad15tp">
+					<h:selectBooleanCheckbox value="#{contractsBean.includeSides}" partialSubmit="true"
+							valueChangeListener="#{contractsBean.listenIncludeSidesChange}" />
+					<h:outputText styleClass="txt12 B pad5lt" value="Include Sideletters" />
+				</div>
+				 -->
+			</icecore:setEventPhase>
+		</div>
+
+		<div class="W100percnt FL pad2tp">
+			<h:outputText styleClass="txt12 B pad5rt" value="Union:" />
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu styleClass="txt11" disabled="#{false}" style="width:200px;"
+						valueChangeListener="#{contractsBean.listenUnionChange}"
+						value="#{contractsBean.unionId}">
+					<f:selectItems value="#{contractsBean.unionsDL}"  />
+					<ace:ajax />
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+		</div>
+
+	</div>
+
+	<div class="CB"> </div>
+
+	<!-- left half of page; scrollable list of Production's contracts -->
+	<div id="scrollleft" class="FL pad5lt W49percnt scrollPnlTab">
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad20tp">
+			<div class="blueLegendCont"> <!-- Blue content -->
+				<span class="legendHdg" >
+					<h:outputText value="#{headerViewBean.production.title}"/>
+				</span>
+
+				<h:panelGroup styleClass="btn_legend" rendered="#{(not empty authBean.pgFields['9.11,edit'])}">
+					<h:outputText rendered="#{! contractsBean.editMode}">
+						<span class="btnMiniLtHot"/>
+							<ace:linkButton value=">>>"
+								action="#{contractsBean.actionRemoveFromProd}"
+								title="Remove the checked contracts from the production."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot"/>
+					</h:outputText>
+					<h:outputText rendered="#{contractsBean.editMode}">
+						<span class="btnMiniLt"/>
+							<ace:linkButton value=">>>"
+								onclick="return false;"
+								styleClass="btnMiniDisCt dislink" />
+						<span class="btnMiniRt"/>
+					</h:outputText>
+				</h:panelGroup>
+
+				<div class="FL rowCont gradTbl3">
+					<ace:dataTable id="prodtable" styleClass="gradTbl3 txt11"
+						singleSort="true"
+						rowStyleClass="CT txt12"
+						sortColumn="#{contractsBean.sortColumnName}"
+						sortAscending="#{contractsBean.ascending}"
+						value="#{contractsBean.sortedItemList}"
+						var="contract"
+						scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+						scrollHeight="#{headerViewBean.mobile ? '' : '290'}"
+						style="width:100%;max-width:100%;overflow-x:hidden;">
+
+						<!-- CHECKBOX -->
+						<ace:column styleClass="LH24 W5percnt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{contract.checked}"
+										valueChangeListener="#{contractsBean.listenProdCheckEntry}" >
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</ace:column>
+
+						<!-- LOCAL/GUILD -->
+						<ace:column headerText="Local/Guild" sortBy="#{contract.unionKey}" styleClass="W15percnt">
+							<h:outputText value="#{contract.unionKey}" />
+						</ace:column>
+
+						<!-- YEAR -->
+						<ace:column headerText="Year" sortBy="#{contract.year}" styleClass="W10percnt">
+							<h:outputText value="#{contract.year}" />
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column headerText="Contract Name" sortBy="#{contract.name}" styleClass="LT W70percnt">
+							<h:outputText styleClass="pad5lt" value="#{contract.name}" />
+						</ace:column>
+
+					</ace:dataTable>
+				</div><!-- end of dataTable wrapper -->
+			</div><!-- end of blue content -->
+		</div><!-- end of blue wrapper -->
+	</div><!-- end scrollleft div -->
+
+	<!-- right half of page; scrollable Contracts list -->
+	<div id="scrollright" class="FR pad5rt W49percnt scrollPnlTab" >
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad20tp">
+			<div class="blueLegendCont"> <!-- Blue content -->
+
+				<h:outputText rendered="#{headerViewBean.production.status.allowsWrite and
+						(not empty authBean.pgFields['9.11,edit'])}">
+					<!-- left-side legend buttons -->
+					<h:panelGroup styleClass="btn_legend_left pad10rt">
+						<h:outputText rendered="#{! contractsBean.editMode}">
+							<span class="btnMiniLtHot"/>
+								<ace:linkButton value="&lt;&lt;&lt;"
+									action="#{contractsBean.actionAddToProd}"
+									title="Add the checked contracts to this production company."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot"/>
+						</h:outputText>
+						<h:outputText rendered="#{contractsBean.editMode}">
+							<span class="btnMiniLt"/>
+								<ace:linkButton value="&lt;&lt;&lt;"
+									onclick="return false;"
+									styleClass="btnMiniDisCt dislink" />
+							<span class="btnMiniRt"/>
+						</h:outputText>
+					</h:panelGroup>
+
+					<span class="legendHdg" >
+						<h:outputText value="Available"/>
+					</span>
+
+				</h:outputText>
+
+				<div class="FL rowCont gradTbl3">
+				<!-- rowSelectListener="#{contract.selected}" -->
+					<ace:dataTable id="availtable" styleClass="gradTbl3 txt11"
+						singleSort="true"
+						rowStyleClass="CT txt12"
+						
+						sortColumn="#{contractsBean.sortedFullContractList.sortColumnName}"
+						sortAscending="#{contractsBean.sortedFullContractList.ascending}"
+						value="#{contractsBean.sortedFullContractList.list}"
+						var="contract"
+						scrollHeight="#{headerViewBean.mobile ? '' : '290'}"
+						style="width:100%;max-width:100%;overflow-x:hidden;">
+
+						<!-- CHECKBOX -->
+						<ace:column headerText=" " styleClass="LH24 W5percnt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{contract.checked}"
+										valueChangeListener="#{contractsBean.listenContractCheckEntry}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</ace:column>
+
+						<!-- LOCAL/GUILD -->
+						<ace:column headerText="Local/Guild" sortBy="#{contract.unionKey}" styleClass="W15percnt">
+							<h:outputText value="#{contract.unionKey}" />
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column headerText="Contract Name" sortBy="#{contract.name}" styleClass="LT W80percnt">
+							<h:outputText styleClass="pad5lt" value="#{contract.name}" />
+						</ace:column>
+
+					</ace:dataTable>
+				</div><!-- end of dataTable wrapper -->
+			</div><!-- end of blue content -->
+		</div><!-- end of blue wrapper -->
+	</div><!-- end scrollright div -->
+
+</ace:tabPane><!-- End mini-Tab -->
+</ui:composition>

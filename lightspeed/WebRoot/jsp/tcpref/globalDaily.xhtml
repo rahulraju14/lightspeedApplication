@@ -1,0 +1,313 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- All the columns of the timecard "daily hours" table for the Full Timecard page -->
+
+	<!-- Uses params:  -->
+	<!--   "aicp" (true for commercial productions) -->
+	<ace:columnGroup type="header">
+		<ace:row>
+			<ace:column style="width:#{aicp ? '10' : '11'}%;"></ace:column>
+			<ace:column style="width:#{aicp ? '15' : '11'}%;">Day</ace:column>
+			<ace:column style="width:#{aicp ? '15' : '9'}%;">Work</ace:column>
+			<ace:column style="width:#{aicp ? '5' : '5'}%;">
+				<h:outputText styleClass="FL" value="NDB/" />
+			</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '5'}%;">NDB</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '4'}%;">Grc</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">NDM</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">NDM</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">Last</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '4'}%;">Grc</ace:column>
+			<ace:column style="width:#{aicp ? '4' : '4'}%;">Cam</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '4'}%;" rendered="#{not aicp}">Frn</ace:column>
+			<ace:column style="width:#{aicp ? '13' : '9'}%;"></ace:column>
+			<ace:column style="width:#{aicp ? '8' : '5'}%;"></ace:column>
+			<ace:column style="width:#{aicp ? '0' : '9'}%;" rendered="#{not aicp}"></ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" colspan="2" rendered="#{not aicp}">Account</ace:column>
+			<ace:column style="width:#{aicp ? '12' : '0'}%;" rendered="#{aicp}"></ace:column>
+		</ace:row>
+		<ace:row>
+			<ace:column style="width:#{aicp ? '10' : '11'}%;">Date</ace:column>
+			<ace:column style="width:#{aicp ? '15' : '11'}%;">Type</ace:column>
+			<ace:column style="width:#{aicp ? '15' : '9'}%;">Zone</ace:column>
+			<ace:column style="width:#{aicp ? '5' : '5'}%;">
+				<h:outputText styleClass="FR" value="NDM" />
+			</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '5'}%;">End</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '4'}%;">1</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">Start</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">End</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">Man</ace:column>
+			<ace:column style="width:#{aicp ? '6' : '4'}%;">2</ace:column>
+			<ace:column style="width:#{aicp ? '4' : '4'}%;">Wrp</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '4'}%;" rendered="#{not aicp}">Hrs</ace:column>
+			<ace:column style="width:#{aicp ? '13' : '9'}%;">City</ace:column>
+			<ace:column style="width:#{aicp ? '8' : '5'}%;">State</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">LOC</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{not aicp}">Pr/Epi</ace:column>
+			<ace:column style="width:#{aicp ? '0' : '4'}%;" rendered="#{not aicp}">Set</ace:column>
+			<ace:column style="width:#{aicp ? '12' : '0'}%;" rendered="#{aicp}">Phase</ace:column>
+		</ace:row>
+	</ace:columnGroup>
+
+	<!-- Day & Date -->
+	<ace:column styleClass="N" style="min-width:58px;">
+		<h:outputText styleClass="FL pad2rt txt12 B" value="#{dailyTime.date}">
+			<f:convertDateTime pattern="EE" timeZone="#{applicationScopeBean.timeZone}" />
+		</h:outputText>
+		<h:outputText styleClass="txt12" value="#{dailyTime.date}">
+			<f:convertDateTime pattern="MM/dd" timeZone="#{applicationScopeBean.timeZone}" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- DAY TYPE -->
+	<ace:column styleClass="N">
+		<h:panelGroup rendered="true">
+			<h:selectOneMenu style="width:90%;"
+					title="#{dailyTime.dayType.label}"
+					value="#{dailyTime.dayType}"
+					rendered="#{payrollGlobalsBean.editMode}">
+				<f:selectItems value="#{payrollGlobalsBean.dayTypeDL}" />
+				<ace:ajax />
+			</h:selectOneMenu>
+			<h:outputText value="#{dailyTime.dayType.shortLabel}"
+					title="#{dailyTime.dayType.label}"
+					rendered="#{! payrollGlobalsBean.editMode}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- WORK ZONE -->
+	<ace:column styleClass="N">
+		<h:panelGroup>
+			<h:selectOneMenu style="width:90%;"
+					title="#{dailyTime.workZone.label}"
+					value="#{dailyTime.workZone}"
+					rendered="#{payrollGlobalsBean.editMode}">
+				<f:selectItems value="#{payrollGlobalsBean.workZoneDL}" />
+				<ace:ajax />
+			</h:selectOneMenu>
+			<h:outputText value="#{dailyTime.workZone.shortLabel}"
+					title="#{dailyTime.workZone.label}"
+					rendered="#{! payrollGlobalsBean.editMode}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- NDB/NDM -->
+	<ace:column>
+		<div class="ndmDiv">
+			<h:selectBooleanCheckbox value="#{dailyTime.nonDeductMealPayroll}" styleClass="ndm1"
+					disabled="#{! payrollGlobalsBean.editMode}"/>
+			<div class="ndmSlash" />
+			<div class="ndmSlash" />
+			<h:selectBooleanCheckbox value="#{dailyTime.nonDeductMeal2Payroll}" styleClass="ndm2"
+					disabled="#{! payrollGlobalsBean.editMode}"/>
+		</div>
+	</ace:column>
+
+	<!-- NDB End -->
+	<ace:column styleClass="txt11 N" >
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<ace:textEntry styleClass="tcEdHr" maxlength="6"
+					value="#{dailyTime.ndbEnd}"
+					rendered="#{payrollGlobalsBean.editMode}"
+					valueChangeListener="#{payrollGlobalsBean.listenDailyChange}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+				<ace:ajax />
+			</ace:textEntry>
+		</icecore:setEventPhase>
+		<h:outputText value="#{dailyTime.ndbEnd}"
+				rendered="#{! payrollGlobalsBean.editMode}">
+			<f:converter converterId="lightspeed.DecimalTimeConverter" />
+		</h:outputText>
+	</ace:column>
+
+	<!-- GRACE 1 -->
+	<ace:column styleClass="txt11 N" >
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr" id="Grace1"
+					value="#{dailyTime.grace1}" maxlength="3"
+					rendered="#{payrollGlobalsBean.editMode}">
+				<f:convertNumber type="number" pattern="0.0#" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.grace1}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+				<f:convertNumber type="number" pattern="0.0#" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- NDM Start -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<ace:textEntry styleClass="tcEdHr" maxlength="6"
+						value="#{dailyTime.ndmStart}"
+						rendered="#{payrollGlobalsBean.editMode}"
+						valueChangeListener="#{payrollGlobalsBean.listenDailyChange}">
+						<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+						<ace:ajax />
+				</ace:textEntry>
+			</icecore:setEventPhase>
+			<h:outputText value="#{dailyTime.ndmStart}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- NDM End -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<ace:textEntry styleClass="tcEdHr" maxlength="6"
+						value="#{dailyTime.ndmEnd}"
+						rendered="#{payrollGlobalsBean.editMode}"
+						valueChangeListener="#{payrollGlobalsBean.listenDailyChange}">
+						<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+						<ace:ajax />
+				</ace:textEntry>
+			</icecore:setEventPhase>
+			<h:outputText value="#{dailyTime.ndmEnd}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- LAST MAN IN -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<ace:textEntry styleClass="tcEdHr" maxlength="6"
+						value="#{dailyTime.lastManIn}"
+						rendered="#{payrollGlobalsBean.editMode}"
+						valueChangeListener="#{payrollGlobalsBean.listenDailyChange}">
+					<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+					<ace:ajax />
+				</ace:textEntry>
+			</icecore:setEventPhase>
+			<h:outputText value="#{dailyTime.lastManIn}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- GRACE 2 -->
+	<ace:column styleClass="txt11 N" >
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr" id="Grace2"
+					value="#{dailyTime.grace2}" maxlength="3"
+					rendered="#{payrollGlobalsBean.editMode}">
+				<f:convertNumber type="number" pattern="0.0#" />
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.grace2}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+				<f:convertNumber type="number" pattern="0.0#" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- CAMERA WRAP -->
+	<ace:column styleClass="CT txt11" >
+		<h:panelGroup>
+			<h:selectBooleanCheckbox
+				value="#{dailyTime.cameraWrap}"
+				rendered="#{payrollGlobalsBean.editMode}" />
+			<h:selectBooleanCheckbox
+				style="width:80%; text-align: center"
+				value="#{dailyTime.cameraWrap}" disabled="true"
+				rendered="#{dailyTime.noStartForm or ! payrollGlobalsBean.editMode}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- FRENCH HOURS -->
+	<ace:column styleClass="CT txt11" rendered="#{not aicp}">
+		<h:panelGroup>
+			<h:selectBooleanCheckbox
+				value="#{dailyTime.frenchHours}"
+				rendered="#{payrollGlobalsBean.editMode}" />
+			<h:selectBooleanCheckbox
+				style="width:80%; text-align: center"
+				value="#{dailyTime.frenchHours}" disabled="true"
+				rendered="#{dailyTime.noStartForm or ! payrollGlobalsBean.editMode}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- CITY -->
+	<ace:column styleClass="txt11 N">
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr" maxlength="35" value="#{dailyTime.city}"
+					rendered="#{payrollGlobalsBean.editMode}">
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.city}"
+					rendered="#{! payrollGlobalsBean.editMode}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- STATE -->
+	<ace:column styleClass="N">
+		<h:panelGroup>
+			<h:selectOneMenu style="width:90%;"
+					value="#{dailyTime.state}"
+					rendered="#{payrollGlobalsBean.editMode}">
+				<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+			</h:selectOneMenu>
+			<h:outputText value="#{dailyTime.state}"
+					rendered="#{! payrollGlobalsBean.editMode}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- LOC -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr" maxlength="4" value="#{dailyTime.accountLoc}"
+					rendered="#{payrollGlobalsBean.editMode}">
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.accountLoc}"
+					rendered="#{! payrollGlobalsBean.editMode}">
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- ACCT MAJOR (PROD # / EPISODE #) -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr" maxlength="6"
+				value="#{dailyTime.accountMajor}"
+				rendered="#{payrollGlobalsBean.editMode}">
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.accountMajor}"
+				rendered="#{ ! payrollGlobalsBean.editMode}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- SET -->
+	<ace:column styleClass="txt11 N" rendered="#{not aicp}">
+		<h:panelGroup>
+			<ace:textEntry styleClass="tcEdHr"
+					value="#{dailyTime.accountSet}"  maxlength="5"
+					rendered="#{(payrollGlobalsBean.editMode)}">
+			</ace:textEntry>
+			<h:outputText value="#{dailyTime.accountSet}"
+					rendered="#{! payrollGlobalsBean.editMode}"/>
+		</h:panelGroup>
+	</ace:column>
+
+	<ace:column styleClass="txt11 N" rendered="#{aicp}">
+		<h:panelGroup rendered="#{! popup}">
+			<h:selectOneMenu value="#{dailyTime.phase}" disabled="#{! payrollGlobalsBean.editMode}">
+				<f:selectItems value="#{payrollGlobalsBean.phaseDL}" />
+			</h:selectOneMenu>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{popup}">
+			<h:outputText value="#{dailyTime.phase.label}" />
+		</h:panelGroup>
+	</ace:column>
+
+</ui:composition>

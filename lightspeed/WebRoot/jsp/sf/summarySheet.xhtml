@@ -1,0 +1,355 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The "Summary Sheet" form body; this is included on both the
+	2.9 Start Forms page and the 3.1 Payroll | Starts page. -->
+
+		<!-- first block  -->
+		<div class="rowCont pad4tp pad10lt">
+			<!-- Employee Occupation Summary Sheet -->
+			<h:outputText value="Employee Occupation Summary Sheet" styleClass="FL B txt17" />
+		</div>
+		<!-- Horizontal rule -->
+		<div style="height:10px;">
+			<hr style="height:2px;background:black;border:0;margin-top:3px;"/>
+		</div>
+		<!-- Horizontal rule end-->
+
+		<!-- First block start-->
+		<div class="W42percnt FL pad10lt pad10tp">
+
+			<!-- PRODUCTION COMPANY START-->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="Prod. Co:"/></span>
+				<h:panelGroup>
+					<span class="fd_sm">
+						<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT"
+								value="#{employmentBean.production.studio}" />
+						<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+								value="#{employmentBean.employment.startForm.prodCompany}" />
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- PRODUCTION COMPANY END-->
+
+			<!-- PRODUCTION TITLE START-->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:panelGroup rendered="#{! aicp}">
+						<h:outputText value="Prod. Title:"/>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{aicp}">
+						<h:outputText value="Job#/Name:" />
+					</h:panelGroup>
+				</span>
+				<h:panelGroup rendered="#{not aicp}">
+					<h:panelGroup>
+						<span class="fd_sm">
+						<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT"
+								value="#{employmentBean.production.title}" />
+						<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+								value="#{employmentBean.employment.startForm.prodTitle}" />
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{aicp}">
+					<h:panelGroup>
+						<span class="fd_sm">
+							<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT"
+								value="#{employmentBean.project.episode} / #{employmentBean.project.title}" />
+							<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+								value="#{employmentBean.employment.startForm.jobNumber} / #{employmentBean.employment.startForm.jobName}"/>
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+			<!-- PRODUCTION TITLE END-->
+
+			<!-- NAME START-->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Name:"/>
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm">
+						<h:outputText rendered="#{employmentBean.employment.startForm eq null}"
+							value="#{employmentBean.employment.contact.displayName}" />
+						<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+							value="#{employmentBean.employment.startForm.firstName} #{employmentBean.employment.startForm.lastName}" />
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- NAME END -->
+
+			<!-- Department Start -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="Department: "/></span>
+				<!-- <h:panelGroup>
+					<span class="fd_sm">
+						<h:outputText styleClass="LH15" value="#{employmentBean.employment.department.name}" />
+						<h:outputText value="&#160; &#160;" />
+					</span>
+				</h:panelGroup> -->
+				<h:selectOneMenu styleClass="FL" disabled="#{not employmentBean.editMode}"
+						valueChangeListener="#{employmentBean.listenDeptChange}" value="#{employmentBean.deptId}">
+					<f:selectItems value="#{employmentBean.departmentDL}" />
+				</h:selectOneMenu>
+			</div>
+			<!-- Department End -->
+
+			<!-- Occupation Start -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="Occupation:"/></span>
+				<h:panelGroup rendered="#{not employmentBean.editMode}">
+					<span class="fd_sm">
+						<h:outputText value="#{employmentBean.employment.occupation}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{employmentBean.editMode}">
+				<span class="fd_sm2">
+					<ace:textEntry maxlength="35"
+						value="#{employmentBean.employment.occupation}" />
+				</span>
+			</h:panelGroup>
+			</div>
+			<!-- Occupation End -->
+
+			<!-- LOAN-OUT CORP START-->
+			<div class="rowCont FL">
+				<span class="fdNm_w" style="width:100px;"><h:outputText style="width:95px" value="Loan-Out Corp:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm" style="width:135px;">
+						<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT" value="N/A" />
+						<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+								 value="#{employmentBean.employment.startForm.loanOutCorpName}" />
+					</span>
+				</h:panelGroup>
+			</div><!-- LOAN-OUT CORP END-->
+
+		</div>
+		<!-- First block end-->
+
+		<!-- Second block start-->
+		<div class="W55percnt FL pad10lt">
+			<!-- OFF PRODUCTION -->
+			<div class=" FR pad10tp pad30rt">
+				<h:selectBooleanCheckbox styleClass="ckbx" id="offProd"
+					value="#{employmentBean.employment.offProduction}"
+					disabled="#{not employmentBean.editMode}" />
+				<span class="ckbxTxtLbl_B">OFF PRODUCTION</span>
+			</div>
+			<!-- OFF PRODUCTION -->
+
+			<!-- ACCOUNT CODE TITLES AND FIELDS -->
+			<div class="rowCont FL" style="margin-top:-5px;">
+				<ui:include src="../tc/accountCodesHdr.xhtml">
+					<ui:param name="aicp" value="#{aicp}" />
+					<ui:param name="bean" value="#{employmentBean}" />
+					<ui:param name="item" value="#{employmentBean.employment}" />
+					<ui:param name="appEdit" value="#{true}" />
+					<ui:param name="done" value="#{false}" />
+				</ui:include>
+			</div>
+			<!-- ACCOUNT CODE TITLES AND FIELDS -->
+
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH20" value="&#160;" />
+			</div>
+
+			<!-- START DATE -->
+			<div class="rowCont FL LH22">
+				<span class="fdNm">
+					<h:outputText value="Start Date:"/>
+				</span>
+				<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT" value="N/A" />
+				<h:outputText rendered="#{employmentBean.employment.startForm ne null}" styleClass="LH22"
+						value="#{employmentBean.employment.startForm.workStartDate}">
+					<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+			</div>
+			<!-- START DATE -->
+
+			<!-- END DATE -->
+			<div class="rowCont FL LH22">
+				<span class="fdNm"><h:outputText value="End Date:" />
+				</span>
+				<h:outputText rendered="#{not employmentBean.editMode}"
+						styleClass="LH22" value="#{employmentBean.employment.endDate}">
+					<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+				</h:outputText>
+				<h:panelGroup rendered="#{employmentBean.editMode}">
+					<span style="width: 100px;">
+						<ace:dateTimeEntry tabindex="0"
+								value="#{employmentBean.employment.endDate}" renderAsPopup="true">
+							<f:converter converterId="lightspeed.MultiDateConverter"/>
+						</ace:dateTimeEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- END DATE -->
+		</div>
+		<!-- Second block End -->
+
+		<!-- EMERGENCY START-->
+		<div class="rowCont FL pad10lt">
+
+			<!-- EMERGENCY CONTACT START-->
+			<div class="W32percnt FL pad6tp">
+				<div class="rowCont">
+					<span class="fdNm pad3rt" style="width:118px;">
+						<h:outputText value="Emergency Contact:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm" style="width:135px;">
+							<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT" value="N/A" />
+							<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+									value="#{employmentBean.employment.startForm.emergencyName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- EMERGENCY CONTACT END-->
+
+			<!-- EMERGENCY PHONE START-->
+			<div class="W35percnt FL pad6tp">
+				<div class="rowCont">
+					<span class="fdNm pad10lt" style="margin-right:-2px; width:118px;">
+						<h:outputText value="Emergency Phone:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm">
+							<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT" value="N/A" />
+							<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+									value="#{employmentBean.employment.startForm.emergencyPhone}">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</h:outputText>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- EMERGENCY PHONE END-->
+
+			<!-- EMERGENCY RELATIONSHIP START-->
+			<div class="W30percnt FL pad6tp">
+				<div class="rowCont ">
+					<span class="fdNm pad3rt" style="width:113px;margin-left:-6px;">
+						<h:outputText value="Emer. Relationship:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm" style="width:135px;">
+							<h:outputText rendered="#{employmentBean.employment.startForm eq null}" styleClass="CT" value="N/A" />
+							<h:outputText rendered="#{employmentBean.employment.startForm ne null}"
+									value="#{employmentBean.employment.startForm.emergencyRelation}" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- EMERGENCY RELATIONSHIP END-->
+
+			<!-- Horizontal rule -->
+			<div style="height:10px; margin-left:-10px">
+				<hr style="height:2px;background:black;border:0;margin-top: 30px;margin-right: 10px;"/>
+			</div>
+		<!-- Horizontal rule end-->
+		</div>
+		<!-- EMERGENCY END-->
+
+		<!-- Timecard Options -->
+		<div class="rowCont FL pad6tp pad10lt">
+
+			<!-- Timecard Options -->
+			<h:outputText value="Timecard Options" styleClass="FL B txt17 rowCont" />
+
+			<!-- First block start-->
+			<div class="W33percnt FL pad10lt pad20tp">
+				<div class="rowCont">
+					When applying
+					<h:outputText styleClass="B U" value="Wage &amp; Overtime" />
+					rules, use rules from the following state:
+						<h:selectOneMenu styleClass="txt11" disabled="#{not employmentBean.editMode}"
+								value="#{employmentBean.employment.wageState}">
+							<f:selectItems value="#{employmentBean.wageRuleStateDL}" />
+						</h:selectOneMenu>
+				</div>
+			</div>
+			<!-- First block end-->
+
+			<!-- Second block start-->
+			<div class="W28percnt FL pad45lt pad18tp">
+				<div class="rowCont LH18">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+						value="#{employmentBean.employment.skipDeptApprovers}"
+						disabled="#{! employmentBean.editMode}" />
+					<span class="ckbxTxtLbl">When timecard is submitted,</span>
+				</div>
+				<div class="rowCont pad5lt">
+					<h:outputText value="bypass Department Approvers." />
+				</div>
+			</div>
+			<!-- Second block end-->
+
+			<!-- Third block start-->
+			<div class="W25percnt FL pad10lt pad20tp">
+				Place Timecards for this Occupation into the Following Batch:
+				<!-- BATCH -->
+				<div class="rowCont FL">
+					<span class="fdNm_a pad10rt"><h:outputText value="Batch:" /></span>
+					<h:selectOneMenu styleClass="FL" disabled="#{not employmentBean.editMode}"
+							valueChangeListener="#{employmentBean.listenBatchChange}"
+							value="#{employmentBean.batchId}">
+						<f:selectItems value="#{employmentBean.prodBatchList}" />
+					</h:selectOneMenu>
+				</div>
+			</div>
+			<!-- Third block end-->
+			<!-- Fourth block end-->
+			<h:panelGroup styleClass="rowCont FL" rendered="#{employmentBean.isUnion and employmentBean.usesVideoTape}">
+				<h:selectBooleanCheckbox styleClass="pad20lt ckbx"
+						value="#{employmentBean.employment.additionalStaff}"
+						disabled="#{! employmentBean.editMode}" />
+					<h:outputText value="Employee is an " />
+					<h:outputText styleClass="B" value='"Additional Employee"' />
+					<h:panelGroup styleClass="rowCnt">
+						<h:outputText styleClass="rowCnt pad20lt FL" value="as per the terms of the Videotape Agreement" />
+					</h:panelGroup>
+			</h:panelGroup>
+			<!-- Fourth block end-->
+
+			<!-- Horizontal rule -->
+			<div style="height:10px; margin-top:30px; margin-left:-10px" class="rowCont FL">
+				<hr style="height:2px; background:black;border:0;"/>
+			</div>
+			<!-- Horizontal rule end-->
+		</div>
+		<!-- Timecard Options End-->
+
+		<!-- Referenced with Start-->
+		<div class="pad10lt FL">
+			<!-- DEPARTMENT & POSITION  -->
+			<div class="rowCont pad10tp">
+				<span class="B"><h:outputText value="Referenced with:"/>
+				</span>
+			</div>
+			<div class="rowCont">
+				<h:panelGroup styleClass="pad10lt LH16">
+					<div class="fd_sm">
+						<h:outputText value="#{employmentBean.employment.department.name} "/>
+						<h:outputText styleClass="pad3lt pad3rt" value="/" />
+						<h:outputText rendered="#{employmentBean.employment.role ne null}"
+							value="#{employmentBean.employment.role.name}" />
+					</div>
+					<div class="rowCont fd_sm">
+						<h:outputText value="#{employmentBean.employment.contact.emailAddress} "/>
+					</div>
+				</h:panelGroup>
+			</div>
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH20" value="&#160;" />
+			</div>
+		</div>
+
+</ui:composition>

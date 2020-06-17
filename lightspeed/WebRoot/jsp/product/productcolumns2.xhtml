@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+		<ace:column styleClass="W10percnt pill" style="min-width:118px;">
+			<f:facet name="header">
+				<h:outputText
+					value="Production Type" />
+			</f:facet>
+			<div class="FL #{item.buttonStyle}">
+				<h:graphicImage value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+			</div>
+			<h:panelGroup
+				styleClass="pill_center scc #{item.buttonStyle}">
+				<div><h:outputText value="#{item.button}" /></div>
+			</h:panelGroup>
+			<div class="FL #{item.buttonStyle}">
+				<h:graphicImage value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+			</div>
+		</ace:column>
+
+		<ace:column styleClass="W50percnt LT">
+			<f:facet name="header">
+				<h:outputText
+					value="Description" />
+			</f:facet>
+			<h:outputText
+				styleClass="FL pad5lt pad6tp pad6bm"
+				value="#{item.description}" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt16">
+			<f:facet name="header">
+				<h:outputText styleClass="CT" value="Max # of Users" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.button ne 'Indie' and item.maxUsers le 9999}"
+					value="#{item.maxUsers}" />
+			<h:outputText
+					rendered="#{item.button eq 'Indie'}"
+					value="#{item.maxUsers}" />
+			<h:outputText styleClass="CT txt14" rendered="#{item.maxUsers > 9999}"
+					value="Unlimited" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Duration" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.duration gt 1}"
+					value="#{item.duration} Months" />
+			<h:outputText
+					rendered="#{item.duration eq 1}"
+					value="Monthly" />
+			<h:outputText
+					rendered="#{item.duration eq 0}"
+					escape="false"
+					value="No&lt;br&gt;Expiration" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14" rendered="false">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Text Messaging" />
+			</f:facet>
+			<h:outputText
+					rendered="#{item.smsEnabled}"
+					value="Unlimited" />
+			<h:outputText
+					rendered="#{not item.smsEnabled}"
+					value="No" />
+		</ace:column>
+
+		<ace:column styleClass="W10percnt CT txt14">
+			<f:facet name="header">
+				<h:outputText
+					styleClass="CT"
+					value="Price" />
+			</f:facet>
+			<h:outputText rendered="#{item.originalPrice lt 0}">
+				Contact<br/>Us!
+			</h:outputText>
+			<span style="#{createProductionBean.showCouponApplied ?
+					'color:red;text-decoration:line-through;font-weight:normal;' : ''}">
+			<h:outputText rendered="#{item.originalPrice gt 0}" style="color:black;"
+					value="#{item.originalPrice}">
+				<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+					currencySymbol="$" maxIntegerDigits="6" minFractionDigits="0"
+					type="currency"/>
+			</h:outputText>
+			<h:outputText escape="false" rendered="#{item.duration eq 1}" style="color:black;"
+					value="per&lt;br/>month" />
+			</span>
+			<h:outputText rendered="#{item.originalPrice eq 0}"
+					value="Free" />
+		</ace:column>
+
+</ui:composition>

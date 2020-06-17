@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="formActraIntent" pageWidth="600" pageHeight="710" columnWidth="570" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5000000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="ssnDAO" class="com.lightspeedeps.dao.FormI9DAO" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT form.*, " +
+			" (case when form.Multi_Branch IS NULL then 'NULL' " +
+			" when form.Multi_Branch <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Multi_Branch_Value, " +
+			" (case when form.Minor IS NULL then 'NULL' " +
+			" when form.Minor <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Minor_Value, " +
+			" (case when form.Stunts IS NULL then 'NULL' " +
+			" when form.Stunts <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Stunts_Value, " +
+			" (case when form.Ext_Scenes IS NULL then 'NULL' " +
+			" when form.Ext_Scenes <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Ext_Scenes_Value, " +
+			" (case when form.Location_Shoot_40_Radius IS NULL then 'NULL' " +
+			" when form.Location_Shoot_40_Radius <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Location_Shoot_40_Radius_Value, " +
+			" (case when form.Weather_Permitting IS NULL then 'NULL' " +
+			" when form.Weather_Permitting <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Weather_Permitting_Value, " +
+			" (case when form.Weekend_Night IS NULL then 'NULL' " +
+			" when form.Weekend_Night <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Weekend_Night_Value, " +
+			" (case when form.Nude_Scenes IS NULL then 'NULL' " +
+			" when form.Nude_Scenes <> 0 then 'YES' " +
+			" else 'NO' end) " +
+			" as Nude_Scenes_Value " +
+			" FROM form_actra_intent form;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="isEmptyPerformers" class="java.lang.Boolean"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="version" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Advertiser" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Product" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Agency_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Producer_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Producer_Email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Signatory_Engager" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Director_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Production_House_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Line_Producer_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Casting_Director_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Multi_Branch" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Multi_Branch_Locations" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Use_Canada" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Use_Us" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Digital_Media_1" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Digital_Media_2" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Other_1" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Other_2" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="National_Com" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tv" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Radio" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Psa" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loc_Region_Com" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Double_Shoot" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Demo" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="A706_Exclusions" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="A707_Waivers" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Seasonal_Com" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tags" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Dealer" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Informercial" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Short_Life_7_Days" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Short_Life_14_Days" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Short_Life_31_Days" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Short_Life_45_Days" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Commercial_Id1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Commercial_Id2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Commercial_Id3" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Minor" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Num_Minors" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Minor_Ages" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Num_Extras_General" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Num_Extras_Group" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Num_Extras_Group_31" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Stunts" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Stunt_Coordinator" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Stunt_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ext_Scenes" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Exterior Scenes]]></fieldDescription>
+	</field>
+	<field name="Ext_Scenes_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Location_Shoot_40_Radius" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Location_Shoot_Details" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weather_Permitting" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weather_Permitting_Details" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weekend_Night" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Weekend_Night_Details" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nude_Scenes" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nude_Scenes_Details" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Multi_Branch_Value" class="java.lang.String"/>
+	<field name="Minor_Value" class="java.lang.String"/>
+	<field name="Stunts_Value" class="java.lang.String"/>
+	<field name="Ext_Scenes_Value" class="java.lang.String"/>
+	<field name="Location_Shoot_40_Radius_Value" class="java.lang.String"/>
+	<field name="Weather_Permitting_Value" class="java.lang.String"/>
+	<field name="Weekend_Night_Value" class="java.lang.String"/>
+	<field name="Nude_Scenes_Value" class="java.lang.String"/>
+	<detail>
+		<band height="558">
+			<staticText>
+				<reportElement style="font16Bold" x="222" y="6" width="181" height="20" uuid="5a18a76d-b2d0-4a97-a3dc-90784c57fc8c"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[ACTRA / ICA – ACA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="font16Bold" x="153" y="31" width="316" height="20" uuid="4f5f326e-7af7-4fc7-b469-6fbcfb65e85a"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[COMMERCIAL INTENT TO PRODUCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="font11Italic" x="27" y="64" width="540" height="20" uuid="58514b1e-9aea-455f-b7bd-539881bb3c1f"/>
+				<textElement>
+					<font size="12" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[This form must be sent to the Local ACTRA office at least two (2) business days prior to shooting.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="99" width="570" height="71" uuid="7c3ea6a8-7bb6-4cda-ae75-4ae09b362cc0"/>
+			</rectangle>
+			<line>
+				<reportElement x="270" y="100" width="1" height="70" uuid="a9ee137b-086c-4640-83c8-86a7e909c22e"/>
+			</line>
+			<line>
+				<reportElement x="0" y="114" width="570" height="1" uuid="e2e068e4-2f66-46af-ab13-724b8e13d416"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="128" width="570" height="1" uuid="fc05cd5d-029c-4f86-9ed8-b118ffe67738"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="142" width="570" height="1" uuid="7ff25436-ce0c-4a72-b9ef-88f90141ad0c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="156" width="570" height="1" uuid="f1c38b35-2f07-41b3-84d6-be32e7d91399"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="101" width="55" height="13" uuid="1a0cd835-9ef1-43a9-b669-7a836ca3ed26"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SPONSOR:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="53" y="101" width="218" height="13" uuid="d5439954-d51f-4c24-9277-e2a3650b179a"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Advertiser}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="115" width="55" height="13" uuid="158c4d6b-66dc-47be-903c-3a6056cfafb5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AGENCY:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="50" y="115" width="220" height="13" uuid="3f79eb17-cda1-4551-a3bd-fee37927146e"/>
+				<textFieldExpression><![CDATA[$F{Agency_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="129" width="62" height="13" uuid="82943e50-e5ce-44fd-b3c2-8f111ab47fc9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCER:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="tcDefault" x="60" y="129" width="210" height="13" uuid="12c5a537-91f0-4b14-9586-93e3735d6956"/>
+				<textFieldExpression><![CDATA[$F{Producer_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="143" width="93" height="13" uuid="6183b134-3e32-4298-accd-1350819b4464"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCTION CO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="88" y="143" width="182" height="13" uuid="d2256013-2152-45dc-9771-2f9491f38c67"/>
+				<textFieldExpression><![CDATA[$F{Production_House_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="157" width="62" height="13" uuid="8abf42e6-c334-441c-9002-0b483934e155"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIRECTOR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="57" y="157" width="213" height="13" uuid="8a778082-844b-4b5a-9a29-f649a4feae42"/>
+				<textFieldExpression><![CDATA[$F{Director_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="272" y="101" width="55" height="13" uuid="7a001ba8-0789-4f13-98c8-00ce0cb07b10"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCT:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="324" y="101" width="245" height="13" uuid="d048f575-7d70-487b-9313-e6ee348ebf6b"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Product}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="272" y="115" width="116" height="13" uuid="3b36d7da-fcf8-432a-9fc7-25827e52fdb5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SIGNATORY ENGAGER:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="381" y="115" width="189" height="13" uuid="d3f083a7-11f8-4a97-a065-7159d7d9657f"/>
+				<textFieldExpression><![CDATA[$F{Signatory_Engager}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="272" y="129" width="95" height="13" uuid="7ddc3dfe-ace9-456e-9388-a4258dd30039"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCER EMAIL:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="363" y="129" width="206" height="13" uuid="cf472e00-0de4-4b38-b532-bf3e53798434"/>
+				<textFieldExpression><![CDATA[$F{Producer_Email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="272" y="143" width="88" height="13" uuid="9f988079-eeed-41ad-90a7-077e839fd85d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LINE PRODUCER:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="355" y="143" width="215" height="13" uuid="63278db3-658f-4b47-a8a9-f5ce76fda46d"/>
+				<textFieldExpression><![CDATA[$F{Line_Producer_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="271" y="157" width="108" height="13" uuid="c3ff9f9e-98a2-49d7-94b1-605d02fac761"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CASTING DIRECTOR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="371" y="157" width="199" height="13" uuid="a01acb2b-3182-4043-8e45-4eea29afa29b"/>
+				<textFieldExpression><![CDATA[$F{Casting_Director_Name}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="185" width="570" height="28" uuid="e0597a3f-9000-42a7-9f3a-004c00381f46"/>
+			</rectangle>
+			<line>
+				<reportElement x="0" y="199" width="570" height="1" uuid="4a037c33-d2d2-480a-85e5-aec182efc810"/>
+			</line>
+			<line>
+				<reportElement x="270" y="185" width="1" height="28" uuid="7ade01d7-1cee-476f-afe3-39c8542a3743"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="186" width="190" height="13" uuid="4e2ca83e-26de-4d57-af87-2f780b99ed29"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Is this a MULTI-BRANCH shoot?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="228" y="186" width="25" height="13" uuid="1b454ccf-d86c-4788-849c-e12bf315eb8f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="254" y="187" width="14" height="10" uuid="846fd65d-ea16-4bb8-8962-4110a9ba5bf5"/>
+				<imageExpression><![CDATA[$F{Multi_Branch_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="273" y="186" width="22" height="13" uuid="77de185a-00b3-4319-9620-09c126a307e1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" mode="Opaque" x="294" y="187" width="14" height="10" uuid="5bd85a9e-2729-42e3-ba2b-eb6db41d3dfd"/>
+				<imageExpression><![CDATA[$F{Multi_Branch_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="200" width="269" height="13" uuid="90fcb8e3-0cfc-48a6-b292-1c9abc2bb92a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[If yes, which other Branch location(s)?]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="273" y="200" width="297" height="13" uuid="f61f19d1-bd68-4c29-b901-0c6dfe6de50a"/>
+				<textFieldExpression><![CDATA[$F{Multi_Branch_Locations}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="229" width="570" height="84" uuid="aca25873-af71-4cf4-a2e2-4338e13fadb5"/>
+			</rectangle>
+			<line>
+				<reportElement x="347" y="229" width="1" height="84" uuid="a84d0232-b336-415a-ac52-db26b12104c7"/>
+			</line>
+			<line>
+				<reportElement x="0" y="243" width="570" height="1" uuid="f4886340-f5c0-40ae-8232-3b18d75d1f48"/>
+			</line>
+			<line>
+				<reportElement x="0" y="257" width="570" height="1" uuid="9e9504db-1991-472b-89ad-7054cd830436"/>
+			</line>
+			<line>
+				<reportElement x="0" y="271" width="570" height="1" uuid="51c14c93-73f8-4ccf-977b-68540d6c973f"/>
+			</line>
+			<line>
+				<reportElement x="0" y="285" width="570" height="1" uuid="3f2b8d6f-4416-4274-9b57-752a76c27724"/>
+			</line>
+			<line>
+				<reportElement x="0" y="299" width="570" height="1" uuid="4c08c0b8-3060-479f-8042-48acb1aa126f"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="230" width="93" height="13" uuid="d42266f5-4dee-4edc-bf64-fcc59d447f50"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Intended Use:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="95" y="230" width="42" height="13" uuid="643ed11f-e734-43a1-bc3a-9e68b0938b8f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Canada]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="139" y="231" width="14" height="10" uuid="afeceb04-25ff-443b-82b1-4e04d53b6710"/>
+				<imageExpression><![CDATA[$F{Use_Canada} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="299" y="229" width="1" height="14" uuid="b92d848a-2b37-41a0-b014-b413da45a331"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="304" y="230" width="26" height="13" uuid="b32754a2-f91a-4160-95bd-1cbb23f67159"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USA]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="329" y="231" width="14" height="10" uuid="7529861f-d6c7-40ee-bd66-1c25cf981b42"/>
+				<imageExpression><![CDATA[$F{Use_Us} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="350" y="230" width="74" height="13" uuid="1bda31f3-ee33-4445-b9a8-cc5e6639d7a1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Digital Media]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="424" y="231" width="14" height="10" uuid="6c983294-2d1f-4a9a-ad0b-745aa3148643"/>
+				<imageExpression><![CDATA[$F{Digital_Media_1} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="460" y="230" width="1" height="14" uuid="d5ee3159-ac69-4816-996e-e195a63ee087"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="467" y="230" width="34" height="13" uuid="9f6b1c49-817c-4117-8519-534bbd120b2e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Other]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="501" y="231" width="14" height="10" uuid="fc9e661d-c41a-49f9-b0d0-42305611170a"/>
+				<imageExpression><![CDATA[$F{Other_1} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="134" y="244" width="1" height="28" uuid="2b062a13-bfbf-4a60-b278-d45f800a2a34"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="244" width="48" height="13" uuid="4f66252d-7312-4d8f-a4a3-174996f7ae9a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[National]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="50" y="245" width="14" height="10" uuid="2a0941fb-6d8c-4426-9226-77a2ac101036"/>
+				<imageExpression><![CDATA[$F{National_Com} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="139" y="244" width="16" height="13" uuid="a2c1ea25-0538-4885-90f1-40f6e3ddacba"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TV]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="155" y="245" width="14" height="10" uuid="73ea8e3e-7f87-4bd3-90e3-bee49a3f5933"/>
+				<imageExpression><![CDATA[$F{Tv} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="234" y="243" width="1" height="28" uuid="46877941-cbfc-4913-a1ca-ca0b031d8983"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="239" y="244" width="42" height="13" uuid="aa7df3c4-355e-4878-a110-1b98bc9f1bf7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Radio]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="283" y="245" width="14" height="10" uuid="ec3e2d75-e880-41c9-b220-47ea6704c4c8"/>
+				<imageExpression><![CDATA[$F{Radio} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="351" y="244" width="73" height="13" uuid="7b57b628-d70a-4192-8a20-0924e968fd43"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Digital Media]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="425" y="245" width="14" height="10" uuid="afffab47-2924-4b34-8b73-5b8db594aabd"/>
+				<imageExpression><![CDATA[$F{Digital_Media_2} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="352" y="258" width="51" height="13" uuid="8c8c1812-5fc1-47f9-ae83-c93621c9d2f0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Seasonal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="469" y="258" width="27" height="13" uuid="0759258f-88ce-4cee-a1ef-9c77971e0d7b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PSA]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="404" y="259" width="14" height="10" uuid="d4d133db-2555-4246-9710-3ef8621421ce"/>
+				<imageExpression><![CDATA[$F{Seasonal_Com} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="462" y="258" width="1" height="14" uuid="e6ec61e2-d59d-472a-b747-43856544852b"/>
+			</line>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="496" y="259" width="14" height="10" uuid="3a8295f1-dd00-4aa0-ad61-cf3c2ac07632"/>
+				<imageExpression><![CDATA[$F{Psa} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="240" y="258" width="31" height="13" uuid="fa65b647-c133-4196-9d79-bbd52a5eb5f8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Demo]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="271" y="259" width="14" height="10" uuid="d69e7e94-8c11-47c7-bbc1-c9ca6c8576b6"/>
+				<imageExpression><![CDATA[$F{Demo} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="3" y="258" width="48" height="13" uuid="38df2132-3c92-4385-91e3-59e8c94fdb1c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loc/Reg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="140" y="258" width="62" height="13" uuid="53bc50fa-c837-4dd0-ad07-b7b8e6434841"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dbl. Shoot]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="184" y="272" width="47" height="13" uuid="7ab744a8-ada4-42c7-a12c-9aedc5f58e2a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[14 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="272" width="80" height="13" uuid="df828855-fe3f-4a82-9145-1cff114dbc7e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Short Life]]></text>
+			</staticText>
+			<line>
+				<reportElement x="93" y="271" width="1" height="14" uuid="ab975de8-41fd-470e-985f-a89a531ab3f6"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="97" y="272" width="40" height="13" uuid="689416a5-884e-4a05-9d00-0001fa4d2f50"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[7 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="267" y="272" width="47" height="13" uuid="05df1256-5e9c-4caa-8963-9e1f33525409"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[31 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="351" y="272" width="47" height="13" uuid="a1ed8106-a7fe-406a-ad88-f6406bf3dba9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[45 Days]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="51" y="259" width="14" height="10" uuid="b3ea8d6d-f571-4d8b-91c0-19b5c80608dd"/>
+				<imageExpression><![CDATA[$F{Loc_Region_Com} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="202" y="259" width="14" height="10" uuid="b9546902-3a97-4467-a171-2f354d6187ab"/>
+				<imageExpression><![CDATA[$F{Double_Shoot} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="312" y="273" width="14" height="10" uuid="175b5b4e-174b-4560-a394-e2f76aef0b45"/>
+				<imageExpression><![CDATA[$F{Short_Life_31_Days} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="396" y="273" width="14" height="10" uuid="46c70fcd-b4b2-41c5-80a8-d5ec9cfb8aa9"/>
+				<imageExpression><![CDATA[$F{Short_Life_45_Days} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="179" y="272" width="1" height="14" uuid="2c9d660e-0e72-44de-ae2d-736e9f849d57"/>
+			</line>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="229" y="273" width="14" height="10" uuid="fe809d0d-138e-4041-a375-fc3e670cb5e3"/>
+				<imageExpression><![CDATA[$F{Short_Life_14_Days} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="262" y="271" width="1" height="14" uuid="1c3f7e1e-b42a-4cba-b274-ccab74e5eb75"/>
+			</line>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="138" y="273" width="14" height="10" uuid="cc34108f-8ff7-4b10-9e8d-ecd1cd60dcc9"/>
+				<imageExpression><![CDATA[$F{Short_Life_7_Days} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="352" y="286" width="66" height="13" uuid="738e8b23-65e1-4e78-af85-ce851d59b3aa"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Infomercial]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="418" y="287" width="14" height="10" uuid="553e59ce-95b4-4b11-b738-1094978841ca"/>
+				<imageExpression><![CDATA[$F{Informercial} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="462" y="285" width="1" height="14" uuid="9aca5917-dbd8-4448-a78c-b3be787f0da2"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="469" y="286" width="34" height="13" uuid="d74880b6-20fa-40d5-8d88-37d8492d213b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Other]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="504" y="287" width="14" height="10" uuid="cce795c8-01d8-44c3-8fbb-cbfea81b4f20"/>
+				<imageExpression><![CDATA[$F{Other_2} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="3" y="286" width="37" height="13" uuid="a894c7e0-a211-450e-9ea7-f5e4a3c94fa4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tags]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="42" y="287" width="14" height="10" uuid="479eacc1-7ab6-44db-96c1-f3c3c9d101c2"/>
+				<imageExpression><![CDATA[$F{Tags} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="154" y="285" width="1" height="14" uuid="af5549c8-8abd-47d9-bb3e-7a6b9768aa88"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="159" y="286" width="37" height="13" uuid="534dfefa-af89-4eac-a5cb-f6b72cef0721"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dealer]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="197" y="287" width="14" height="10" uuid="2021a5a7-8d8b-4e32-b931-5438a36fb908"/>
+				<imageExpression><![CDATA[$F{Dealer} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="111" y="301" width="14" height="10" uuid="745557e4-1708-47bc-ad29-d9b32aba7181"/>
+				<imageExpression><![CDATA[$F{A706_Exclusions} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="4" y="300" width="107" height="13" uuid="8d5447e7-179a-45e2-a098-41e1a32c768c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[A706 – Exclusions]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="451" y="301" width="14" height="10" uuid="72d724ae-d32e-44fd-8d98-a58312ba5ab5"/>
+				<imageExpression><![CDATA[$F{A707_Waivers} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="352" y="300" width="99" height="13" uuid="78144cc6-931c-4db3-ac0b-0654b0ff3667"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[A707 – Waivers]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="1" y="344" width="570" height="13" isPrintInFirstWholeBand="true" uuid="17e015fd-68a7-4185-8803-02b0890ef4d6"/>
+				<subreportParameter name="commercialId">
+					<subreportParameterExpression><![CDATA[$F{Commercial_Id1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/formActraIntentCom.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="358" width="570" height="13" isPrintInFirstWholeBand="true" uuid="2c804b22-1c30-4ea2-84b4-6c5b8975ae78"/>
+				<subreportParameter name="commercialId">
+					<subreportParameterExpression><![CDATA[$F{Commercial_Id2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/formActraIntentCom.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="373" width="570" height="13" isPrintInFirstWholeBand="true" uuid="46715ebe-5aed-49eb-848d-9d72df795ba3"/>
+				<subreportParameter name="commercialId">
+					<subreportParameterExpression><![CDATA[$F{Commercial_Id3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/formActraIntentCom.jasper"]]></subreportExpression>
+			</subreport>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="329" width="570" height="57" uuid="8c5d5371-4b1d-4d80-b543-d2576121193d"/>
+			</rectangle>
+			<line>
+				<reportElement x="207" y="329" width="1" height="57" uuid="4ed82a00-2109-4b51-ad4f-6dd7e2ee0fdf"/>
+			</line>
+			<line>
+				<reportElement x="330" y="329" width="1" height="57" uuid="ea3f1ec9-1729-4626-af04-e2cc8252379b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="343" width="570" height="1" uuid="0b09c16c-f0bb-4723-9e4d-4c330a673d22"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="357" width="570" height="1" uuid="f1fe3ccb-8397-481e-9b5b-dd1b9ceae14c"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="371" width="570" height="1" uuid="32398126-4c68-4925-9124-35c60ba6d781"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="330" width="205" height="13" uuid="c305003f-18f7-4a99-ac3c-3c8c3641a176"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Commercial Name(s)
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="211" y="330" width="93" height="13" uuid="054b889f-8867-4748-bf5c-36be03e35e63"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date(s)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="334" y="330" width="124" height="13" uuid="2b069549-6b63-474d-848c-de2d4f955f42"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location(s)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="403" width="570" height="126" uuid="984575a5-bbd0-4ae4-931d-1f9ffff1f256"/>
+			</rectangle>
+			<line>
+				<reportElement x="392" y="403" width="1" height="14" uuid="cf938cbe-d430-4f3d-a185-fb0bdfaac4d0"/>
+			</line>
+			<line>
+				<reportElement x="202" y="403" width="1" height="14" uuid="59676ca1-b35d-4244-8548-daef79e84ae7"/>
+			</line>
+			<line>
+				<reportElement x="299" y="403" width="1" height="14" uuid="6c8328b3-8c5f-40b2-a7d4-bb779224a512"/>
+			</line>
+			<line>
+				<reportElement x="0" y="515" width="570" height="1" uuid="3453edef-c02b-420b-8198-24df0c16b1e5"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="501" width="570" height="1" uuid="318da5f9-67bb-4c7b-8488-98494e182e02"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="417" width="570" height="1" uuid="15f8954f-5ebc-430d-9748-c0e8184805f6"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="431" width="570" height="1" uuid="798a7255-4700-4578-9744-4e769162d4b2"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="445" width="570" height="1" uuid="5d4129f5-8658-4d18-b64c-decbdaee4c3b"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="299" y="431" width="1" height="14" uuid="3ccfd338-e0c7-4057-bf30-7feac3fd58aa"/>
+			</line>
+			<line>
+				<reportElement x="202" y="431" width="1" height="14" uuid="8ac03720-3c3f-44d9-8a34-4c0899f0bbe4"/>
+			</line>
+			<line>
+				<reportElement x="392" y="431" width="1" height="14" uuid="a0a3ac85-5f4f-4db7-9d8d-ec4be5e2698b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="459" width="570" height="1" uuid="5e9b88db-22ac-4c53-90aa-8f4873955218"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="473" width="570" height="1" uuid="6b20da34-b9d4-4b64-8b61-9353edb83689"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="487" width="570" height="1" uuid="18fc0a1a-b474-412f-9f1c-777053462085"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="299" y="460" width="1" height="69" uuid="e0144909-167b-49ad-9a0e-941401b20552"/>
+			</line>
+			<line>
+				<reportElement x="202" y="460" width="1" height="69" uuid="9bce65b4-366b-4b20-8503-c9b312c84a99"/>
+			</line>
+			<line>
+				<reportElement x="392" y="460" width="1" height="69" uuid="3d85bc6d-a50a-4468-85a3-50cc534454ce"/>
+			</line>
+			<line>
+				<reportElement x="481" y="404" width="1" height="14" uuid="fc89d8e4-2a3a-4bf3-9298-67a4c1296f6d"/>
+			</line>
+			<line>
+				<reportElement x="403" y="417" width="1" height="14" uuid="3e16b81b-7318-408f-81d8-40b2433512ee"/>
+			</line>
+			<line>
+				<reportElement x="269" y="417" width="1" height="14" uuid="953df835-0ef2-49f4-8bd0-6f13fd0f4526"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="404" width="200" height="13" uuid="dd8bef35-4fb7-48e3-a559-d058c6f2524c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Children (under 16 yrs.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="394" y="404" width="40" height="13" uuid="1c604d13-7bb7-4692-ae2a-619bb0a7ef78"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total#:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="429" y="404" width="53" height="13" uuid="482d5101-20be-4062-867a-7ed63025a3e7"/>
+				<textFieldExpression><![CDATA[$F{Num_Minors}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="484" y="404" width="30" height="13" uuid="9276cfbd-e282-45e2-8995-75ba71b5fb46"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ages:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="1" y="474" width="200" height="13" uuid="e2493b32-fa14-4438-a00b-c24c72ecd44b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location Shoot - beyond 40 km radius]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="418" width="109" height="13" uuid="46ca774c-38a9-4098-9798-cdaa61ab1ffe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Background Talent]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="432" width="200" height="13" uuid="4eda2a69-55e7-4a56-9b10-7a118d793ce7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stunts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="446" width="38" height="13" uuid="12629ccf-ec5c-40cc-954b-eb5fe54c92c2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="3" y="460" width="200" height="13" uuid="f9ae20dd-681c-4d16-9759-8d19c3779399"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exterior Scenes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="488" width="200" height="13" uuid="3a1f9b6c-8226-4f01-af9c-4812f563e662"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weather Permitting]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="502" width="200" height="13" uuid="94323998-11cb-4b96-b18b-acd4cc4791d3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weekend or Night Production]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="3" y="516" width="200" height="13" uuid="42c6374e-3aa2-45a7-93f4-7a9c809be6a3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nude/Intimate Scenes]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="327" y="405" width="14" height="10" uuid="11abebdb-9eaf-45c0-9cae-c3460f448db3"/>
+				<imageExpression><![CDATA[$F{Minor_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="206" y="404" width="25" height="13" uuid="554a39b3-165f-42b6-8a5e-69a68aea2ccd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="305" y="404" width="22" height="13" uuid="7bd5d5a6-68ed-4feb-b4f9-6c5c6f041852"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="232" y="405" width="14" height="10" uuid="67ce898a-429e-40aa-ae16-839ad3dbfcba"/>
+				<imageExpression><![CDATA[$F{Minor_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="461" width="14" height="10" uuid="d99f535b-53b4-4eb6-9d17-0f18187c7987"/>
+				<imageExpression><![CDATA[$F{Ext_Scenes_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="460" width="25" height="13" uuid="e0bb3ba4-90ac-4b20-a38f-c8cc7c6bbbad"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="461" width="14" height="10" uuid="95e7dcee-eab7-4f95-afe6-ea9a2aeda4bf"/>
+				<imageExpression><![CDATA[$F{Ext_Scenes_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="460" width="22" height="13" uuid="3a4354f8-be30-4e2d-ba08-30b27db7da07"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="475" width="14" height="10" uuid="172154d2-70f1-40a6-98d7-d6111b05a471"/>
+				<imageExpression><![CDATA[$F{Location_Shoot_40_Radius_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="474" width="25" height="13" uuid="6560a56a-dfd2-4b9b-a9c1-235ebeabfde6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="475" width="14" height="10" uuid="6fca7405-b247-429c-8396-0c8de7f65826"/>
+				<imageExpression><![CDATA[$F{Location_Shoot_40_Radius_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="394" y="473" width="175" height="14" uuid="1a411da3-f7b8-436f-9647-f2e4f817e513"/>
+				<textFieldExpression><![CDATA[$F{Location_Shoot_Details}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="474" width="22" height="13" uuid="9efc9708-6e1c-4b00-92fd-2db0ba97e632"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="489" width="14" height="10" uuid="08d97d5b-cc7b-451a-ae57-f3618d5c9bde"/>
+				<imageExpression><![CDATA[$F{Weather_Permitting_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="488" width="25" height="13" uuid="9756b9c8-290d-4382-a72a-c4f28e1d832e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="489" width="14" height="10" uuid="9784cc2d-8728-495c-98b6-0628d5886714"/>
+				<imageExpression><![CDATA[$F{Weather_Permitting_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="394" y="487" width="175" height="14" uuid="1a411da3-f7b8-436f-9647-f2e4f817e513"/>
+				<textFieldExpression><![CDATA[$F{Weather_Permitting_Details}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="488" width="22" height="13" uuid="7e51d3d5-d7ef-4630-a1c9-6c25469e0056"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="503" width="14" height="10" uuid="5e5b8d27-57fb-499a-8c52-1e92cdcdaa49"/>
+				<imageExpression><![CDATA[$F{Weekend_Night_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="502" width="25" height="13" uuid="d99265a3-8d81-4f03-a82f-b50f18c2ee02"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="503" width="14" height="10" uuid="c219e322-812f-46b1-864a-c1656019601d"/>
+				<imageExpression><![CDATA[$F{Weekend_Night_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="394" y="501" width="175" height="14" uuid="1a411da3-f7b8-436f-9647-f2e4f817e513"/>
+				<textFieldExpression><![CDATA[$F{Weekend_Night_Details}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="502" width="22" height="13" uuid="ba3a9bce-ebf8-4402-9d3c-508328842464"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="517" width="14" height="10" uuid="622f79a8-3d3c-41c1-b89d-0a2ff64674a1"/>
+				<imageExpression><![CDATA[$F{Nude_Scenes_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="516" width="25" height="13" uuid="b6f5ee7a-29f6-4cf6-9448-95976d4c24f7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="517" width="14" height="10" uuid="bf458149-2a5a-4dd2-b2ac-383d8db65253"/>
+				<imageExpression><![CDATA[$F{Nude_Scenes_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="394" y="515" width="175" height="14" uuid="1a411da3-f7b8-436f-9647-f2e4f817e513"/>
+				<textFieldExpression><![CDATA[$F{Nude_Scenes_Details}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="516" width="22" height="13" uuid="7b0d539f-d1cd-4b57-ad31-b101ad0b8f66"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="513" y="404" width="57" height="13" uuid="d0331cf9-79f0-4bfe-8f3c-ea5d8260d507"/>
+				<textFieldExpression><![CDATA[$F{Minor_Ages}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="146" y="418" width="70" height="13" uuid="abc25fe2-55f7-4ec1-8d16-6887f34609f1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[General BG#:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="208" y="418" width="61" height="13" uuid="8e1369e3-194a-43e7-a423-8b3bd75db5e8"/>
+				<textFieldExpression><![CDATA[$F{Num_Extras_General}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="329" y="418" width="74" height="13" uuid="64e14509-0595-4512-99d1-cd9ee63e48c4"/>
+				<textFieldExpression><![CDATA[$F{Num_Extras_Group}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="272" y="418" width="65" height="13" uuid="2a60ca4d-35df-4b6f-8af2-3eabc7acc00e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Group BG#:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="482" y="418" width="88" height="13" uuid="54a5f2fb-9b32-4c0d-b68f-601299ff0c24"/>
+				<textFieldExpression><![CDATA[$F{Num_Extras_Group_31}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="405" y="418" width="90" height="13" uuid="38ee46fd-5cec-404d-91ac-60992c094320"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Group BG 31+ #:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="486" y="432" width="84" height="13" uuid="cbcb525f-c718-4935-9aea-24121e0b867a"/>
+				<textFieldExpression><![CDATA[$F{Stunt_Coordinator}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="395" y="432" width="105" height="13" uuid="2a6393a2-7d94-4701-a39b-40f3830c7a8e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stunt Co-Ordinator:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="39" y="446" width="351" height="13" uuid="fba95d09-7669-41a9-bfc6-81c25b050a52"/>
+				<textFieldExpression><![CDATA[$F{Stunt_Type}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="429" y="460" width="141" height="13" uuid="1a411da3-f7b8-436f-9647-f2e4f817e513"/>
+				<textFieldExpression><![CDATA[$F{Ext_Scenes_Type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="395" y="460" width="38" height="13" uuid="1c438da2-c84b-49ee-b662-37d8d7ce5a23"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="306" y="432" width="22" height="13" uuid="6f93f84c-cbc5-4bb6-a310-4058daf4a212"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="207" y="432" width="25" height="13" uuid="67fb5183-1546-4d34-8c77-f28fbbc13c1b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Yes:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="328" y="433" width="14" height="10" uuid="ecc06ea6-6bd5-43e5-a2b9-dc88a1f54772"/>
+				<imageExpression><![CDATA[$F{Stunts_Value}.equals("NO") ? $P{imagesPath}+"/check_box.gif" : $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="233" y="433" width="14" height="10" uuid="800f9896-74d2-4dc2-a0e0-e040bd136a90"/>
+				<imageExpression><![CDATA[$F{Stunts_Value}.equals("YES") ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="-76" width="135" height="13" uuid="889b7273-7fe6-4079-be27-3e5485995787"/>
+				<textFieldExpression><![CDATA[$F{Ext_Scenes_Type}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="545" width="569" height="13" uuid="e835c604-3729-4c70-ad43-f78deac33b37"/>
+			</rectangle>
+			<staticText>
+				<reportElement style="tcDefBold" x="331" y="545" width="39" height="13" uuid="376d759d-c037-415b-be5b-9d8ea884ed8d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<line>
+				<reportElement x="327" y="545" width="1" height="13" uuid="f8d6e3ae-1f83-46d4-a803-c80428612018"/>
+			</line>
+			<line>
+				<reportElement x="392" y="545" width="1" height="13" uuid="0a8a0657-6887-461c-93a4-bc0abcbff0a2"/>
+			</line>
+			<line>
+				<reportElement x="220" y="545" width="1" height="13" uuid="1ec3cc4f-b8d4-459f-a420-aea8c38b0c41"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="4" y="545" width="138" height="13" uuid="d92bc644-7c15-40f9-8308-94b1b3e18395"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Performer Name(s)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="397" y="545" width="124" height="13" uuid="51b70552-8c5a-4605-afc6-c09d19ccb9a4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="164" y="545" width="56" height="13" uuid="5bd2d60d-27ec-4bed-9ece-50d089377e5a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ - 16 yrs]]></text>
+			</staticText>
+			<line>
+				<reportElement x="161" y="545" width="1" height="13" uuid="aae0750d-4f6e-45e4-9be0-e7d58c1cc06a"/>
+			</line>
+			<staticText>
+				<reportElement style="tcDefBold" x="224" y="545" width="93" height="13" uuid="b972708f-6fa9-4c5a-bd37-46cec092664b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Category]]></text>
+			</staticText>
+		</band>
+		<band height="15">
+			<printWhenExpression><![CDATA[(! $P{isEmptyPerformers})]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="570" height="15" isPrintInFirstWholeBand="true" uuid="30815707-0f36-40da-97ec-716151777954"/>
+				<subreportParameter name="intentId">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="imagesPath">
+					<subreportParameterExpression><![CDATA[$P{imagesPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/forms/formActraIntentTalent.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="112">
+			<printWhenExpression><![CDATA[$P{isEmptyPerformers}]]></printWhenExpression>
+			<line>
+				<reportElement x="0" y="27" width="569" height="1" uuid="88cb5592-e941-4506-9436-8f9361d154de"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="69" width="569" height="1" uuid="3e607f86-ed86-4917-9c6c-79f93f494b2c"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="83" width="569" height="1" uuid="bb5d831d-330f-4926-8ff5-c7ad74e280ac"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="55" width="569" height="1" uuid="5fb50a50-c376-49aa-9d1d-cedb8cb675f0"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="41" width="569" height="1" uuid="5841fa41-1574-4101-9a0f-ca3f338bb37b"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="13" width="569" height="1" uuid="1e4b42e9-1ac7-4738-8eb5-7eeaed16ba95"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="97" width="570" height="1" uuid="a1fb0705-6073-4b1f-a5a5-847088bee3cb"/>
+				<graphicElement>
+					<pen lineColor="#000000"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="161" y="0" width="1" height="111" uuid="37596907-1967-4a97-8c3c-0cc7520cfd4b"/>
+			</line>
+			<line>
+				<reportElement x="220" y="0" width="1" height="111" uuid="d83bd0d0-39ed-4a3c-a732-32a716ad55f6"/>
+			</line>
+			<line>
+				<reportElement x="327" y="0" width="1" height="111" uuid="800ef6bb-820a-43c5-93a0-ab3dea2209bb"/>
+			</line>
+			<line>
+				<reportElement x="392" y="0" width="1" height="111" uuid="f7816a59-264e-4184-a64f-67a99bb801f8"/>
+			</line>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="0" width="569" height="111" uuid="11db0eda-8bec-4fd3-9821-fd064d347840"/>
+			</rectangle>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="1" width="14" height="10" uuid="d0c052d9-fe96-4945-8391-b2be5b6944ff"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="15" width="14" height="10" uuid="c73e3e8d-896a-4dbb-a215-0096d84ff709"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="29" width="14" height="10" uuid="1058cd9c-2c71-4926-a70b-6d441877ceaa"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="43" width="14" height="10" uuid="a039b935-828b-49d8-91d4-c4d0b80cb1e8"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="57" width="14" height="10" uuid="e36263b9-05b0-435f-b025-5565505cfe18"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="71" width="14" height="10" uuid="b9c2d66b-b993-4d50-a5f7-85eb007d81cb"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="99" width="14" height="10" uuid="07c51f47-5af8-4137-8b27-67ec703f6f9b"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="85" width="14" height="10" uuid="2b3f74b8-e7b7-4d9c-9d6d-ead7a27e0eaf"/>
+				<imageExpression><![CDATA[$P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

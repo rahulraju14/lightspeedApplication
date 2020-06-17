@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- ONE CONTACT on Contacts minitab of the Admin / Payroll Services page -->
+
+	<!-- parameters: -->
+	<!--   title -->
+	<!--   name -->
+	<!--   phone -->
+	<!--   email -->
+
+		<div class="rowCont FL">
+			<span class="fdNm_w">
+				<h:outputText value="#{title}" />
+			</span>
+			<h:panelGroup  rendered="#{not editMode}">
+				<span class="fd1">
+					<h:outputText value="#{name}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{editMode}">
+				<span class="fd1">
+					<ace:textEntry maxlength="50" value="#{name}" />
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont FL">
+			<span class="fdNm_w">Telephone:
+			</span>
+			<h:panelGroup  rendered="#{not editMode}">
+				<span class="fd1">
+					<h:outputText value="#{phone}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{editMode}">
+				<span class="fd1">
+					<ace:textEntry maxlength="50" value="#{phone}" />
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- EMAIL -->
+		<div class="rowCont FL">
+			<span class="fdNm_w">Email:
+			</span>
+			<h:panelGroup rendered="#{not editMode}">
+				<span class="fd1">
+					<h:outputLink value="mailto:#{email}">
+						<h:outputText value="#{email}"/>
+					</h:outputLink>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{editMode}">
+				<span class="fd1">
+					<ace:textEntry styleClass="address"
+						maxlength="100" value="#{email}" />
+				</span>
+			</h:panelGroup>
+		</div>
+
+</ui:composition>

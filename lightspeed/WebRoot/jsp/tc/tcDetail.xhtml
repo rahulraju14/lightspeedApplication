@@ -1,0 +1,558 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- timecard details mini-tab for Timecard and My Timecards pages -->
+
+	<!-- Uses params:
+			"aicp" : true if AICP Timecard (for Commercial production) 
+			"projectActive": true if either non-Commercial, or the timecard being viewed belongs to an active project; LS-2849
+			"isEnhancedLoanOut": true if the FF4J flag for Enhanced Loan Out supprot is on.
+	-->
+	<!-- Added ids for QA automation LS-2923 -->
+
+	<c:set var="isHybrid" value="#{indivTimecardBean.hybridProduction}" scope="request" />
+	<ace:tabPane label="Timecard">
+		<div id="scrollTc" class="scrollPnlTab">
+			<h:panelGroup rendered="#{indivTimecardBean.weeklyTimecard.id ne null}">
+				<ui:include src="basictcTop.xhtml"><!-- Basic timecard header area -->
+					<ui:param name="idPrefix" value="bvTc"/> <!-- bvTc = basic view timecard-->
+				</ui:include>
+				<!-- Appears in Scenes legend wrapper -->
+				<div class="scriptElemAprsContWrap MA">
+					<div id="scriptElemAprsCont" class="FL">
+						<div style="min-height:19px;"><!-- keep size even if btn is hidden -->
+							<!-- COPY PRIOR Legend button -->
+							<h:panelGroup styleClass="btn_legend_left"
+									rendered="#{indivTimecardBean.editMode and indivTimecardBean.showCopyPrior}">
+								<span class="btnMiniLtHot"/>
+									<ace:linkButton value="Copy from Prior Week" id="btCopyPriorWeek"
+											action="#{indivTimecardBean.actionCopyPrior}"
+											title="Copy the prior week's timecard hours into this week"
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+
+							<!-- VIEW FULL Legend button -->
+							<h:panelGroup styleClass="btn_legend"
+								rendered="#{! indivTimecardBean.editMode}">
+								<span class="btnMiniLtHot"/>
+									<ace:linkButton value="View Full" id="btFullView"
+										action="#{indivTimecardBean.actionViewFull}"
+										title="View the full timecard"
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+						</div>
+
+						<div class="FL rowCont gradTbl2">
+							<!-- note: datatable id is used in javascript! -->
+							<ace:dataTable styleClass="gradTbl2 CT txt11" id="cday"
+								singleSort="true" rowStyleClass="CT txt12"
+								value="#{indivTimecardBean.weeklyTimecard.dailyTimes}"
+								var="dailyTime"
+								style="width:100%;max-width:100%;overflow-x:hidden;">
+
+								<c:set var="banner" value="#{dailyTime.showBanner}" />
+								<c:set var="bannerText" value="#{dailyTime.banner}" />
+
+								<ace:columnGroup type="header">
+									<ace:row>
+										<ace:column style="width:12%"></ace:column>
+										<ace:column style="width:16%">Day</ace:column>
+										<ace:column style="width:7.2%" rendered="#{(not aicp) or (indivTimecardBean.weeklyTimecard.allowWorked)}">
+											<h:outputText rendered="#{not (indivTimecardBean.weeklyTimecard.allowWorked)}"
+													styleClass="FL" value="NDB/" title="#{msg.Timecard_Help_NDB}" />
+											<h:outputText rendered="#{indivTimecardBean.weeklyTimecard.allowWorked}" value=" " />
+										</ace:column>
+										<ace:column style="width:6.4%"></ace:column>
+										<ace:column style="width:12.8%" colspan="2">Meal 1</ace:column>
+										<ace:column style="width:12.8%" colspan="2">Meal 2</ace:column>
+										<ace:column style="width:6.4%"></ace:column>
+										<ace:column style="width:6.4%"></ace:column>
+										<ace:column style="width:6%"></ace:column>
+										<ace:column style="width:6%"  rendered="#{aicp}"></ace:column>
+										<ace:column style="width:6%" rendered="#{aicp and isHybrid}"></ace:column>
+										<ace:column rendered="#{not aicp}" style="width:6%">Re-</ace:column>
+										<ace:column style="width:8%" rendered="#{not aicp}"></ace:column>
+									</ace:row>
+									<ace:row>
+										<ace:column styleClass="LT"
+											style="width:12%;padding-left:8px;">Date</ace:column>
+										<ace:column style="width:16%">Type</ace:column>
+										 <ace:column style="width:7.2%" rendered="#{(not aicp) or (indivTimecardBean.weeklyTimecard.allowWorked)}">
+											<h:outputText rendered="#{not (indivTimecardBean.weeklyTimecard.allowWorked)}"
+													styleClass="FR" value="NDM" title="#{msg.Timecard_Help_NDM}" />
+											<h:outputText rendered="#{indivTimecardBean.weeklyTimecard.allowWorked}"
+													value="Wrk'd" title="#{msg.Timecard_Help_Worked}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="Call" title="#{msg.Timecard_Help_Call}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="Out" title="#{msg.Timecard_Help_M1Out}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="In" title="#{msg.Timecard_Help_M1In}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="Out" title="#{msg.Timecard_Help_M2Out}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="In" title="#{msg.Timecard_Help_M2In}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="Wrap" title="#{msg.Timecard_Help_Wrap}" />
+										</ace:column>
+										<ace:column style="width:6.4%">
+											<h:outputText value="Hrs" title="#{msg.Timecard_Help_Hours}" />
+										</ace:column>
+										<ace:column style="width:6%" rendered="#{aicp}">
+											<h:outputText value="State" title="" />
+										</ace:column>
+										<ace:column style="width:6.4%" rendered="#{aicp}">
+											<h:outputText value="City" title="" />
+										</ace:column>
+										<ace:column style="width:6%" rendered="#{aicp and isHybrid}">
+											<h:outputText value="Ctry" title="" />
+										</ace:column>
+										 <ace:column style="width:6%" rendered="#{not aicp}">
+											<h:outputText value="MP" rendered="#{not indivTimecardBean.weeklyTimecard.allowWorked}"
+													title="#{msg.Timecard_Help_MPV}"/>
+											<h:outputText value=" " rendered="#{indivTimecardBean.weeklyTimecard.allowWorked}" />
+										</ace:column>
+										<ace:column style="width:6%" rendered="#{ not aicp}">
+											<h:outputText value="Rate" title="#{msg.Timecard_Help_Rerate}"/>
+										</ace:column> 
+										 <ace:column style="width:8%" rendered="#{not aicp}">
+											<h:outputText value="#{aicp ? '' : 'Set'}" />
+										</ace:column> 
+									</ace:row>
+								</ace:columnGroup>
+
+								<ace:columnGroup type="footer">
+									<ace:row>
+										<ace:column headerText="" colspan="#{(not aicp) or (indivTimecardBean.weeklyTimecard.allowWorked) ? 8 : 7}">
+											<h:panelGroup rendered="#{indivTimecardBean.showTwLegend}">
+												<h:outputText styleClass="TW_box FL" value=" " />
+												<h:outputText styleClass="FL"
+													value="Use Orange-shaded cells for Travel Start, Travel End, and Work Start" />
+												<br />
+											</h:panelGroup>
+											<h:panelGroup rendered="#{indivTimecardBean.showWtLegend}">
+												<h:outputText styleClass="WT_box FL" value=" " />
+												<h:outputText styleClass="FL"
+													value="Use Blue-shaded cells for Work End, Travel Start, and Travel End" />
+											</h:panelGroup>
+										</ace:column>
+										<ace:column>
+											<h:outputText styleClass="B txt12" value="Total:" />
+										</ace:column>
+										<ace:column>
+											<div class="ftrBorder">
+												<h:outputText styleClass="tcTotHr"
+													rendered="#{! indivTimecardBean.weeklyTimecard.allExempt}"
+													value="#{indivTimecardBean.weeklyTimecard.totalHours}">
+													<f:convertNumber type="number" pattern="#0.0#" />
+												</h:outputText>
+											</div>
+										</ace:column>
+										<ace:column rendered="#{not aicp}">
+											<div class="ftrBorder">
+												<h:outputText styleClass="tcTotHr"
+													value="#{indivTimecardBean.weeklyTimecard.totalMpvUser}"
+													rendered="#{! indivTimecardBean.weeklyTimecard.allowWorked}">
+													<f:convertNumber type="number" pattern="##0" />
+												</h:outputText>
+												&#160;
+											</div>
+										</ace:column>
+										<ace:column rendered="#{not aicp}">
+											<div class="ftrBorder">&#160;</div>
+										</ace:column>
+										<ace:column rendered="#{ aicp or isHybrid}">
+											<div class="ftrBorder">&#160;</div>
+										</ace:column>
+										<ace:column>
+										</ace:column>
+										<ace:column rendered="#{ aicp and isHybrid}">
+										</ace:column>
+									</ace:row>
+								</ace:columnGroup>
+
+								<!-- Date -->
+								<ace:column styleClass="B">
+									<h:outputText styleClass="FL pad5lt W30percnt"
+										value="#{dailyTime.date}">
+										<f:convertDateTime pattern="EE"
+											timeZone="#{timezone}" />
+									</h:outputText>
+									<h:outputText styleClass="pad3lt" value="#{dailyTime.date}">
+										<f:convertDateTime pattern="MM/dd"
+											timeZone="#{timezone}" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- DAY TYPE -->
+								<ace:column>
+									<c:set var="travWork" value="#{dailyTime.dayType eq 'TW'}" />
+									<c:set var="workTrav" value="#{dailyTime.dayType eq 'WT'}" />
+									<c:set var="normal" value="#{not (travWork or workTrav)}" />
+
+									<h:panelGroup>
+										<h:selectOneMenu id="DT_DAY_TYPE" style="width:90%;"
+											title="#{dailyTime.dayType.label}"
+											value="#{dailyTime.dayType}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}"
+											rendered="#{(!dailyTime.noStartForm) and
+												(indivTimecardBean.editRaw or (indivTimecardBean.editMode and indivTimecardBean.mayApprove))}">
+											<f:selectItems value="#{indivTimecardBean.dayTypeDL}" />
+											<f:ajax execute="@this" render="@all" />
+										</h:selectOneMenu>
+										<h:outputText value="#{dailyTime.dayType.shortLabel}"
+											title="#{dailyTime.dayType.label}"
+											rendered="#{dailyTime.noStartForm or
+												(! (indivTimecardBean.editRaw or (indivTimecardBean.editMode and indivTimecardBean.mayApprove)))}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- NDM - Non-deductible meal or WORKED CHECKBOX -->
+								<ace:column rendered="#{(not aicp) or (indivTimecardBean.weeklyTimecard.allowWorked)}">
+									<h:panelGroup rendered="#{(not indivTimecardBean.weeklyTimecard.allowWorked)}" >
+										<div class="ndmDiv">
+											<h:selectBooleanCheckbox id="DT_NDB" value="#{dailyTime.nonDeductMeal}" styleClass="ndm1"
+													 valueChangeListener="#{indivTimecardBean.listenDailyChange}"
+													disabled="#{(! indivTimecardBean.editRaw) or dailyTime.noStartForm}">
+												<ace:ajax/>
+											</h:selectBooleanCheckbox>
+											<div class="ndmSlash" />
+											<div class="ndmSlash" />
+											<h:selectBooleanCheckbox id="DT_NDM" value="#{dailyTime.nonDeductMeal2}" styleClass="ndm2"
+													 valueChangeListener="#{indivTimecardBean.listenDailyChange}"
+													disabled="#{(! indivTimecardBean.editRaw) or dailyTime.noStartForm}">
+												<ace:ajax/>
+											</h:selectBooleanCheckbox>
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup rendered="#{indivTimecardBean.weeklyTimecard.allowWorked}" >
+										<h:selectBooleanCheckbox id="DT_DAY_WORKED" value="#{dailyTime.worked}" 
+												valueChangeListener="#{indivTimecardBean.listenDailyChange}"
+												disabled="#{(! indivTimecardBean.editRaw)
+														or dailyTime.noStartForm or dailyTime.dayType.idle}">
+											<ace:ajax/>
+										</h:selectBooleanCheckbox>
+									</h:panelGroup>
+								</ace:column> 
+
+								<!-- Call Time -->
+								<ace:column>
+									<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+											id="DT_CALL" value="#{dailyTime.callTime}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.callTime}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[0]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Meal 1 Out (start) -->
+								<ace:column>
+									<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+											id="DT_MEAL1_OUT" value="#{dailyTime.m1Out}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.m1Out}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[1]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Meal 1 In (end) -->
+								<ace:column>
+									<h:panelGroup styleClass="#{travWork ? 'bk_TW' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{travWork ? 'bk_TW' : ''}"
+											id="DT_MEAL1_IN" value="#{dailyTime.m1In}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.m1In}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[2]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Meal 2 Out (start) -->
+								<ace:column>
+									<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+											id="DT_MEAL2_OUT" value="#{dailyTime.m2Out}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.m2Out}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[3]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Meal 2 In (end) -->
+								<ace:column>
+									<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+											id="DT_MEAL2_IN" value="#{dailyTime.m2In}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.m2In}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter
+												converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[4]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Wrap -->
+								<ace:column>
+									<h:panelGroup styleClass="#{workTrav ? 'bk_WT' : ''}">
+										<ace:textEntry styleClass="tcEdHr #{workTrav ? 'bk_WT' : ''}"
+											id="DT_WRAP" value="#{dailyTime.wrap}" maxlength="6"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and !banner}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+											<ace:ajax />
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.wrap}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) and (!banner)}">
+											<f:converter converterId="lightspeed.DecimalTimeConverter" />
+										</h:outputText>
+										<h:outputText value="#{bannerText[5]}" rendered="#{banner}" />
+									</h:panelGroup>
+								</ace:column>
+
+								<!-- Hours (calculated) -->
+								<ace:column>
+									<h:outputText styleClass="tcTotHr"
+										rendered="#{! indivTimecardBean.weeklyTimecard.allExempt}"
+										value="#{dailyTime.hours}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- MPV User -->
+								 <ace:column rendered="#{not aicp}">
+									<ace:textEntry id="DT_MPV_USER" styleClass="tcEdHr"
+											maxlength="10" value="#{dailyTime.mpvUser}" 
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and
+													not indivTimecardBean.weeklyTimecard.allowWorked}"
+											valueChangeListener="#{indivTimecardBean.listenDailyChange}">
+										<ace:ajax/>
+									</ace:textEntry>
+									<h:outputText value="#{dailyTime.mpvUser}"
+											rendered="#{(! indivTimecardBean.editRaw) or dailyTime.noStartForm or
+											indivTimecardBean.weeklyTimecard.allowWorked}" />
+								</ace:column>
+
+								<!-- Re-Rate -->
+								 <ace:column rendered="#{not aicp}">
+									<h:selectBooleanCheckbox value="#{dailyTime.reRate}"
+										disabled="#{(! indivTimecardBean.editRaw) or dailyTime.noStartForm}"/>
+								</ace:column>
+
+								<!-- SET (account number) -->
+								<ace:column rendered="#{not aicp}">
+									<h:panelGroup rendered="#{! aicp}">
+										<ace:textEntry styleClass="tcEdHr"
+											value="#{dailyTime.accountSet}" maxlength="5"
+											rendered="#{(!dailyTime.noStartForm) and (indivTimecardBean.editRaw or
+												(indivTimecardBean.editMode and indivTimecardBean.mayApprove))}">
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.accountSet}"
+											rendered="#{(dailyTime.noStartForm) or (! (indivTimecardBean.editRaw or
+												(indivTimecardBean.editMode and indivTimecardBean.mayApprove)))}"/>
+
+										<h:outputText rendered="#{aicp}">&#160;</h:outputText>
+									</h:panelGroup>
+								</ace:column>
+								<!-- If this is a hybrid production, disable the city/state based on the day type and/or country from latest requirements. LS-2313 -->
+					<c:set var="disableCityState" value="#{isHybrid and ((not dailyTime.dayType.usCityStateRequired) 
+									or (dailyTime.dayType.usCityStateRequired and dailyTime.country ne 'US'))}"/>
+					<c:set var="enableCity" value="#{dailyTime.dayType.cityRequiredStateHM}" />
+							
+
+								<!-- STATE -->
+								<ace:column rendered="#{aicp}">
+									<h:panelGroup>
+										<icecore:setEventPhase events="ValueChangeEvent"
+											phase="INVOKE_APPLICATION">
+											<h:selectOneMenu style="width:90%;" id="BASIC_DT_WORK_STATE"
+												value="#{dailyTime.state}"  disabled="#{disableCityState}"
+												valueChangeListener="#{indivTimecardBean.listenDailyStateChange}"
+												rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm}">
+												<f:selectItems
+													value="#{indivTimecardBean.stateCodeTypeDL(dailyTime)}" />
+												<f:ajax execute="@this" render="@all" />
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										<h:outputText value="#{dailyTime.state}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm)}" />
+									</h:panelGroup>
+								</ace:column>
+									<!-- CITY -->
+								<ace:column rendered="#{aicp}">
+									<h:panelGroup>
+										<ace:textEntry id="basicdailyWorkCity" styleClass="tcEdHr"
+											maxlength="35" value="#{dailyTime.city}"
+											rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm and (enableCity or not disableCityState)}">
+										</ace:textEntry>
+										<h:outputText value="#{dailyTime.city}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm) or (not enableCity and disableCityState)}">
+										</h:outputText>
+									</h:panelGroup>
+								</ace:column>
+
+
+								<!-- COUNTRY -->
+								<ace:column rendered="#{aicp and isHybrid}">
+									<h:panelGroup>
+										<icecore:setEventPhase events="ValueChangeEvent"
+											phase="INVOKE_APPLICATION">
+											<h:selectOneMenu style="width:90%;" id="BASIC_DT_WORK_COUNTRY"
+												value="#{dailyTime.country}" disabled="#{dailyTime.disableCountry}"
+												valueChangeListener="#{indivTimecardBean.listenDailyCountryChange}"
+												rendered="#{(indivTimecardBean.editRaw) and !dailyTime.noStartForm}">
+												<f:selectItems value="#{applicationScopeBean.countryCodeDL}" />
+												<ace:ajax execute="@this" render="@all" />
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										<h:outputText value="#{dailyTime.country}"
+											rendered="#{((! indivTimecardBean.editRaw) or dailyTime.noStartForm)}" />
+									</h:panelGroup>
+								</ace:column>
+							</ace:dataTable>
+						</div>
+
+						<div class="FL rowCont BKwhite">
+							<h:panelGroup>
+								<table class="gridPlain W100percnt" style="overflow-x:hidden;">
+									<tr>
+										<td style="width:10%;">
+											<h:outputText styleClass="FL pad3lt B" rendered="#{indivTimecardBean.editMode}"
+													style="margin-top: -40px;margin-bottom: 10px;" value="Add Comment:" />
+											<h:outputText styleClass="FL pad3lt B" value="Comments:" />
+										</td>
+										<td colspan="2" style="width: 90%;">
+											<ace:textAreaEntry styleClass="FL pad3lt stdTxtArea" value="#{indivTimecardBean.newComment}"
+												maxlength="2000" rendered="#{indivTimecardBean.editMode}"
+												style="height:30px;width:85%;font-size:11px;"/>
+											<h:panelGroup rendered="#{indivTimecardBean.editMode}">
+												<span class="FR pad10rt pad5tp">
+													<span class="btnPriEnbLt" />
+													<span>
+														<ace:linkButton title="Add your new comment to this timecard" value="Add"
+																onmouseup="showErrors();" onclick="queueClick(this,event);"
+																action="#{indivTimecardBean.actionAddComment}" styleClass="btnPriEnbCt" />
+													</span>
+													<span class="btnPriEnbRt" />
+												</span>
+											</h:panelGroup>
+											<h:outputText rendered="#{not indivTimecardBean.editMode}"
+												styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{indivTimecardBean.weeklyTimecard.comments}"
+												escape="false" style="min-height:60px;max-height:90px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+											<h:outputText rendered="#{indivTimecardBean.editMode}"
+												styleClass="FL pad2lt pad1tp pad2bm txt11" value="#{indivTimecardBean.weeklyTimecard.comments}"
+												escape="false" style="min-height:60px;max-height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;"/>
+										</td>
+									</tr>
+									<tr class="LH22">
+										<td style="width: 10%;">
+											<h:outputText styleClass="FL pad3lt B" value="Mileage:" />
+										</td>
+										<td style="width: 50%;">
+											<h:outputText styleClass="FL pad5lt LH20" value="Allowable:" />
+											<h:outputText styleClass="FL pad10lt" value="#{indivTimecardBean.weeklyTimecard.mileage.nonTaxableMiles}"
+													rendered="true" style="width:20%;">&#160;
+													<f:convertNumber type="number" pattern="#0.#" />
+											</h:outputText>
+											<h:outputText styleClass="FL pad20lt LH20" value="Taxable:" />
+											<h:outputText styleClass="FL pad10lt" value="#{indivTimecardBean.weeklyTimecard.mileage.taxableMiles}"
+												rendered="true" style="width:20%;" >
+												<f:convertNumber type="number" pattern="#0.#" />
+											</h:outputText>
+										</td>
+										<td style="width: 40%">
+											<h:panelGroup rendered="#{indivTimecardBean.weeklyTimecard.boxRental ne null}">
+												<h:outputText styleClass="FL pad3lt B" value="Box Rental Form:" />
+												<h:outputText styleClass="FL pad10lt" value="#{indivTimecardBean.weeklyTimecard.boxRental.amount}"
+														style=" ">&#160;
+													<f:convertNumber type="number" pattern="#,##0.00" />
+												</h:outputText>
+												<h:outputText styleClass="B" rendered="#{not indivTimecardBean.boxMatchesStart}" value="*" />
+											</h:panelGroup>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h:panelGroup styleClass="FR pad20rt" rendered="#{not indivTimecardBean.boxMatchesStart}">
+						(Box Rental Form does not match Start Form)
+					</h:panelGroup>
+				</div>
+
+				<!-- include expenses/reimbursement section -->
+				<div class="rowCont">&#160;</div>
+
+				<h:panelGroup rendered="#{indivTimecardBean.payrollPref.allowEmployeeExpense}">
+					<ui:include src="tcExpense.xhtml">
+						<ui:param name="timecardBean" value="#{indivTimecardBean}" />
+						<ui:param name="categoryDL" value="#{indivTimecardBean.emplExpCategoryDL}" />
+						<ui:param name="isBasicView" value="#{true}" />
+						<ui:param name="projectActive" value="#{projectActive}" />
+					</ui:include>
+				</h:panelGroup>
+			</h:panelGroup><!-- timecard exists -->
+
+			<h:panelGroup rendered="#{indivTimecardBean.weeklyTimecard.id eq null}">
+				<br/>
+				<h:outputText styleClass="pad20lt txt14"  value="No timecard is currently available."/>
+			</h:panelGroup>
+		</div>
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

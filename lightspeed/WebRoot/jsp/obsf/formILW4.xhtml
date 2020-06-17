@@ -1,0 +1,339 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="FORM IL-W4"
+			rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+
+		<div class="miniTab pad15lt" style="width:840px;">
+
+			<!-- scrolling container -->
+			<!-- FIRST PAGE -->
+			<div class="BKwhite sfFormBorder1">
+				<div class="pad10lt pad10rt" style="width:840px;">
+					<h:graphicImage alt="" value="" style="width:815px; margin-top:25px" url="../../i/forms/formILW4_inst1_1.png"/>
+					<h:graphicImage alt="" value="" style="width:815px;;margin-top:-2px" url="../../i/forms/formILW4_inst2_1.png"/>
+					<h:outputText value="&#160;" styleClass="LH60"/>
+				</div>
+			</div>
+
+			<div class="rowCont" style="height:30px; width:820px;"/>
+
+			<!-- SECOND PAGE -->
+			<div class="BKwhite sfFormBorder1">
+				<div class="pad10rt pad10tp" style="width:820px; margin-left:11px;">
+					<h:graphicImage alt="" value="" style="width:815px;" url="../../i/forms/formILW4_inst3_1.png"/>
+
+					<hr class="rowCont FL pad3lt pad2tp" style="height:3px; background:black; border:0; width:810px" />
+
+					<span> <h:outputText styleClass="FL pad5tp B txt20 pad3lt"
+						value="Step 1: &#160; Figure your basic personal allowances" /></span>
+					<span> <h:outputText styleClass="FL pad10tp B txt17 pad6lt" value="(including allowances for dependents)" /> </span>
+
+					<!-- 1-4 START -->
+					<div class="FL rowCont"><h:outputText styleClass="FL pad10tp pad5lt" value="Check all that apply:" /></div>
+					<div class="FL rowCont pad5tp">
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								disabled="#{not formILW4Bean.empEdit}"
+								styleClass="iceSelBoolChkbx FL pad10lt"
+								value="#{formILW4Bean.form.dependent}">
+								<ace:ajax render="@this boxesChecked1 basicPersonalAllowances"/>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:290px; font-weight:normal;"> No one else can claim me as a dependent. </span>
+					</div>
+					<div class="FL rowCont">
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad10lt"
+								disabled="#{not formILW4Bean.empEdit}"
+								value="#{formILW4Bean.form.spouseDependent}">
+								<ace:ajax render="@this boxesChecked1 basicPersonalAllowances"/>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm" style="width:290px; font-weight:normal;"> I can claim my spouse as a dependent. </span>
+					</div>
+					<div class="FL rowCont">
+						<!-- 1 -->
+						<div class="rowCont FL pad8tp">
+							<h:outputText style="width:600px;" styleClass="FL pad10lt" escape="false" value="&lt;strong&gt;1&lt;/strong&gt;
+								&#160;Enter the total number of boxes you checked." />
+							<h:panelGroup>
+								<span class="fd_sm">
+									<h:outputText styleClass="FL B" value="1" />
+									<ace:textEntry id="boxesChecked1" maxlength="2"
+										disabled="#{true}" styleClass="pad3lt"
+										value="#{formILW4Bean.form.boxesChecked}"
+										style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+										<ace:ajax render="@this basicPersonalAllowances"/>
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- 2 -->
+						<div class="rowCont FL pad10tp">
+							<h:outputText styleClass="FL pad10lt" style="width:600px;" escape="false" value="&lt;strong&gt;2&lt;/strong&gt;
+								&#160;Enter the number of dependents (other than you or your spouse) you will claim on your tax return." />
+							<h:panelGroup>
+								<span class="fd_sm">
+									<h:outputText styleClass="FL B" value="2" />
+									<ace:textEntry styleClass="pad3lt" maxlength="2" id="NumOfDependents"
+										disabled="#{not formILW4Bean.empEdit}"
+										value="#{formILW4Bean.form.numOfDependents}"
+										style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+										<ace:ajax render="@this basicPersonalAllowances"/>
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- 3 -->
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad10lt">
+								<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt;3&lt;/strong&gt;
+								 	&#160;Add Lines 1 and 2. Enter the result. This is the total number of basic personal allowances to which you are" />
+								<h:outputText styleClass="FL rowCont pad2tp" escape="false" value="&#160; &#160; &lt;strong&gt; entitled. &lt;/strong&gt;
+								  You are not required to claim these allowances. The number of basic personal allowances that you" />
+								<h:outputText styleClass="FL pad2tp" style="width:600px;"
+									value="&#160; &#160; choose to claim will determine how much money is withheld from your pay. See Line 4 for more information." />
+								<h:panelGroup>
+									<span class="fd_sm">
+										<h:outputText styleClass="FL B" value="3"/>
+										<ace:textEntry styleClass="pad3lt"
+											id="BasicPersonalAllowances"
+											maxlength="3" disabled="#{true}"
+											value="#{formILW4Bean.form.basicPersonalAllowances}"
+											style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+							</span>	
+						</div>
+
+						<!-- 4 -->
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad10lt">
+								<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt;4&lt;/strong&gt;
+								 	&#160;Enter the total number of basic personal allowances you choose to claim on this line and Line 1 of" />
+								<h:outputText styleClass="FL rowCont pad2tp" escape="false" value="&#160; &#160; Form IL-W-4 below.
+									This number may not exceed the amount on Line 3 above, however you can claim as" />
+								<h:outputText styleClass="FL pad2tp" style="width:600px;"
+									value="&#160; &#160; few as zero. Entering lower numbers here will result in more money being withheld(deducted) from your pay." />
+								<h:panelGroup>
+									<span class="fd_sm">
+										<h:outputText styleClass="FL B" value="4"/>
+										<ace:textEntry styleClass="pad3lt" id="PersonalAllowances"
+											maxlength="2" disabled="#{not formILW4Bean.empEdit}"
+											value="#{formILW4Bean.form.personalAllowances}"
+											style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+											<ace:ajax render="@this item1"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</span>
+						</div>
+					</div>
+					<!-- 1-4 END -->
+
+					<hr class="rowCont FL pad3lt pad8tp" style="height:3px; background:black; border:0; width:810px" />
+
+					<div class="FL rowCont"><h:outputText styleClass="FL pad5tp B txt20 pad3lt"
+						value="Step 2: &#160; Figure your additional allowances" /></div>
+
+					<!-- 5-9 START -->
+					<div class="FL rowCont"><h:outputText styleClass="FL pad10tp pad5lt" value="Check all that apply:" /></div>
+					<div class="FL rowCont pad5tp">
+						<h:panelGroup>
+							<icecore:setEventPhase events="ValueChangeEvent"
+								phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox
+									styleClass="iceSelBoolChkbx FL pad10lt"
+									disabled="#{not formILW4Bean.empEdit}"
+									value="#{formILW4Bean.form.over65}">
+									<ace:ajax render="@this boxesChecked2 totalAddtlAllowances"/>
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+							<span class="FL fdNm_w3" style="font-weight:normal;"> I am 65 or older. </span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad50lt">
+							<icecore:setEventPhase events="ValueChangeEvent"
+								phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox
+									styleClass="iceSelBoolChkbx FL"
+									disabled="#{not formILW4Bean.empEdit}"
+									value="#{formILW4Bean.form.blind}">
+									<ace:ajax render="@this boxesChecked2 totalAddtlAllowances"/>
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+							<span class="FL fdNm_w3" style="font-weight:normal;"> I am legally blind. </span>
+						</h:panelGroup>
+					</div>
+					<div class="FL rowCont">
+						<h:panelGroup>
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL pad10lt"
+								disabled="#{not formILW4Bean.empEdit}"
+								value="#{formILW4Bean.form.spouseOver65}">
+								<ace:ajax render="@this boxesChecked2 totalAddtlAllowances"/>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm_w3" style="font-weight:normal;"> My spouse is 65 or older. </span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad50lt">
+						<icecore:setEventPhase events="ValueChangeEvent"
+							phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox
+								styleClass="iceSelBoolChkbx FL"
+								disabled="#{not formILW4Bean.empEdit}"
+								value="#{formILW4Bean.form.spouseBlind}">
+								<ace:ajax render="@this boxesChecked2 totalAddtlAllowances"/>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+						<span class="FL fdNm_w3" style="font-weight:normal;"> My spouse is legally blind. </span>
+						</h:panelGroup>
+					</div>
+					<div class="FL rowCont">
+						<!-- 5 -->
+						<div class="rowCont FL pad8tp">
+							<h:outputText style="width:600px;" styleClass="FL pad10lt" escape="false" value="&lt;strong&gt;5&lt;/strong&gt;
+								&#160;Enter the total number of boxes you checked." />
+							<h:panelGroup>
+								<span class="fd_sm">
+									<h:outputText styleClass="FL B" value="5" />
+									<ace:textEntry id="boxesChecked2" maxlength="2"
+										disabled="#{true}" styleClass="pad3lt"
+										value="#{formILW4Bean.form.boxesCheckedStep2}"
+										style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+										<ace:ajax render="@this totalAddtlAllowances"/>
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- 6 -->
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad10lt">
+								<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt;6&lt;/strong&gt;
+								 	&#160;Enter any amount that you reported on Line 4 of the Deductions Worksheet" />
+								<h:outputText styleClass="FL pad2tp" style="width:600px;" escape="false" value="&#160; &#160;
+								  for federal Form W-4 plus any additional Illinois subtractions or deductions." />
+								<h:panelGroup>
+									<span class="fd_sm">
+										<h:outputText styleClass="FL B" value="6" />
+										<ace:textEntry styleClass="pad3lt" maxlength="8" id="Deductions"
+												disabled="#{not formILW4Bean.empEdit}"
+												value="#{formILW4Bean.form.deductions}"
+												style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+											<ace:ajax render="@this dividedDeductions2 totalAddtlAllowances"/>
+											<f:convertNumber type="number" pattern="#,###" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<!-- 7 -->
+						<div class="rowCont FL pad10tp">
+							<h:outputText styleClass="FL pad10lt" style="width:600px;" escape="false" value="&lt;strong&gt;7&lt;/strong&gt;
+								&#160;Divide Line 6 by 1,000. Round to the nearest whole number. Enter the result on Line 7." />
+							<h:panelGroup>
+								<span class="fd_sm">
+									<h:outputText styleClass="FL B" value="7"/>
+									<ace:textEntry id="DividedDeductions2"
+											styleClass="pad3lt"
+											maxlength="8" disabled="#{true}"
+											value="#{formILW4Bean.form.dividedDeductions}"
+											style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+										<ace:ajax render="@this totalAddtlAllowances"/>
+										<f:convertNumber type="number" pattern="#,###" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- 8 -->
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad10lt">
+								<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt;8&lt;/strong&gt;
+								 	&#160;Add Lines 5 and 7. Enter the result. This is the total number of additional allowances to which" />
+								<h:outputText styleClass="FL rowCont pad2tp" escape="false" value="&#160; &#160; you are
+									&lt;strong&gt;entitled.&lt;/strong&gt; You are not required to claim these allowances. The number of additional allowances" />
+								<h:outputText styleClass="FL pad2tp" style="width:600px;"
+									value="&#160; &#160; that you choose to claim will determine how much money is withheld from your pay." />
+								<h:panelGroup>
+									<span class="fd_sm">
+										<h:outputText styleClass="FL B" value="8"/>
+										<ace:textEntry styleClass="pad3lt"
+											id="TotalAddtlAllowances"
+											maxlength="8" disabled="#{true}"
+											value="#{formILW4Bean.form.totalAddtlAllowances}"
+											style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<!-- 9 -->
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad10lt">
+								<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt;9&lt;/strong&gt;
+								 	&#160;Enter the total number of additional allowances you elect to claim on Line 2 of Form IL-W-4, below. This" />
+								<h:outputText styleClass="FL rowCont pad2tp" escape="false" value="&#160; &#160; number may not
+									exceed the amount on Line 8 above, however you can claim as few as zero. Entering lower" />
+								<h:outputText styleClass="FL pad2tp" style="width:600px;"
+									value="&#160; &#160; numbers here will result in more money being withheld(deducted) from your pay." />
+								<h:panelGroup>
+									<span class="fd_sm">
+										<h:outputText styleClass="FL B" value="9"/>
+										<ace:textEntry styleClass="pad3lt" maxlength="2" id="AddtlAllowances"
+											disabled="#{not formILW4Bean.empEdit}"
+											value="#{formILW4Bean.form.addtlAllowances}"
+											style="min-width:8%; width:22%; margin-top:-7px; border-bottom:solid 1px;">
+											<ace:ajax render="@this item2"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</span>
+						</div>
+
+						<div class="rowCont FL pad10tp">
+							<span class="FL pad12lt">
+								<h:outputText styleClass="FL rowCont txt13" escape="false"
+								value="IMPORTANT: If you want to have additional amounts withheld from your pay, you may enter a dollar amount on Line 3 of Form IL-W-4" />
+								<h:outputText styleClass="FL rowCont pad2tp txt13" escape="false"
+								value="below. This amount will be deducted from your pay in addition to the amounts that are withheld as a result of the allowances you have" />
+								<h:outputText styleClass="FL pad2tp rowCont txt13" value="claimed." />
+							</span>
+						</div>
+					</div>
+					<!-- 5-9 END -->
+
+					<ui:include src="formILW4_empCertificate.xhtml"></ui:include>
+				</div>
+			</div>
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formILW4Bean}" />
+						<ui:param name="events" value="#{formILW4Bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

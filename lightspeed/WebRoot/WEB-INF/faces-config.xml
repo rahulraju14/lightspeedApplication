@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0" metadata-complete="false">
+
+	<!-- ******** BEGIN NAVIGATION RULES ********* -->
+	<navigation-rule>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/login.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Navigation rules for all tabs, from anywhere, using unique "outcome" 
+		values. These values are available in java via statics in HeaderViewBean. -->
+	<navigation-rule>
+
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/login.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>reset</from-outcome>
+			<to-view-id>/jsp/login/reset.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>newaccount</from-outcome>
+			<to-view-id>/jsp/login/newaccount.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>emailsent</from-outcome>
+			<to-view-id>/jsp/login/sent.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Used for routing to external URLs (e.g., ESS) via html redirects. 
+			LS-3758 -->
+		<navigation-case>
+			<from-outcome>paystub</from-outcome>
+			<to-view-id>/jsp/jump/paystub.jsp</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>w2form</from-outcome>
+			<to-view-id>/jsp/jump/w2.jsp</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- My Home / My Account / My Productions - initial log in - area -->
+		<navigation-case>
+			<from-outcome>myproductions</from-outcome>
+			<to-view-id>/jsp/user/myprod.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>mytimecards</from-outcome>
+			<to-view-id>/jsp/user/mytc.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myfulltimecard</from-outcome>
+			<to-view-id>/jsp/user/myfulltc.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myforms</from-outcome>
+			<to-view-id>/jsp/user/myforms.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myaccount</from-outcome>
+			<to-view-id>/jsp/user/account.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>deleteaccount</from-outcome>
+			<to-view-id>/jsp/user/delete.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>purchase</from-outcome>
+			<to-view-id>/jsp/product/list.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>createproduction</from-outcome>
+			<to-view-id>/jsp/product/confirm.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- ADMIN area - at system level -->
+		<navigation-case>
+			<from-outcome>adminproductions</from-outcome>
+			<to-view-id>/jsp/adminsys/prod.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>adminusers</from-outcome>
+			<to-view-id>/jsp/adminsys/users.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>adminpayroll</from-outcome>
+			<to-view-id>/jsp/adminsys/payroll.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>adminevents</from-outcome>
+			<to-view-id>/jsp/adminsys/events.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>prodadminmisc</from-outcome>
+			<to-view-id>/jsp/adminsys/other.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Home main tab area -->
+		<navigation-case>
+			<from-outcome>myhome</from-outcome>
+			<to-view-id>/jsp/main/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Cast and Crew main tab area -->
+		<navigation-case>
+			<from-outcome>contactlist</from-outcome>
+			<to-view-id>/jsp/contacts/contactlist.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>talentcontactlist</from-outcome>
+			<to-view-id>/jsp/contacts/contactlist.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>contactview</from-outcome>
+			<to-view-id>/jsp/contacts/contactlist.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcstarts</from-outcome>
+			<to-view-id>/jsp/sf/starts.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>departments</from-outcome>
+			<to-view-id>/jsp/contacts/dept.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>talentdepartments</from-outcome>
+			<to-view-id>/jsp/contacts/dept.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>onboarding</from-outcome>
+			<to-view-id>/jsp/ob/onboard.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>talentonboarding</from-outcome>
+			<to-view-id>/jsp/ob/onboard.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		
+		<!-- Payroll start forms -->
+		<navigation-case>
+			<from-outcome>payrollStart</from-outcome>
+			<to-view-id>/jsp/obsf/forms.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Subject Navigation -->
+		<navigation-case>
+			<from-outcome>toSubject</from-outcome>
+			<to-view-id>/jsp/contacts/dept.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		
+		
+		<!-- Files main tab area (admin only) -->
+		<navigation-case>
+			<from-outcome>filerepository</from-outcome>
+			<to-view-id>/jsp/filerepository/filerepository.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>files</from-outcome>
+			<to-view-id>/jsp/filerepository/filerepository.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Project main tab area -->
+		<navigation-case>
+			<from-outcome>project</from-outcome>
+			<to-view-id>/jsp/main/project.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<!-- <navigation-case> <from-outcome>materials</from-outcome> <to-view-id>/jsp/materials/materials.jsf</to-view-id> 
+			<redirect/> </navigation-case> -->
+		<navigation-case>
+			<from-outcome>permissions</from-outcome>
+			<to-view-id>/jsp/main/permissions.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Reports main tab area -->
+		<navigation-case>
+			<from-outcome>reports</from-outcome>
+			<to-view-id>/jsp/reports/report.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>exhibitG</from-outcome>
+			<to-view-id>/jsp/reports/exhibitgview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>exhibitGview</from-outcome>
+			<to-view-id>/jsp/reports/exhibitgview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>exhibitGedit</from-outcome>
+			<to-view-id>/jsp/reports/exhibitgedit.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dprview</from-outcome>
+			<to-view-id>/jsp/dpr/view.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dpredit</from-outcome>
+			<to-view-id>/jsp/dpr/edit.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Schedule main tab area -->
+		<navigation-case>
+			<from-outcome>calendar</from-outcome>
+			<to-view-id>/jsp/schedule/calendarview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>calendaredit</from-outcome>
+			<to-view-id>/jsp/schedule/calendaredit.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>stripboardview</from-outcome>
+			<to-view-id>/jsp/schedule/stripboardview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>stripboardeditm</from-outcome>
+			<to-view-id>/jsp/schedule/stripboardeditm.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>stripboardlist</from-outcome>
+			<to-view-id>/jsp/schedule/stripboardlist.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>callsheetlist</from-outcome>
+			<to-view-id>/jsp/callsheet/callsheetlist.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>callsheetview</from-outcome>
+			<to-view-id>/jsp/callsheet/view.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>callsheetedit</from-outcome>
+			<to-view-id>/jsp/callsheet/edit.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Script/Breakdown main tab area -->
+		<navigation-case>
+			<from-outcome>breakdown</from-outcome>
+			<to-view-id>/jsp/script/breakdown.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>newrevision</from-outcome>
+			<to-view-id>/jsp/script/import.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>drafts</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>compare</from-outcome>
+			<to-view-id>/jsp/script/draftcomparison.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>scriptelements</from-outcome>
+			<to-view-id>/jsp/elements/script.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>scriptelementlist</from-outcome>
+			<to-view-id>/jsp/elements/script.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>scriptelementview</from-outcome>
+			<to-view-id>/jsp/elements/script.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>scriptelementedit</from-outcome>
+			<to-view-id>/jsp/elements/script.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>realelements</from-outcome>
+			<to-view-id>/jsp/elements/real.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>realelementadd</from-outcome>
+			<to-view-id>/jsp/realelements/edit.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>pointofinterest</from-outcome>
+			<to-view-id>/jsp/elements/poi.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Onboarding for Talent main tabs -->
+		<navigation-case>
+			<from-outcome>packets</from-outcome>
+			<to-view-id>/jsp/ob/packets.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>distreview</from-outcome>
+			<to-view-id>/jsp/ob/distReview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>doctransfer</from-outcome>
+			<to-view-id>/jsp/ob/documentTransfer.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>approvalpaths</from-outcome>
+			<to-view-id>/jsp/ob/approvalPaths.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>docprefs</from-outcome>
+			<to-view-id>/jsp/ob/documentPreferences.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>copydocs</from-outcome>
+			<to-view-id>/jsp/ob/copyDocuments.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+
+		<!-- Payroll main tab area -->
+		<navigation-case>
+			<from-outcome>timecard</from-outcome>
+			<to-view-id>/jsp/tc/timecard.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>fulltimecard</from-outcome>
+			<to-view-id>/jsp/tc/fulltc.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>timesheet</from-outcome>
+			<to-view-id>/jsp/tcs/tsheet.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcapprover</from-outcome>
+			<to-view-id>/jsp/tcdash/approver.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcpreferences</from-outcome>
+			<to-view-id>/jsp/tcpref/prefer.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>hotcostsdataentry</from-outcome>
+			<to-view-id>/jsp/tcdash/hotCostsData.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toursallocation</from-outcome>
+			<to-view-id>/jsp/tcs/taxWageAllocations.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>prcontracts</from-outcome>
+			<to-view-id>/jsp/tccon/contracts.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>sideletters</from-outcome>
+			<to-view-id>/jsp/tccon/sideltr.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>prstartform</from-outcome>
+			<to-view-id>/jsp/obsf/forms.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>talentprstartform</from-outcome>
+			<to-view-id>/jsp/obsf/forms.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- ADMIN tab area (within a production) -->
+		<navigation-case>
+			<from-outcome>eventlist</from-outcome>
+			<to-view-id>/jsp/admin/events.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>scriptelementmerge</from-outcome>
+			<to-view-id>/jsp/admin/merge.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>miscadmin</from-outcome>
+			<to-view-id>/jsp/admin/misc.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- TRUE MOBILE navigation -->
+
+		<navigation-case>
+			<from-outcome>loginm</from-outcome>
+			<to-view-id>/m/l/l.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>resetm</from-outcome>
+			<to-view-id>/m/l/r.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>resetpwreturnm</from-outcome>
+			<to-view-id>/m/l/rp.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>resetnewm</from-outcome>
+			<to-view-id>/m/l/rn.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>newaccountm</from-outcome>
+			<to-view-id>/m/l/na.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>emailsentm</from-outcome>
+			<to-view-id>/m/l/st.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>createpinm</from-outcome>
+			<to-view-id>/m/t/pin.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>homem</from-outcome>
+			<to-view-id>/m/u/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myhomem</from-outcome>
+			<to-view-id>/m/u/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myproductionsm</from-outcome>
+			<!-- we no longer use the "My Productions" page on mobile; go to mobile 
+				home instead -->
+			<to-view-id>/m/u/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myprojectsm</from-outcome>
+			<to-view-id>/m/t/prj.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>productionm</from-outcome>
+			<to-view-id>/m/u/prod1.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>myaccountm</from-outcome>
+			<to-view-id>/m/u/acct.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>mystartsm</from-outcome>
+			<to-view-id>/m/u/mystarts.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>editaccountm</from-outcome>
+			<to-view-id>/m/u/edac.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>chgpasswordm</from-outcome>
+			<to-view-id>/m/u/cpw.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>chgpinm</from-outcome>
+			<to-view-id>/m/u/cpn.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>mytimecardsm</from-outcome>
+			<to-view-id>/m/u/ptc.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>timecardlistm</from-outcome>
+			<to-view-id>/m/t/tcs.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>pickdaym</from-outcome>
+			<to-view-id>/m/t/days.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>hoursm</from-outcome>
+			<to-view-id>/m/t/hrs.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>boxrentalm</from-outcome>
+			<to-view-id>/m/t/box.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>mileagem</from-outcome>
+			<to-view-id>/m/t/mile.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>expensem</from-outcome>
+			<to-view-id>/m/t/exp.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>submitm</from-outcome>
+			<to-view-id>/m/t/sub.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>submitapprovem</from-outcome>
+			<to-view-id>/m/t/subap.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>confirmm</from-outcome>
+			<to-view-id>/m/t/cnf.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>appdashboardm</from-outcome>
+			<to-view-id>/m/t/dash.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcreviewm</from-outcome>
+			<to-view-id>/m/t/rev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcapprovem</from-outcome>
+			<to-view-id>/m/t/app.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcapprovedonem</from-outcome>
+			<to-view-id>/m/t/appd.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcrejectm</from-outcome>
+			<to-view-id>/m/t/rej.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>tcrejectdonem</from-outcome>
+			<to-view-id>/m/t/rejd.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>clonem</from-outcome>
+			<to-view-id>/m/t/clone.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>clonedm</from-outcome>
+			<to-view-id>/m/t/cloned.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+
+	</navigation-rule>
+	<!-- END of "global" navigation rules -->
+
+	<!-- ** Script Import and Comparison Navigation Rules ** DH: Managed-bean 
+		entries are not required if the bean id is listed in the applicationContext.xml, 
+		or have @Component annotations in the source. The DelegatingVariableResolver 
+		(listed in faces-config.xml) takes care of this. -->
+
+	<navigation-rule>
+		<from-view-id>/jsp/script/import.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>manual</from-outcome>
+			<to-view-id>/jsp/script/breakdown.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>step2</from-outcome>
+			<to-view-id>/jsp/script/importreview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>step4</from-outcome>
+			<to-view-id>/jsp/script/importfinal.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsp/script/import.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/jsp/script/import.jsf</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsp/script/importreview.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>next</from-outcome>
+			<to-view-id>/jsp/script/importcompare.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>done</from-outcome>
+			<to-view-id>/jsp/script/import.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsp/script/importcompare.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>next</from-outcome>
+			<to-view-id>/jsp/script/importfinal.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>back</from-outcome>
+			<to-view-id>/jsp/script/importreview.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsp/script/importfinal.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>done</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>cancel</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsp/script/draftcomparison.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>return</from-outcome>
+			<to-view-id>/jsp/script/scriptrev.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Login navigation rules -->
+	<navigation-rule>
+		<from-view-id>/jsp/login/resetpwreturn.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsp/main/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/jsp/login/resetpwreturn.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- MOBILE login non-global navigation rules -->
+	<navigation-rule>
+		<from-view-id>/m/l/l.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/m/l/l.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/m/l/r.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/m/l/r.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/m/l/rp.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/m/u/home.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/m/l/rp.jsf</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<!-- END MOBILE non-global rules -->
+
+	<application>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>en</supported-locale>
+		</locale-config>
+		<message-bundle>com.lightspeedeps.util.app.messageResources</message-bundle>
+	</application>
+
+	<lifecycle>
+		<phase-listener>com.lightspeedeps.web.listener.PageAuthenticatePhaseListener</phase-listener>
+		<phase-listener>com.lightspeedeps.web.listener.OpenSessionInViewPhaseListener</phase-listener>
+		<phase-listener>com.lightspeedeps.web.listener.ResizePhaseListener</phase-listener>
+		<!-- add the following for debugging JSF life-cycle phase-related issues. -->
+		<phase-listener>com.lightspeedeps.web.listener.LogPhaseListener</phase-listener>
+		<!-- -->
+	</lifecycle>
+
+	<factory>
+		<exception-handler-factory>com.lightspeedeps.web.util.CustomExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+
+	<application>
+		<!-- EL resolver eliminates need for managed-bean entries; faces uses <bean> 
+			entries in applicationContext.xml -->
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+
+	<!-- Other config files are listed in web.xml, javax.faces.CONFIG_FILES 
+		parameter -->
+
+</faces-config>

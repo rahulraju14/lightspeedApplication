@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Mini-tab for Attachments to either Onboarding Documents or Timecards;
+	 part of formsPage in onboarding;
+	 part of basictcPage or fulltcPage (via tcAttachment) for Timecards. -->
+
+	<!-- Uses params:  -->
+	<!--   "show" : true if tab should be displayed -->
+	<!--   "disabled" : true if tab should be disabled -->
+	<!--   "isTimecard" : true if showing timecard attachments; false for onboarding doc attachments -->
+
+	<ace:tabPane label="#{show ? 'Attachments' : ''}" disabled="#{disabled or not show}" cache="dynamic">
+
+	<h:panelGroup rendered="#{show}">
+		<div style="margin-top:-1px;">
+			<div class="W26percnt FL">
+				<div class="rowCont pad10lt">
+					<h:panelGroup>
+						<div id="attachment_formLegend"
+							class="blueLegendCont scrollPnlTab #{isTimecard ? 'pad16tp' : 'pad12tp'}"
+							onscroll="setScrollPos(this.scrollTop);"
+							style="width:100%; background:white;">
+
+							<ace:dataTable value="#{attachmentBean.attachmentList}"
+								var="item" styleClass="bk_sl_grid"
+								rowSelectListener="#{attachmentBean.listenRowClicked}"
+								selectionMode="single"
+								stateMap="#{attachmentBean.stateMap}">
+
+								<!-- the Attachment name -->
+								<ace:column headerText="&#160; With #{isTimecard ? 'Timecard' : attachmentBean.contactDocument.document.normalizedName}">
+									<div class="FL pad5lt" style="text-align:left;">
+										<h:outputText styleClass="#{(item.isOwner or not item.isPrivate) ? '' : 'unavailable'}" value="#{item.name}"/>
+									</div>
+								</ace:column>
+
+								<!-- Private -->
+								<ace:column headerText="Private" style="text-align:left;" 
+									rendered="#{! isTimecard}">
+									<div class="FL pad20lt" style="text-align:left;">
+										<h:graphicImage value="" rendered="#{item.isPrivate}"
+											style="width:20px;" url="../../i/padlock_icon.png"/>
+									</div>
+								</ace:column>
+
+							</ace:dataTable>
+
+						</div>
+						<!-- blueLegendContWrap -->
+					</h:panelGroup>
+				</div>
+				<!-- blueLegendContWrap -->
+				<!-- End of Contact document list -->
+			</div>
+			<!-- W22percnt -->
+
+			<div class="W72percnt FL">
+				<div class="rowCont">
+					<div class="FR rowCont pad1tp" style="min-height:15px;">
+						<icecore:setEventPhase events="ValueChangeEvent"
+								phase="INVOKE_APPLICATION">
+							<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx FR"
+									rendered="#{attachmentBean.attachment.isOwner and (! isTimecard)
+											and attachmentBean.contactDocument.formType eq 'DEPOSIT'}"
+									value="#{attachmentBean.attachment.isPrivate}"
+									valueChangeListener="#{attachmentBean.listenChangePrivate}">
+								<ace:ajax  />
+								<span class="FR pad5tp">Mark as Private</span>
+							</h:selectBooleanCheckbox>
+						</icecore:setEventPhase>
+					</div>
+					<!-- Attachment blue legend start -->
+					<div class="blueLegendContWrap">
+						<div class="blueLegendCont" id="attachment_sfLegend"
+								style="margin-left:2%;margin-top:1px;">
+							<span class="legendHdg">Attachment :
+								<h:outputText value="#{attachmentBean.clickedAttachmentName}" />
+							</span>
+
+							<!-- Web viewer -->
+							<h:panelGroup rendered="#{(attachmentBean.attachment.isOwner or not attachmentBean.attachment.isPrivate)
+									and attachmentBean.infoMessage eq null and attachmentBean.attachment.mimeType.pdf}">
+								<div id="attachViewer" style="width:100%;">
+								</div>
+							</h:panelGroup>
+
+							<!-- Image -->
+							<h:panelGroup rendered="#{( attachmentBean.attachment.isOwner or not attachmentBean.attachment.isPrivate)
+									and attachmentBean.infoMessage eq null and attachmentBean.attachment.mimeType.image}">
+								<div class="FL rowCont" style="max-height:96%; max-width:100%; overflow:auto">
+									<ace:graphicImage style="max-height:100%; max-width:100%; height:auto; overflow:auto"
+										value="#{attachmentBean.imageResource}" alt="" />
+								</div>
+							</h:panelGroup>
+
+							<!-- Message Box -->
+							<h:panelGroup rendered="#{attachmentBean.attachment.isPrivate and (attachmentBean.infoMessage ne null)}">
+								<div class="rowCont" style="margin-top:12%">
+									<div class="FL BKwhite sfFormBorder1 pad15bm"
+										style="height:60px; width:410px;padding-left:10px;padding-top:15px; margin-left:24%">
+										<h:outputText styleClass="txt17 pad15tp" value="#{attachmentBean.infoMessage}" />
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- Start form blue legend END -->
+				</div>
+				<!-- rowCont  -->
+
+			</div>
+			<!-- W72percnt -->
+		</div>
+		<!-- scrollDiv -->
+		</h:panelGroup>
+	</ace:tabPane>
+</ui:composition>

@@ -1,0 +1,577 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Batch Transfer tab of Payroll / Approver Dashboard page -->
+	<!--
+		Parameters:
+			aicp : true if Commercial (AICP) production is being displayed
+			projectActive: true if either non-Commercial, or the timecard being viewed belongs to an active project; LS-2849
+	 -->
+
+	<c:set var="show" value="#{showTab and not empty authBean.pgFields['9.6,view']}" />
+
+	<ace:tabPane label="#{show ? 'Batch Transfer' : ''}" disabled="#{not show}">
+
+		<div>
+			<!-- SHOW ALL PROJECTS CHECKBOX -->
+			<div class="FL pad10lt LH28">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox value="#{transferToPayrollBean.showAllProjects}"
+							valueChangeListener="#{transferToPayrollBean.listenAllProjects}"
+							rendered="#{aicp and
+									(! headerViewBean.production.payrollPref.includeTouring) and
+									(not empty authBean.pgFields['9.5,all_projects'])}">
+							Show all Projects
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+			</div>
+			<div class="CB"></div>
+		</div>
+
+		<!-- top half of page; scrollable batch list -->
+		<div id="scrolltop" class="scrollPnlTab">
+			<!-- Legend wrapper -->
+			<div class="blueLegendContWrap pad10tp">
+				<div class="blueLegendCont"> <!-- Blue content -->
+					<span class="legendHdg" >Batches</span>
+
+					<!-- NEW button -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive}">
+						<!-- left-side legend buttons -->
+						<h:panelGroup styleClass="btn_legend_left pad30lt">
+							<h:panelGroup rendered="#{(transferToPayrollBean.weeklyBatch.id ge 0) ||
+									(transferToPayrollBean.weekEndDate.year gt 101)}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="New"
+											action="#{transferToPayrollBean.actionAddBatch}"
+											title="Create a new batch for the selected week."
+											styleClass="btnMiniCt" >
+											<f:ajax execute="@this" render="@all"/>
+									</h:commandLink>
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{(transferToPayrollBean.weeklyBatch.id lt 0) and
+									(transferToPayrollBean.weekEndDate.year le 101)}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="New" onclick="return false;" styleClass="btnMiniDisCt"
+											title="Select a batch with the W/E date you want for the new batch."/>
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- RENAME button -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive}">
+						<!-- left-side legend buttons -->
+						<h:panelGroup styleClass="btn_legend_left">
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount gt 0}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="Rename"
+											action="#{transferToPayrollBean.actionRenameBatch}"
+											title="Rename the checked batch."
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount le 0}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Rename" onclick="return false;" styleClass="btnMiniDisCt"
+											title="Check-mark the batch you want to rename." />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- DELETE button -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive}">
+						<!-- left-side legend buttons -->
+						<h:panelGroup styleClass="btn_legend_left">
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount gt 0}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="Delete"
+											action="#{transferToPayrollBean.actionDeleteBatch}"
+											title="Delete the checked batch(es)."
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount le 0}">
+								<span class="btnMiniLt"/>
+								<h:commandLink value="Delete" onclick="return false;" styleClass="btnMiniDisCt dislink"
+									title="Check-mark the batch(es) you want to delete." />
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- right-side legend buttons -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive
+							and (transferToPayrollBean.payrollService ne null)}">
+						<!-- CHECK PAYROLL STATUS button -->
+						<h:panelGroup rendered="#{(transferToPayrollBean.payrollService.sendBatchMethod eq 'AUTH_POST')}">
+							<h:panelGroup styleClass="btn_legend">
+								<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount gt 0}">
+									<span class="btnMiniLtHot"/>
+										<h:commandLink value="Check Payroll Status"
+												action="#{transferToPayrollBean.actionCheckBatchStatus}"
+												title="Request the status of the checked batch(es) from the payroll service."
+												styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot"/>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount le 0}">
+									<span class="btnMiniLt"/>
+									<span>
+										<h:commandLink value="Check Payroll Status" onclick="return false;" styleClass="btnMiniDisCt dislink"
+												title="Check-mark the batch(es) whose status you want to update." />
+									</span>
+									<span class="btnMiniRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+
+						<!-- TRANSMIT TO PAYROLL button -->
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount gt 0}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="Transmit to Payroll"
+											action="#{transferToPayrollBean.actionTransmitBatch}"
+											title="Send the batch(es) that are checked to the payroll service."
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedBatchCount le 0}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Transmit to Payroll" onclick="return false;"
+											styleClass="btnMiniDisCt dislink"
+											title="Check-mark the batch(es) you want to send." />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- LIST OF BATCHES -->
+					<div class="FL rowCont gradTbl3">
+						<ace:dataTable id="batchtable" styleClass="gradTbl3 txt11 CT" singleSort="true"
+								value="#{transferToPayrollBean.sortedBatchList.list}"
+								selectionMode="single" var="batch" rowStyleClass="CT txt12"
+								rowSelectListener="#{transferToPayrollBean.listenBatchRowSelected}"
+								scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+								scrollHeight="#{headerViewBean.mobile ? '' : '250'}"
+								style="width:100%;max-width:100%;overflow-x:hidden;overflow-y:scroll">
+
+							<!-- CHECKBOX -->
+							<ace:column style="width:3%;">
+								<f:facet name="header">
+									<div class="CT pad2lt">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<ace:triStateCheckbox id="master1" indeterminateBeforeChecked="true"
+													disabled="#{transferToPayrollBean.batchMasterCheck.disabled}"
+													valueChangeListener="#{transferToPayrollBean.listenBatchMasterCheck}"
+													value="#{transferToPayrollBean.batchMasterCheck.value}" >
+												<ace:ajax/>	
+											</ace:triStateCheckbox>
+										</icecore:setEventPhase>
+									</div>
+								</f:facet>
+
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox value="#{batch.checked}" 
+										valueChangeListener="#{transferToPayrollBean.listenCheckEntry}"
+										disabled="#{batch.id le 0}" >
+										<f:ajax execute="@this" render="@all"/>
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</ace:column>
+
+							<!-- JOB NUMBER (AICP) -->
+							<ace:column rendered="#{aicp}" headerText="Job #" sortBy="#{batch.project.episode}" 
+								style="width:#{aicp ? '7' : '0'}%;">
+								<h:outputText rendered="#{batch.aggregate}" styleClass="B" value="+ "
+										style="visibility:hidden;"/><!-- keeps episode # centered! -->
+									<h:outputText rendered="#{batch.jobCode ne null}" value="#{batch.jobCode}" />
+									<h:outputText rendered="#{batch.jobCode eq null}" value="#{batch.project.episode}" />
+								<h:outputText rendered="#{batch.aggregate}" styleClass="B" value=" +" />
+							</ace:column>
+
+							<!-- JOB NAME (AICP) -->
+							<ace:column rendered="#{aicp}" headerText="Job Name" sortBy="#{batch.project.title}" 
+								style="width:#{aicp ? '12' : '0'}%;">
+									<h:outputText rendered="#{batch.jobName ne null}" styleClass="CT" value="#{batch.jobName}" />
+									<h:outputText rendered="#{batch.jobName eq null}" styleClass="CT" value="#{batch.project.title}" />
+							</ace:column>
+
+							<!-- W/E DATE -->
+							<ace:column headerText="W/E" sortBy="#{batch.endDate}" style="width:#{aicp ? '5' : '7'}%;">
+								<h:outputText value="#{batch.endDate}" >
+									<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+							</ace:column>
+							
+							<!-- BATCH NO -->
+							<ace:column headerText="Batch #" sortBy="#{batch.id}" style="width:6%;" >
+								<h:outputText styleClass="pad5lt" rendered="#{batch.id gt 0}" value="#{batch.id}" />
+							</ace:column>
+						
+							<!-- BATCH NAME -->
+							<ace:column headerText="Weekly Batch Name" sortBy="#{batch.name}" style="width:#{aicp ? '15' : '24'}%;" >
+								<h:outputText styleClass="pad5lt #{batch.unBatched ? 'B I' : ''}" value="#{batch.name}" />
+							</ace:column>
+
+							<!-- UPDATED -->
+							<ace:column headerText="Batch Updated" sortBy="#{batch.lastUpdated}" style="width:#{aicp ? '12' : '13'}%;">
+								<h:outputText value="#{batch.lastUpdated}"
+										styleClass="#{((not empty batch.sent) and (batch.lastUpdated gt batch.sent)) ? 'B RED' : ''}">
+									<f:convertDateTime pattern=" MM/dd/yy hh:mm a z" timeZone="#{headerViewBean.production.timeZone}" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- COUNT -->
+							<ace:column headerText="Timecards" sortBy="#{batch.timecardCount}" style="width:#{aicp ? '6' : '7'}%;">
+								<h:outputText value="#{batch.timecardCount}" />
+							</ace:column>
+
+							<!-- TOTAL GROSS -->
+							<ace:column headerText="Gross" sortBy="#{batch.gross}" style="width:10%;">
+								<h:outputText styleClass="FR pad2rt" rendered="#{batch.gross ne 0}" value="#{batch.gross}" >
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- TRANSFERRED DATE -->
+							<ace:column headerText="Received by Payroll" sortBy="#{batch.sent}" style="width:#{aicp ? '12' : '18'}%;">
+								<h:outputText styleClass="pad5lt" value="#{batch.sent}">
+									<f:convertDateTime pattern=" MM/dd/yy hh:mm a z" timeZone="#{headerViewBean.production.timeZone}" />
+								</h:outputText>
+								<h:outputText styleClass="pad5lt" value="(partial)"
+										rendered="#{(not empty batch.sent) and batch.timecardsSent ne batch.timecardCount}" />
+							</ace:column>
+
+							<!-- STATUS/PROGRESS ICONS -->
+							<!-- SENT -->
+							<ace:column headerText="Sent" sortBy="#{batch.timecardsSent}" style="width:3%;">
+								<h:panelGroup rendered="#{batch.id ge 0}">
+									<h:panelGroup rendered="#{batch.status eq 'UNKNOWN'}">
+										<h:graphicImage 
+												url="../../i/icon_flag_red.png" alt="" title="This batch is not recognized by the payroll service"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{batch.status ne 'UNKNOWN' and
+											batch.timecardsSent eq batch.timecardCount and batch.timecardCount gt 0 and
+											batch.lastUpdated le batch.sent}">
+										<h:graphicImage 
+												url="../../i/icon_check.gif" alt="" title="All timecards in this batch have been sent to payroll"/>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{batch.status ne 'UNKNOWN' and
+											batch.timecardsSent eq batch.timecardCount and batch.timecardCount gt 0 and
+											batch.lastUpdated gt batch.sent}">
+										<h:graphicImage 
+												url="../../i/icon_tc_01_open.png" alt="" title="Timecard(s) have changed since being sent to payroll"/>
+									</h:panelGroup>
+									<h:outputText rendered="#{(batch.timecardsSent ne batch.timecardCount or batch.timecardCount eq 0)}"
+											value="#{batch.timecardsSent}" />
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- RECEIVED -->
+							<ace:column headerText="Rcvd" sortBy="#{batch.timecardsEdit}" style="width:3%;">
+								<h:panelGroup rendered="#{batch.id ge 0 and batch.processed ne null}">
+									<h:panelGroup rendered="#{batch.timecardsEdit eq batch.timecardCount and batch.timecardCount gt 0}">
+										<h:graphicImage 
+												url="../../i/icon_check.gif" alt="" title="All timecards in this batch have been received"/>
+									</h:panelGroup>
+									<h:outputText rendered="#{(batch.timecardsEdit ne batch.timecardCount)}"
+											value="#{batch.timecardsSent}" />
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- FINAL -->
+							<ace:column headerText="Final" sortBy="#{batch.timecardsFinal}" style="width:3%;">
+								<h:panelGroup rendered="#{batch.id ge 0}">
+									<h:panelGroup rendered="#{batch.timecardsFinal eq batch.timecardCount and batch.timecardCount gt 0}">
+										<h:graphicImage 
+											url="../../i/icon_check.gif" alt="" title="All timecards in this batch have been marked as Final"/>
+									</h:panelGroup>
+									<h:outputText rendered="#{batch.timecardsFinal ne batch.timecardCount and batch.timecardsFinal ne 0}"
+											value="#{batch.timecardsFinal}" />
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- PAID -->
+							<ace:column headerText="Paid" sortBy="#{batch.timecardsPaid}" style="width:3%;">
+								<h:panelGroup rendered="#{batch.id ge 0}">
+									<h:panelGroup rendered="#{batch.timecardsPaid eq batch.timecardCount and batch.timecardCount gt 0}">
+										<h:graphicImage 
+											url="../../i/icon_check.gif" alt="" title="All timecards in this batch have been marked Paid"/>
+									</h:panelGroup>
+									<h:outputText rendered="#{batch.timecardsPaid ne batch.timecardCount and batch.timecardsPaid ne 0}"
+											value="#{batch.timecardsPaid}" />
+								</h:panelGroup>
+							</ace:column>
+
+						</ace:dataTable>
+					</div><!-- end of dataTable wrapper -->
+				</div><!-- end of blue content -->
+			</div><!-- end of blue wrapper -->
+		</div><!-- end scrolltop div -->
+
+		<!-- ********** Horizontal gap between timecards and PR area ********* -->
+		<div class="CB" id="tpTablegap" style="height:5px;">&#160;</div>
+
+
+		<!-- BOTTOM HALF OF PAGE - SCROLLABLE TIMECARD LIST -->
+		<div id="tpScrollbottom" class="scrollPnlTab">
+			<!-- Legend wrapper -->
+			<div class="blueLegendContWrap pad10tp">
+				<div class="blueLegendCont"> <!-- Blue content -->
+					<span class="legendHdg" >
+						<h:outputText value="#{transferToPayrollBean.weeklyBatch.name}"/>
+					</span>
+
+					<!-- RE-ASSIGN BUTTON -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive}">
+						<!-- left-side legend buttons -->
+						<h:panelGroup styleClass="btn_legend_left pad30lt">
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedTimecardCount gt 0}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="Reassign"
+											action="#{transferToPayrollBean.actionReassign}"
+											title="Move the checked timecard(s) to a different batch."
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{transferToPayrollBean.selectedTimecardCount le 0}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Reassign" onclick="return false;" styleClass="btnMiniDisCt dislink"
+											title="Check-mark the timecard(s) you want to move to a different batch." />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- BOTTOM, RIGHT-SIDE LEGEND BUTTONS -->
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive
+							and (transferToPayrollBean.payrollService ne null)}">
+
+					<!-- CHECK PAYROLL STATUS button -->
+						<h:panelGroup rendered="#{(transferToPayrollBean.payrollService.sendBatchMethod eq 'AUTH_POST')}">
+							<h:panelGroup styleClass="btn_legend">
+								<h:panelGroup rendered="#{transferToPayrollBean.weeklyBatch.id ge 0}">
+									<span class="btnMiniLtHot"/>
+										<h:commandLink value="Check Payroll Status"
+												action="#{transferToPayrollBean.actionCheckTimecardStatus}"
+												title="Request the status of the displayed timecards from the payroll service."
+												styleClass="btnMiniCt" />
+									<span class="btnMiniRtHot"/>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{transferToPayrollBean.weeklyBatch.id lt 0}">
+									<span class="btnMiniLt"/>
+									<span>
+										<h:commandLink value="Check Payroll Status" onclick="return false;" styleClass="btnMiniDisCt dislink"
+												title="The status cannot be updated on un-batched timecards." />
+									</span>
+									<span class="btnMiniRt"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+
+					<!-- TRANSMIT TO PAYROLL button -->
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<h:panelGroup rendered="#{transferToPayrollBean.weeklyBatch.id ge 0 and
+									transferToPayrollBean.selectedTimecardCount gt 0 and
+									(transferToPayrollBean.payrollService.sendBatchMethod ne 'PDF_ONLY' or
+									transferToPayrollBean.payrollPref.useEmail)}">
+								<span class="btnMiniLtHot"/>
+									<h:commandLink value="Transmit to Payroll"
+											action="#{transferToPayrollBean.actionTransmitTimecards}"
+											title="Send the timecard(s) that are checked to the payroll service."
+											styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{transferToPayrollBean.weeklyBatch.id lt 0 or
+									transferToPayrollBean.selectedTimecardCount le 0 or
+									(transferToPayrollBean.payrollService.sendBatchMethod eq 'PDF_ONLY' and
+									not transferToPayrollBean.payrollPref.useEmail)}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Transmit to Payroll" onclick="return false;" styleClass="btnMiniDisCt dislink"
+											title="Check-mark the batched timecard(s) you want to transmit." />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- LIST OF TIMECARDS IN SELECTED BATCH -->
+					<div class="FL rowCont gradTbl3">
+						<ace:dataTable id="tpTcTable" styleClass="gradTbl3 txt11 CT" singleSort="true"
+							rowStyleClass="txt12 CT"
+							value="#{transferToPayrollBean.itemList}" var="tcEntry" 
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '260'}"
+							style="width:100%;max-width:100%;overflow-x:hidden;overflow-y:scroll">
+
+							<!-- CHECKBOX -->
+							<ace:column style="width:#{aicp ? '3' : '3'}%;">
+								<f:facet name="header">
+									<div class="CT pad2lt">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<ace:triStateCheckbox id="master2" indeterminateBeforeChecked="true"
+													disabled="#{transferToPayrollBean.tcMasterCheck.disabled}"
+												valueChangeListener="#{transferToPayrollBean.listenTcMasterCheck}"
+												value="#{transferToPayrollBean.tcMasterCheck.value}" >
+												<ace:ajax/>	
+											</ace:triStateCheckbox>
+										</icecore:setEventPhase>
+									</div>
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{tcEntry.checked}" 
+										valueChangeListener="#{transferToPayrollBean.listenCheckEntry}" >
+									<f:ajax execute="@this" render="@all"/>
+								</h:selectBooleanCheckbox>
+							</ace:column>
+
+							<!-- STATUS ICON -->
+							<ace:column style="width:#{aicp ? '5' : '5'}%;" sortBy="#{tcEntry.status}">
+								<ui:include src="tcStatusCol.xhtml">
+									<ui:param name="bean" value="#{transferToPayrollBean}"></ui:param>
+									<ui:param name="tcEntry" value="#{tcEntry}"></ui:param>
+								</ui:include>
+							</ace:column>
+
+							<!-- JOB NUMBER (AICP) -->
+							<ace:column rendered="#{aicp}" headerText="Job #" sortBy="#{tcEntry.weeklyTc.jobNumber}" 
+									style="width:#{aicp ? '8' : '0'}%;">
+								<h:outputText value="#{tcEntry.weeklyTc.jobNumber}" />
+							</ace:column>
+
+							<!-- WEEK-ENDING DATE -->
+							<ace:column headerText="W/E Date" sortBy="#{tcEntry.weeklyTc.endDate}" 
+									style="width:#{aicp ? '7' : '6'}%;">
+								<h:outputText value="#{tcEntry.weeklyTc.endDate}"
+										styleClass="#{tcEntry.weeklyTc.status eq 'VOID' ? 'tcVoid' : ''}">
+									<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+								<h:outputText rendered="#{tcEntry.weeklyTc.adjusted}" value="A" styleClass="tcAdj" />
+							</ace:column>
+
+							<!-- ACCOUNT CODES -->
+							<ace:column rendered="#{! aicp}" headerText="Account" sortBy="#{tcEntry.weeklyTc.account}" 
+									style="width:#{aicp ? '0' : '20'}%;">
+								<ui:include src="../tc/accountCodes.xhtml">
+									<ui:param name="edit" value="false" />
+									<ui:param name="rate" value="#{tcEntry.weeklyTc.account}" />
+									<ui:param name="aicp" value="#{aicp}" />
+									<ui:param name="hideLoc" value="true" />
+								</ui:include>
+							</ace:column>
+
+							<!-- NAME -->
+							<ace:column headerText="Name" sortBy="#{tcEntry.weeklyTc.startForm.contact.user.lastNameFirstName}" 
+									style="width:#{aicp ? '16' : '15'}%;">
+								<h:outputText styleClass="pad5lt" value="#{tcEntry.weeklyTc.lastName}" />,&#160;
+								<h:outputText styleClass=" " value="#{tcEntry.weeklyTc.firstName}" />
+							</ace:column>
+
+							<!-- SSN -->
+							<ace:column headerText="SS #" sortBy="#{tcEntry.weeklyTc.viewSSNmin}" 
+									style="width:#{aicp ? '4' : '4'}%;">
+								<h:outputText value="#{tcEntry.weeklyTc.viewSSNmin}" />
+							</ace:column>
+
+							<!-- OCCUPATION -->
+							<ace:column headerText="Occupation" sortBy="#{tcEntry.weeklyTc.occupation}"
+									style="width:#{aicp ? '21' : '14'}%;">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.weeklyTc.occupation}" />
+							</ace:column>
+
+							<!-- DEPARTMENT -->
+							<ace:column headerText="Department" sortBy="#{tcEntry.weeklyTc.deptName}"
+									style="width:#{aicp ? '12' : '11'}%;">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.weeklyTc.deptName}" />
+							</ace:column>
+
+							<!-- UNION -->
+							<ace:column headerText="Union" sortBy="#{tcEntry.weeklyTc.unionNumber}" 
+									style="width:#{aicp ? '5' : '4'}%;">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.weeklyTc.unionNumber}" />
+							</ace:column>
+
+							<!-- GROSS -->
+							<ace:column headerText="Gross" sortBy="#{tcEntry.weeklyTc.grandTotal}" 
+									style="width:#{aicp ? '7' : '6'}%;">
+								<h:outputText styleClass="FR pad2rt" value="#{tcEntry.weeklyTc.grandTotal}" >
+									<f:convertNumber pattern="#,##0.00" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- STATUS/PROGRESS ICONS -->
+							<!-- SENT -->
+							<ace:column headerText="Sent" sortBy="#{tcEntry.weeklyTc.timeSent}" style="width:#{aicp ? '3' : '3'}%;"	>
+								<h:panelGroup rendered="#{not tcEntry.weeklyTc.transmittable and (tcEntry.weeklyTc.status eq 'VOID')}">
+									<h:graphicImage	url="../../i/icon_tc_12_void.png" alt="" title="A Void timecard may not be transmitted"/>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{not tcEntry.weeklyTc.transmittable and (tcEntry.weeklyTc.status ne 'VOID')}">
+									<h:graphicImage 
+											url="../../i/icon_tc_09_resub_ready.png" alt="" title="The timecard is missing required payment data"/>
+								</h:panelGroup>
+							
+								<h:panelGroup rendered="#{(not empty tcEntry.weeklyTc.timeSent) and tcEntry.weeklyTc.transmittable and
+										tcEntry.weeklyTc.updated le tcEntry.weeklyTc.timeSent}">
+									<h:graphicImage 
+											url="../../i/icon_check.gif" alt="" title="Sent #{tcEntry.weeklyTc.timeSentFmtd}"/>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{(not empty tcEntry.weeklyTc.timeSent) and tcEntry.weeklyTc.transmittable and
+										tcEntry.weeklyTc.updated gt tcEntry.weeklyTc.timeSent}">
+									<h:graphicImage 
+											url="../../i/icon_tc_01_open.png" alt="" title="Last changed #{tcEntry.weeklyTc.updatedFmtd}"/>
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- PROCESSED (Team) -->
+							<ace:column headerText="Rcvd" sortBy="#{tcEntry.weeklyTc.timeEdit}" style="width:#{aicp ? '3' : '3'}%;">
+								<h:panelGroup rendered="#{transferToPayrollBean.weeklyBatch.processed ne null}">
+									<h:panelGroup rendered="#{(not empty tcEntry.weeklyTc.timeSent) and tcEntry.weeklyTc.transmittable and
+											tcEntry.weeklyTc.updated le tcEntry.weeklyTc.timeSent}">
+										<h:graphicImage 
+												url="../../i/icon_check.gif" alt="" title="The timecard was received for editing"/>
+									</h:panelGroup>
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- FINAL -->
+							<ace:column headerText="Final" sortBy="#{tcEntry.weeklyTc.timeFinal}" style="width:#{aicp ? '3' : '3'}%;">
+								<h:panelGroup rendered="#{not empty tcEntry.weeklyTc.timeFinal}">
+									<h:graphicImage 
+											url="../../i/icon_check.gif" alt="" title="The timecard was approved for payment"/>
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- PAID -->
+							<ace:column headerText="Paid" sortBy="#{tcEntry.weeklyTc.timePaid}" style="width:#{aicp ? '3' : '3'}%;">
+								<h:panelGroup rendered="#{not empty tcEntry.weeklyTc.timePaid}">
+									<h:graphicImage 
+											url="../../i/icon_check.gif" alt="" title="The timecard has cleared the bank"/>
+								</h:panelGroup>
+							</ace:column>
+
+						</ace:dataTable>
+					</div><!-- end of dataTable wrapper -->
+				</div><!-- end of blue content -->
+			</div><!-- end of blue wrapper -->
+			<div class="CB">&#160;</div>
+		</div> <!-- end scrollbottom div -->
+ 
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

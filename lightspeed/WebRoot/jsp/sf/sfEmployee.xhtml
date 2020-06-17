@@ -1,0 +1,503 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Employee information (left side - demographics, etc.) of Start Payroll form -->
+	<!-- LS-2723 Mandatory labels will always be red for Team clients. -->
+	
+	<!-- passed parameters:
+		isAddrUnif : 		FF4J setting of TTCO_ADDR_UNIF_PAYROLL_START
+		isEnhancedLoanOut : FF4J setting of TTCO_ENHANCED_LOAN_OUT
+		isTeamPayroll:      true if this production is processed by Team
+		done :				true if this form has been 'finalized'
+	 -->
+	<div class=" pad10lt">
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" scope="request" />
+		<c:set var="edit" value="#{startFormBean.editMode}" scope="request" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted and not v30}" scope="request" />
+		<c:set var="tours" value="#{startFormBean.production.type.tours}" scope="request" />
+		
+		<!-- TV/F EMPLOYEE INFORMATION -->
+		<div>
+			<ui:include src="sfTvFEmployee.xhtml">
+				<ui:param name="v30" value="#{v30}" />
+			</ui:include>
+		</div>
+
+		<!-- Agent -->
+		<div class="rowCont">
+			<span class="FR pad10rt" style="right: 211px;">
+				<h:selectBooleanCheckbox styleClass="pad20lt ckbx"
+					value="#{startFormBean.form.agentRep}" id="sfAgentRep"
+					valueChangeListener="#{startFormBean.listenAgentRep}"
+					disabled="#{submitted or done or not edit}" >
+					<ace:ajax/>
+				</h:selectBooleanCheckbox>
+				<span class="ckbxTxtLbl_B">Agent</span>
+				<!-- can't color checkbox, so put colored area behind it -->
+				<h:panelGroup rendered="#{edit and nonTeamEmp}" style="width:60px;margin-left:-60px;z-index:-1;position:relative;">
+					<ace:textEntry maxlength="1" disabled="true"
+						style="width:60px;z-index:-1;position:relative;"
+						styleClass="requiredDiv">
+					</ace:textEntry>
+				</h:panelGroup>
+			</span>
+		</div>
+
+		<div class="rowCont">
+			<!-- LEFT portion -->
+			<!-- PERMANENT AGENCY -->
+			<div class="W33percnt FL">
+				<div class="rowCont FL">
+					<h:panelGroup rendered="#{isAddrUnif}">
+						<span class="B"> 
+							<h:outputText value="Resident Address (W-4):" /> 
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not (isAddrUnif)}">
+						<span class="fdNm_w"> <h:outputText value="Permanent Address:" /> </span>
+					</h:panelGroup>
+				</div>
+
+				<!-- ADDRESS LINE 1 -->
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:outputText value="Address:" />
+						<span class="mandatory"> </span>
+					 </span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.permAddress.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2"> 
+							<ace:textEntry maxlength="50" id="sfPermAddressAddr1"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.permAddress.addrLine1}"
+									disabled="#{submitted or done or not edit}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- ADDRESS LINE 2 -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value=" " /> </span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.permAddress.addrLine2}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2"> 
+							<ace:textEntry maxlength="50" id="sfPermAddressAddr2"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.permAddress.addrLine2}"
+									disabled="#{submitted or done or not edit}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- CITY -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value="City:" />
+						<span class="mandatory"></span>
+					</span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.permAddress.city}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="35" id="sfPermAddressCity"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.permAddress.city}"
+									disabled="#{submitted or done or not edit}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- STATE + ZIP -->
+				<div class="rowCont FL">
+					<span class="fdNm"> State:
+						<span class="mandatory"> </span>
+					</span>
+					<h:selectOneMenu id="sfPermAddressState"
+							styleClass="FL #{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+							disabled="#{submitted or done or not edit or (isAddrUnif and isTeamPayroll)}"
+							value="#{startFormBean.form.permAddress.state}">
+						<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+					<span class="fdNm_sm" style="width:40px;">
+						<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText value="#{startFormBean.form.permAddress.zip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_xsm">
+							<ace:textEntry maxlength="10" style="width: 55px;"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.permAddress.zip}"
+									disabled="#{submitted or done or not edit}" id="sfPermAddressZip">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- LEFT portion END-->
+
+			<!-- MIDDLE portion -->
+			<!-- MAILING ADDRESS -->
+			<div class="W33percnt FL">
+				<div class="rowCont FL">
+					<span class="fdNm_w"> <h:outputText value="Mailing Address:" /> </span>
+				</div>
+
+				<!-- ADDRESS LINE 1 -->
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+							<h:outputText styleClass="#{empty startFormBean.form.mailingAddress.addrLine1 or (isTeamPayroll and isEnhancedLoanOut) ? 'mandatory' : ''}" value="Address:" />
+							<span class="mandatory">*</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{isAddrUnif and isTeamPayroll}">
+							<h:outputText value="Address:" />
+						</h:panelGroup>
+					 </span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.mailingAddress.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="50" disabled="#{submitted or done or not edit}"
+								value="#{startFormBean.form.mailingAddress.addrLine1}" id="sfMailingAddressAddr1"
+								styleClass="#{(not v30) and (nonTeamEmp or empty startFormBean.form.mailingAddress.addrLine1) ? 'requiredDiv' : ''}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- ADDRESS LINE 2 -->
+				<div class="rowCont FL">
+					<span class="fdNm"><h:outputText value=" " /> </span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.mailingAddress.addrLine2}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="50" disabled="#{submitted or done or not edit}"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.mailingAddress.addrLine2}" id="sfMailingAddressAddr2">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- CITY -->
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+							<h:outputText styleClass="#{(empty startFormBean.form.mailingAddress.city or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="City:" />
+							<span class="mandatory">*</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{isAddrUnif and isTeamPayroll}">
+							<h:outputText value="City:" />
+						</h:panelGroup>
+					</span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.mailingAddress.city}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="35" disabled="#{submitted or done or not edit}"
+									value="#{startFormBean.form.mailingAddress.city}" id="sfMailingAddressCity"
+									styleClass="#{(not v30) and (nonTeamEmp or empty startFormBean.form.mailingAddress.city) ? 'requiredDiv' : ''}">
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- STATE + ZIP -->
+				<div class="rowCont FL">
+					<span class="fdNm">
+						<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+							<h:outputText styleClass="#{(empty startFormBean.form.mailingAddress.state or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="State:" />
+							<span class="mandatory">*</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{isAddrUnif and isTeamPayroll}">
+							<h:outputText value="State:" />
+						</h:panelGroup>
+					</span>
+					<h:selectOneMenu id="sfMailingAddressState"
+							disabled="#{submitted or done or not edit or (isAddrUnif and isTeamPayroll)}"
+							value="#{startFormBean.form.mailingAddress.state}"
+							styleClass="FL #{(not v30) and edit and (nonTeamEmp or startFormBean.form.mailingAddress.state eq null) ? 'requiredDiv' : ''}">
+						<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+					<span class="fdNm_sm" style="width:40px;">
+						<h:panelGroup rendered="#{not (isAddrUnif) or not isTeamPayroll}">
+							<h:outputText styleClass="pad20lt pad1rt #{(empty startFormBean.form.mailingAddress.state or (isTeamPayroll and isEnhancedLoanOut)) ? 'mandatory' : ''}" value="Zip:" />
+							<span class="mandatory">*</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{isAddrUnif and isTeamPayroll}">
+							<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+						</h:panelGroup>
+					</span>
+					<h:panelGroup rendered="#{not edit or (isAddrUnif and isTeamPayroll)}">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText value="#{startFormBean.form.mailingAddress.zip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit and (not isAddrUnif or not isTeamPayroll)}">
+						<span class="fd_xsm" >
+							<ace:textEntry maxlength="10" style="width: 55px;"
+									value="#{startFormBean.form.mailingAddress.zip}"
+									disabled="#{submitted or done or not edit}" id="sfMailingAddressZip"
+									styleClass="#{(not v30) and (nonTeamEmp or empty startFormBean.form.mailingAddress.zip) ? 'requiredDiv' : ''}">
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- MIDDLE portion END-->
+
+			<!-- RIGHT portion START-->
+			<div class="W34percnt FL">
+
+				<!-- AGENCY NAME -->
+				<div class="rowCont FL">
+					<span class="fdNm"  style="width:82px;"> <h:outputText value="Agency Name" /> </span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.agencyName}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2">
+							<ace:textEntry disabled="#{submitted or done or not edit}"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									maxlength="50" style="min-width:67%" id="sfAgencyName"
+									value="#{startFormBean.form.agencyName}" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- AGENCY ADDRESS LINE 1 -->
+				<div class="rowCont FL">
+					<span class="fdNm"> <h:outputText value="Address:" /> </span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.agencyAddress.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2 pad6lt">
+							<ace:textEntry maxlength="50" style="min-width:67%;"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.agencyAddress.addrLine1}"
+									disabled="#{submitted or done or not edit}" id="sfAgencyAddressAddr1">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- AGENCY ADDRESS LINE 2 -->
+				<div class="rowCont FL">
+					<span class="fdNm"> <h:outputText value=" " /> </span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.agencyAddress.addrLine2}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2 pad6lt">
+							<ace:textEntry maxlength="50" style="min-width:67%"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.agencyAddress.addrLine2}"
+									disabled="#{submitted or done or not edit}" id="sfAgencyAddressAddr2">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- AGENCY CITY -->
+				<div class="rowCont FL">
+					<span class="fdNm"> <h:outputText value="City:" /> </span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm">
+							<h:outputText value="#{startFormBean.form.agencyAddress.city}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_sm2 pad6lt">
+							<ace:textEntry maxlength="35" style="min-width:67%"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.agencyAddress.city}"
+									disabled="#{submitted or done or not edit}" id="sfAgencyAddressCity" >
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- AGENCY STATE + ZIP -->
+				<div class="rowCont FL">
+					<span class="fdNm">State: </span>
+					<h:selectOneMenu id="sfAgencyAddressState"
+							styleClass="FL pad6lt #{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+							disabled="#{submitted or done or not edit}"
+							value="#{startFormBean.form.agencyAddress.state}">
+						<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+					<span class="fdNm_sm" style="width:40px;">
+						<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not edit}">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText value="#{startFormBean.form.agencyAddress.zip}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{edit}">
+						<span class="fd_xsm">
+							<ace:textEntry maxlength="10" style="width: 79px;"
+									styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+									value="#{startFormBean.form.agencyAddress.zip}"
+									disabled="#{submitted or done or not edit}" id="sfAgencyAddressZip">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- end top right -->
+		</div>
+
+		<!-- EMERGENCY -->
+		<div class="rowCont pad15tp ">
+			<!-- EMERGENCY CONTACT START-->
+			<div class="W33percnt FL">
+				<span class="fdNm" style="width:118px;">
+					<h:outputText value="Emergency Contact:" />
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm" style="width:135px;">
+						<h:outputText style="line-height:15px;" value="#{startFormBean.form.emergencyName}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="30" style="width:117px;"
+								styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+								value="#{startFormBean.form.emergencyName}"
+								disabled="#{submitted or done or not edit}" id="sfEmrName">
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- EMERGENCY CONTACT END-->
+
+			<!-- EMERGENCY PHONE START-->
+			<div class="W33percnt FL">
+				<span class="fdNm" style=" width:118px;">
+					<h:outputText value="Emergency Phone:" />
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm">
+						<h:outputText style="line-height:15px;" value="#{startFormBean.form.emergencyPhone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="25" style="width:117px;"
+								styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+								value="#{startFormBean.form.emergencyPhone}"
+								disabled="#{submitted or done or not edit}" id="sfEmrPhoneNumber">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- EMERGENCY PHONE END-->
+
+			<!-- EMERGENCY RELATIONSHIP START-->
+			<div class="W34percnt FL">
+				<span class="fdNm" style="width:113px;">
+					<h:outputText value="Emer. Relationship:" />
+				</span>
+				<h:panelGroup rendered="#{not edit}">
+					<span class="fd_sm" style="width:135px;">
+						<h:outputText style="line-height:15px;" value="#{startFormBean.form.emergencyRelation}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{edit}">
+					<span class="fd_sm pad6lt">
+						<ace:textEntry maxlength="30" id="sfEmrRelation"
+								styleClass="#{edit and nonTeamEmp ? 'requiredDiv' : ''}"
+								style="width:146px;" disabled="#{submitted or done or not edit}"
+								value="#{startFormBean.form.emergencyRelation}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- EMERGENCY RELATIONSHIP END-->
+		</div>
+
+		<!-- DEPARTMENT & POSITION
+		<div class="rowCont pad10tp">
+			<span class="B"><h:outputText value="Referenced with:"/>
+			</span>
+		</div>
+		<div class="rowCont">
+			<h:panelGroup styleClass="pad10lt LH16">
+				<div class="fd_sm">
+					<h:outputText value="#{startFormBean.form.deptName} "/>
+					<h:outputText styleClass="pad3lt pad3rt" value="/" />
+					<h:outputText value=" #{startFormBean.form.employment.role.name}" />
+				</div>
+				<div class="rowCont fd_sm">
+					<h:outputText value="#{startFormBean.contact.emailAddress} "/>
+				</div>
+			</h:panelGroup>
+		</div>-->
+
+	</div>
+	<!-- end lower left side: (left of tables) -->
+
+</ui:composition>

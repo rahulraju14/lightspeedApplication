@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Box Rental section of the Weekly Payroll page (days.xhtml) -->
+
+	<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+	<a id="boxrental" /><!-- box rental scroll-to-top position -->
+
+	<div class="toggle">
+			<h:commandLink value="Box Rental" styleClass="btnPriHotCt"
+					action="#{mobileTimecardBean.actionToggleBoxRental}" />
+	</div>
+
+	<h:panelGroup styleClass="B" rendered="#{mobileTimecardBean.showBoxRental}">
+		<h:panelGroup styleClass="mBtnCenter" rendered="#{mobileTimecardBean.weeklyTimecard.boxRental ne null}">
+			<span class="FL btnPriHotLt"/>
+			<span>
+				<h:commandLink value="Box Rental Form"
+						action="boxrentalm" styleClass="btnPriHotCt" >
+					<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+					<f:setPropertyActionListener value="pickdaym" target="#{jumpBean.value}"/>
+				</h:commandLink>
+			</span>
+			<span class="FL btnPriHotRt"/>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="mBtnCenter"
+				rendered="#{mobileTimecardBean.weeklyTimecard.boxRental eq null and mobileTimecardBean.editRaw}">
+			<span class="FL btnPriHotLt"/>
+			<span>
+				<h:commandLink value="Use Box Rental Form"
+					action="#{mobileTimecardBean.actionCreateBoxRental}" styleClass="btnPriHotCt" />
+			</span>
+			<span class="FL btnPriHotRt"/>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="txt16 inCtlRow"
+				rendered="#{mobileTimecardBean.weeklyTimecard.boxRental eq null
+					and ! mobileTimecardBean.editRaw}" >
+			No box rental submitted.
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="MA inCtlRow" rendered="#{mobileTimecardBean.weeklyTimecard.boxRental ne null}">
+			<h:outputText styleClass="unBoxVal CT" style="margin-right:10%; width:15%;min-width:90px;"
+					value="#{mobileTimecardBean.weeklyTimecard.boxRental.amount}" >
+				<f:convertNumber type="number" pattern="$ #,##0.00" />
+			</h:outputText>
+			<h:panelGroup styleClass="ckbx">
+				<h:selectBooleanCheckbox value="#{mobileTimecardBean.weeklyTimecard.boxRental.inventoryOnFile}"
+						disabled="true" />
+				<span class="ckbxTxtLbl_B pad3lt">
+					Inventory is on file
+				</span>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="mBtnCenter"
+				rendered="#{mobileTimecardBean.weeklyTimecard.boxRental ne null
+					and mobileTimecardBean.editRaw and mobileTimecardBean.weeklyTimecard.status eq 'OPEN'}">
+			<span class="FL btnPriHotLt"/>
+			<span>
+				<h:commandLink value="Delete Box Rental Form"
+					action="#{mobileTimecardBean.actionDeleteBoxRental}" styleClass="btnPriHotCt" />
+			</span>
+			<span class="FL btnPriHotRt"/>
+		</h:panelGroup>
+
+		<hr class="pad10tp pad2bm"/>
+	</h:panelGroup>
+	<!-- END Box Rental section -->
+
+</ui:composition>

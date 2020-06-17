@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Stripboard Sets</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('stripboardlist:boardList', 220, 357);
+	</c:if>
+}
+
+var formname = "stripboardlist";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="stripboardlist">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="stripboardlist" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="#{headerViewBean.project.title}"/>
+							</span>
+						</div>
+
+						<div class="centerFullTb MA">
+
+							<h:panelGrid styleClass="miniPanel">
+
+								<!-- Tab for stripboard lists -->
+								<ace:tabSet selectedIndex="0">
+
+									<!--  Scheduled Tab   -->
+									<ace:tabPane label="Strip boards">
+										<div class="blueLegendContWrap MA pad20tp">
+											<div class="blueLegendCont FL">
+												<span class="legendHdg"></span>
+												<div class="rowCont gradTbl2">
+
+										<ace:buttonGroup id="inUse" mutuallyExclusive="true">
+
+											<ace:dataTable
+													selectionMode="" singleSort="true"
+													style="width:100%;max-width:100%;overflow-x:hidden;"
+													id="boardList"
+													styleClass="gradTbl2"
+													scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+													scrollHeight="#{headerViewBean.mobile ? '' : '367'}"
+													value="#{stripBoardListBean.stripboardList}" var="stripboard">
+
+												<ace:column styleClass="CT W5percnt">
+													<h:commandButton
+															rendered="#{not (
+																	(empty authBean.pgFields['6.1.1,delete']) or
+																	( (stripboard.id eq stripBoardListBean.currentStripboardId)
+																	and (stripBoardListBean.stripboardCount gt 1
+																	or stripBoardListBean.project.script ne null) )
+																	)}"
+															action="#{stripBoardListBean.actionDelete}"
+															image="../../i/icon_deleteX.gif"
+															value=""
+															title="Delete this Stripboard">
+														<f:setPropertyActionListener value="#{stripboard.id}" target="#{stripBoardListBean.removeId}"/>
+													</h:commandButton>
+													<h:commandButton
+															rendered="#{(empty authBean.pgFields['6.1.1,delete']) or
+																	( (stripboard.id eq stripBoardListBean.currentStripboardId)
+																	and (stripBoardListBean.stripboardCount gt 1
+																	or stripBoardListBean.project.script ne null) )}"
+															disabled="#{true}"
+															action="#{stripBoardListBean.actionDelete}"
+															image="../../i/icon_deleteX.gif"
+															value=""
+															title="The active Stripboard may not be deleted">
+													</h:commandButton>
+												</ace:column>
+
+												<ace:column headerText="Revision" styleClass="CT W8percnt">
+													<h:outputText value="#{stripboard.revision}" />
+												</ace:column>
+
+												<ace:column headerText="Description" styleClass="LT W23percnt"
+														rendered="#{not empty authBean.pgFields['6.1.1,link_stripboard']}" >
+													<ace:linkButton id="stripboardlink" styleClass="FL pad3lt"
+															title="View Stripboard" value="#{stripboard.description}"
+															action="stripboardview">
+														<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+														<f:setPropertyActionListener value="#{stripboard.id}" target="#{jumpBean.value}"/>
+													</ace:linkButton>
+												</ace:column>
+
+												<ace:column headerText="Shooting Days" styleClass="CT W10percnt">
+													<h:outputText value="#{stripBoardListBean.shootingDays[stripboard.id][1]}"/>
+													<ui:repeat offset="2" var="unitNum" style="display:inline;"
+															value="#{stripBoardListBean.shootingDays[stripboard.id]}">
+														<h:outputText value=" / #{unitNum}" rendered="#{not empty unitNum}"/>
+													</ui:repeat>
+												</ace:column>
+
+												<ace:column headerText=" " styleClass="CT W8percnt">
+													<h:panelGroup styleClass="DIB"
+															rendered="#{not empty authBean.pgFields['6.1.1,edit_stripboard']}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Edit" title="Edit this stripboard"
+																action="#{stripBoardListBean.actionEdit}"
+																styleClass="btnMiniCt" >
+															<f:setPropertyActionListener value="com.lightspeedeps.stripboardId" target="#{jumpBean.attribute}"/>
+															<f:setPropertyActionListener value="#{stripboard.id}" target="#{jumpBean.value}"/>
+														</ace:linkButton>
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+												</ace:column>
+
+												<ace:column headerText="In Use" styleClass="CT W8percnt">
+													<ace:radioButton value="#{stripboard.selected}"
+															valueChangeListener="#{stripBoardListBean.defaultStripboardChange}" >
+														<f:attribute name="currentRow" value="#{stripboard.id}" />
+														<ace:ajax execute="inUse" render="@all"/>
+													</ace:radioButton>
+												</ace:column>
+
+												<ace:column styleClass="CT W8percnt">
+													<h:panelGroup styleClass="DIB"
+															rendered="#{not empty authBean.pgFields['6.1.1,copy_stripboard']}">
+														<span class="btnMiniLtHot" />
+														<ace:linkButton value="Copy" title="Make a new copy of this stripboard"
+																actionListener="#{stripBoardListBean.copyStripboard}"
+																styleClass="btnMiniCt" >
+															<f:attribute name="currentRow" value="#{stripboard.id}" />
+														</ace:linkButton>
+														<span class="btnMiniRtHot" />
+													</h:panelGroup>
+												</ace:column>
+
+												<ace:column headerText="Last Updated" styleClass="CT W30percnt">
+												<h:panelGroup>
+								 					<h:outputText value="#{stripboard.lastSaved}">
+								 						<f:convertDateTime pattern="h:mm a  MMM d, yyyy"
+								 							timeZone="#{headerViewBean.production.timeZoneStr}"/>
+								 					</h:outputText>
+								 					<h:outputText value=" by " />
+													<ace:linkButton styleClass="pad5lt"
+															value="#{stripboard.user eq null ? '' : stripboard.user.displayName}"
+															title="View person"
+															rendered="#{not empty authBean.pgFields['3.1,all']}"
+															action="#{jumpBean.actionViewContactByUserId}">
+														<f:setPropertyActionListener value="#{stripboard.user.id}" target="#{jumpBean.value}"/>
+													</ace:linkButton>
+													<h:outputText rendered="#{empty authBean.pgFields['3.1,all']}"
+															value="#{stripboard.user.displayName}" styleClass="pad5lt"/>
+												</h:panelGroup>
+												</ace:column>
+
+											</ace:dataTable>
+										</ace:buttonGroup>
+
+												</div>
+											</div>
+										</div>
+									</ace:tabPane><!--  End Stripboard List Tab -->
+								</ace:tabSet>
+
+							</h:panelGrid><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+
+</h:body></html>

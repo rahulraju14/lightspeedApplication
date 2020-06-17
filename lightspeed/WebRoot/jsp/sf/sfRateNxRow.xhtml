@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- One of the 1.5x or 2.0x rows from Weekly/Hourly rates portion of Start Payroll form -->
+<!-- on these rows, the rates are not editable and are passed as separate parameters, as they
+		are not stored in the "rate" entity. -->
+<!-- Uses params:
+		rate (HoursGroup)
+		title (plain text)
+		studioRate (decimal)
+		locRate (decimal)
+		aicp		: true for commercial productions
+		v30 		: true if this is the 3.0 (Non-On-Boarding) style page 
+		done 		: true if this form has been 'finalized'
+-->
+
+			<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" />
+
+			<td>
+				<h:outputText styleClass="stwklab" value="#{title}"/>
+			</td>
+
+			<!-- STUDIO RATE / HOURS -->
+			<td>
+				<div class="dollarsout2">
+					<h:outputText value="#{studioRate}">
+						<f:convertNumber type="number" pattern="###,###.00##" />
+					</h:outputText>&#160;
+				</div>
+				<h:panelGroup rendered="#{startFormBean.editMode and not empty rate.studioHrs}">
+					<ace:textEntry styleClass="hoursin2" maxlength="5"
+							value="#{rate.studioHrs}" disabled="#{done or not appEdit}">
+						<f:convertNumber type="number" pattern="#,###.0#" />
+						<ace:ajax/>
+					</ace:textEntry>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{! (startFormBean.editMode and not empty rate.studioHrs)}">
+					<div class="hoursout2">
+						<h:outputText value="#{rate.studioHrs}">
+							<f:convertNumber type="number" pattern="#,###.0#" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+			</td>
+
+			<h:panelGroup rendered="#{! aicp}">
+
+				<!-- DISTANT RATE / HOURS -->
+				<td>
+					<div class="dollarsout2">
+						<h:outputText value="#{locRate}">
+							<f:convertNumber type="number" pattern="##,###.00##" />
+						</h:outputText>&#160;
+					</div>
+					<h:panelGroup rendered="#{startFormBean.editMode}">
+						<h:panelGroup rendered="#{not empty rate.locHrs}">
+							<ace:textEntry styleClass="hoursin2" maxlength="5"
+									value="#{rate.locHrs}" disabled="#{done or not appEdit}">
+								<f:convertNumber type="number" pattern="#.0#" />
+								<ace:ajax/>
+							</ace:textEntry>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{empty rate.locHrs}">
+							<div class="hoursout2">
+								<h:outputText value="#{rate.locHrs}">
+									<f:convertNumber type="number" pattern="#.0#" />
+								</h:outputText>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{! startFormBean.editMode}">
+						<div class="hoursout2">
+							<h:outputText value="#{rate.locHrs}">
+								<f:convertNumber type="number" pattern="#.0#" />
+							</h:outputText>
+						</div>
+					</h:panelGroup>
+				</td>
+
+				<!-- ACCOUNT FIELDS -->
+				<td class="CT" style="width:#{aicp ? '20%' : '39%'};">
+					<ui:include src="../tc/accountCodes.xhtml">
+						<ui:param name="edit" value="#{appEdit}" />
+						<ui:param name="appEdit" value="#{appEdit}" />
+						<ui:param name="rate" value="#{rate}" />
+					</ui:include>
+				</td>
+
+			</h:panelGroup>
+
+</ui:composition>

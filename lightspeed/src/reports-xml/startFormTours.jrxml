@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="startFormTours" pageWidth="612" pageHeight="600" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="36" bottomMargin="18" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="502"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startFormId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[116]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sfDAO" class="com.lightspeedeps.dao.StartFormDAO" isForPrompting="false"/>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select *, " +
+ " case employment_basis " +
+    " when 'FT' then 'Full Time' " +
+	" when 'PT' then 'Part Time' " +
+	" when 'VAR' then 'Variable Hours' " +
+	" when 'SNL' then 'Seasonal' " +
+	" else 'N/A' " +
+	" end as aca_empl, " +
+    " CASE retirement_plan " +
+    " when '4' then '401K' " +
+    " when 'P' then 'PHBP' " +
+    " else '' " +
+    " end as retirePlan, " +
+    " ROUND(CAST(((sf.Tours_Show_Rate * CAST(100 AS decimal)) / NULLIF(sf.Tours_Show_Rate, 0)) AS decimal(7,2)), 1) as 'Tours_Show_Percent', " +
+    " ROUND(CAST(((sf.Tours_Prep_Rate * CAST(100 AS decimal)) / NULLIF(sf.Tours_Show_Rate, 0)) AS decimal(7,2)), 1) as 'Tours_Prep_Percent', " +
+    " ROUND(CAST(((sf.Tours_Post_Rate * CAST(100 AS decimal)) / NULLIF(sf.Tours_Show_Rate, 0)) AS decimal(7,2)), 1) as 'Tours_Post_Percent', " +
+    " ROUND(CAST(((sf.Tours_Travel_Rate * CAST(100 AS decimal)) / NULLIF(sf.Tours_Show_Rate, 0)) AS decimal(7,2)), 1) as 'Tours_Travel_Percent', " +
+    " ROUND(CAST(((sf.Tours_Down_Rate * CAST(100 AS decimal)) / NULLIF(sf.Tours_Show_Rate, 0)) AS decimal(7,2)), 1) as 'Tours_Down_Percent' " +
+    " from start_form sf, employment e where " +
+    " sf.employment_id = e.id ;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="docStatus" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="version" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Sequence" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prior_Form_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="employment_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Contact_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Project_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Project_Member_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Locked_By" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Form_Number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Form_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Company" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Title" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="First_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Middle_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Gender" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Date_of_Birth" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mailing_Address_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Permanent_Address_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Social_Security" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Creation_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Effective_Start_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Effective_End_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Start_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_End_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Off_Production" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Hire_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Retirement_Plan" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Employment_Basis" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="union_local_num" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Union_Key" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occupation_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ls_Occ_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occ_Rule_Key" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Job_Class" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Contract_Schedule" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Schedule_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Additional_Staff" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nearby_Hire" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Overtime_Rule" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Rate_Type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Company_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Address_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Incorporation_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Incorporation_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Federal_Tax_ID" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_Tax_ID" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Qualified_CA" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Qualified_NY" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Loan_Out_Qualified_States" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Ethnic_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Citizen_Status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_of_Residence" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_County" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Zip" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Minor" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Agent_Rep" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Agency_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Agency_Address_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Allow_Worked" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Pay_6th_7th_Day" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Under_Contract" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Skip_Dept_Approval" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Use_Studio_or_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Start_Rates" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prod_Rate_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Prep_Rate_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Studio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Loc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Cap" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Sep_Check" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Taxable" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Box_Rental_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Studio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Loc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Cap" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Sep_Check" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Taxable" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Car_Allow_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Studio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Loc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Sep_Check" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Allow_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Penalty_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Tx_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Ntx_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Perdiem_Adv_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Amt_Studio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Amt_Loc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Amt_Studio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Amt_Loc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Weekly" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Meal_Money_Adv_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Loc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Major" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Dtl" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Sub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Set" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Free" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Fringe_Acct_Free2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mileage_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Screen_Credit_Role" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Screen_Credit_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Industry_Exp_Roster_Conf" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Emergency_Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Emergency_Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Emergency_Relation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Medical_Conditions" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Show_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Prep_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Post_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Travel_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Down_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Home_Work_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Tours_Home_Off_Rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Work_Zone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Permission_Mask" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Occupation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Role_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Def_Role" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="End_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Production_Batch_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Skip_Dept_Approvers" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Wage_State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Updated" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Last_Sent" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="aca_empl" class="java.lang.String"/>
+	<field name="retirePlan" class="java.lang.String"/>
+	<field name="Tours_Show_Percent" class="java.math.BigDecimal"/>
+	<field name="Tours_Prep_Percent" class="java.math.BigDecimal"/>
+	<field name="Tours_Post_Percent" class="java.math.BigDecimal"/>
+	<field name="Tours_Travel_Percent" class="java.math.BigDecimal"/>
+	<field name="Tours_Down_Percent" class="java.math.BigDecimal"/>
+	<background>
+		<band height="546" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="abd78b27-0470-404c-bc78-86ab835a6d38" style="font12Box" mode="Transparent" x="0" y="0" width="540" height="546"/>
+			</rectangle>
+			<image>
+				<reportElement uuid="6c3f2518-a6ee-4f22-abe6-88663034d192" x="2" y="168" width="540" height="172">
+					<printWhenExpression><![CDATA[$P{docStatus}.equals("VOID")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportsTemplate}+"/void.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="0192bc85-60d7-4b1e-b953-71b1fac91946" x="0" y="0" width="540" height="80"/>
+				<subreportParameter name="startFormId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/sf/startFormToursHdr.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="91">
+			<printWhenExpression><![CDATA[(! $F{Company_Name}.isEmpty())]]></printWhenExpression>
+			<break>
+				<reportElement uuid="e1a10ad3-529a-47d3-ac31-5b52e3ac4d36" x="0" y="0" width="100" height="1"/>
+			</break>
+			<subreport>
+				<reportElement uuid="605da13e-abd6-4cce-be33-a8a579efb494" isPrintRepeatedValues="false" x="0" y="0" width="540" height="91">
+					<printWhenExpression><![CDATA[(! $F{Company_Name}.isEmpty())]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="aicp">
+					<subreportParameterExpression><![CDATA[false]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="startFormId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="sfDAO">
+					<subreportParameterExpression><![CDATA[$P{sfDAO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/sf/sfLoanOut.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="160">
+			<rectangle>
+				<reportElement uuid="abd78b27-0470-404c-bc78-86ab835a6d38" style="font12Box" mode="Transparent" x="0" y="13" width="540" height="131"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="0" y="0" width="152" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[EMPLOYEE INFORMATION:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="432" y="0" width="81" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Off Production:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="37d52a37-7abf-4272-95d5-f29bac0fa930" key="image-2" positionType="Float" stretchType="RelativeToBandHeight" x="512" y="0" width="27" height="11"/>
+				<imageExpression><![CDATA[$F{Off_Production} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="1" y="14" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Social Sec. #:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="81" y="14" width="81" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.startFormSSN($F{Id})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="162" y="14" width="54" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Union:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="216" y="14" width="54" height="13"/>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{union_local_num}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="1" y="27" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Job Class:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="82" y="27" width="189" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Job_Class}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="271" y="14" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gender:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="351" y="14" width="54" height="13"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{Gender}.equals("M") ? "Male" : "Female")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="405" y="13" width="54" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ethnic Code:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="459" y="14" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Ethnic_Code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="271" y="27" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Citizen Status:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="351" y="27" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{Citizen_Status}.equals("U") ? "US" : ($F{Citizen_Status}.equals("A") ? "Alien" : "Other"))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="405" y="26" width="54" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[D.O.B.:]]></text>
+			</staticText>
+			<textField pattern="M/d/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="459" y="26" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date_of_Birth}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="271" y="39" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[State Residence:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="351" y="39" width="27" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{State_of_Residence}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="378" y="39" width="54" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Minor:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="37d52a37-7abf-4272-95d5-f29bac0fa930" key="image-2" positionType="Float" stretchType="RelativeToBandHeight" x="432" y="39" width="27" height="11"/>
+				<imageExpression><![CDATA[$F{Minor} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="459" y="39" width="54" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agent:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement uuid="37d52a37-7abf-4272-95d5-f29bac0fa930" key="image-2" positionType="Float" stretchType="RelativeToBandHeight" x="513" y="39" width="27" height="11"/>
+				<imageExpression><![CDATA[$F{Agent_Rep} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="190" y="78" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Addr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="190" y="104" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[City:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="190" y="117" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[State:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="1" y="51" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phone:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="81" y="51" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPhone($F{Phone})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="53d2dbd2-d3a9-4548-bf71-3f5f7eef604f" x="270" y="13" width="1" height="52"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="379" y="65" width="54" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agency:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="432" y="65" width="108" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Agency_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="379" y="77" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Addr:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement uuid="0192bc85-60d7-4b1e-b953-71b1fac91946" x="405" y="78" width="135" height="52"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Agency_Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/sf/address1.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="379" y="104" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[City:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="379" y="116" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[State:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="2" y="131" width="108" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Emergency Cont.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="108" y="131" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Emergency_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="189" y="131" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Emer. Phone:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="271" y="131" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPhone($F{Emergency_Phone})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="352" y="131" width="108" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Emergency Relation:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefault" x="460" y="131" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Emergency_Relation}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5487fa6c-7120-4ef4-87cb-46f2917b30be" style="tcDefBold" x="271" y="51" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACA Empl. Basis:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1c53ecb1-d58c-4f6e-9fa8-0a50f8a2b072" style="tcDefault" x="351" y="51" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{aca_empl}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="7945e571-b228-4d3d-a25b-da74ba3db9a8" x="0" y="130" width="540" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b27b9dde-07ef-4273-84f1-64d2880b7aca" style="tcDefBold" x="1" y="39" width="81" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Occup. Code:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="92a68bd3-b2db-48e9-b018-acc33d7a873e" style="tcDefault" x="81" y="39" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Occupation_Code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="431c2414-038a-45d1-9d7b-adb62cd22d2b" style="tcDefBold" x="135" y="39" width="54" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Schedule:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a8f09c33-5043-4e5f-9a0c-e0ddfda7c27b" style="tcDefault" x="189" y="39" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Contract_Schedule}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="63b9dcae-dc26-43e9-b760-ac252beb17f8" x="1" y="64" width="539" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="55c2e4ae-f6cd-4b44-8ffc-e7413016c629" style="tcDefBold" x="405" y="51" width="54" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Retire:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="1efb54d6-f488-465e-8e59-063dddf78f1f" style="tcDefault" x="459" y="51" width="81" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{retirePlan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="f732fe4a-20e9-4ea2-9fa6-22c1c114eedb" x="378" y="64" width="1" height="66"/>
+			</line>
+			<line>
+				<reportElement uuid="a762f14d-d2ea-48d7-9613-90d3cae57e7c" x="1" y="77" width="539" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="118539b4-78e6-4569-967d-db8d2c216742" x="189" y="64" width="1" height="66"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b4c328c0-f8cc-46c9-909e-c1f12fd7288d" style="tcDefBold" x="190" y="65" width="189" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permanent Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b15abf40-29e0-4b1e-a50e-6411769458f9" style="tcDefBold" x="1" y="65" width="189" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mailing Address:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cc512992-cbfe-4e8d-adaa-a55e8c03bea7" style="tcDefBold" x="1" y="104" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[City:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9278352b-1a13-4f10-bbf1-381e7272bdda" style="tcDefBold" x="1" y="78" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Addr:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="47f1bf0e-2c10-43dc-a692-7bcb89bed191" style="tcDefBold" x="1" y="117" width="27" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[State:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement uuid="a709914c-19a6-4573-ae96-9cf1df07bb19" x="27" y="78" width="162" height="52"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Mailing_Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/sf/address1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="4227eac0-3bb6-49ef-be8e-dbf0448d5a78" x="216" y="78" width="162" height="52"/>
+				<subreportParameter name="addressId">
+					<subreportParameterExpression><![CDATA[$F{Permanent_Address_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/sf/address1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="171">
+			<staticText>
+				<reportElement uuid="72c0e22a-a794-4908-b93f-847a86bd2c68" style="tcDefault" x="39" y="102" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Travel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b618153-5cbb-4fdc-877a-2a2db91c3876" style="tcDefault" x="39" y="88" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Post]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b24831fd-1bb1-4d75-af91-0f2baf350f4a" style="tcDefBold" x="120" y="46" width="54" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f1d9e598-e32c-4288-9472-63cab881eb2b" style="tcDefBold" x="366" y="62" width="64" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Freq]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="178216c5-6f79-41c2-b1a2-75a7ff64d601" style="tcDefBold" x="174" y="33" width="54" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[% of]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40ae7c5b-78ae-45d9-adc6-6cab086a83c4" style="tcDefBold" x="39" y="20" width="108" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[ RATE TABLE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c0375181-de57-4a34-9e97-2c6573014432" style="tcDefault" x="258" y="90" width="107" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Per Diem (Non-Tax)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8fba92ab-dd7e-4196-95ee-2be6f702a362" style="tcDefBold" x="39" y="46" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[DAY TYPE]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2eaf46b9-4893-4e7d-9c0c-0215678be8ec" x="429" y="49" width="1" height="96"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="99b02310-3a06-4771-8de4-824b94cedd05" x="39" y="87" width="188" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="765a404d-5004-4bd7-a279-5692313a6606" style="tcDefault" x="39" y="60" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Show]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c856ed3b-3aac-48e1-a3c9-473f76a50d2d" style="tcDefault" x="39" y="116" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Down]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="3921ff45-3947-4a7d-a3a0-265d5c6ef775" x="119" y="33" width="1" height="122"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement uuid="397e2e5d-ff86-48a3-8843-2740d3f3fcc4" style="tcDefBox" mode="Transparent" x="39" y="20" width="188" height="135"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="9016d93b-e4ba-4a9f-a8d1-7c0af09756ad" style="tcDefBold" x="366" y="49" width="64" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Pay]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="697a12d9-edef-491f-a4f3-6842b5b5f018" style="tcDefault" x="258" y="104" width="107" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Cash Advance]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c3e1b32e-f0de-497f-a435-1800893194b4" x="39" y="101" width="188" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="50035805-b8e3-4238-8580-11bf6affe8ce" x="39" y="59" width="188" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="3694154d-0db7-4c99-8b25-8b6239a6009f" style="tcDefault" x="258" y="76" width="107" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Per Diem (Taxable)]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="0d87c40d-e859-45a9-9318-a236849bd22a" x="365" y="49" width="1" height="96"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="2aa62071-9029-446d-bb50-b8232b68314d" style="tcDefBold" x="430" y="62" width="66" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="914f0dd3-d7a3-49c7-b08f-227643594880" style="tcDefault" x="39" y="74" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Prep]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="502788bb-b7c6-4d90-8a85-c707440a3f4a" style="tcDefBold" x="173" y="46" width="54" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Show Rate]]></text>
+			</staticText>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="e327cbed-e547-42b5-bd5e-434e63ba0111" style="tcDefault" x="120" y="60" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Show_Rate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b4c089b4-9625-4caa-ab7d-8fe72a5811b9" x="39" y="73" width="188" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="fe91ccf2-5aa1-4ee8-8040-d578bc9e7719" x="39" y="115" width="188" height="1"/>
+			</line>
+			<textField pattern="#0.#" isBlankWhenNull="true">
+				<reportElement uuid="bc186a4c-d8dc-4d4b-aac3-fa5890520301" style="tcDefault" x="173" y="60" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Show_Percent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="22fd7948-9eef-49d6-980b-a5666eb49d34" style="tcDefault" x="120" y="74" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Prep_Rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.#" isBlankWhenNull="true">
+				<reportElement uuid="d948c627-458d-473a-b5db-54d685b4dfa1" style="tcDefault" x="173" y="74" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Prep_Percent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="81b8b449-845d-4858-ae85-9ccf723d8554" style="tcDefault" x="120" y="88" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Post_Rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.#" isBlankWhenNull="true">
+				<reportElement uuid="55ede407-8558-46ad-b712-1180b020b1d2" style="tcDefault" x="173" y="88" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Post_Percent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="d6272ce1-398c-47cd-b93e-a619a3259d49" style="tcDefault" x="120" y="102" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Travel_Rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.#" isBlankWhenNull="true">
+				<reportElement uuid="d38dc22d-c6da-4b73-a314-aa40f39758ab" style="tcDefault" x="173" y="102" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Travel_Percent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="7f9b8601-de77-454d-a187-9ed14476e866" style="tcDefault" x="120" y="116" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Down_Rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.#" isBlankWhenNull="true">
+				<reportElement uuid="08674a9c-a11b-4078-b619-abcfe600703b" style="tcDefault" x="173" y="116" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Down_Percent}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e4541bfe-f170-4ed9-a1c1-5a43f247be9f" style="tcDefault" x="366" y="76" width="64" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Perdiem_Tx_Weekly} ? "Weekly" : "Daily")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a2ffb876-a8bb-4b29-b7c8-9a32f5617189" style="tcDefault" x="366" y="90" width="63" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Perdiem_Ntx_Weekly} ? "Weekly" : "Daily")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ff0819a9-e02f-4186-a8d0-0273ad4a1416" style="tcDefault" x="366" y="104" width="63" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Perdiem_Adv_Weekly} ? "Weekly" : "Daily")]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="be4aa7af-d6ea-4ad3-9d12-b6647194f5ce" style="tcDefault" x="430" y="90" width="66" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Perdiem_Ntx_Amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="6a0ef17c-0fc4-419e-9145-d9808a5536fe" style="tcDefault" x="430" y="76" width="66" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Perdiem_Tx_Amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="0e8d94e7-7e1d-430b-8f4a-9c83c07a448d" style="tcDefault" x="430" y="104" width="66" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Perdiem_Adv_Amt}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1811c568-8fe5-4762-826c-a48007fe7166" style="tcDefBold" x="271" y="7" width="123" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Employee Type:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d57fb365-258c-4596-b3da-4ec9c0369fea" style="tcDefault" x="407" y="7" width="132" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[($F{Rate_Type}.equals("HOURLY") ? "Hourly" : ($F{Rate_Type}.equals("WEEKLY") ? "Weekly/Exempt" : "Daily/Exempt")) + " / " + ($F{Use_Studio_or_Loc}.equals("S") ? "Studio" : "Distant")]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement uuid="a1ddfe32-829d-4ae0-afac-e5f2cb7e80a1" style="tcDefBox" mode="Transparent" x="258" y="49" width="238" height="96"/>
+			</rectangle>
+			<line>
+				<reportElement uuid="251f8b4f-397c-415a-a1b5-453d8d3759f1" x="258" y="75" width="238" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="ed565314-ad1c-411a-b793-c6148609fa47" x="258" y="89" width="238" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="262a9dde-60b5-4e0b-b0ca-d7927e812d9b" x="258" y="103" width="238" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="85605356-e8f9-41d4-afb7-ebd5ce3e68f0" x="258" y="117" width="238" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="5e4179bf-7399-47f0-8b33-9d06f2897209" x="258" y="131" width="238" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="21ac4928-34fa-4bb8-8f8d-972d90cf4631" x="39" y="46" width="188" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="4d0207d5-b5f1-4bc5-a349-aea1da7451d0" x="39" y="33" width="188" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="6bcb2597-c71f-4bc6-82f0-d9be3c070780" x="173" y="33" width="1" height="122"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="aa83d925-1675-4a87-8364-2efcadaa022e" x="258" y="62" width="239" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="15870a05-4a92-4e59-a442-71afd8f0f219" x="39" y="128" width="188" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="0d860fb3-2c88-4c3a-8cce-cb3df578ec3c" x="39" y="142" width="188" height="1"/>
+			</line>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="b28c91f4-b34f-4c34-a139-210e6ce08515" style="tcDefault" x="120" y="129" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Home_Work_Rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3efbf517-4a31-4bee-beed-30dea51fdab6" style="tcDefault" x="39" y="129" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Work (Home)]]></text>
+			</staticText>
+			<textField pattern="#,##0.00##" isBlankWhenNull="true">
+				<reportElement uuid="14adb654-9143-461e-a99f-4ade5132fa9f" style="tcDefault" x="120" y="143" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Tours_Home_Off_Rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3ee8781e-b5a6-48f2-856a-1d0ab13cd6d8" style="tcDefault" x="39" y="143" width="81" height="13"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[Off (Home)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5d0b9b99-29c4-408e-83f0-476b79dbd9a7" style="tcDefBold" x="271" y="26" width="123" height="13"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Default Workplace:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1fe63f13-0818-42a8-bcbe-5d8bcb09f2a4" style="tcDefault" x="407" y="26" width="89" height="13"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Work_Zone}.equals("DL") ? "Tour" : "Home"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefault" x="1" y="22" width="81" height="13"/>
+				<textElement>
+					<font isBold="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Signature:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="53d2dbd2-d3a9-4548-bf71-3f5f7eef604f" x="82" y="35" width="270" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

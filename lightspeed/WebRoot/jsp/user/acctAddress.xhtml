@@ -1,0 +1,509 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: Agency section -->
+	<div class="rowCont pad40lt pad-10tp">
+
+		<!-- PERMANENT ADDRESS -->
+		<!-- LEFT portion -->
+		<div class="W33percnt FL">
+			<div class="rowCont FL pad25tp">
+				<span class="B"> <h:outputText value="Resident Address (W-4):" /> </span>
+			</div>
+			<!-- personal address 1 -->
+			<div class="rowCont FL pad5tp">
+				<span class="FL B">
+					<h:outputText value="Street Address:" />
+				 </span>
+				 <div class="FL pad35lt">
+					<h:panelGroup rendered="#{not userViewBean.editMode and
+									(not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<span class="fd_sm"> <h:outputText value="#{userViewBean.user.homeAddress.addrLine1}" /> </span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{userViewBean.editMode and (not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30" id="homeAddressAddr1"	value="#{userViewBean.user.homeAddress.addrLine1}"
+								valueChangeListener="#{userViewBean.listenHomeAddressChange}">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div><!-- end personal address 1 -->
+
+			<!-- personal address 2 -->
+			<div class="rowCont FL pad8tp">
+				<span class="FL B"> <h:outputText value="Apt/Unit # (Optional):"/> </span>
+				<div class="FL pad10lt">
+					<h:panelGroup rendered="#{not userViewBean.editMode and
+									(not empty userViewBean.user.homeAddress.addrLine2) and
+									(not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<span class="fd_sm"> <h:outputText value="#{userViewBean.user.homeAddress.addrLine2}" /> </span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode and
+										(not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30" value="#{userViewBean.user.homeAddress.addrLine2}" id="homeAddressAddr2" 
+								valueChangeListener="#{userViewBean.listenHomeAddressChange}">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- personal address 2 -->
+
+			<!-- personal city, state zip "VIEW mode" -->
+			<!-- <h:panelGroup styleClass="rowCont FL"
+					rendered="#{not userViewBean.editMode and (not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+				<span class="fdNm">
+					keep this place holder
+				</span>
+				<span class="fd">
+					<span class="FL">
+						<h:outputText styleClass="pad5rt" rendered="#{not empty userViewBean.user.homeAddress.city}"
+								value="#{userViewBean.user.homeAddress.city}," />
+					</span>
+					<span class=" FL pad5rt">
+						<h:outputText value="#{userViewBean.user.homeAddress.state}" />
+					</span>
+					<span class="FL">
+						<h:outputText value="#{userViewBean.user.homeAddress.zip}" />
+					</span>
+				</span>
+			</h:panelGroup> -->
+			<!-- end personal city state zip "VIEW mode" -->
+
+			<!-- personal city, state zip "EDIT mode" -->
+			<div class="rowCont FL pad3tp">
+				<span class="fdNm">
+					<h:outputText value="City:"></h:outputText>
+				</span>
+				<div class="FL pad50lt">
+					<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (not (empty authBean.pgFields['3.1.1,city'] and userViewBean.hidden))}">
+						<span class="fd_sm2 ">
+							<ace:textEntry maxlength="35" value="#{userViewBean.user.homeAddress.city}" id="homeAddressCity"  
+								disabled="#{true}">
+								<ace:ajax/>
+							</ace:textEntry>
+							<h:panelGroup
+									rendered="#{(userViewBean.editMode) and (empty userViewBean.user.homeAddress.zip or empty userViewBean.user.homeAddress.city)}">
+									<span
+										style="font-weight:bold;position: absolute; left: 2px; width: 97%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+										Enter Zip Code
+									</span>
+							</h:panelGroup>
+							</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not userViewBean.editMode and
+										(not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText styleClass="pad5rt" rendered="#{not empty userViewBean.user.homeAddress.city}"
+										value="#{userViewBean.user.homeAddress.city}," />
+							</span>
+						</div>
+					</h:panelGroup>
+				</div>
+			</div>
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="State:"></h:outputText>
+				</span>
+				<div class="FL pad50lt">
+				<h:panelGroup rendered="#{(userViewBean.editMode) and (not (empty authBean.pgFields['3.1.1,city'] and userViewBean.hidden)) and empty userViewBean.user.homeAddress.zip}" >
+					</h:panelGroup>
+						<h:selectOneMenu styleClass="FL" value="#{userViewBean.user.homeAddress.state}"  id="homeAddressState"
+								rendered="#{not (empty authBean.pgFields['3.1.1,state'] and userViewBean.hidden)}"
+								disabled="true">
+							<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+							<ace:ajax/>
+						</h:selectOneMenu>
+						<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (empty userViewBean.user.homeAddress.zip or empty userViewBean.user.homeAddress.state)}">
+							<span
+								style="position: absolute; left: 2px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+						</h:panelGroup>
+						<span class="fdNm_sm" style="width:40px;">
+						<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not (empty authBean.pgFields['3.1.1,zip'] and userViewBean.hidden)
+												and (userViewBean.editMode)}">
+						<span class="fd_xsm">
+							<ace:textEntry maxlength="5" styleClass="zip" id="homeAddressZip" 
+								value="#{userViewBean.user.homeAddress.zip}"  
+								valueChangeListener="#{userViewBean.listenHomeAddressZipChange}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not userViewBean.editMode and
+								(not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden))}">
+						<div class="FL pad4tp">
+							<span class="fd_sm">
+								<h:outputText styleClass="pad1tp" value="#{userViewBean.user.homeAddress.zip}" />
+							</span>
+						</div>
+					</h:panelGroup>
+				</div>
+			</div><!-- end personal city, state zip "EDIT mode" -->
+
+			<!-- personal country -->
+			<span class="fdNm pad5tp">
+				<h:outputText value="Country:" />
+			</span>
+			<div class="FL pad50lt pad5tp">
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="FL pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.homeAddress.country}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}" styleClass="FL">
+					<span class="fd">
+						<h:panelGroup
+							rendered="#{not (empty authBean.pgFields['3.1.1,country'] and userViewBean.hidden)}">
+							<h:selectOneMenu  id="homeAddressCountry"
+								style="width:250px;" valueChangeListener="#{userViewBean.listenHomeAddressChange}"
+								value="#{userViewBean.user.homeAddress.country}" styleClass="country">
+								<f:selectItems value="#{applicationScopeBean.countryDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</span>
+				</h:panelGroup><!-- end personal country -->
+			</div>
+
+		</div>
+		<!-- LEFT portion END-->
+		
+		<!-- MIDDLE portion -->
+		<!-- MAILING ADDRESS -->
+		<div class="W33percnt FL">
+			<div class="rowCont pad25tp">
+				<span class="B FL"> <h:outputText value="Mailing Address:" /> </span>
+				<h:panelGroup rendered="#{isAddrUnification}">
+					<span class="B FL pad15lt"> <h:outputText value="Same as Resident Address" /> </span>
+					<span class="FL pad5lt">
+						<h:selectBooleanCheckbox id="sameAsResidentAddressCheckBox"
+							value="#{userViewBean.user.sameAsHomeAddr}"
+							valueChangeListener="#{userViewBean.listenSameAsHomeAddrChange}"
+							disabled="#{! userViewBean.editMode or (userViewBean.user.homeAddress.isEmpty())}" >
+							<ace:ajax/>
+						</h:selectBooleanCheckbox>
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- MAILING ADDRESS LINE 1 -->
+			<div class="rowCont FL">
+				<span class="FL B">
+					<h:outputText value="Street Address:" />
+					<span class="mandatory"> </span>
+				 </span>
+				 <div class="FL pad35lt">
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.mailingAddress.addrLine1}" />
+							</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30" id="mainAddressAddr1" disabled="#{userViewBean.user.sameAsHomeAddr}"
+								value="#{userViewBean.user.mailingAddress.addrLine1}">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- MAILING ADDRESS LINE 2 -->
+			<div class="rowCont FL pad4tp">
+				<span class="pad4tp FL B"><h:outputText value="Apt/Unit # (Optional):" /> </span>
+				<div class="FL pad10lt">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.mailingAddress.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30" id="mainAddressAddr2" disabled="#{userViewBean.user.sameAsHomeAddr}"
+								value="#{userViewBean.user.mailingAddress.addrLine2}">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- MAILING CITY -->
+			<div class="rowCont FL pad4tp">
+				<span class="fdNm"><h:outputText value="City:" />
+					<span class="mandatory"></span>
+				</span>
+				<div class="FL pad50lt">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.mailingAddress.city}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="35"  id="mainAddressCity" disabled="true"
+								value="#{userViewBean.user.mailingAddress.city}" />
+						</span>
+						<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (empty userViewBean.user.mailingAddress.zip or empty userViewBean.user.mailingAddress.city)}">
+							<span
+								style="font-weight:bold;position: absolute; left: 2px; width: 97%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+								Enter Zip Code </span>
+						</h:panelGroup>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- MAILING STATE + ZIP -->
+			<div class="rowCont FL">
+				<span class="fdNm"> State:
+					<span class="mandatory"> </span>
+				</span>
+				<div class="FL pad50lt">					
+					<h:selectOneMenu styleClass="FL" id="mainAddressState"
+						value="#{userViewBean.user.mailingAddress.state}"
+						disabled="true">
+						<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+					</h:selectOneMenu>
+					<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (empty userViewBean.user.mailingAddress.zip or empty userViewBean.user.mailingAddress.state)}">
+							<span
+								style="position: absolute; left: 2px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+					</h:panelGroup>
+					<span class="fdNm_sm" style="width:40px;">
+						<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+					</span>
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="FL pad4tp">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText styleClass="pad1tp" value="#{userViewBean.user.mailingAddress.zip}" />
+						</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_xsm" >
+							<ace:textEntry maxlength="5" style="width: 55px;"  id="mainAddressZip"
+								disabled="#{userViewBean.user.sameAsHomeAddr}" value="#{userViewBean.user.mailingAddress.zip}"
+								valueChangeListener="#{userViewBean.listenMailingAddressZipChange}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- MAILING COUNTRY -->
+			<div class="rowCont FL">
+				<span class="fdNm pad5tp"><h:outputText value="Country:" /> </span>
+				<div class="FL pad50lt pad5tp">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.mailingAddress.country}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<h:selectOneMenu disabled="#{userViewBean.user.sameAsHomeAddr}"
+								value="#{userViewBean.user.mailingAddress.country}" styleClass="country"
+								style="width:250px;" id="mainAddressCountry">
+								<f:selectItems value="#{applicationScopeBean.countryDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</div>
+		<!-- MIDDLE portion END-->
+
+		<!-- RIGHT portion START-->
+		<div class="W34percnt FL">
+			<!-- Agent Checkbox -->
+			<div class="rowCont">
+				<span class="fdNm">Agent:</span>
+				<span class="FL pad9lt">
+					<h:selectBooleanCheckbox styleClass="ckbx" id="agcyCheckBox"
+						value="#{userViewBean.user.agentRep}"
+						disabled="#{! userViewBean.editMode}" />
+				</span>
+			</div>
+
+			<!-- AGENCY NAME -->
+			<div class="rowCont FL">
+				<span class="fdNm" style="width:88px"><h:outputText value="Agency Name:"/>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.agencyName}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2 pad2lt">
+						<ace:textEntry maxlength="50" value="#{userViewBean.user.agencyName}" style="min-width:59%" 
+							id="agcyName">
+						<ace:ajax render="@form"/>	
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- AGENCY ADDRESS LINE 1 -->
+			<div class="rowCont FL">
+				<span class="FL B"><h:outputText value="Street Address:"/>
+				</span>
+				<div class="FL pad35lt">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.agencyAddress.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<ace:textEntry style="min-width: 62%;" maxlength="30" value="#{userViewBean.user.agencyAddress.addrLine1}"
+								id="agcyAddressAddr1">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- AGENCY ADDRESS LINE 2 -->
+			<div class="rowCont FL pad4tp">
+				<span class="FL B pad4tp"> <h:outputText value="Apt/Unit # (Optional):"/> </span>
+				<div class="FL pad5lt">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.agencyAddress.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<ace:textEntry style="min-width: 62%;" maxlength="30" value="#{userViewBean.user.agencyAddress.addrLine2}"
+								id="agcyAddressAddr2">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- AGENCY CITY -->
+			<div class="rowCont FL pad4tp">
+				<span class="fdNm"><h:outputText value="City:"/>
+				</span>
+				<div class="FL pad50lt">					
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.agencyAddress.city}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry style="min-width: 62%;" disabled="true" maxlength="35" value="#{userViewBean.user.agencyAddress.city}" 
+							id="agcyAddressCity" />
+					</span>
+					<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (empty userViewBean.user.agencyAddress.zip or empty userViewBean.user.agencyAddress.city)}">
+							<span
+								style=" font-weight:bold;position: absolute; left: 2px; width: 97%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+								Enter Zip Code </span>
+						</h:panelGroup>
+				</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- AGENCY STATE + ZIP -->
+			<div class="rowCont FL">
+				<span class="fdNm">State: </span>
+				<div class="FL pad50lt">					
+					<span class="pad10lt">
+						<h:selectOneMenu styleClass="FL" disabled="true"
+								value="#{userViewBean.user.agencyAddress.state}" id="agcyAddressState">
+							<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						</h:selectOneMenu>
+						<h:panelGroup
+							rendered="#{(userViewBean.editMode) and (empty userViewBean.user.agencyAddress.zip or empty userViewBean.user.agencyAddress.state)}">
+							<span
+								style="position: absolute; left: 2px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+					</h:panelGroup>
+					</span>
+					<span class="fdNm_sm" style="width:40px;">
+						<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+					</span>
+					<h:panelGroup
+						rendered="#{not userViewBean.editMode}">
+							<div class="FL pad4tp">
+								<span class="fd_sm" style="width:20px;min-width:20px;">
+									<h:outputText styleClass="" value="#{userViewBean.user.agencyAddress.zip}" />
+								</span>
+							</div>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{userViewBean.editMode}">
+						<span class="fd_xsm">
+							<ace:textEntry maxlength="5" id="agcyAddressZip"
+								value="#{userViewBean.user.agencyAddress.zip}"
+								valueChangeListener="#{userViewBean.listenAgencyAddressZipChange}">
+								<ace:ajax/>
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<!-- AGENCY COUNTRY -->
+			<div class="rowCont FL">
+				<span class="fdNm pad5tp"><h:outputText value="Country:" /> </span>
+				<div class="FL pad50lt pad5tp">					
+					<h:panelGroup rendered="#{not userViewBean.editMode}">
+						<div class="pad4tp">
+							<span class="fd_sm">
+								<h:outputText value="#{userViewBean.user.agencyAddress.country}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{userViewBean.editMode}">
+						<span class="fd_sm2">
+							<h:selectOneMenu disabled="#{not userViewBean.editMode}" id="agcyAddressCountry"
+								value="#{userViewBean.user.agencyAddress.country}" styleClass="country"
+								style="width:264px;">
+								<f:selectItems value="#{applicationScopeBean.countryDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</div><!-- RIGHT portion END-->
+	</div>
+
+</ui:composition>

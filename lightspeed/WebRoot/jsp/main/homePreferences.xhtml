@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+										<!--  My Preferences Tab  -->
+										<ace:tabPane label="My Preferences" id="preftabs">
+											<div id="prefCont">
+												<div class="rowCont rowGradient">
+													<div class="subSecHdgW pad4tp pad3lt">
+														Deliver Notifications to:
+													</div>
+													<div class="prefCkBxs">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox  styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyByEmail}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not headerViewBean.production.notify}"
+																disabled="true" value="false" />
+															<span class="ckbxTxtLbl">E-Mail</span>
+														</span>
+														<br />
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify and headerViewBean.production.smsEnabled}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyByTextMsg}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not (headerViewBean.production.notify and headerViewBean.production.smsEnabled)}"
+																disabled="true" value="false" />
+																<span class="ckbxTxtLbl">Cell</span>
+														</span>
+													</div>
+													<div class="prefCkBxs">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox  styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyByAsstEmail}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not headerViewBean.production.notify}"
+																disabled="true" value="false" />
+																<span class="ckbxTxtLbl">Assistant E-Mail</span>
+															</span>
+														<br />
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify and headerViewBean.production.smsEnabled}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyByAsstTextMsg}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not (headerViewBean.production.notify and headerViewBean.production.smsEnabled)}"
+																disabled="true" value="false" />
+															<span class="ckbxTxtLbl">Assistant Cell</span>
+														</span>
+													</div>
+												</div>
+
+												<div class="rowCont rowGradient">
+													<div class="subSecHdgW pad13tp pad3lt">
+														Notification Subscription:
+													</div>
+													<div class="prefCkBxsCt">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyForAlerts}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not headerViewBean.production.notify}"
+																disabled="true" value="false" />
+															<span class="ckbxTxtLbl">Call Sheet Changes</span>
+														</span>
+													</div>
+													<div class="prefCkBxsCt">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyForCalendarChanges}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not headerViewBean.production.notify}"
+																disabled="true" value="false" />
+															<span class="ckbxTxtLbl">Calendar Changes</span>
+														</span>
+													</div>
+													<div class="prefCkBxsCt">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{headerViewBean.production.notify}"
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.notifyForNewTask}" />
+															<h:selectBooleanCheckbox styleClass="ckbx"
+																rendered="#{not headerViewBean.production.notify}"
+																disabled="true" value="false" />
+															<span class="ckbxTxtLbl">Task Reminders</span>
+														</span>
+													</div>
+												</div>
+
+												<div class="rowCont rowGradient">
+													<div class="subSecHdgW pad13tp pad3lt">
+														Document Subscription:
+													</div>
+													<div class="prefCkBxs">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.sendCallsheet}"
+																styleClass="ckbx" />
+																<span class="ckbxTxtLbl">Call Sheet</span>
+														</span>
+														<br />
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox
+																disabled="#{not preferencesBean.editMode}"
+																value="#{preferencesBean.contact.sendDirections}"
+																styleClass="ckbx" />
+															<span class="ckbxTxtLbl">Location Directions</span>
+														</span>
+													</div>
+													<div class="prefCkBxs"
+														style="width:185px;">
+														<span class="pad15rt">
+															<h:selectBooleanCheckbox
+																	value="#{preferencesBean.sendAdvanceScript}"
+																	valueChangeListener="#{preferencesBean.listenSendAdvanceScript}"
+																	disabled="#{not preferencesBean.editMode or (empty authBean.pgFields['1.2,script'])}"
+																	styleClass="ckbx">
+																<ace:ajax />
+															</h:selectBooleanCheckbox>
+															<span class="ckbxTxtLbl">Advance Script Pages</span>
+														</span>
+														<br />
+														<span class="pad15lt">
+															<ace:textEntry
+																disabled="#{(not preferencesBean.sendAdvanceScript) or (not preferencesBean.editMode) or (empty authBean.pgFields['1.2,script'])}"
+																style="width:25px" maxlength="3"
+																styleClass="pad5rt pad5lt"
+																value="#{preferencesBean.contact.sendAdvanceScript}" />
+															<span class="ckbxTxtLbl">days in advance</span>
+														</span>
+													</div>
+												</div>
+											</div><!-- end prefCont -->
+										</ace:tabPane><!--  End My Preferences Tab -->
+
+
+</ui:composition>

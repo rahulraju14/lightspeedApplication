@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Hot Costs Import page (screen number 9.4) -->
+	<!-- -->
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<h:form>	
+		<ace:dialog visible="#{hotCostsImportBean.visible}"
+				header="#{hotCostsImportBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false"
+				styleClass="xtraSmPopup2">
+					
+			<ace:ajax event="close" execute="@this" listener="#{indivTimecardBean.actionCancel}"/>
+			<div class="xtraSmPopBdy2">
+				<div class="xtraSmPopCont2">
+					<div class="xtraSmPopup_main">
+						<div>
+							<h:panelGroup styleClass="pad15lt" rendered="#{hotCostsImportBean.selectedImportType eq 'TC'}">
+								<h:outputText value="Import from" />
+								<br/>
+								<ace:buttonGroup id="hciGroup" styleClass="radioTxtLbl sp_radio pad15lt" mutuallyExclusive="true" style="border:0;">	
+										<ace:radioButton id="tcBttn" value="#{hotCostsImportBean.importTimecard}" disabled="true"
+											label="Timecard" labelPosition="right"/>
+<!-- Currently not supporting Production Reports
+								<br/>								
+								<ace:radioButton id="tcBttn" value="#{hotCostsImportBean.selectedImportType eq 'PR'}" disabled="true"
+									label="Production Report"/>
+-->									
+								</ace:buttonGroup>
+								<br/>
+								<h:selectBooleanCheckbox styleClass="pad15lt" value="#{hotCostsImportBean.overwriteData}"/>
+								<h:outputText value="#{msg.HotCosts_Import_Overwrite_Data}"/>
+							</h:panelGroup>
+						</div>
+					</div>
+				</div> <!-- End popupCont -->
+				<div>&#160;</div>
+				<div>&#160;</div>
+				<div>&#160;</div>
+				<div>&#160;</div>
+				<div>&#160;</div>
+				<div>&#160;</div>
+				<div class="xtraSmpopBtnCont4">
+					<br/>
+					<h:panelGroup rendered="true">
+						<span class="FR pad5rt">
+							<span class="btnPriEnbLt"/>
+								<span>
+									<h:commandLink value="#{hotCostsImportBean.buttonCancelLabel}" tabindex="2"
+										action="#{hotCostsImportBean.actionCancel}" styleClass="btnPriEnbCt" />
+								</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+					</h:panelGroup>
+					<span class="FR pad5rt">
+						<h:panelGroup rendered="#{hotCostsImportBean.selectedImportType eq 'TC'}">
+							<span class="btnSecHotLt"/>
+								<span>
+									<h:commandLink value="#{hotCostsImportBean.buttonOkLabel}" tabindex="1"
+										action="#{hotCostsImportBean.actionImport}" styleClass="btnSecHotCt" />
+								</span>
+							<span class="btnSecHotRt"/>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{hotCostsImportBean.selectedImportType eq 'BV'}">
+							<span class="btnSecHotLt"/>
+								<span>
+									<h:commandLink value="#{hotCostsImportBean.buttonOkLabel}" tabindex="1"
+										action="#{hotCostsImportBean.actionImportBudgetedValues}" styleClass="btnSecHotCt" />
+								</span>
+							<span class="btnSecHotRt"/>
+						</h:panelGroup>
+					</span>
+				</div>	<!-- End popupBtnCont -->
+			</div> <!-- End popupBdy -->
+		</ace:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- one line in the Pay Breakdown Daily table - for Full Timecard page (ADMIN ONLY) -->
+
+	<!-- parameters:
+					timecardBean: the backing bean
+					entry: the PayBreakdownDaily object being displayed
+					rowIndex: the index of the current row being rendered
+					editHTG: true if fields should be in edit mode (false for view/output mode)
+					aicp: true if AICP/Commercial production
+	-->
+	<ui:include src="payBreakHdr.xhtml">
+		<ui:param name="aicp" value="#{aicp}" />
+	</ui:include>
+
+	<!-- LINE NUMBER + DATE -->
+	<ace:column>
+		<h:panelGroup rendered="#{! editHTG}">
+			<h:outputText value="#{rowIndex+1}" styleClass="FL" style="width: 30%;"
+					rendered="#{entry.category ne null}" />
+			<h:outputText styleClass="FL txt11" value="#{entry.date}" style="width:60%;">
+				<f:convertDateTime pattern="M/dd" timeZone="#{timezone}" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- JOB # (for Commercials) -->
+	<ace:column rendered="#{aicp}">
+		<h:panelGroup>
+			<h:outputText value="#{entry.jobNumber}"
+				rendered="#{(not editHTG) or entry.category eq null}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- ACCOUNT CODES -->
+	<ace:column>
+		<h:panelGroup rendered="#{entry.category ne null}">
+			<!-- ACCOUNT COLUMNS -->
+			<ui:include src="accountCodes.xhtml">
+				<ui:param name="edit" value="#{editHTG}" />
+				<ui:param name="rate" value="#{entry.account}" />
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{entry.category eq null}">
+			&#160;
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- FREE -->
+	<ace:column rendered="#{aicp}">
+		<h:panelGroup>
+			<h:outputText value="#{entry.accountFree}"
+				rendered="#{(not editHTG) or entry.category eq null}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- CATEGORY -->
+	<ace:column>
+		<h:panelGroup>
+			<h:outputText value="#{entry.category} [#{entry.getExportName(useModelRelease)}]" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- HOURS -->
+	<ace:column>
+		<h:panelGroup>
+			<h:outputText value="#{entry.quantity}"
+					rendered="#{(not editHTG) or entry.category eq null}">
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MULTIPLIER -->
+	<ace:column>
+		<h:panelGroup>
+			<h:outputText value="#{entry.multiplier}"
+					rendered="#{(not editHTG) or entry.category eq null}">
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- RATE -->
+	<ace:column>
+		<h:panelGroup>
+			<!-- for Team, show extended rate. LS-1831 -->
+			<h:outputText value="#{entry.extRate}" styleClass="FR pad5rt"
+					rendered="#{disablePayBreakdownLines and ((not editHTG) or entry.category eq null)}">
+				<f:convertNumber type="number" pattern="#,##0.00##" />
+			</h:outputText>
+			<!-- for non-Team, show base rate. LS-1831 -->
+			<h:outputText value="#{entry.rate}" styleClass="FR pad5rt"
+					rendered="#{(not disablePayBreakdownLines) and ((not editHTG) or entry.category eq null)}">
+				<f:convertNumber type="number" pattern="#,##0.00##" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- TOTAL -->
+	<ace:column>
+		<h:panelGroup>
+			<h:outputText value="#{entry.total2}" styleClass="FR pad5rt">
+				<f:convertNumber type="number" pattern="#,##0.00" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+</ui:composition>

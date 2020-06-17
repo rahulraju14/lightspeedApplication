@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- The main Onboarding page, with tabs for Documents, packets,
+	distribution, approval, etc. -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Onboarding</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+    console.log("resize ******");
+
+	<c:if test="#{not headerViewBean.mobile}">
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+
+	var element = document.getElementById('ob:miniView');
+	resizeElement(element, 180, 390);
+	resizeDocPackets(); 	// resize tables on Documents and Packets mini-tab
+	resizeDistributionAndReview(); 	// resize tables on Distribution and Review mini-tab
+	resizeTransfer();		// resize tables on original Transfer mini-tab
+	resizeApprovalPaths();	// resize tables on Approval Paths mini-tab
+	resizeCopyDocuments();
+	resizeNewApprovalPaths();
+	resizeTransferTab();	// resize tables on new transfer mini-tab
+	//getResolution();
+
+	// resize preferences mini-tab
+	element = document.getElementById('prefScrolldiv');
+	resizeElement(element, 225, 340);
+
+	/* if (scrollme > 0) { // scrollToPos was called...
+		scrollme = 0;
+		scrollToPos(); // re-do scroll after resize of div is done.
+	}*/
+
+	if (scrollPath != 0) { // scrollToPos was called...
+		scrollPathToPos(); // re-do scroll after resize of div is done.
+	}
+
+	</c:if>
+	// Note: clearOnScroll() not needed for ace:dataTable
+
+}
+
+function resizeDistributionAndReview() {
+	// 1. Employee Status View
+
+	// Employee (contact) status table
+	resizeScrollable('ob:statusTable', 375, 150);
+
+	// Document table for selected employee (contact)
+	resizeScrollable('ob:contactDocTable', 358, 150);
+
+}
+
+function resizeCopyDocuments() {
+
+	resizeScrollable('ob:docstable', 300, 150);
+
+	resizeScrollable('ob:prodTable', 615, 150);
+
+	resizeScrollable('ob:selectedProdTable', 630, 130);
+}
+
+function resizeTransfer() {
+
+	// resize Contact-Document table in Transfer tab
+	resizeScrollable('ob:transferTable', 370, 110);
+
+	// re-position span with table counts
+	var element = document.getElementById('transferCount'); // span to move
+	if (element != null) {
+		var tbox = document.getElementById('transferDiv'); // blue box container
+		if (tbox != null) {
+			var ht = tbox.clientHeight; // height of box
+			ht = 7 - ht; // adjust for half line height
+			//console.log(ht);
+			element.style.top = ht + "px";
+		}
+	}
+}
+
+// For new transfer tab
+function resizeTransferTab() {
+
+	// resize table in Transfer tab
+	resizeScrollable('ob:tableTransferDoc', 415, 155);
+	var xferTab = getScrollDiv('ob:tableTransferDoc'); /* the scrollable div within the datatable */
+	if (xferTab != null) {
+		xferTab.style.height = 'auto'; /* eliminates white space below (short) doc list */
+	}
+
+	/* element = document.getElementById('transferDoc');
+	resizeElement(element, 310, 110); */
+
+	//getResolution();
+}
+
+
+function resizeApprovalPaths() {
+
+	/*resize production Member ace list */
+	resizeScrollable('ob:productionMemberList', 340, 150);
+
+	/* Id of table to adjust scroll bar*/
+	resizeScrollable('ob:approvalDocChainTable', 345, 150);
+
+	/* resize table document chain table*/
+	element = document.getElementById('ob:approvalDocChainTable');
+	resizeElement(element, 315, 150);
+
+	/* resize document approvers legend*/
+	element = document.getElementById('docApproverLegend');
+	resizeElement(element, 300, 150);
+
+	resizeScrollable('ob:linearProdApprover', 630, 90);
+
+	resizeScrollable('ob:linearDeptApprover', 630, 90);
+
+	resizeScrollable('ob:poolProdApprover', 630, 83);
+
+	resizeScrollable('ob:poolDeptApprover', 630, 83);
+}
+
+function resizeNewApprovalPaths() {
+
+	element = document.getElementById('approvalPathScrollTop');
+	resizeElement(element, 225, 310);
+
+	/* Id of table to adjust scroll bar*/
+	resizeScrollable('ob:approvalDocChainTable2',  630, 150);
+}
+
+function resizeDocPackets() {
+
+	// Left side - resize document table (folder contents)
+	resizeScrollable('ob:doctableSp', 352, 325);
+
+	/* resize tables and divs on "Docs and Packets" minitab */
+	var minHt = 330; // minimum size of top section when bottom is collapsed (includes blue wrappers)
+	var diff = 175; // headers and footers including mini-tab header
+	var gapHeight = 8; // minimum gap between top and bottom sections
+	var extra = 0;	// assume no extra height available
+	var packetCollapsed = 50; // height of "collapsed" Packet area
+
+	var packetElement = document.getElementById('ob:packetTable'); // bottom left datatable
+
+	/** calculate avail = space available for the 2 table areas and the gap between them. */
+	var avail = document.documentElement.clientHeight - diff;
+	if (packetElement != null) { // Bottom section is expanded
+		gapHeight = 0; // room for arrow control
+		minHt = 250;
+		extra = avail - ((2 * minHt) + gapHeight); // how much beyond minimum
+	}
+	else {
+		extra = avail - (minHt + packetCollapsed + gapHeight); // how much beyond minimum
+	}
+	//console.log("avail=" + avail + ", extra=" + extra + ", PacketElem=" + packetElement);
+	if (extra > 0) {
+		t = extra / 50; // gap gets 2% of extra space
+		if (t > 10) {
+			t = 10; // but no more than 10 extra px
+		}
+		gapHeight = gapHeight + t;
+		if (packetElement != null) {
+			extra = (extra - t) / 2; // split remaining space between top and bottom
+		}
+		else {
+			extra = extra - t;
+		}
+	}
+	else {
+		extra = 0;
+	}
+	tcHeight = minHt + extra; // scroll div height (NOT including blue wrapper or table header)
+	//console.log("tcHt=" + tcHeight + ", gap=" + gapHeight);
+
+	// top right of Starts Packet mini-tab - document table for selected tree node
+	/* resizeOne('ob:doctableSp', tcHeight); */
+
+	// top left - folder tree panelGroup wrapper
+	element = document.getElementById('ob:treePanel');
+	if (element != null) {
+		var treeHt = tcHeight - 75;
+		element.style.maxHeight = treeHt + "px";
+		element.style.height = treeHt + "px";
+	}
+
+	resizeOne('tablegap', gapHeight); // set the new gap height
+
+	if (packetElement != null) {
+		resizeOne('ob:packetTable', tcHeight); // right top table - list of packets
+		resizeOne('ob:packetDocTable', tcHeight); // right bottom table -- list of documents in one packet
+	}
+}
+
+function resizeOne( name, height) {
+	var element = document.getElementById(name);
+	if (element != null) {
+		//console.log("id=" + name + ", ht=" + height);
+		var subelem = element.childNodes[1];
+		if (subelem != null) {
+			var subht = height - 110; // adjust for table header, two blue box borders, etc.
+			//console.log("subelem=" + subelem + ", ht=" + subht);
+			try {
+				subelem.style.maxHeight = subht + "px";
+				subelem.style.height = subht + "px";
+				return;
+			}
+			catch(e) {
+			}
+		}
+		element.style.maxHeight = height + "px";
+		element.style.height = height + "px";
+	}
+}
+
+var formname = "ob";
+
+//var scrollme = 0;
+
+var scrollPath = 0;
+
+/*
+function setScrollPos(pos) {
+	// called via 'onscroll' tag
+	document.getElementById('ob:scrollPos').value = pos;
+}
+
+function scrollToPos() {
+	scrollme = 1; // tell "resize" to call us again in case it executes after us.
+	var scrollable = document.getElementById('ob:approvalPathScrollTop');
+	if (scrollable != null) {
+		var scrollposElem = document.getElementById('ob:scrollPos');
+		pos = scrollposElem.value;
+		if (pos != null) {
+			scrollable.scrollTop = pos;
+		}
+	}
+} */
+
+function setPathScrollPos(pos) {
+	// called via 'onscroll' tag
+	document.getElementById('ob:scrollPos').value = pos;
+	scrollPath = pos;
+}
+
+function scrollPathToPos() {
+	var scrollable = document.getElementById('approvalPathScrollTop');
+	if (scrollable != null) {
+		scrollable.scrollTop = scrollPath;
+	}
+}
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="ob">
+
+		<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+			<f:attribute name="tabid" value="#{not headerViewBean.talent ? 'onboarding' : 'talentonboarding'}" />
+		</h:outputText>
+		<!-- restore our saved mini-tab selection: -->
+		<h:outputText value="#{headerViewBean.checkMiniTab}" style="display:none" />
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" scope="request" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+				<div id="pnlFull" class="MA">
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+					<div class="FL rowCont ltrtBdr BKwhite">
+
+						<!-- Force a bean reference to instantiate (early) the correct bean based on the
+							 current mini-tab. This allows the bean to register with FilterBean before any
+							 callbacks are attempted. -->
+							<h:panelGroup rendered="#{headerViewBean.miniTab eq 1}">
+								<h:panelGroup rendered="#{statusListBean.statusType eq 'EMPLOYEE_STATUS'}">
+									<h:outputText value="" rendered="#{statusListBean.selectedTab eq 99}"/>
+								</h:panelGroup>
+								<!-- prevent unnecessary bean instantiation
+								<h:panelGroup rendered="#{statusListBean.statusType eq 'DOCUMENT_STATUS'}">
+									<h:outputText value="" rendered="#{docStatusBean.selectedTab eq 99}"/>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{statusListBean.statusType eq 'EMPLOYEE_DETAIL'}">
+									<h:outputText value="" rendered="#{empDetailBean.selectedTab eq 99}"/>
+								</h:panelGroup>
+								 -->
+							</h:panelGroup>
+
+						<!-- TODO DH: All the windows which includes this "errorsMain.xhtml" are showing an error message all the time. -->
+						<h:panelGroup styleClass="errMsgCont" rendered="#{ ! popupUploadBean.visible}">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="rowCont">
+							<div class="W50percnt FL">
+								<h:outputText styleClass="pnlHdrTxt" value="Onboarding#{aicp ? ':' : ''} #{aicp ? headerViewBean.project.title : ''}" />
+							</div>
+							<div class="FR pad10rt">
+
+								<!-- ENABLED EDIT BUTTON (PREFERENCES)-->
+								<h:panelGroup rendered="#{headerViewBean.miniTab eq 5 and (not empty authBean.pgFields['9.9,edit'])}">
+									<h:panelGroup rendered="#{(not payrollSetupBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Edit" action="#{payrollSetupBean.actionEdit}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- DISABLED EDIT BUTTON (PREFERENCES)-->
+									<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+										<span class="FR pad5rt">
+											<span class="btnPriDisLt"/>
+											<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+											</span>
+											<span class="btnPriDisRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- EXPORT BUTTON (OLD TRANSFER TAB)-->
+								<!-- 
+								<h:outputText rendered="#{headerViewBean.miniTab eq 2 and (not empty authBean.pgFields['2.0,write_any'])}">
+									<h:outputText>
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Export" action="#{transferBean.actionExport}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:outputText>
+								</h:outputText>
+								 -->
+
+								<!-- EXPORT BUTTON (NEW TRANSFER TAB)-->
+								<h:panelGroup rendered="#{headerViewBean.miniTab eq 3 and (not empty authBean.pgFields['2.0,write_any'])}">
+									<h:panelGroup>
+										<span class="FR pad5rt">
+											<span class="btnPriHotLt"/>
+											<span>
+											<ace:linkButton value="Export" action="#{transferDocBean.actionExport}" styleClass="btnPriHotCt" />
+											</span>
+											<span class="btnPriHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</div>
+						</div>
+						<div class="centerFullTb MA">
+							<h:panelGrid id="miniView" styleClass="miniPanel" style="min-height:609px;">
+
+								<!-- New transfer (v2) page used for all clients except those using M.S. or C&C -->
+								<c:set var="psId" value="#{headerViewBean.production.payrollPref.payrollService.id}" scope="request" />
+								<c:set var="useTransferV2" value="#{(psId lt 12) or (psId gt 14)}" scope="request" />
+
+								<!-- Tabs for Onboarding -->
+								<ace:tabSet id="tabs" selectedIndex="#{headerViewBean.miniTab}">
+
+									<!-- 0. Document & Packets mini-tab -->
+									<ui:include src="packets.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- 1. Distribution & Status mini-tab -->
+									<ui:include src="distReview.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- 2. Original (row per doc) Transfer mini-tab -->
+									<ui:include src="documentTransfer.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+										<ui:param name="useTransferV2" value="#{useTransferV2}" />
+									</ui:include>
+
+									<!-- 3. New (row per person) Transfer mini-tab -->
+									<ui:include src="transferDocument.xhtml">
+										<ui:param name="useTransferV2" value="#{useTransferV2}" />
+									</ui:include>
+
+									<!-- 4. Approval Paths mini-tab -->
+									<ui:include src="approvalPaths.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- 5. Preferences.xhtml mini-tab -->
+									<ui:include src="documentPreferences.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+											<!-- 6. Student.xhtml mini-tab -->
+											<ui:include src="Student.xhtml">
+											</ui:include>
+
+
+
+											<ui:include src="copyDocuments.xhtml" />
+
+								</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<div class="rowBtn">
+
+								<div class="rowBtnBdr"></div>
+
+								<!-- NEW APPROVAL PATH TAB BUTTONS -->
+								<h:panelGroup rendered="#{(headerViewBean.miniTab eq 4)}">
+
+									<!-- CANCEL BUTTON -->
+									<h:panelGroup rendered="#{(approvalPathsBean.editMode)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt" />
+											<span>
+											<ace:linkButton styleClass="btnPriEnbCt" value="Cancel"
+												action="#{approvalPathsBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+
+									<!-- SAVE BUTTON -->
+									<h:panelGroup rendered="#{(approvalPathsBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton value="Save" onmouseup="showErrors();"
+													action="#{approvalPathsBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- PAYROLL PREFERENCES SETUP SAVE and CANCEL BUTTONS -->
+								<h:panelGroup rendered="#{(headerViewBean.miniTab eq 5)}">
+									<!-- CANCEL BUTTON -->
+									<h:panelGroup rendered="#{(payrollSetupBean.editMode)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt"
+													 value="Cancel" action="#{payrollSetupBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- SAVE BUTTON -->
+									<h:panelGroup rendered="#{(payrollSetupBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+											<ace:linkButton value="Save" onmouseup="showErrors();"
+												 action="#{payrollSetupBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end contactDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+		</div>
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+<ace:textEntry id="scrollPos" value="#{approvalPathsBean.scrollPos}" style="display:none" />
+
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+	<h:panelGroup rendered="#{headerViewBean.miniTab eq 0}">
+		<ui:include src="../ob/popupUpload.xhtml" />
+		<ui:include src="../ob/documentOrder.xhtml" /><!-- Document Order pop-up. LS-4600 -->
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{headerViewBean.miniTab eq 1}">
+		<ui:include src="../ob/popupDeliver.xhtml" />
+	</h:panelGroup>
+	
+	<!-- 	Added popup for zipcode and city -->
+	<h:panelGroup>
+		<ui:include src="../ob/zipcodepopup.xhtml" />
+	</h:panelGroup>
+
+
+	<h:panelGroup rendered="#{headerViewBean.miniTab eq 3}">
+		<ui:include src="../ob/selectDocuments.xhtml" />
+	</h:panelGroup>
+	<h:panelGroup rendered="#{headerViewBean.miniTab eq 4}">
+		<ui:include src="../ob/popupSelectApprovers.xhtml" />
+	</h:panelGroup>
+
+	<ui:include src="../common/confirmpopupbig.xhtml" />
+	<!-- <ui:include src="../common/confirmpopup.xhtml" /> -->
+	<ui:include src="../common/popupinput.xhtml" />
+
+
+</h:body>
+</html>

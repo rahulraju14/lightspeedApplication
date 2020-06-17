@@ -1,0 +1,496 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Personal mini-tab of the Prod Admin / Users page -->
+
+	<ace:tabPane label="Personal">
+
+		<div class="miniTabPart rowGradient">
+
+			<h:panelGroup
+				rendered="#{userListBean.editMode}"
+				styleClass="subPersonal FL pad2tp">
+
+				<div class="rowCont FL LH20">
+
+					<span class="fdNm_first FL">
+						<h:outputText value="First Name:" />
+						<span class="mandatory">*</span>
+					</span>
+					<span class="fd_first">
+						<ace:textEntry maxlength="20"
+								value="#{userListBean.user.firstName}" styleClass="FL" />
+					</span>
+
+					<span class="fdNm_a pad10lt">
+						<h:outputText value="Middle Initial:" />
+					</span>
+					<span class="">
+						<ace:textEntry maxlength="1" styleClass="FL W30"
+								value="#{userListBean.user.middleName}" />
+					</span>
+
+					<span class="fdNm pad10lt">
+						<h:outputText value="Last Name:" />
+						<span class="mandatory">*</span>
+					</span>
+					<span class="fd_last">
+						<ace:textEntry maxlength="25"
+								value="#{userListBean.user.lastName}" />
+					</span>
+
+				</div>
+			</h:panelGroup>
+
+			<div id="Dim" class="subPersonalLt FL"><!-- Dim is used to identify only these fields when contact assist 1st is ckd -->
+
+				<!-- personal Role -->
+
+				<!-- personal address 1 -->
+				<h:panelGroup>
+
+					<div class="rowCont FL fd_btmPad">
+						<span class="fdNm">
+							<h:outputText value="Address:" />
+						</span>
+						<h:panelGroup
+							rendered="#{not userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+							<span class="fd">
+								<h:outputText
+									value="#{userListBean.user.homeAddress.addrLine1}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+							<span class="fd">
+								<ace:textEntry maxlength="35"
+									styleClass="address"
+									value="#{userListBean.user.homeAddress.addrLine1}" />
+							</span>
+						</h:panelGroup>
+					</div><!-- end personal address 1 -->
+
+					<!-- personal address 2 -->
+					<h:panelGroup
+						rendered="#{not userListBean.editMode and (not empty userListBean.user.homeAddress.addrLine2) and (not (empty authBean.pgFields['0.1,account']))}">
+						<div class="rowCont FL fd_btmPad">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span class="fd">
+								<h:outputText
+									value="#{userListBean.user.homeAddress.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+						<div class="rowCont FL fd_btmPad">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span class="fd">
+								<ace:textEntry maxlength="35" styleClass="address"
+									value="#{userListBean.user.homeAddress.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup><!-- personal address 2 -->
+
+					<!-- personal city, state zip "VIEW mode" -->
+					<h:panelGroup styleClass="rowCont FL fd_btmPad"
+						rendered="#{not userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+						<span class="fdNm">
+							<!-- keep this place holder -->
+						</span>
+						<span class="fd">
+							<span class="FL">
+								<h:outputText styleClass="pad5rt" rendered="#{not empty userListBean.user.homeAddress.city}"
+									value="#{userListBean.user.homeAddress.city}," />
+							</span>
+							<span class=" FL pad5rt">
+								<h:outputText
+									value="#{userListBean.user.homeAddress.state}" />
+							</span>
+							<span class="FL">
+								<h:outputText
+									value="#{userListBean.user.homeAddress.zip}" />
+							</span>
+						</span>
+					</h:panelGroup>
+					<!-- end personal city state zip "VIEW mode" -->
+
+					<!-- personal city, state zip "EDIT mode" -->
+					<h:panelGroup
+						rendered="#{userListBean.editMode}">
+						<div class="rowCont FL fd_btmPad">
+							<span class="fdNm">
+								<h:outputText value="City:" />
+							</span>
+							<h:panelGroup
+								rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+								<span class="fd">
+									<ace:textEntry maxlength="30" styleClass="city"
+										value="#{userListBean.user.homeAddress.city}" />
+								</span>
+							</h:panelGroup>
+						</div>
+						<div class="rowCont FL fd_btmPad">
+							<span class="fdNm">
+								<h:outputText value="State:" />
+							</span>
+							<h:panelGroup
+								rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+								<span class="fd_state">
+									<h:selectOneMenu styleClass="state"
+										value="#{userListBean.user.homeAddress.state}">
+										<f:selectItems
+											value="#{applicationScopeBean.stateDL[userListBean.user.homeAddress.country]}" />
+									</h:selectOneMenu>
+								</span>
+							</h:panelGroup>
+							<span class="fdNm_zip">
+								<h:outputText value="Zip:" />
+							</span>
+							<h:panelGroup
+								rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+								<span class="fd_zip">
+									<ace:textEntry maxlength="10" styleClass="zip"
+										value="#{userListBean.user.homeAddress.zip}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</h:panelGroup><!-- end personal city, state zip "EDIT mode" -->
+
+					<!-- personal country -->
+					<h:panelGroup
+						rendered="#{not userListBean.editMode and (not empty userListBean.user.homeAddress.country)
+							and (userListBean.user.homeAddress.country ne 'US')
+							and not (empty authBean.pgFields['0.1,account'])}">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span class="fd">
+							<h:outputText
+								value="#{userListBean.user.homeAddress.country}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{userListBean.editMode}"
+						styleClass="rowCont FL fd_btmPad">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span class="fd">
+							<h:panelGroup
+								rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+								<h:selectOneMenu
+									value="#{userListBean.user.homeAddress.country}" styleClass="country">
+									<f:selectItems
+										value="#{applicationScopeBean.countryDL}" />
+										<ace:ajax />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</span>
+					</h:panelGroup><!-- end personal country -->
+
+					<!-- personal Email -->
+					<div class="rowCont FL fd_btmPad">
+						<span class="fdNm">
+							<h:outputText value="E-mail:" />
+						</span>
+						<h:panelGroup
+							rendered="#{not userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+							<span class="fd">
+								<h:outputLink
+									value="mailto:#{userListBean.user.emailAddress}">
+								<h:outputText
+									value="#{userListBean.user.emailAddress}" />
+								</h:outputLink>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+							<span class="fd">
+								<ace:textEntry styleClass="address"
+									maxlength="100" value="#{userListBean.user.emailAddress}">
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div><!-- end personal Email -->
+
+					<!-- personal IM -->
+					<div class="rowCont FL fd_btmPad">
+						<h:panelGroup rendered="#{not userListBean.editMode}">
+							<span class="fdNm">
+								<h:outputText value="IM:" />
+							</span>
+							<div class="fd" style="max-width:255px;">
+								<h:panelGroup
+									rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+									<h:outputText styleClass="FL" value="#{userListBean.user.imService}" />
+									<span class="FL B pad5lt">ID:</span>
+									<h:outputText styleClass="FL pad3lt NW" style="max-width:188px;height:20px;overflow:hidden;"
+										value="#{userListBean.user.imAddress}" />
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userListBean.editMode}">
+							<span class="fdNm">
+								<h:outputText value="IM:" />
+							</span>
+							<div class="fd_xsm">
+								<h:selectOneMenu styleClass="FL"
+									rendered="#{not (empty authBean.pgFields['0.1,account'])}"
+									value="#{userListBean.user.imService}"
+									style="width:75px">
+									<f:selectItems
+										value="#{enumList.imServiceTypes}" />
+								</h:selectOneMenu>
+							</div>
+							<span class="fdNm_xsm pad10lt">
+								<h:outputText value="ID:" />
+							</span>
+							<div class="fd_xsm">
+								<h:panelGroup
+									rendered="#{not (empty authBean.pgFields['0.1,account'])}">
+									<ace:textEntry styleClass="FL"
+										maxlength="100" style="width:130px;"
+										value="#{userListBean.user.imAddress}" />
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div><!-- end personal IM -->
+
+					<!-- personal IMDB -->
+					<div class="rowCont FL fd_btmPad">
+						<span class="fdNm">
+							<h:outputText value="IMDB:" />
+						</span>
+						<span class="fd">
+							<h:panelGroup style="width:250px;overflow-x:hidden;"
+								rendered="#{not userListBean.editMode}">
+								<h:outputLink target="_blank"
+									value="http://#{userListBean.user.imdbLink}">
+									<h:outputText
+										value="#{userListBean.user.imdbLink}" />
+								</h:outputLink>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{userListBean.editMode}">
+								<ace:textEntry maxlength="60" styleClass="address"
+									value="#{userListBean.user.imdbLink}" />
+							</h:panelGroup>
+						</span>
+					</div><!-- end personal IMDB -->
+
+				</h:panelGroup><!-- dim switch when contact assist 1st is ckd -->
+
+			<!-- change password -->
+			<div class="FL pad5lt pad15tp">
+				<h:panelGroup styleClass="homeCngPwdContWrap MA"
+						rendered="#{not headerViewBean.offline}">
+					<div id="homeCngPwdCont" class="FL">
+						<div class="subSecHdg_homeCngPwd">My Password</div>
+
+						<h:panelGroup styleClass="btn_chgPwd">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Change Password" title="Open dialog box to set a new password"
+									action="#{preferencesBean.actionOpenChangePassword}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="FL pad15tp LH32">
+							<ace:textEntry value="********" styleClass="FL W210" disabled="true" style="background:#efefef;"/>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+			</div><!-- end change password -->
+
+			</div><!-- end subPersonal Left -->
+
+			<!-- subPersonalRt -->
+			<div class="subPersonalRt FR">
+
+				<!-- personal agent - ->
+				<h:panelGroup
+					visible="false"
+					styleClass="W98percnt FL fd_btmPad pad2tp">
+					<h:panelGroup
+						rendered="#{userListBean.editMode}">
+						<span class="FL B LH18 W42">
+							<h:outputText value="Agent:"></h:outputText>
+						</span>
+						<span class="FL LH18">
+							<h:outputText
+								styleClass="pad5tp"
+								value="#{userListBean.user.talentAgent.displayName}"
+								rendered="#{not empty userListBean.user.talentAgent.displayName}">
+							</h:outputText>
+							<h:outputText value="NA"
+								rendered="#{empty userListBean.user.talentAgent.displayName}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{not userListBean.editMode}">
+						<span class="FL B LH18 pad5tp W42">
+							<h:outputText value="Agent:"></h:outputText>
+						</span>
+						<span class="FL LH18 pad5tp">
+							<h:outputText
+								value="#{userListBean.user.talentAgent.displayName}"
+								rendered="#{not empty userListBean.user.talentAgent.displayName}">
+							</h:outputText>
+							<h:outputText value="NA"
+								rendered="#{empty userListBean.user.talentAgent.displayName}" />
+						</span>
+					</h:panelGroup>
+				</h:panelGroup><!- - end personal agent -->
+
+				<!-- personal images -->
+				<div class="W96percnt thumbNail">
+
+					<ui:include src="../common/imageTable.xhtml">
+						<ui:param name="list" value="#{userListBean.user.imageResources}" />
+						<ui:param name="imageTitle" value="Image" />
+						<ui:param name="showName" value="false" />
+					</ui:include>
+
+				</div><!-- end personal images -->
+
+				<div class="W98percnt FL pad2tp">
+
+					<ace:buttonGroup id="phones" mutuallyExclusive="true">
+					<div class="contactPhContWrap">
+						<div id="contactPhCont" class="MA">
+							<h:panelGroup
+								rendered="#{userListBean.editMode}">
+								<h:outputText
+									styleClass="FR B txt10 pad3rt"
+									value="Primary#" />
+							</h:panelGroup>
+							<!-- personal office phone -->
+							<div class="W240 LH20 MA pad10tp">
+								<span class="FL B LH18 W42 pad3lt">
+									<h:outputText value="Office:" />
+								</span>
+								<span class="FL LH20">
+									<h:panelGroup
+										rendered="#{(not userListBean.editMode) and (not empty authBean.pgFields['0.1,account'])}">
+										<h:outputText styleClass="pad10lt FL W140" value="#{userListBean.user.businessPhone}" />
+										<h:panelGroup styleClass="FL pad5lt pad-2tp" rendered="#{(not empty userListBean.user.businessPhone) and
+												(userListBean.user.primaryPhoneIndex eq 0)}">
+											<h:graphicImage value="" url="../../i/icon_check.gif" alt="office phone is preferred" />
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup
+										rendered="#{userListBean.editMode}">
+										<ace:textEntry styleClass="FL W120"
+											id="businessPhoneNumber"
+											maxlength="25"
+											value="#{userListBean.user.businessPhone}">
+											<f:validator validatorId="lightspeed.phoneNumberValidator" />
+										</ace:textEntry>
+										<span class="FL pad15lt">
+											<ace:radioButton value="#{userListBean.primaryPhone[0]}">
+												<ace:ajax execute="phones" event="activate" render="@form"/>
+											</ace:radioButton>
+										</span>
+
+									</h:panelGroup>
+								</span>
+							</div>
+
+							<!-- personal cell phone -->
+							<div class="W240 LH20 MA pad2tp">
+								<span class="FL B LH18 W42 pad3lt">
+									<h:outputText value="Cell:" />
+								</span>
+								<span class="FL LH20">
+									<h:panelGroup
+										rendered="#{not userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+										<h:outputText styleClass="pad10lt FL W140" value="#{userListBean.user.cellPhone}" />
+										<h:panelGroup styleClass="FL pad5lt pad-2tp" rendered="#{(not empty userListBean.user.cellPhone) and
+												(userListBean.user.primaryPhoneIndex eq 1)}">
+											<h:graphicImage value="" url="../../i/icon_check.gif" alt="cell phone is preferred"/>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup
+										rendered="#{userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+										<ace:textEntry styleClass="FL W120"
+											maxlength="25"
+											value="#{userListBean.user.cellPhone}">
+											<f:validator validatorId="lightspeed.phoneNumberValidator" />
+										</ace:textEntry>
+										<span class="FL pad15lt">
+											<ace:radioButton value="#{userListBean.primaryPhone[1]}">
+												<ace:ajax execute="phones" event="activate" render="@form"/>
+											</ace:radioButton>
+										 </span>
+									</h:panelGroup>
+								</span>
+							</div>
+
+							<!-- personal home phone -->
+							<div class="W240 LH20 MA pad2tp">
+								<span class="FL B LH18 W42 pad3lt">
+									<h:outputText value="Home:" />
+								</span>
+								<span class="FL LH20">
+									<h:panelGroup
+										rendered="#{not userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+										<h:outputText styleClass="pad10lt FL W140" value="#{userListBean.user.homePhone}" />
+										<h:panelGroup styleClass="FL pad5lt pad-2tp" rendered="#{(not empty userListBean.user.homePhone) and
+												(userListBean.user.primaryPhoneIndex eq 2)}">
+											<h:graphicImage value="" url="../../i/icon_check.gif" alt="home phone is preferred"/>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup
+										rendered="#{userListBean.editMode and (not (empty authBean.pgFields['0.1,account']))}">
+										<ace:textEntry styleClass="FL W120"
+											maxlength="25"
+											value="#{userListBean.user.homePhone}">
+											<f:validator validatorId="lightspeed.phoneNumberValidator" />
+										</ace:textEntry>
+										 <span class="FL pad15lt">
+										 <ace:radioButton label="" value="#{userListBean.primaryPhone[2]}" >
+											<ace:ajax execute="phones" event="activate" render="@form"/>
+										 </ace:radioButton>
+										 </span>
+									</h:panelGroup>
+								</span>
+							</div>
+						</div><!-- end phone #'s -->
+
+						<h:panelGroup styleClass="rowCont FL legend">
+							<h:panelGroup
+								rendered="#{(not userListBean.editMode) and (
+									(not empty userListBean.user.homePhone     and (userListBean.user.primaryPhoneIndex eq 2) and (not (empty authBean.pgFields['0.1,account']))) or
+									(not empty userListBean.user.cellPhone     and (userListBean.user.primaryPhoneIndex eq 1) and (not (empty authBean.pgFields['0.1,account']))) or
+									(not empty userListBean.user.businessPhone and (userListBean.user.primaryPhoneIndex eq 0) and (not empty authBean.pgFields['0.1,account']))
+								) }">
+							<span class="FL pad2tp">
+								<h:graphicImage value="" url="../../i/icon_check.gif" alt="check indicates preferred phone number"/>
+							</span>
+							<span class="legendTxt">&#160;- Primary</span>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+					</ace:buttonGroup>
+				</div>
+			</div><!-- end subPersonal Right -->
+		</div><!-- end personalCont -->
+
+		<!-- personal Union Ckbxs -->
+		<div class="rowCont FL pad5tp">
+		</div><!-- end Union Ckbxs -->
+
+	</ace:tabPane><!--  End "Personal" mini-Tab   -->
+
+</ui:composition>

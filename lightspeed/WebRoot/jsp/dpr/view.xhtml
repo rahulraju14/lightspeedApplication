@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} DPR View</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+				element = document.getElementById('scrolldiv');
+				resizeElement(element,236, 360);
+
+				element = document.getElementById('dprCont');
+				resizeElement(element, 181, 395);
+
+				//console.log("resize->scroll");
+				scrollToPos(); // re-do scroll after resize of div is done.
+
+				</c:if>
+			}
+
+			var formname = "dprForm";
+
+		</script>
+	</h:head>
+	<h:body>
+
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+			ice.ace.jq( document ).ready(function() {
+				initDomLoaded(); // do our standard page initialization tasks.
+			});
+			</script>
+		</c:if>
+
+		<h:form id="dprForm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="reports" />
+			</h:outputText>
+
+			<div id="main">
+
+				<ui:include src="../common/header2.xhtml" />
+
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+
+							<!-- Begin Lists pnlLt -->
+							<div id="pnlFull" class="MA">
+
+								<div id="errMsgCont" class="CT rowCont FL pad12lt pad2tp">
+									<ui:include src="../common/errorsMain.xhtml" />
+									<!-- call to dprViewBean.view (= getView()) to ensure we're not in edit mode -->
+									<h:outputText value=" " rendered="#{dprViewBean.view}" />
+								</div>
+
+								<div class="topBdrCont">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<ui:include src="viewControls.xhtml"></ui:include>
+
+								<div class="rowCont ltrtBdr BKwhite FL">
+									<div class="centerFullTb MA pad3tp">
+
+										<div class="FL">
+											<div id="dprCont">
+												<!-- Tabs for dpr rpt -->
+												<ace:tabSet id="tabs" selectedIndex="0">
+
+													<!-- Prod Rpt Tab -->
+													<ace:tabPane label="Production Report">
+
+														<!--start scrollable body section-->
+														<div id="scrolldiv" class="dprScrCont" onscroll="setScrollPos(this.scrollTop);">
+
+															<!-- dates, logo, producer/director area -->
+															<ui:include src="header.xhtml" />
+
+															<!-- call/shooting/meal/wrap times -->
+															<div class="FL rowCont pad20tp rowGradient pad20bm">
+																<ui:include src="times.xhtml" />
+															</div>
+
+															<ui:include src="sceneList.xhtml" />
+
+															<div class="FL rowCont pad5lt pad20tp rowGradient pad40bm">
+
+																<ui:include src="dayStats.xhtml" />
+
+																<div class="rowCont pad10tp">
+																	<ui:repeat var="episode" value="#{dprViewBean.dpr.dprEpisodes}">
+																		<h:panelGroup styleClass="FL DIB" style="width:48%;">
+																			<ui:include src="sceneStats.xhtml">
+																				<ui:param name="episode" value="#{episode}" />
+																			</ui:include>
+																		</h:panelGroup>
+																	</ui:repeat>
+																	<ui:include src="sceneNotes.xhtml" />
+																</div>
+															</div>
+
+															<div class="FL rowCont pad10bm">
+																<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bk_sl_grid">
+																	<tr>
+																		<td>
+																			<h:outputText styleClass="FL pad3lt" escape="false"
+																				value="#{dprViewBean.dpr.comment1}" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<h:outputText styleClass="FL pad3lt" escape="false"
+																				value="#{dprViewBean.dpr.comment2}" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<h:outputText styleClass="FL pad3lt" escape="false"
+																				value="#{dprViewBean.dpr.comment3}" />
+																		</td>
+																	</tr>
+																</table>
+															</div>
+
+															<h:panelGroup rendered="#{not empty dprViewBean.filmStockList}">
+																<div class="MA rowCont pad20tp rowGradient pad40bm">
+																	<ui:include src="material.xhtml" />
+																</div>
+															</h:panelGroup>
+
+															<div class="FL rowCont pad20tp rowGradient pad40bm">
+																<div class="FL rowCont B pad3lt">Cast</div>
+
+																<div class="FL rowCont">
+																	<ui:include src="cast.xhtml" />
+																</div>
+															</div>
+
+															<div class="FL rowCont pad20tp rowGradient pad40bm">
+																<ui:include src="background.xhtml" />
+															</div>
+
+															<div class="FL rowCont rowGradient pad20tp pad40bm">
+																<div class="pad10tp MA">
+																	<div class="FL W24percnt pad3lt">
+																		<h:outputText escape="false" value="#{dprViewBean.dpr.contact1}" />&#160;
+																	</div>
+																	<div class="FL W24percnt pad10lt">
+																		<h:outputText escape="false" value="#{dprViewBean.dpr.contact2}" />&#160;
+																	</div>
+																	<div class="FL W24percnt pad10lt">
+																		<h:outputText escape="false" value="#{dprViewBean.dpr.contact3}" />&#160;
+																	</div>
+																	<div class="FL W24percnt pad10lt">
+																		<h:outputText escape="false" value="#{dprViewBean.dpr.contact4}" />&#160;
+																	</div>
+																</div>
+															</div>
+
+															<!-- END "FRONT PAGE" of DPR -->
+
+															<ui:include src="backPage.xhtml" />
+
+															<div class="FL rowCont pad20tp pad40bm">
+																<ui:include src="notes.xhtml" />
+															</div>
+
+														</div><!-- End scrollable body -->
+
+													</ace:tabPane>
+												</ace:tabSet>
+											</div><!-- end dprCont -->
+
+										</div><!-- end miniView -->
+									</div><!-- end centerFullTab -->
+
+									<!-- Bottom button(s) -->
+									<div class="rowBtn">
+										<div class="rowBtnBdr"></div>
+										<div class="FL rowCont">
+											<h:panelGroup>
+												<span class="FR pad10rt">
+													<span class="btnSecHotLt" />
+													<span>
+														<ace:linkButton
+															value="Return"
+															action="reports"
+															styleClass="btnSecHotCt">
+														</ace:linkButton>
+													</span>
+													<span class="btnSecHotRt" />
+												</span>
+											</h:panelGroup>
+										</div>
+									</div><!-- end Btn row -->
+
+								</div><!-- end outer list cont -->
+
+								<div class="btmBdrCont">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+
+							</div><!-- end pnlFull -->
+						</div><!-- end pnlCont -->
+					</div><!-- end ctrCont -->
+
+					<div class="CB"></div><!-- clears float for liquid layout -->
+
+				</div><!-- end mainCont -->
+
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+
+			</div><!-- end main -->
+
+			<ace:textEntry id="scrollPos" value="#{dprViewBean.scrollPos}" style="visibility:hidden;"/>
+
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+		
+		<ui:include src="../common/selectcontacts.xhtml" />
+
+	</h:body>
+</html>

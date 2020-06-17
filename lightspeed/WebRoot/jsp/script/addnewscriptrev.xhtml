@@ -1,0 +1,230 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The "Print Script" pop-up dialog; used on Scripts page -->
+
+<h:form enctype="multipart/form-data">
+	<!-- multipart spec is needed due to fileEntry embedded within dialog -->
+	<c:set var="bean" value="#{scriptDraftsBean}" />
+
+	<ace:dialog visible="#{bean.showAddNewScriptRev}"
+			header="Add New Script Revision"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popupAddScriptRev">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCloseAdd}"/>
+
+		<div class="popNewSptRevBdy">
+
+			<div class="FL rowCont pad22tp">
+			<h:panelGroup styleClass="MA CT popErrMsgCont"
+				rendered="#{not empty importScript.errorMessage}">
+				<div id="popErrMsgCont">
+					<div class="popErrTitleBar">
+						<h:outputText styleClass="errTitleBarTxt" value="Error" />
+					</div>
+					<ul><li><h:outputText value="#{importScript.errorMessage}" /></li></ul>
+					<ace:linkButton styleClass="errorCloseIcon" title="close"
+						onclick="hidePopErrors();return false;">
+						X
+					</ace:linkButton>
+				</div>
+			</h:panelGroup>
+			</div>
+
+			<div id="addScripRevCont">
+				<div class="popup_main pad15tp pad20rt">
+
+						<div class="pad5tp FL rowCont" style="border:1px solid #999;">
+							<span class="FL pad5lt" style="padding-left:2px;background-color:#999;width:104px;top:-8px;color:#fff;">
+								Title &amp; Page Color
+							</span>
+							<span class="rowCont FL">
+								<span class="FL pad3tp pad15lt fdNm">
+									<h:outputText value="Title:" />
+								</span>
+								<span class="fd FL pad2lt">
+									<ace:textEntry maxlength="50" style="width:350px;"
+										id="addScript_focus"
+										value="#{importScript.description}" />
+								</span>
+							</span>
+							<span class="rowCont pad3tp">
+								<span class="FL pad3tp pad15lt fdNm">
+									<h:outputText value="Page Color:" />
+								</span>
+								<h:selectOneMenu styleClass="FL pad2lt"
+									value="#{importScript.colorName}"
+									disabled="#{importScript.importOk}">
+									<f:converter converterId="lightspeed.ColorNameConverter" />
+									<f:selectItems value="#{importScript.colorList}"/>
+									<ace:ajax />
+								</h:selectOneMenu>
+							</span>
+						</div>
+
+						<div class="pad20tp FL rowCont" style="height:60px;border:1px solid #999;">
+							<span class="FL pad5lt" style="padding-left:2px;background-color:#999;width:165px;top:-8px;color:#fff;">
+								How will the Script be input?
+							</span>
+							<span class="rowCont pad12lt">
+							<ace:radioButtons styleClass="W140"
+									value="#{importScript.importMethod}">
+								<f:selectItem itemLabel="Automatic Import" itemValue="auto"/>
+								<f:selectItem itemLabel="Manual Entry" itemValue="manual"
+										itemDisabled="#{! importScript.manualAllowed}" />
+									<ace:ajax />
+							</ace:radioButtons>
+							</span>
+						 </div>
+
+						<div class="pad20tp FL rowCont" style="border:1px solid #999;">
+							<span class="FL pad5lt" style="padding-left:2px;background-color:#999;width:137px;top:-8px;color:#fff;">
+								(Automatic Import only)
+							</span>
+							<div class="rowCont FL">
+								<span class="pad20lt">Select the Import file:</span>
+								<span class="pad10lt B_false">
+									You may import Final Draft 7 (.xml), 8 (.fdx), .pdf, or .sex files.
+								</span>
+							</div>
+						 	<span class="rowCont FL pad15lt pad15tp" style="height:45px;">
+								<ace:fileEntry id="import_file" label="Upload File"
+										fileEntryListener="#{importScript.listenUpload}"
+										disabled="#{(importScript.importAllowed) or (importScript.importMethod eq 'manual')}"
+										maxFileSize="6291456"
+										messagePersistence="false"
+										relativePath="upload"
+										useOriginalFilename="true" >
+								</ace:fileEntry><!-- 6291456=6*1024*1024=6MB -->
+								<h:panelGroup rendered="#{(! importScript.importAllowed) and (importScript.importMethod ne 'manual')}">
+									<span class="btnSecHotLt" />
+									<span>
+										<h:commandButton value="Upload File" style="width:90px;" styleClass="btnSecHotCt"  />
+									</span>
+									<span class="btnSecHotRt" />
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{(importScript.importAllowed) or (importScript.importMethod eq 'manual')}">
+									<span class="btnPriDisLt" />
+									<span>
+										<ace:linkButton value="Upload File" style="width:90px;"
+											styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</h:panelGroup>
+							</span>
+
+							<div class="rowCont FL">
+								<table class="MA W100percnt defTab" style="height:100px">
+									<tr>
+										<td>
+										<h:panelGroup styleClass="rowCont CT">
+												<span class="ckbx">
+													<h:selectBooleanCheckbox id="includeSceneElements"
+														disabled="#{importScript.importMethod eq 'manual'}"
+														value="#{importScript.includeSceneElements}"/>
+												</span>
+												<span class="pad15rt ckbxTxtLbl_B">
+													Include Scene Elements
+												</span>
+												<span class="ckbx">
+													<h:selectBooleanCheckbox id="includeText"
+														disabled="#{importScript.importMethod eq 'manual'}"
+														value="#{importScript.includeText}"/>
+												</span>
+												<span class="ckbxTxtLbl_B">
+													Include Script Text
+												</span>
+											</h:panelGroup>
+										</td>
+									</tr>
+									<tr>
+										<td class="pad10tp">
+											<h:panelGroup
+												styleClass="rowCont CT"
+												rendered="#{! importScript.importAllowed}">
+												<h:outputText
+													styleClass="infoTxtnopad"
+													value="(Please upload a file to enable import.)"/>
+											</h:panelGroup>
+											<h:panelGroup
+												styleClass="rowCont hotTxt pad20lt"
+												rendered="#{importScript.importAllowed}">
+												<h:outputText
+													value="File "/>
+												<h:outputText
+													styleClass="B"
+													value="#{importScript.displayFilename}"/>
+												<h:outputText
+													value=" uploaded; click Continue to begin import."/>
+											</h:panelGroup>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="pad20lt infoTxtnopad">
+												<h:outputText styleClass=" " value="#{importScript.uploadStatus}"/>
+		  										<h:outputText rendered="#{not empty importScript.uploadStatus}"
+		  											styleClass="pad10lt" value="File type is: #{importScript.fileContentType}"/>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div id="uploadprog" class="pad10tp rowCont CT pad10bm">
+								<img src="../../i/uploadprogbars.gif" />
+							</div>
+						</div>
+				</div>
+			</div>
+
+			<div class="popBtnCont2 padPop10tp">
+
+				<!-- this button gets "clicked" by JavaScript -->
+				<h:commandButton id="btnTooBig" value="big" style="visibility:hidden;"
+						action="#{importScript.actionFileTooBig}" />
+
+				<span class="FR pad15rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel" styleClass="btnPriEnbCt"
+								action="#{scriptDraftsBean.actionCancelAdd}" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+
+				<h:panelGroup id="continueOn" styleClass="FR pad5rt" onclick="showUploadProg();"
+						rendered="#{importScript.importAllowed or importScript.importMethod eq 'manual'}">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Continue" styleClass="btnSecHotCt"
+								action="#{scriptDraftsBean.actionContinueAdd}" />
+					</span>
+					<span class="btnSecHotRt" />
+				</h:panelGroup>
+				<h:panelGroup id="continueOff" styleClass="FR pad5rt" style="display: none;"
+						rendered="#{importScript.importAllowed or importScript.importMethod eq 'manual'}">
+					<span class="btnPriDisLt" />
+					<span>
+						<ace:linkButton value="Continue"
+								styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+					</span>
+					<span class="btnPriDisRt" />
+				</h:panelGroup>
+
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

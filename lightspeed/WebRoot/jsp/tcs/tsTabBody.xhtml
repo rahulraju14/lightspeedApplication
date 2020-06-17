@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Main body of the Timesheet page tab (screen number 9.x) -->
+<!--
+	Parameters: (none)
+ -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	<c:set var="workplace" value="#{timesheetBean.workplace}" />
+	<c:set var="loc" value="tour" /><!-- designed to handle separate 'tour' and 'home' tabs -->
+	<ace:tabPane label="Timesheet" style="overflow-x:hidden !important;">
+
+		<div id="scrollTsheet" class="rowCont FL scrollPnlTab" onscroll="setScrollPos(this.scrollTop);" style="margin-top:-1px;overflow-x:#{!timesheetBean.newTimeSheet ? 'auto':'none'};">
+			<div class="rowCont" style="height:auto;">
+				<div class="W50percnt pad15lt FL"><!-- LEFT-hand column -->
+					<div class="rowCont FL pad15tp">
+						<span>
+							<h:outputText value="Production Name:" styleClass="FL B txt12 pad2tp" />
+							<h:outputText value="#{timesheetBean.production.title}" styleClass="FL pad5lt txt12 pad2tp" />
+						</span>
+					</div>
+					<div class="rowCont FL pad10tp">
+						<span>
+							<h:outputText value="Production Co:" styleClass="FL B txt12 pad2tp" />
+							<h:outputText value="#{timesheetBean.production.studio}" styleClass="FL pad5lt txt12 pad2tp" />
+						</span>
+					</div>
+			  </div><!-- end left-hand column -->
+			  <div class="W30percnt FL pad15tp"><!-- Middle column -->
+					<span>
+						<h:outputText value="Status:" styleClass="FL B txt12 pad2tp" style="margin-left: -77%;"/>
+						<h:outputText value="#{timesheetBean.timesheet.status.label}" styleClass="FL pad5lt txt12 pad2tp" style="margin-left: -65%;"/>
+					</span>
+			  </div>
+              <h:panelGroup rendered="#{!timesheetBean.newTimeSheet}">
+				    <div class="W20percnt FL"><!-- RIGHT-hand column -->
+					    <h:panelGroup rendered="#{(not (timesheetBean.timesheet.status.finalized or
+							timesheetBean.timesheet.status.sealed)) and
+							(timesheetBean.isProdApprover)}"
+						    styleClass="btn_legend" style="margin-top:25px; margin-right:30px;" >
+						<span class="btnMiniLtHot" />
+						<ace:linkButton value="Update from Starts" action="#{timesheetBean.actionUpdateFromStarts}"
+							title="Update from Starts" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					   </h:panelGroup>
+				   </div>
+			  </h:panelGroup>
+				<!-- end right-hand column -->
+			</div> 
+		<h:panelGroup rendered="#{!timesheetBean.newTimeSheet}">
+		    <h:panelGroup
+						rendered="#{timesheetBean.timesheet.payPeriodType eq 'W'}">
+						<ui:include src="tsWeeklyTimeSheet.xhtml">
+						</ui:include>
+			</h:panelGroup>
+			<h:panelGroup
+						rendered="#{(timesheetBean.timesheet.payPeriodType eq 'BW') or (timesheetBean.timesheet.payPeriodType eq 'SM')}">
+						<ui:include src="tsBiWeeklyTimeSheet.xhtml">
+						</ui:include>
+			</h:panelGroup>
+            <h:panelGroup
+						rendered="#{timesheetBean.timesheet.payPeriodType eq 'M'}">
+						<ui:include src="tsMonthlyTimeSheet.xhtml">
+						</ui:include>
+			</h:panelGroup>
+            <div class="MA FL rowCont pad15tp">
+						<div class="FL W30percnt pad10lt pad5tp">
+							<!-- History wrapper -->
+							<div class="blueLegendContWrap MA">
+								<h:panelGroup styleClass="blueLegendCont FR">
+									<div class="legendHdg">History</div>
+									<div style="min-height: 19px;">
+										<!-- keeps size even if btn is hidden -->
+										<h:panelGroup styleClass="btn_legend"
+											rendered="#{(not timesheetBean.showAllHistory) and
+											(timesheetBean.timesheet.id ne null)}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="All entries"
+												action="#{timesheetBean.actionHistoryShowAll}"
+												styleClass="btnMiniCt" onmouseup="showErrors();"
+												onclick="queueClick(this,event);" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<h:panelGroup styleClass="btn_legend"
+											rendered="#{(timesheetBean.showAllHistory) and
+											(timesheetBean.timesheet.id ne null)}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Signatures only"
+												action="#{timesheetBean.actionHistoryShowSignatures}"
+												styleClass="btnMiniCt" onmouseup="showErrors();"
+												onclick="queueClick(this,event);" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+									</div>
+									<table class="W100percnt BKwhite"
+										style="border-collapse: collapse;" cellpadding="0"
+										cellspacing="0">
+										<tr style="width: 100%;">
+											<td style="width: 86%;">
+												<div class="FL W100percnt" style="height: 50%;">
+													<ui:repeat
+														value="#{timesheetBean.timesheet.timesheetEvents}"
+														style="width:99%; border:1px; height:105px; solid #ccc; overflow:auto;max-height:100px;"
+														var="event" styleClass="pad2lt txt11">
+														<h:panelGroup
+															rendered="#{(timesheetBean.showAllHistory eq true) or
+															(event.type.signed)}">
+															<div class="pad5lt pad10bm">
+																<h:panelGroup rendered="#{timesheetBean.showAllHistory}">
+																	<h:outputText value="#{event.display}" />
+																	<br />
+																</h:panelGroup>
+																<h:panelGroup styleClass="txt12 pad10lt"
+																	rendered="#{event.type.signed}">
+																	<h:outputText value="Electronically signed by"
+																		styleClass="U" />
+																	<h:outputText value=" #{event.name}"
+																		styleClass="U B txtBlue" />
+																	<h:outputText value=" #{event.displayTime}" />
+																	<br />
+																	<h:outputText value="# #{event.uuid}"
+																		styleClass="pad10lt" />
+																</h:panelGroup>
+															</div>
+														</h:panelGroup>
+													</ui:repeat>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						<div
+							class="FR W35percnt pad10rt #{(not timesheetBean.editMode) ?' pad5tp' : ''}">
+							<!-- Comments wrapper -->
+							<div class="blueLegendContWrap MA">
+								<h:panelGroup
+									rendered="#{(not empty authBean.pgFields['9.1,private_comments'])}">
+									<div class="blueLegendCont FL">
+										<div class="legendHdg">Comments</div>
+										<table class="W100percnt BKwhite" cellpadding="1"
+											cellspacing="0">
+											<tr>
+												<td>
+												    <h:panelGroup rendered="#{timesheetBean.editMode}">
+														<ace:textAreaEntry styleClass="pad2lt stdTxtArea"
+															value="#{timesheetBean.newComment}" maxlength="2000"
+															style="height:30px;width:86%;font-size:11px;" />
+
+														<span class="pad5tp FR" style="margin-right: 3%;">
+															<span class="btnPriEnbLt" /> 
+															<span> 
+															     <ace:linkButton
+																	title="#{msg.Timecard_Help_AddPayrollComment}"
+																	value="Add" action="#{timesheetBean.actionAddComment}"
+																	styleClass="btnPriEnbCt" onmouseup="showErrors();"
+																	onclick="queueClick(this,event);" />
+														    </span> 
+														    <span class="btnPriEnbRt" />
+														</span>
+													</h:panelGroup> <h:outputText rendered="#{not timesheetBean.editMode}"
+														styleClass="FL pad2lt pad1tp pad1bm txt11"
+														value="#{timesheetBean.timesheet.comments}" escape="false"
+														style="height:105px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;" />
+													<h:outputText rendered="#{timesheetBean.editMode}"
+														styleClass="FL pad2lt pad1tp pad1bm txt11"
+														value="#{timesheetBean.timesheet.comments}" escape="false"
+														style="height:60px;width:99%;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;" />
+												</td>
+										  </tr>
+									  </table>
+								   </div>
+									<!-- end blueLegendCont -->
+								</h:panelGroup>
+							</div>
+							<!-- end blueLegendContWrap for comments -->
+						</div>
+				</div>
+			</h:panelGroup>
+		</div>
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

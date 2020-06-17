@@ -1,0 +1,380 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- DPR vs Timecard comparison table for some Approver Dashboard - Timecard Review page -->
+	<!--
+		Parameters:
+			hidePrDisc: true if PR Discrepancy highlighting should be hidden
+	 -->
+
+	<div class="blueLegendContWrap FR pad10tp" style="width:63%;">
+		<div class="blueLegendCont"> <!-- Blue content -->
+			<div class="FL W100percnt">
+				<div class="FL W25percnt">
+					<span class="legendHdg" >
+						<h:outputText value="#{approverDashboardBean.weeklyTimecard.firstName}"/>&#160;
+						<h:outputText value="#{approverDashboardBean.weeklyTimecard.lastName}"/>
+					</span>
+				</div>
+				<div class="FL" style="width:27%;">
+					<h:panelGroup styleClass="btn_legend" rendered="#{approverDashboardBean.weeklyTimecard ne null}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="View Timecard" action="#{approverDashboardBean.actionViewTimecard}"
+								title="View this person's detailed timecard" styleClass="btnMiniCt">
+								<f:setPropertyActionListener target="#{approverDashboardBean.selectedTimecardId}" value="#{approverDashboardBean.weeklyTimecard.id}"/>
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="btn_legend" rendered="#{approverDashboardBean.weeklyTimecard eq null}">
+						&#160;
+					</h:panelGroup>
+				</div>
+				<div class="FL" style="width:23%;">
+					<span class="legendHdg pad15lt" >
+						<h:outputText value="Production Report"/>
+					</span>
+				</div>
+				<div class="FL W25percnt">
+					<h:panelGroup styleClass=" btn_legend " rendered="#{approverDashboardBean.enableViewDpr}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="View PR" action="#{approverDashboardBean.actionOpenViewDpr}"
+								title="View the associated daily Production Report" styleClass="btnMiniCt"/>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</div>
+			</div>
+
+			<div class="FL rowCont gradTbl2 gradTbl4">
+				<ace:dataTable styleClass="gradTbl4 CT txt11" id="drpTbl"
+					value="#{approverDashboardBean.dayEntry}"
+					var="entry" rowStyleClass="txt11 CT"
+					style="width:100%;max-width:100%;overflow-x:hidden;">
+
+					<ace:columnGroup type="header">
+						<ace:row>
+							<ace:column style="width:5%;"></ace:column>
+							<ace:column style="width:5.5%;"></ace:column>
+							<ace:column style="width:11%;" colspan="2">Meal 1</ace:column>
+							<ace:column style="width:11%;" colspan="2">Meal 2</ace:column>
+							<ace:column style="width:5.5%;"></ace:column>
+							<ace:column style="width:6.5%;"></ace:column>
+							<ace:column style="width:4%;">MP</ace:column>
+							<ace:column style="width:4%;">MP</ace:column>
+
+							<ace:column style="width:6.5%;"></ace:column>
+							<ace:column style="width:4%;">MP</ace:column>
+							<ace:column style="width:4%;">MP</ace:column>
+							<ace:column style="width:5.5%;"></ace:column>
+							<ace:column style="width:11%;" colspan="2">Meal 1</ace:column>
+							<ace:column style="width:11%;" colspan="2">Meal 2</ace:column>
+							<ace:column style="width:5.5%;"></ace:column>
+						</ace:row>
+						<ace:row>
+							<ace:column style="width:5%;">Day</ace:column>
+							<ace:column style="width:5.5%;">Call</ace:column>
+							<ace:column style="width:5.5%;">Out</ace:column>
+							<ace:column style="width:5.5%;">In</ace:column>
+							<ace:column style="width:5.5%;">Out</ace:column>
+							<ace:column style="width:5.5%;">In</ace:column>
+							<ace:column style="width:5.5%;">Wrap</ace:column>
+							<ace:column style="width:6.5%;">Hrs</ace:column>
+							<ace:column style="width:4%;">1</ace:column>
+							<ace:column style="width:4%;">2</ace:column>
+
+							<ace:column style="width:6.5%;">Hrs</ace:column>
+							<ace:column style="width:4%;">1</ace:column>
+							<ace:column style="width:4%;">2</ace:column>
+							<ace:column style="width:5.5%;">Call</ace:column>
+							<ace:column style="width:5.5%;">Out</ace:column>
+							<ace:column style="width:5.5%;">In</ace:column>
+							<ace:column style="width:5.5%;">Out</ace:column>
+							<ace:column style="width:5.5%;">In</ace:column>
+							<ace:column style="width:5.5%;">Wrap</ace:column>
+						</ace:row>
+					</ace:columnGroup>
+
+					<c:set var="banner"
+							value="#{(not empty entry.dailyTime.dayType.banner) and
+									(!(entry.dailyTime.dayType.work and not entry.dailyTime.worked)) and
+									((empty entry.dailyTime.callTime) and (empty entry.dailyTime.m1Out) and
+									(empty entry.dailyTime.m1In) and (empty entry.dailyTime.m2Out) and
+									(empty entry.dailyTime.m2In) and (empty entry.dailyTime.wrap) )}" />
+
+					<c:set var="bannerText"
+							value="#{entry.dailyTime.worked ? approverDashboardBean.dayTypeWorked.banner :
+									(empty entry.dailyTime.dayType ? '' : entry.dailyTime.dayType.banner)}" />
+
+					<!-- DATE -->
+					<ace:column>
+						<h:outputText styleClass="FL pad1lt txt12 B" value="#{entry.dailyTime.date}">
+							<f:convertDateTime pattern="EE" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- CALL TIME -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.callTime}"
+								styleClass="#{entry.dailyTime.callTime eq entry.dailyHours.callTime or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((entry.dailyHours.onCall) and (empty entry.dailyTime.callTime))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[0]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- MEAL 1 OUT -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.m1Out}"
+								styleClass="#{(entry.dailyTime.m1Out ge entry.dailyHours.m1Out and
+										entry.dailyTime.m1Out le entry.dailyHours.m1Out) or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((empty entry.dailyTime.m1Out) and (empty entry.dailyHours.m1Out)) or
+										((empty entry.dailyTime.hours) and (entry.dailyHours.onCall or empty entry.dailyHours.hours))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[1]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- MEAL 1 IN -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.m1In}"
+								styleClass="#{(entry.dailyTime.m1In ge entry.dailyHours.m1In and
+										entry.dailyTime.m1In le entry.dailyHours.m1In) or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((empty entry.dailyTime.m1In) and (empty entry.dailyHours.m1In)) or
+										((empty entry.dailyTime.hours) and (entry.dailyHours.onCall or empty entry.dailyHours.hours))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[2]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- MEAL 2 OUT -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.m2Out}"
+								styleClass="#{(entry.dailyTime.m2Out ge entry.dailyHours.m2Out and
+										entry.dailyTime.m2Out le entry.dailyHours.m2Out) or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((empty entry.dailyTime.m2Out) and (empty entry.dailyHours.m2Out)) or
+										((empty entry.dailyTime.hours) and (entry.dailyHours.onCall or empty entry.dailyHours.hours))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[3]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- MEAL 2 IN -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.m2In}"
+								styleClass="#{(entry.dailyTime.m2In ge entry.dailyHours.m2In and
+										entry.dailyTime.m2In le entry.dailyHours.m2In) or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((empty entry.dailyTime.m2In) and (empty entry.dailyHours.m2In)) or
+										((empty entry.dailyTime.hours) and (entry.dailyHours.onCall or empty entry.dailyHours.hours))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[4]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- WRAP -->
+					<ace:column footerText="Totals:" style="border-color: transparent;">
+						<h:outputText rendered="#{! entry.dailyTime.worked}" value="#{entry.dailyTime.wrap}"
+								styleClass="#{entry.dailyTime.wrap eq entry.dailyHours.wrap or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((entry.dailyHours.onCall) and (empty entry.dailyTime.wrap))
+										? '' : 'prDiff'}">
+							<f:convertNumber type="number" pattern="##.0#" />&#160;
+						</h:outputText>
+						<h:outputText rendered="#{banner}" value="#{bannerText[5]}"
+								styleClass="#{((empty entry.dailyHours.hours) and (entry.dailyHours.onCall)) or
+										(hidePrDisc) or
+										(not entry.dailyHours.contactMatch) ? '' : 'prDiff'}" />
+					</ace:column>
+
+					<!-- TOTAL HOURS -->
+					<ace:column style="border-color: transparent;">
+						<f:facet name="footer">
+							<h:outputText value="#{approverDashboardBean.weeklyTimecard.totalHours}"
+								rendered="#{! approverDashboardBean.weeklyTimecard.allExempt}"
+								styleClass="#{approverDashboardBean.weeklyTimecard.totalHours eq approverDashboardBean.weeklyTimecard.totalDprHours or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr) or
+										(approverDashboardBean.weeklyTimecard.allowWorked)
+										? 'B txt12' : 'B txt12 prDiff'}">
+								<f:convertNumber type="number" pattern="#0.0#" />
+							</h:outputText>
+						</f:facet>
+						<h:outputText value="#{entry.dailyTime.hours}"
+								rendered="#{! approverDashboardBean.weeklyTimecard.allExempt}"
+								styleClass="#{entry.dailyTime.hours eq entry.dailyHours.hours or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										(entry.dailyTime.worked and entry.dailyHours.contactMatch and entry.dailyHours.onCall)
+										? 'B' : 'B prDiff'}">
+							<f:convertNumber type="number" pattern="#0.0#" />&#160;
+						</h:outputText>
+					</ace:column>
+
+					<!-- MPV 1 (AM) -->
+					<ace:column>
+						<f:facet name="footer">
+							<h:outputText styleClass="B txt12" value="#{approverDashboardBean.weeklyTimecard.totalMpv1}" />
+						</f:facet>
+						<h:outputText value="#{entry.dailyTime.mpv1Payroll}"
+								styleClass="#{entry.dailyTime.mpv1Payroll eq entry.dailyHours.mpv1 or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((not entry.dailyHours.dprExists) and empty entry.dailyTime.mpv1Payroll)
+										? '' : 'prDiff'}">&#160;
+						</h:outputText>
+					</ace:column>
+
+					<!-- MPV 2 (PM) -->
+					<ace:column>
+						<f:facet name="footer">
+							<h:outputText styleClass="B txt12" value="#{approverDashboardBean.weeklyTimecard.totalMpv2}" />
+						</f:facet>
+						<h:outputText value="#{entry.dailyTime.mpv2Payroll}"
+								styleClass="#{entry.dailyTime.mpv2Payroll eq entry.dailyHours.mpv2 or
+										(hidePrDisc) or
+										(not approverDashboardBean.deptOnDpr and not entry.dailyHours.contactMatch) or
+										((not entry.dailyHours.dprExists) and empty entry.dailyTime.mpv2Payroll)
+										? '' : 'prDiff'}">&#160;
+						</h:outputText>
+					</ace:column>
+
+					<!-- right half - DPR values -->
+
+					<!-- PR TOTAL HOURS -->
+					<ace:column style="border-color: transparent;">
+						<f:facet name="footer">
+							<div class="ftrBorder">
+								<h:outputText styleClass="B txt12" value="#{approverDashboardBean.weeklyTimecard.totalDprHours}" >
+									<f:convertNumber type="number" pattern="#0.0#" />
+								</h:outputText>
+							</div>
+						</f:facet>
+						<h:outputText styleClass="B" value="#{entry.dailyHours.hours}"
+								rendered="#{(entry.dailyHours.contactMatch)}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MPV 1 (AM) -->
+					<ace:column style="border-color: transparent;">
+						<f:facet name="footer">
+							<h:outputText styleClass="B txt12" value="#{approverDashboardBean.weeklyTimecard.totalDprMpv1}" />
+						</f:facet>
+						<h:outputText value="#{entry.dailyHours.mpv1}"
+								rendered="#{(entry.dailyHours.contactMatch)}">
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MPV 2 (PM) -->
+					<ace:column style="border-color: transparent;">
+						<f:facet name="footer">
+							<h:outputText styleClass="B txt12" value="#{approverDashboardBean.weeklyTimecard.totalDprMpv2}" />
+						</f:facet>
+						<h:outputText value="#{entry.dailyHours.mpv2}"
+								rendered="#{(entry.dailyHours.contactMatch)}">
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR CALL TIME or O/C - OPTIONAL -->
+					<ace:column style="border-color: transparent;">
+						<!-- CALL TIME - Either this section or the next should be rendered -->
+						<h:outputText rendered="#{entry.dailyHours.contactMatch and entry.dailyHours.dprExists}">
+							<h:outputText rendered="#{(entry.dailyHours.contactMatch)}"
+									styleClass="#{(approverDashboardBean.weeklyTimecard.allowWorked eq true) and
+											(not hidePrDisc) and
+											(entry.dailyTime.hours eq null) and (empty entry.dailyTime.callTime) and
+											(entry.dailyHours.onCall) and (! entry.dailyTime.worked) ? 'prDiff' : ''}"
+									value="#{entry.dailyHours.callTime}">
+								<f:converter converterId="lightspeed.DecimalTimeConverterOC" />
+								<f:attribute name="pattern" value="#0.0#" />
+							</h:outputText>
+						</h:outputText>
+						<!-- "NOT [on PR]", "NO PR" - OPTIONAL -->
+						<h:outputText rendered="#{not (entry.dailyHours.contactMatch and entry.dailyHours.dprExists)}">
+							<h:outputText rendered="#{entry.dailyHours.dprExists}"
+									value="Not" styleClass="FR pad3rt"/>
+							<h:outputText rendered="#{not entry.dailyHours.dprExists}"
+									value="No PR" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MEAL 1 OUT or "[not] On PR"  -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText rendered="#{entry.dailyHours.dprExists and not entry.dailyHours.contactMatch}"
+								value="on PR" styleClass="FL" />
+						<h:outputText value="#{entry.dailyHours.m1Out}"
+								rendered="#{entry.dailyHours.contactMatch}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MEAL 1 IN -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText value="#{entry.dailyHours.m1In}"
+								rendered="#{entry.dailyHours.contactMatch}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MEAL 2 OUT -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText value="#{entry.dailyHours.m2Out}"
+								rendered="#{entry.dailyHours.contactMatch}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR MEAL 2 IN -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText value="#{entry.dailyHours.m2In}"
+								rendered="#{entry.dailyHours.contactMatch}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+					<!-- PR WRAP -->
+					<ace:column style="border-color: transparent;">
+						<h:outputText value="#{entry.dailyHours.wrap}"
+								rendered="#{(entry.dailyHours.contactMatch)}">
+							<f:convertNumber type="number" pattern="#0.0#" />
+						</h:outputText>
+					</ace:column>
+
+				</ace:dataTable>
+			</div>
+		</div><!-- end of blue border -->
+	</div><!-- end of bottom Right panel -->
+</ui:composition>

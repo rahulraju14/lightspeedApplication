@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- (Old, pre-2018) Transfer tab for Onboarding (one row per document) -->
+<!--
+	** STILL USED BY MEDIA-SERVICES & CAST&CREW CLIENTS **
+		THIS PAGE SUPPORTS TRANSFER OF CUSTOM DOCS; new transfer page does NOT.
+
+	Parameters:
+		aicp : true if Commercial (AICP) production is being displayed
+		useTransferV2 : true if the new transfer tab should be used (not this one!)
+ -->
+
+	<c:set var="show" value="#{(not empty authBean.pgFields['10.4,view'])
+				and (not useTransferV2)}" />
+
+	<ace:tabPane label="#{show ? 'Transfer' : ''}" disabled="#{not show}">
+		<!-- LS-358 give Media Services clients the old transfer page for now -->
+		<div id="scrolltop" class="scrollPnlTab">
+			<div class="rowCont"></div>
+
+			<div class="blueLegendContWrap">
+				<div class="blueLegendCont pad25tp pad5lt" style="width:95%" id="transferDiv">
+					<div class="legendHdg">Transfer to Payroll service</div>
+
+					<!-- legend button starts
+					Transfer button -->
+					<h:panelGroup styleClass="btn_legend pad10rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Transfer"
+								action="#{transferBean.actionTransfer}"
+								title="Transfer the documents that are checked."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<!-- legend button end -->
+
+					<ace:dataTable id="transferTable"
+						value="#{show ? transferBean.lazyContactDocList : transferBean.emptyContactDocList}"
+						var="item"
+						pageCount="5"
+						paginatorPosition="top"
+						styleClass="bk_sl_grid pad5tp"
+						scrollable="true"
+						scrollHeight="350"
+						lazy="true"
+						rows="200"
+						paginator="true"
+						singleSort="true">
+
+						<ace:ajax execute="@this" event="filter"
+								render="@this ob:transferForm:numOfDocs ob:transferForm:selectedDocs1"/>
+						<ace:ajax execute="@this" event="sort"
+								render="@this ob:transferForm:numOfDocs ob:transferForm:selectedDocs1"/>
+
+						<ace:column styleClass="W5percnt">
+							<f:facet name="header">
+								<icecore:setEventPhase events="ValueChangeEvent"
+									phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox styleClass="iceSelBoolChkbx"
+											valueChangeListener="#{transferBean.listenCheckedForAll}"
+											value="#{transferBean.checkedForAll}">
+										<ace:ajax execute="@form" render="@form"/>
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</f:facet>
+							<div>
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox value="#{item.checked}" valueChangeListener="#{transferBean.listenSingleCheck}"
+											disabled="#{(not item.status.finalized) and (not (item.status eq 'VOID' and item.timeSent ne null))}"
+											styleClass="iceSelBoolChkbx">
+										<ace:ajax execute="@form" render="@form"/>
+										<f:attribute name="selectedRow" value="#{item}" />
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</div>
+						</ace:column>
+
+						<!-- STATUS -->
+						<ace:column headerText="Status" styleClass="W8percnt" sortBy="#{item.viewStatus}"
+								filterOptions="#{transferBean.documentStatus}"
+								filterBy="#{item.viewStatus}">
+							<div class="docIconBtn#{item.viewStatus}" style="width:76px;">
+								<h:panelGroup rendered="#{not item.disableJump}">
+									<ace:pushButton title="#{item.viewStatus.iconTitle}" action="payrollStart">
+										<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{item.id}" target="#{jumpBean.value}"/>
+									</ace:pushButton>
+								</h:panelGroup>
+							</div>
+							<h:panelGroup rendered="#{item.disableJump}">
+								<div class="docIcon#{item.viewStatus}" title="#{item.viewStatus.iconTitle}"
+									style="width:27px;margin-left:28%;">
+									<h:outputText value="&#160;" />
+								</div>
+							</h:panelGroup>
+						</ace:column>
+
+						<!-- DOCUMENT -->
+						<ace:column headerText="Document" styleClass="W10percnt"
+							filterBy="#{item.documentChain.normalizedName}"
+							sortBy="#{item.documentChain.normalizedName}">
+							<h:outputText value="#{item.documentChain.normalizedName}" title="#{item.document.normalizedName}" />
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column headerText="Name" styleClass="W20percnt"
+							filterBy="#{item.contact.user.lastNameFirstName}"
+							sortBy="#{item.contact.user.lastNameFirstName}">
+							<h:outputText value="#{item.contact.user.lastNameFirstName}" />
+						</ace:column>
+
+						<!-- DEPARTMENT -->
+						<ace:column headerText="Department" styleClass="W15percnt"
+							filterBy="#{item.employment.role.department.name}"
+							sortBy="#{item.employment.role.department.name}">
+							<h:outputText value="#{item.employment.role.department.name}" />
+						</ace:column>
+
+						<!-- OCCUPATION -->
+						<ace:column headerText="Occupation" styleClass="W20percnt"
+							filterBy="#{item.employment.role.name}"
+							sortBy="#{item.employment.role.name}">
+							<h:outputText value="#{item.employment.role.name}" />
+						</ace:column>
+
+						<!-- WAITING FOR -->
+						<ace:column headerText="Waiting For" styleClass="W15percnt" filterBy="">
+							<h:outputText value="#{item.waitingFor}" escape="false"/>
+						</ace:column>
+
+						<!-- SENT -->
+						<ace:column  headerText="Sent" styleClass="W20percnt"
+								filterOptions="#{transferBean.sentStatus}"
+								filterBy="#{item.timeSent}">
+							<div title="Sent #{item.timeSentFmtd}">
+								<h:panelGroup rendered="#{item.timeSent ne null}">
+									<div class="tcXferDone" />
+								</h:panelGroup>
+							</div>
+						</ace:column>
+					</ace:dataTable>
+
+					<!-- LISTED / DISPLAYED / SELECTED counts
+					This needs to be rendered after the ace table, then is repositioned by javaScript -->
+					<span class="legendHdg pad200lt" id="transferCount">
+						<span>Documents in list: </span>
+						<h:outputText value="#{transferBean.lazyContactDocListSize}" id="numOfDocs" />
+						<h:outputText class="pad8lt" value="(#{transferBean.lazyContactDocNumDisplayed} per page)" id="numDisplayed"
+								rendered="#{transferBean.lazyContactDocListSize gt transferBean.lazyContactDocNumDisplayed}"/>
+						<span class="pad15lt">Selected: </span>
+						<h:outputText value="#{transferBean.selectedDocumentCount}" id="selectedDocs1"/>&#160;
+
+						<!-- SHOW ALL PROJECTS CHECKBOX -->
+						<span class="pad12lt">
+							<h:panelGroup styleClass="W30percnt"
+								rendered="#{(not empty authBean.pgFields['10.5,all_projects']) and
+											(headerViewBean.production.type.aicp)}">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox
+											value="#{transferBean.showAllProjects}"
+											style="margin-bottom: -4px; height: 24px; vertical-align: bottom;"
+											styleClass="iceSelBoolChkbx">
+										<ace:ajax execute="@form" render="@form"/>
+											Show all Projects:
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</h:panelGroup>
+						</span>
+					</span>
+				</div>
+				<!-- blueLegendCont -->
+			</div>
+			<!-- blueLegendContWrap --> 
+		</div>
+		<!-- scrollTop end  -->
+
+	</ace:tabPane> <!-- end of mini-tab -->
+</ui:composition>

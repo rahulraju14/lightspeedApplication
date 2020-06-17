@@ -1,0 +1,728 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- PAY JOBS / JOB TABLE section of the Full Timecard pages -->
+
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+	<!--   "bean" : fullTimecardBean -->
+
+	<div class="blueLegendContWrap MA">
+		<h:panelGroup rendered="#{(! fullTimecardBean.expandJobs) and (not empty authBean.pgFields['9.1,view_htg'])}">
+			<!-- collapsed header for Pay Jobs -->
+			<div class="blueLegendCont pad12tp FL"><!-- Blue content -->
+				<h:commandLink value=" " styleClass="legendHdg" title="Show Pay Job tables"
+						action="#{fullTimecardBean.actionToggleJobs}">
+					<h:graphicImage value="../../i/plus.gif"  style="height:14px;" alt="" />
+				</h:commandLink>
+				<span class="legendHdg">Jobs</span>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{(fullTimecardBean.expandJobs) and (not empty authBean.pgFields['9.1,view_htg'])}">
+			<div class="blueLegendCont pad12tp FL"><!-- Blue content -->
+				<h:commandLink value=" " styleClass="legendHdg" title="Hide Pay Job tables"
+						action="#{fullTimecardBean.actionToggleJobs}">
+					<h:graphicImage value="" url="../../i/minus.gif" style="height:14px;" alt="" />
+				</h:commandLink>
+				<span class="legendHdg">Jobs</span>
+				<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+					<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.editHtg) and
+							(fullTimecardBean.weeklyTimecard.id ne null)}">
+						<span class="btnMiniLtHot" />
+						<h:commandLink value="Add Job"
+								action="#{fullTimecardBean.actionAddJob}" styleClass="btnMiniCt"
+								onmouseup="showErrors();" onclick="queueClick(this,event);" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.editHtg) and
+							(fullTimecardBean.weeklyTimecard.id ne null)}">
+						<span class="btnMiniLtHot" />
+						<h:commandLink value="Fill Jobs"
+								action="#{fullTimecardBean.actionFillJobs}" styleClass="btnMiniCt"
+								onmouseup="showErrors();" onclick="queueClick(this,event);" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</div>
+				<div class="FL rowCont gradTbl2">
+					<!-- panelSeries won't work - see design notes; nested ICEfaces UISeries components bug.
+					ui:repeat value="#{fullTimecardBean.weeklyTimecard.payJobs}" var="job">
+					-->
+					<!-- PAY-JOB LOOP -->
+					<ui:repeat value="#{fullTimecardBean.weeklyTimecard.payJobs}" var="job">
+
+						<c:set var="item" value="#{job}"/><!-- matches shared account-code xhtml -->
+						<c:set var="sixrates" value="#{(job.customMult5 gt 0.0) or (job.customMult6 gt 0.0)}"/>
+
+						<div class="blueSeriesBox"
+								style="width:#{job.hasNpHours?(sixrates?492:440):(sixrates?360:308)}px;">
+
+							<div class="BKwhite W100percnt" style="border-bottom: 2px solid #bed6f8;display:inline-block;">
+								<!-- "JOB #" LABEL with delete/erase -->
+								<div class="FL BKwhite CT" style="width:22%;">
+									<!-- dummy button gets 'submit' action if user hits Enter -->
+									<h:commandButton style="visibility:hidden;" value=" "/>
+									<h:commandButton styleClass="FL DB"
+											style="visibility: #{((fullTimecardBean.editMode)
+												and (fullTimecardBean.editHtg)) ? 'visible':'hidden'}"
+											value="" title="Clear the data in this Pay Job" image="../../i/icon_clearJob.gif"
+											action="#{fullTimecardBean.actionClearJob}">
+										<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.deleteJobNumber}" />
+									</h:commandButton>
+									<h:commandButton styleClass="FR DB"
+											style="visibility: #{((fullTimecardBean.editMode eq true)
+												and (job.jobNumber gt 1) and (fullTimecardBean.editHtg eq true)
+												and job.jobNumber eq (fullTimecardBean.weeklyTimecard.payJobsSize)) ? 'visible':'hidden'}"
+											value="" title="Delete this Pay Job" image="../../i/icon_deleteX.gif"
+											action="#{fullTimecardBean.actionDeleteJob}">
+										<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.deleteJobNumber}" />
+									</h:commandButton>
+									<h:panelGroup styleClass="txt30 B DB W60">
+										<h:outputText value="Job"/>
+										<h:outputText value=" # #{job.jobNumber}"/>
+									</h:panelGroup>
+								</div>
+
+								<div class="FR" style="width:77.6%;border-left: 1px solid #ccc;">
+									<h:panelGroup>
+										<!-- HEADER ROW 1 - "table" with single row -->
+										<ace:dataTable styleClass="gradTbl2 txt11 CT"
+											value="#{fullTimecardBean.jobNumberDL}" rows="1"
+											var="unused1" rowStyleClass="CT txt11"
+											style="width:100%;max-width:100%;overflow-x:hidden;">
+
+											<ace:columnGroup type="header">
+												<ace:row>
+													<ace:column style="width:#{aicp ? '40' : '100'}%;">
+														<h:outputText value="#{aicp ? 'Job' : 'Account'}"/>
+													</ace:column>
+													<ace:column style="width:#{aicp ? '60' : '0'}%;" rendered="#{aicp}">
+														<h:outputText value="Job"/>
+													</ace:column>
+												</ace:row>
+												<ace:row>
+													<ace:column>
+														<h:panelGroup rendered="#{aicp}">
+															<h:outputText value="#" />
+														</h:panelGroup>
+														<h:panelGroup rendered="#{! aicp}">
+															<div class="W100percnt">
+																<div class="acLoc acHdr">Loc
+																</div>
+																<div class="acPrd acHdr">Prd/Ep
+																</div>
+																<div class="acDtl acHdr">Detail
+																</div>
+																<div class="acSub acHdr">Sub
+																</div>
+																<div class="acSet acHdr">Set
+																</div>
+																<div class="acFr1 acHdr">F1
+																</div>
+																<div class="acFr acHdr">F2
+																</div>
+															</div>
+														</h:panelGroup>
+													</ace:column>
+													<ace:column rendered="#{aicp}">
+														<h:outputText value="Name"/>
+													</ace:column>
+												</ace:row>
+											</ace:columnGroup>
+
+											<!-- Prod/Epi. / DETAIL / SET -->
+											<ace:column>
+												<h:panelGroup rendered="#{not aicp}">
+													<h:panelGroup rendered="#{not bean.editMode}" styleClass="LH22 DIB W100percnt FL">
+														<div class="acLoc">
+															<h:outputText value="#{item.accountLoc}&#160;" />
+														</div>
+														<div class="acPrd">
+															<h:outputText value="#{item.accountMajor}&#160;" />
+														</div>
+														<div class="acDtl">
+															<h:outputText value="#{item.accountDtl}&#160;" />
+														</div>
+														<div class="acSub">
+															<h:outputText value="#{item.accountSub}&#160;" />
+														</div>
+														<div class="acSet">
+															<h:outputText value="#{item.accountSet}&#160;" />
+														</div>
+														<div class="acFr1">
+															<h:outputText value="#{item.accountFree}&#160;" />
+														</div>
+														<div class="acFr">
+															<h:outputText value="#{item.accountFree2}&#160;" />
+														</div>
+													</h:panelGroup>
+													<h:panelGroup rendered="#{bean.editMode}" styleClass="LH22 DIB W100percnt FL">
+														<div class="acLoc">
+															<ace:textEntry maxlength="3" styleClass="acEditFr2"
+																	
+																	value="#{item.accountLoc}" />
+														</div>
+														<div class="acPrd">
+															<ace:textEntry maxlength="6" styleClass="acEdit"
+																	
+																	value="#{item.accountMajor}" />
+														</div>
+														<div class="acDtl">
+															<ace:textEntry maxlength="8" styleClass="acEdit"
+																	
+																	value="#{item.accountDtl}" />
+														</div>
+														<div class="acSub">
+															<ace:textEntry maxlength="5" styleClass="acEdit"
+																	
+																	value="#{item.accountSub}" />
+														</div>
+														<div class="acSet">
+															<ace:textEntry maxlength="5" styleClass="acEdit"
+																	
+																	value="#{item.accountSet}" />
+														</div>
+														<div class="acFr1">
+															<ace:textEntry maxlength="2" styleClass="acEdit"
+																	
+																	value="#{item.accountFree}" />
+														</div>
+														<div class="acFr">
+															<ace:textEntry maxlength="2" styleClass="acEditFr2"
+																	
+																	value="#{item.accountFree2}" />
+														</div>
+													</h:panelGroup>
+												</h:panelGroup>
+
+												<h:panelGroup rendered="#{aicp}">
+													<ace:textEntry styleClass="tcEdHr" maxlength="15"
+															value="#{job.jobAccountNumber}"
+															rendered="#{fullTimecardBean.editHtg}"/>
+													<h:outputText styleClass="tcEdHr" value="#{job.jobAccountNumber}"
+															rendered="#{not fullTimecardBean.editHtg}"/>
+												</h:panelGroup>
+											</ace:column>
+
+											<!-- FREE / JOB NAME -->
+											<ace:column rendered="#{aicp}">
+													<ace:textEntry value="#{job.jobName}"
+														styleClass="tcEdHr" maxlength="35"
+														rendered="#{fullTimecardBean.editHtg}" />
+													<h:outputText value="#{job.jobName}"
+														rendered="#{! fullTimecardBean.editHtg}" />
+											</ace:column>
+										</ace:dataTable>
+
+										<!-- HEADER ROW 2 - "table" with single row -->
+										<ace:dataTable styleClass="gradTbl2 txt11 CT" width="100%"
+											value="#{fullTimecardBean.jobNumberDL}" rows="1"
+											var="unused2" rowStyleClass="CT txt11"
+											style="width:100%;max-width:100%;overflow-x:hidden;">
+
+											<ace:columnGroup type="header">
+												<ace:row>
+													<ace:column style="width:#{aicp ? '40' : '34'}%;">Occ. Code</ace:column>
+													<ace:column style="width:#{aicp ? '30' : '33'}%;">Rate</ace:column>
+													<ace:column style="width:#{aicp ? '30' : '33'}%;">Prem. Rate</ace:column>
+												</ace:row>
+											</ace:columnGroup>
+
+											<!-- OCC CODE -->
+											<ace:column>
+												<ace:textEntry value="#{job.occCode}"
+														styleClass="tcEdHr" maxlength="20"
+														rendered="#{fullTimecardBean.editHtg}" />
+												<h:outputText value="#{job.occCode}"
+														rendered="#{! fullTimecardBean.editHtg}" />
+											</ace:column>
+
+											<!-- RATE -->
+											<ace:column>
+											<!-- LS-3022 Changes for appropriate rate -->
+												<h:panelGroup rendered="#{bean.weeklyTimecard.employeeRateType eq 'HOURLY'}">
+													<ace:textEntry value="#{job.rate}" maxlength="11"
+															styleClass="tcEdDlr"
+															rendered="#{fullTimecardBean.editHtg}">
+														<f:convertNumber type="number" pattern="#,###.00##" />
+													</ace:textEntry>
+													<h:outputText value="#{job.rate}" styleClass="FR pad5rt"
+															rendered="#{! fullTimecardBean.editHtg}">
+														<f:convertNumber type="number" pattern="#,###.00##" />
+													</h:outputText>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{bean.weeklyTimecard.employeeRateType eq 'DAILY'}">
+													<ace:textEntry value="#{job.dailyRate}" maxlength="11"
+															styleClass="tcEdDlr"
+															rendered="#{fullTimecardBean.editHtg}">
+														<f:convertNumber type="number" pattern="#,###.00##" />
+													</ace:textEntry>
+													<h:outputText value="#{job.dailyRate}" styleClass="FR pad5rt"
+															rendered="#{! fullTimecardBean.editHtg}">
+														<f:convertNumber type="number" pattern="#,###.00##" />
+													</h:outputText>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{bean.weeklyTimecard.employeeRateType eq 'WEEKLY'}">
+													<ace:textEntry value="#{job.weeklyRate}" 
+															maxlength="11" styleClass="tcEdDlr"
+															rendered="#{fullTimecardBean.editHtg}" >
+														<f:convertNumber type="number" pattern="#,###.00" />
+													</ace:textEntry>
+													<h:outputText value="#{job.weeklyRate}" styleClass="FR pad5rt"
+															rendered="#{! fullTimecardBean.editHtg}">
+														<f:convertNumber type="number" pattern="#,###.00" />
+													</h:outputText>
+												</h:panelGroup>
+											</ace:column>
+
+											<!-- PREMIUM RATE -->
+											<ace:column>
+												<ace:textEntry value="#{job.premiumRate}" 
+														maxlength="11" styleClass="tcEdDlr"
+														rendered="#{fullTimecardBean.editHtg}" >
+													<f:convertNumber type="number" pattern="##,###.00##" />
+												</ace:textEntry>
+												<h:outputText value="#{job.premiumRate}" styleClass="FR pad5rt"
+														rendered="#{! fullTimecardBean.editHtg}">
+													<f:convertNumber type="number" pattern="##,###.00##" />
+												</h:outputText>
+											</ace:column>
+
+										</ace:dataTable>
+
+									</h:panelGroup>
+								</div>
+							</div>
+							<div class="CB" />
+
+							<!-- DAILY DETAIL ROWS (PayJobDaily) -->
+							<ace:dataTable styleClass="gradTbl2 txt11 CT" width="100%"
+								value="#{job.payJobDailies}"
+								var="daily" rowStyleClass="CT txt11"
+								style="width:100%;max-width:100%;overflow-x:hidden;">
+
+								<ace:columnGroup type="header">
+									<ace:row>
+										<ace:column headerText="Date" style="width:#{aicp ? (sixrates ? '16%;' : '18%') : (sixrates ? '18%;' : '18%')}"></ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '8%;' : '8%') : (sixrates ? '0%;' : '0%')}" rendered="#{aicp}">Acct</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">1.0</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">1.5</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult1Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{1}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult1}"
+													value="#{job.customMult1Text}"/>
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult2Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{2}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText  rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult2}"
+													value="#{job.customMult2Text}" />
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult3Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{3}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText  rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult3}"
+													value="#{job.customMult3Text}" />
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '6%') : (sixrates ? '6%;' : '7%')}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult4Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{4}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText  rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult4}"
+													value="#{job.customMult4Text}" />
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '0%') : (sixrates ? '%6;' : '0%')}" rendered="#{sixrates}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult5Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{5}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText  rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult5}"
+													value="#{job.customMult5Text}" />
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '0%') : (sixrates ? '6%;' : '0%')}" rendered="#{sixrates}">
+											<h:commandButton styleClass="btnPjMult" rendered="#{fullTimecardBean.editHtg}"
+													value="#{job.customMult6Text}" tabindex="-1"
+													title="Click to set a custom multiplier"
+													action="#{fullTimecardBean.actionSetMultiplier}">
+												<f:setPropertyActionListener value="#{job.jobNumber}" target="#{fullTimecardBean.modifyJobNumber}" />
+												<f:setPropertyActionListener value="#{6}" target="#{fullTimecardBean.multiplierNumber}" />
+											</h:commandButton>
+											<h:outputText  rendered="#{! fullTimecardBean.editHtg}"
+													title="#{job.customMult6}"
+													value="#{job.customMult6Text}" />
+										</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5%;' : '5%') : (sixrates ? '6%;' : '6%')}">MP1</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5%;' : '5%') : (sixrates ? '6%;' : '6%')}">MP2</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '5.5%') : (sixrates ? '6%;' : '7%')}" rendered="#{job.hasNpHours}">10N1</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '5.5%') : (sixrates ? '6%;' : '7%')}" rendered="#{job.hasNpHours}">10N2</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '5.5%') : (sixrates ? '6%;' : '7%')}" rendered="#{job.hasNpHours}">15N1</ace:column>
+										<ace:column style="width:#{aicp ? (sixrates ? '5.5%;' : '5.5%') : (sixrates ? '6%;' : '7%')}" rendered="#{job.hasNpHours}">15N2</ace:column>
+									</ace:row>
+								</ace:columnGroup>
+
+								<!-- DATE -->
+								<ace:column>
+									<f:facet name="footer">
+										<h:outputText styleClass="B pad5rt" value="Totals:" />
+									</f:facet>
+									<h:outputText styleClass="FL pad3lt txt12" value="#{daily.date}" style="font-weight: bold;">
+										<f:convertDateTime pattern="EE"
+											timeZone="#{timezone}" />
+									</h:outputText>
+									<h:outputText styleClass="FR pad5rt txt11" value="#{daily.date}">
+										<f:convertDateTime pattern="M/dd"
+											timeZone="#{timezone}" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- ACCOUNT NUMBER -->
+								<ace:column rendered="#{aicp}" >
+									<ace:textEntry value="#{daily.accountNumber}" 
+											maxlength="7" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" />
+									<h:outputText styleClass="CT" value="#{daily.accountNumber}"
+											rendered="#{! fullTimecardBean.editHtg}" />
+								</ace:column>
+
+								<!-- 1.0x -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total10}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours10}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours10}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- 1.5X -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total15}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours15}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours15}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 1 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust1}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust1}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust1}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 2 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust2}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust2}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust2}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 3 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust3}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust3}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust3}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 4 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust4}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust4}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust4}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 5 -->
+								<ace:column rendered="#{sixrates}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust5}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust5}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust5}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- CUSTOM 6 -->
+								<ace:column rendered="#{sixrates}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalCust6}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hoursCust6}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hoursCust6}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- MPV 1 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalMpv1}"/>
+										</div>
+									</f:facet>
+									<ace:textEntry styleClass="tcEdHr" 
+											value="#{daily.mpv1}" maxlength="2"
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											rendered="#{fullTimecardBean.editHtg}">
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText
+										value="#{daily.mpv1}"
+										rendered="#{! fullTimecardBean.editHtg}">
+									</h:outputText>
+								</ace:column>
+
+								<!-- MPV 2 -->
+								<ace:column>
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.totalMpv2}"/>
+											<h:outputText value="/" rendered="#{(job.totalMpv3 gt 0)}"/>
+											<h:outputText value="#{job.totalMpv3}" rendered="#{job.totalMpv3 gt 0}"/>
+										</div>
+									</f:facet>
+									<ace:textEntry styleClass="tcEdHr" 
+											value="#{daily.mpv2}" maxlength="2"
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											rendered="#{fullTimecardBean.editHtg}">
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText
+										value="#{daily.mpv2}"
+										rendered="#{! fullTimecardBean.editHtg}">
+									</h:outputText>
+								</ace:column>
+
+								<!-- NIGHT PREMIUM - 110% of 1.0x -->
+								<ace:column rendered="#{job.hasNpHours}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total10Np1}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours10Np1}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours10Np1}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- NIGHT PREMIUM - 120% of 1.0x -->
+								<ace:column rendered="#{job.hasNpHours}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total10Np2}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours10Np2}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours10Np2}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- NIGHT PREMIUM - 110% of 1.5x -->
+								<ace:column rendered="#{job.hasNpHours}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total15Np1}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours15Np1}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours15Np1}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+
+								<!-- NIGHT PREMIUM - 120% of 1.5x -->
+								<ace:column rendered="#{job.hasNpHours}">
+									<f:facet name="footer">
+										<div class="ftrBorder">
+											<h:outputText value="#{job.total15Np2}">
+												<f:convertNumber type="number" pattern="#0.0#" />
+											</h:outputText>
+										</div>
+									</f:facet>
+									<ace:textEntry value="#{daily.hours15Np2}" 
+											valueChangeListener="#{fullTimecardBean.listenJobDailyChange}"
+											maxlength="5" styleClass="tcEdHr"
+											rendered="#{fullTimecardBean.editHtg}" >
+										<f:convertNumber type="number" pattern="#0.0#" />
+										<ace:ajax />
+									</ace:textEntry>
+									<h:outputText value="#{daily.hours15Np2}"
+											rendered="#{! fullTimecardBean.editHtg}">
+										<f:convertNumber type="number" pattern="#0.0#" />
+									</h:outputText>
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</ui:repeat><!-- loop on Job Table entries -->
+				</div>
+			</div><!-- End of Blue content -->
+		</h:panelGroup>
+	</div><!-- End blueLegendContWrap for Pay Jobs -->
+</ui:composition>

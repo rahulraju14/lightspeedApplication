@@ -1,0 +1,662 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Hot Costs review tab of Dashboard page (screen number 9.4) -->
+	<!--
+	Parameters:
+		aicp : true if Commercial (AICP) production is being displayed
+	-->
+	<c:set var="summaryBean" value="#{hotCostsSummaryBean}" />
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+
+	<div class="W100percnt">
+		<!-- Hot Cost Summary Table -->
+		<div>
+			<h:panelGroup styleClass="FL pad10lt">
+<!--				<h:outputText value="Hot Costs Summary" styleClass="txt12 B_true"/> -->
+			</h:panelGroup>
+			<h:panelGroup rendered="#{empty summaryBean.deptWeeklyHotCostsList}" styleClass="FL">
+				<h:outputText value="No Hot Cost entries for this week" styleClass="txt12 B_true"/>
+			</h:panelGroup>
+			<h:panelGroup styleClass="FR W40percnt">
+				<h:panelGroup styleClass="FR pad10rt">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Enter Hot Costs"
+							action="#{summaryBean.actionDataView}"
+							title="Enter Hot Costs" styleClass="btnMiniCt"
+							 onclick="queueClick(this,event);"/>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+<!--
+				<h:panelGroup>
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Refresh"
+							action="#{summaryBean.actionRefresh}"
+							title="Enter Hot Costs" styleClass="btnMiniCt"
+							 onclick="queueClick(this,event);"/>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+-->
+			</h:panelGroup>
+		</div>
+
+		<h:panelGroup rendered="#{not empty summaryBean.deptWeeklyHotCostsList}">
+			<ui:repeat value="#{summaryBean.deptWeeklyHotCostsList}" var="deptWhcEntry">
+				<!-- Collapsed View -->
+				<h:panelGroup rendered="${deptWhcEntry.weeklyHotCostsWrappers ne null and not empty deptWhcEntry.weeklyHotCostsWrappers}">
+					<h:panelGroup rendered="#{!deptWhcEntry.expand}" >
+						<div class="blueLegendContWrap MA">
+							<div class="blueLegendCont pad12tp">
+								<h:commandLink value="" styleClass="legendHdg" title="Show Department Members"
+									actionListener="#{deptWhcEntry.listenToggleDept}">
+									<h:graphicImage value="" url="../../i/plus.gif" style="height:14px;" />
+								</h:commandLink>
+								<span class="legendHdg">
+									<h:outputText value="#{deptWhcEntry.dept.name}" />
+								</span>
+
+								<ace:dataTable styleClass="gradTbl3 txt11 CT" id="hcSumTableNoRows"
+									value="#{deptWhcEntry}" var="deptEntry" rowStyleClass="txt11"
+									style="width:100%;max-width:100%;overflow-x:hidden;">
+
+									<ace:columnGroup>
+										<ace:row>
+											<ace:column styleClass="W13percnt"></ace:column>
+											<ace:column styleClass="W3percnt">Prd/</ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+	<!--										<ace:column styleClass="W10percnt"></ace:column> -->
+											<ace:column styleClass="W10percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt">Act</ace:column>
+											<ace:column styleClass="W5percnt">Bgtd</ace:column>
+											<ace:column styleClass="W5percnt">Var</ace:column>
+											<ace:column styleClass="W5percnt">Act</ace:column>
+											<ace:column styleClass="W5percnt">Bgtd</ace:column>
+											<ace:column styleClass="W5percnt">Var</ace:column>
+										</ace:row>
+										<ace:row>
+											<ace:column styleClass="W13percnt">Name</ace:column>
+											<ace:column styleClass="W3percnt">Epi.</ace:column>
+											<ace:column styleClass="W3percnt">Detail</ace:column>
+											<ace:column styleClass="W3percnt">Sub</ace:column>
+											<ace:column styleClass="W3percnt">Set</ace:column>
+	<!--										<ace:column styleClass="W10percnt">Department</ace:column> -->
+											<ace:column styleClass="W10percnt">Position</ace:column>
+											<ace:column styleClass="W5percnt">Sun</ace:column>
+											<ace:column styleClass="W5percnt">Mon</ace:column>
+											<ace:column styleClass="W5percnt">Tue</ace:column>
+											<ace:column styleClass="W5percnt">Wed</ace:column>
+											<ace:column styleClass="W5percnt">Thu</ace:column>
+											<ace:column styleClass="W5percnt">Fri</ace:column>
+											<ace:column styleClass="W5percnt">Sat</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+										</ace:row>
+									</ace:columnGroup>
+
+
+									<!-- Totals -->
+
+									<ace:column/>
+									<ace:column/>
+									<ace:column/>
+									<ace:column/>
+									<ace:column/>
+									<ace:column/>
+
+									<!-- Sunday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalSundayCost}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Monday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalMondayCost}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Tuesday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalTuesdayCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Wednesday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalWednesdayCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Thursday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalThursdayCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Friday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalFridayCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Saturday Total Cost-->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptWhcEntry.totalSaturdayCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Actual Hours for the week -->
+									<ace:column styleClass="CT tcTotHr">
+										<h:outputText value="#{deptEntry.totalHours}" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Budgeted Hours for the week -->
+									<ace:column styleClass="CT tcTotHr">
+										<h:outputText value="#{deptWhcEntry.totalBudgetedHours}" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Hours Variance for the week -->
+									<ace:column styleClass="CT #{deptEntry.totalHoursVariance gt 0 ? 'tcHrDiff' : 'tcTotHr'}">
+										<h:outputText value="#{deptEntry.totalHoursVariance}" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Actual Cost for the week -->
+									<ace:column styleClass="tcTotHr">
+										<h:outputText value="#{deptEntry.totalCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Budgeted Cost for the week -->
+									<ace:column styleClass="tcTotHr pad2rt">
+										<h:outputText value="#{deptEntry.totalBudgetedCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Total Cost Variance for the week -->
+									<ace:column styleClass="#{deptEntry.totalCostVariance gt 0 ? 'tcHrDiff' : 'tcTotHr'}">
+										<h:outputText value="#{deptEntry.totalCostVariance}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+								</ace:dataTable>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{deptWhcEntry.expand}" styleClass="W100percnt">
+						<div class="blueLegendContWrap MA">
+							<div class="blueLegendCont pad12tp">
+								<h:commandLink value="" styleClass="legendHdg" title="Hide Department Members"
+									actionListener="#{deptWhcEntry.listenToggleDept}">
+									<h:graphicImage value="" url="../../i/minus.gif" style="height:14px;" />
+								</h:commandLink>
+								<div class="legendHdg">
+									<h:outputText value="#{deptWhcEntry.dept.name}" />
+								</div>
+								<ace:dataTable styleClass="gradTbl3 txt11 CT" id="hcSumTable"
+									rowStyleClass="txt11" value="#{deptWhcEntry.weeklyHotCostsWrappers}" var="whcWrapper"
+									style="width:100%;max-width:100%;overflow-x:hidden;">
+									<c:set var="whc" value="#{whcWrapper.weeklyHotCosts}" />
+									<ace:columnGroup type="header">
+										<ace:row>
+											<ace:column styleClass="W13percnt"></ace:column>
+											<ace:column styleClass="W3percnt">Prd/</ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+											<ace:column styleClass="W3percnt"></ace:column>
+	<!--										<ace:column styleClass="W10percnt"></ace:column> -->
+											<ace:column styleClass="W10percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt"></ace:column>
+											<ace:column styleClass="W5percnt">Act</ace:column>
+											<ace:column styleClass="W5percnt">Bgtd</ace:column>
+											<ace:column styleClass="W5percnt">Var</ace:column>
+											<ace:column styleClass="W5percnt">Act</ace:column>
+											<ace:column styleClass="W5percnt">Bgtd</ace:column>
+											<ace:column styleClass="W5percnt">Var</ace:column>
+										</ace:row>
+										<ace:row>
+											<ace:column styleClass="W13percnt">Name</ace:column>
+											<ace:column styleClass="W3percnt">Epi.</ace:column>
+											<ace:column styleClass="W3percnt">Detail</ace:column>
+											<ace:column styleClass="W3percnt">Sub</ace:column>
+											<ace:column styleClass="W3percnt">Set</ace:column>
+	<!--										<ace:column styleClass="W10percnt">Department</ace:column> -->
+											<ace:column styleClass="W10percnt">Position</ace:column>
+											<ace:column styleClass="W5percnt">Sun</ace:column>
+											<ace:column styleClass="W5percnt">Mon</ace:column>
+											<ace:column styleClass="W5percnt">Tue</ace:column>
+											<ace:column styleClass="W5percnt">Wed</ace:column>
+											<ace:column styleClass="W5percnt">Thu</ace:column>
+											<ace:column styleClass="W5percnt">Fri</ace:column>
+											<ace:column styleClass="W5percnt">Sat</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Hrs</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+											<ace:column styleClass="W5percnt">Cost</ace:column>
+										</ace:row>
+									</ace:columnGroup>
+
+									<!-- Contact Name -->
+									<ace:column styleClass="LT">
+										<h:outputText styleClass="pad5lt" value="#{whc.employment.contact.displayName}" />
+									</ace:column>
+									<!-- Prod/Epi -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum - 1].accountMajor}" rendered="#{!editable}"/>
+									</ace:column>
+									<!-- Acct Detail -->
+									<ace:column>
+									</ace:column>
+									<!-- Acct Sub -->
+									<ace:column>
+									</ace:column>
+									<!-- Acct Set -->
+									<ace:column>
+									</ace:column>
+									<!-- Dept Name -->
+		<!--
+									<ace:column styleClass="CT">
+										<h:outputText value="#{whc.departmentName}" />
+									</ace:column>
+		-->
+									<!-- Occupation -->
+									<ace:column styleClass="CT">
+										<h:outputText value="#{whc.employment.role.name}" />
+									</ace:column>
+									<!-- Sunday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[0].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Monday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[1].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Tuesday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[2].actualCost}" styleClass=" FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Wednesday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[3].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Thursday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[4].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Friday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[5].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Saturday -->
+									<ace:column>
+										<h:outputText value="#{whc.dailyHotCosts[6].actualCost}" styleClass="FR pad5rt" >
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Actual Weekly Hours -->
+									<ace:column>
+										<h:outputText value="#{whc.weeklyWorkedHours}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Budgeted Weekly Hours -->
+									<ace:column>
+										<h:outputText value="#{whc.budgetedWeeklyHours}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Hours Variance -->
+									<ace:column styleClass="#{whc.hoursVariance gt 0 ? 'tcHrDiff' : ''}">
+										<h:outputText value="#{whc.hoursVariance}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Actual Weekly Cost -->
+									<ace:column>
+										<h:outputText value="#{whc.weeklyCost}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Budgeted Weekly Cost -->
+									<ace:column>
+										<h:outputText value="#{whc.budgetedWeeklyCost}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+									<!-- Cost Variance -->
+									<ace:column styleClass="#{whc.costVariance gt 0 ? 'tcHrDiff' : ''}">
+											<h:outputText value="#{whc.costVariance}" styleClass="FR pad5rt">
+											<f:convertNumber
+												type="number"
+												maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="true"
+											/>
+										</h:outputText>
+									</ace:column>
+
+									<!-- Totals -->
+									<ace:columnGroup type="footer">
+										<ace:row>
+											<ace:column colspan="6" style="width:35%"/>
+											<!-- Sunday Total Cost-->
+											<ace:column styleClass="tcTotHr">
+												<h:outputText value="#{deptWhcEntry.totalSundayCost}" styleClass="FR">
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Monday Total Cost-->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalMondayCost}" styleClass="FR">
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Tuesday Total Cost-->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalTuesdayCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Wednesday Total Cost-->
+											<ace:column styleClass="tcTotHr">
+												<h:outputText value="#{deptWhcEntry.totalWednesdayCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Thursday Total Cost-->
+											<ace:column styleClass="tcTotHr">
+												<h:outputText value="#{deptWhcEntry.totalThursdayCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Friday Total Cost-->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalFridayCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Saturday Total Cost-->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalSaturdayCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Actual Hours for the week -->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalHours}" styleClass="FR">
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Budgeted Hours for the week -->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalBudgetedHours}" styleClass="FR">
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Hours Variance for the week -->
+											<ace:column styleClass="CT #{deptWhcEntry.totalHoursVariance gt 0 ? 'tcHrDiff' : 'tcTotHr'}" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalHoursVariance}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Actual Cost for the week -->
+											<ace:column styleClass="tcTotHr" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Budgeted Cost for the week -->
+											<ace:column styleClass="tcTotHr pad2rt" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalBudgetedCost}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+											<!-- Total Cost Variance for the week -->
+											<ace:column styleClass="#{deptWhcEntry.totalCostVariance gt 0 ? 'tcHrDiff' : 'tcTotHr'}" style="width:5%">
+												<h:outputText value="#{deptWhcEntry.totalCostVariance}" styleClass="FR" >
+													<f:convertNumber
+														type="number"
+														maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="true"
+													/>
+												</h:outputText>
+											</ace:column>
+										</ace:row>
+									</ace:columnGroup>
+								</ace:dataTable>
+							</div>
+						</div>
+					</h:panelGroup>
+				</h:panelGroup>
+			</ui:repeat>
+		</h:panelGroup>
+	</div>
+</ui:composition>

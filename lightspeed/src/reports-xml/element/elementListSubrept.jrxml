@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="elementListSubrept" columnCount="14" printOrder="Horizontal" pageWidth="381" pageHeight="421" columnWidth="27" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="758172c3-94ed-49d4-8233-c75eb2265da6">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="defFont" isDefault="true" fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+	<parameter name="scriptElement" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="scriptId" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[(select sc.number, sc.sequence from scene_script_element sse, scene sc where
+		  sse.script_element_id =$P{scriptElement} and sse.scene_id = sc.id and
+		  sc.script_id = $P{scriptId})
+		Union
+		  (select sc.number, sc.sequence from scene sc where sc.set_id = $P{scriptElement} and
+		  sc.script_id = $P{scriptId})
+		order by sequence ASC;]]>
+	</queryString>
+	<field name="number" class="java.lang.String"/>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="2c674a21-2c75-413b-a6fe-376010bb4a42" x="0" y="0" width="27" height="12"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

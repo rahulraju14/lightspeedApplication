@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="filminvtry" printOrder="Horizontal" pageWidth="171" pageHeight="70" columnWidth="171" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e067d1ed-fc91-4348-b1f3-97ce4e14043e">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="productionId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+	</parameter>
+	<parameter name="project" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="date" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Date("12/01/2013")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select m.type as type,
+	case when (fs.date=$P{date}) then fs.inventory_prior
+		else (fs.inventory_prior + fs.inventory_received -
+		fs.inventory_used_today) end as inventory_prior,
+	case when (fs.date=$P{date}) then fs.inventory_received   else 0 end
+		as inventory_received,
+	case when (fs.date=$P{date}) then fs.inventory_used_today else 0 end
+		as inventory_used_today,
+	(fs.inventory_prior + fs.inventory_received -
+		fs.inventory_used_today) as inventory_total
+	from film_stock fs, material m
+	where fs.material_id = m.id and
+	m.in_use = "1" and
+	(fs.date, fs.material_id) IN
+		(Select max(f2.date),f2.material_id from Film_Stock f2, Material
+		where f2.date <= $P{date}
+		and f2.material_id = material.id
+		and material.production_id = $P{productionId}
+		group by f2.material_id)
+	order by type
+	limit 6;]]>
+	</queryString>
+	<field name="type" class="java.lang.String"/>
+	<field name="inventory_prior" class="java.lang.Integer"/>
+	<field name="inventory_received" class="java.lang.Integer"/>
+	<field name="inventory_used_today" class="java.lang.Integer"/>
+	<field name="inventory_total" class="java.lang.Integer"/>
+	<title>
+		<band height="10">
+			<staticText>
+				<reportElement uuid="a2d30864-2b1a-4ab4-94ef-c28090ffd88a" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="0" width="63" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[INVENTORY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2d30864-2b1a-4ab4-94ef-c28090ffd88a" style="prDefBox" positionType="Float" mode="Opaque" x="63" y="0" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Start]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="60015d94-700c-41b8-aa4d-4cb26652274f" style="prDefBox" positionType="Float" mode="Opaque" x="90" y="0" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Rcvd]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5ab4a14f-59ff-4a66-b2b9-2db8e39b2b4f" style="prDefBox" positionType="Float" mode="Opaque" x="117" y="0" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Used]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="80069442-cbc0-4209-866d-417a1691dc81" style="prDefBox" positionType="Float" mode="Opaque" x="144" y="0" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement uuid="5bf73c73-0414-4b59-97d1-d258d22d3341" key="textField" style="prDefBoxBold" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="63" height="10" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="86e69e4b-49a6-4d12-85f3-c669392e7ab1" key="textField" style="prDefBox" x="63" y="0" width="27" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inventory_prior}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="4cdf3253-0ba8-4a89-a6e1-ce073dd59344" key="textField" style="prDefBox" x="90" y="0" width="27" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inventory_received}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="649d6f38-1cf1-4871-b75e-c37f48c64d5b" key="textField" style="prDefBox" x="117" y="0" width="27" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inventory_used_today}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="a6d18b46-98fb-448a-a72c-b7a63f75019b" key="textField" style="prDefBox" x="144" y="0" width="27" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+					<paragraph rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Integer($F{inventory_prior}.intValue() + $F{inventory_received}.intValue()- $F{inventory_used_today}.intValue())]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

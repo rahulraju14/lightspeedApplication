@@ -1,0 +1,624 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Document Transfer tab (2018+) for Onboarding -->
+<!--
+	Parameters:
+		useTransferV2 : true if the new transfer tab should be used (this one!)
+ -->
+
+	<c:set var="show" value="#{(not empty authBean.pgFields['10.4,view_xfer'])
+			and useTransferV2}" />
+			
+	<c:set var="isCanadaProd" value="#{headerViewBean.production.type.canadaTalent}" />
+
+	<ace:tabPane label="#{show ? 'Transfer' : ''}" disabled="#{not show}">
+
+		<!-- Notify the transfer bean when the tab is actually being rendered: -->
+		<h:outputText style="visibility:hidden;" value="#{transferDocBean.setUp}"/>
+
+		<div id="scrolltop" class="scrollPnlTab">
+						<!-- Do not show for Canada Talent -->
+			<h:panelGroup rendered="#{not headerViewBean.production.type.canadaTalent}">
+				<h:outputText styleClass="FL pnlHdrTxt pad10lt pad2tp" style="top:1px;" value="Filter Employee list by:"/>
+
+				<h:outputText styleClass="FL pad30lt pad5tp" value="Document Status"/>
+
+				<!-- DOCUMENT STATUS DROP DOWN -->
+				<icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<h:selectOneMenu id="status"
+						styleClass="FL W10percnt pad10lt pad2tp"
+						value="#{transferDocBean.selectedStatus}"
+						valueChangeListener="#{transferDocBean.listenFilterType}"
+						immediate="true">
+						<ace:ajax />
+						<f:selectItems value="#{transferDocBean.statusList}" />
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+
+				<!-- TRANSFER  STATUS DROP DOWN -->
+				<h:outputText styleClass="FL pad20lt pad5tp" value="Transfer Status"/>
+				<icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<h:selectOneMenu id="transferStatus"
+						styleClass="FL W10percnt pad10lt pad2tp"
+						value="#{transferDocBean.selectedTransferStatus}"
+						valueChangeListener="#{transferDocBean.listenFilterType}"
+						immediate="true">
+						<ace:ajax />
+						<f:selectItems value="#{transferDocBean.transferStatusList}" />
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+
+				<!-- SHOW ALL PROJECTS CHECKBOX -->
+				<span class="FL pad20lt pad3tp" >
+					<h:panelGroup rendered="#{(not empty authBean.pgFields['10.5,all_projects']) and
+							(headerViewBean.production.type.aicp)}">
+					<span>
+						<h:panelGroup styleClass="W30percnt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox id="showAll"
+										style="height:13px" value="#{transferDocBean.showAllProjects}"
+										valueChangeListener="#{transferDocBean.listenFilterType}"
+										styleClass="iceSelBoolChkbx">
+									<ace:ajax execute="@form" render="@form"/>
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</h:panelGroup>
+					</span>
+					<span>Show all Projects</span>
+					</h:panelGroup>
+				</span>
+			</h:panelGroup>
+			<span class="FR pad15rt">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox id="allowPrevious"
+						valueChangeListener="#{transferDocBean.listenFilterType}"
+						value="#{transferDocBean.allowSent}" styleClass="FL">
+						<ace:ajax execute="@form"/>
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+				<h:outputText escape="false" styleClass="pad4lt FL" value="Allow previously sent documents" />
+				<span class="pad-2tp"><h:outputText escape="false" styleClass="pad-2tp" value="&lt;/br&gt; &#160; &#160; &#160;  &#160;to be transferred again." /></span>
+			</span>
+
+			<div class="blueLegendContWrap">
+				<div class="blueLegendCont pad20tp pad6lt" style="width:99%; text-align:center;" id="transferDoc">
+					<h:panelGroup rendered = "#{not headerViewBean.production.type.canadaTalent}">
+					  <div class="legendHdg">Transfer to Payroll Service</div>
+                    </h:panelGroup>
+					<!-- legend button starts -->
+					<!-- Transfer button -->
+					<h:panelGroup rendered ="#{not headerViewBean.production.type.canadaTalent}" styleClass="btn_legend pad10rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Transfer"
+								rendered="#{not headerViewBean.production.type.canadaTalent}"
+								action="#{transferDocBean.actionTransfer('transferTo')}"
+								title="Transfer the documents that are checked"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="btn_legend pad5rt" rendered="#{not headerViewBean.production.type.canadaTalent}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Include Docs"
+								action="#{transferDocBean.actionIncludeDocuments}"
+								title="Select which document types to display"
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<!-- legend button end -->
+
+					<!-- LISTED / DISPLAYED / SELECTED counts -->
+					<span class="legendHdg pad30lt" >
+					  <h:panelGroup rendered = "#{not headerViewBean.production.type.canadaTalent}">
+						<span>Employees in List: </span>
+					  </h:panelGroup>
+					  <h:panelGroup rendered = "#{headerViewBean.production.type.canadaTalent}">
+						<span>Performers in List: </span>
+					  </h:panelGroup>
+							<h:outputText id="empCount" value="#{transferDocBean.totalEmploymentCount}" />
+					</span>
+					<!-- <span class="legendHdg pad10lt pad-1tp" >
+						<span>Selected Employments: </span>
+							<h:outputText value="#{transferDocBean.selectedEmploymentCount}" />
+					</span> -->
+				    <h:panelGroup rendered = "#{not headerViewBean.production.type.canadaTalent}">
+						<span class="legendHdg pad30lt" >
+							<span>Documents in List: </span>
+								<h:outputText id="docCount" value="#{transferDocBean.totalDocumentCount}" />
+						</span>
+					</h:panelGroup>
+					<span class="legendHdg pad10lt" >
+						<span>Selected Documents: </span>
+							<h:outputText id="selectedDocs" value="#{transferDocBean.selectedDocumentCount}" />
+					</span>
+
+					<div id="docTransferTable" class="FL rowCont" style="overflow-x:auto;">
+						<ace:dataTable id="tableTransferDoc"
+								value="#{transferDocBean.employmentList}"
+								filterListener="#{transferDocBean.listenFilter}"
+								var="item"
+								constantRefilter="true"
+								style="width:auto;max-width:100%;"
+								styleClass="bk_sl_grid pad5tp"
+								scrollable="true" singleSort="true">
+								<!-- scrollHeight="350" -->
+								
+
+							<ace:ajax event="filter" render="ob:empCount ob:docCount" />
+
+							<ace:column style="width:30px">
+								<f:facet name="header">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox
+												styleClass="iceSelBoolChkbx"
+												valueChangeListener="#{transferDocBean.listenCheckedForAll}"
+												value="#{transferDocBean.checkedForAll}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</f:facet>
+								<div>
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<ace:triStateCheckbox id="empCheckBox-#{item.employmentId}" value="#{item.empMasterCheck.value}"
+												valueChangeListener="#{transferDocBean.listenEmpMasterCheck}">
+											<ace:ajax execute="@form"/>
+											<f:attribute name="employmentId" value="#{item.employmentId}" /> <!-- Added for LS-2492 -->
+										</ace:triStateCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</ace:column>
+
+							<!-- NAME -->
+							<ace:column headerText="Name &amp; Occupation" styleClass="W300 "
+								filterBy="#{item.empName}#{item.occupation}" filterMatchMode="contains"
+								sortBy="#{item.empName}" style="text-align:left;">
+								<h:outputText styleClass="rowCont pad5lt" value="#{item.empName}" />
+								<h:outputText styleClass="rowCont pad10lt" value="#{item.occupation}" />
+							</ace:column>
+
+							<!-- DEPARTMENT -->
+							<ace:column headerText="Department" styleClass="W200"
+								filterBy="#{item.department}" style="text-align:left;"
+								sortBy="#{item.department}">
+								<h:outputText styleClass="pad5lt" value="#{item.department}" />
+							</ace:column>
+							
+							<!-- PAYROLL START -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="START" />
+							</ui:include>
+
+							<!-- I9 -->
+							<!-- LS-2236 TTCO document Transfer page options to exclude I9 -->
+							<!-- c:if test="#{isTeamProd == false}" *Revert LS-2236 5/22/19 DH* -->
+								<ui:include src="transferDocColumn.xhtml">
+									<ui:param name="item" value="#{item}" />
+									<ui:param name="typeName" value="I9" />
+								</ui:include>
+							<!-- /c:if -->
+
+							<!-- W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="W4" />
+							</ui:include>
+
+							<!-- W9 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="W9" />
+							</ui:include>
+
+							<!-- CA WTPA -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="CA_WTPA" />
+							</ui:include>
+
+							<!-- NY WTPA -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="NY_WTPA" />
+							</ui:include>
+
+							<!-- INDEMNIFICATION -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="INDEM" />
+							</ui:include>
+
+							<!-- MTA -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MTA" />
+							</ui:include>
+
+							<!-- DIRECT DEPOSIT -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="DEPOSIT" />
+							</ui:include>
+ 
+							<!-- Model Release Form -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MODEL_RELEASE" />
+							</ui:include>
+							
+							<!-- STATE W4s FOLLOW - IN Alphabetical order LS-3536 -->
+
+							<!-- AL: A4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="AL_W4" />
+							</ui:include>
+							
+							<!-- AR: W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="AR_W4" />
+							</ui:include>
+							
+							<!-- AZ: A4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="AZ_W4" />
+							</ui:include>
+
+							<!-- CA: DE 4 - LS-3536-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="CA_W4" />
+							</ui:include>
+							
+							<!-- CT: W4 - LS-3647-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="CT_W4" />
+							</ui:include>
+							
+							<!-- DC: W4-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="DC_W4" />
+							</ui:include>
+							
+							<!-- DE: W4-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="DE_W4" />
+							</ui:include>
+
+							<!-- GA: G4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="GA_W4" />
+							</ui:include>
+							
+							<!-- HI: HI-W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="HI_W4" />
+							</ui:include>
+
+							<!-- IA: IA-W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="IA_W4" />
+							</ui:include>
+							
+							<!-- ID: ID-W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="ID_W4" />
+							</ui:include>
+							
+							<!-- IL: IL-W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="IL_W4" />
+							</ui:include>
+							
+							<!-- IN: IN-W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="IN_W4" />
+							</ui:include>
+
+							<!-- KS W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="KS_W4" />
+							</ui:include>
+							
+							<!-- KY W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="KY_W4" />
+							</ui:include>
+							
+							<!-- LA: L4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="LA_W4" />
+							</ui:include>
+
+							<!-- MA: M-4 - LS-3733 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MA_W4" />
+							</ui:include>
+
+							<!-- MD: MW5074 - LS-3764 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MD_W4" />
+							</ui:include>
+							
+							<!-- ME W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="ME_W4" />
+							</ui:include>
+
+                            <!-- MI W-4 - LS-3539 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MI_W4" />
+							</ui:include>
+							
+							<!-- MN W-4 - LS-3539 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MN_W4" />
+							</ui:include>
+							
+							<!-- MO W-4 - LS-3644 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MO_W4" />
+							</ui:include>
+							
+							<!-- MS W-4 - LS-3644 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MS_W4" />
+							</ui:include>
+							
+							<!-- MT W-4 - LS-4718 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="MT_W4" />
+							</ui:include>
+							
+							<!-- NC W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="NC_W4" />
+							</ui:include>
+							
+							<!-- NE W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="NE_W4" />
+							</ui:include>
+							
+							<!-- NJ W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="NJ_W4" />
+							</ui:include>
+
+							<!-- NY: IT-2104 - LS-3536-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="NY_W4" />
+							</ui:include>
+							
+							<!-- OH LS-3641-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="OH_W4" />
+							</ui:include>
+								
+							<!-- OK LS-3540-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="OK_W4" />
+							</ui:include>
+							
+							<!-- OR LS-3540-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="OR_W4" />
+							</ui:include>
+							
+							<!-- PR LS-4230-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="PR_W4" />
+							</ui:include>
+
+							<!-- RI W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="RI_W4" />
+							</ui:include>
+							
+							<!-- SC W4 -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="SC_W4" />
+							</ui:include>
+							
+							<!-- VA LS-3540-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="VA_W4" />
+							</ui:include>
+							
+							<!-- VT LS-4137-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="VT_W4" />
+							</ui:include>
+							
+							<!-- WI LS-3643-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="WI_W4" />
+							</ui:include>
+
+							<!-- WV LS-4238-->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="WV_W4" />
+							</ui:include>	
+							
+							<!--  *** CANADA FORMS FOLLOW *** -->
+
+							<!-- ACTRA Contract -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="ACTRA_CONTRACT" />
+							</ui:include>
+
+							<!-- ACTRA Work Permit -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="ACTRA_PERMIT" />
+							</ui:include>
+ 
+							<!-- Uda Contract -->
+							<ui:include src="transferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="UDA_INM" />
+							</ui:include>
+
+							<!-- OTHER (removed by LS-3536 - not used)
+							<ui:include src="canadaTransferDocColumn.xhtml">
+								<ui:param name="item" value="#{item}" />
+								<ui:param name="typeName" value="OTHER" />
+							</ui:include>
+							-->
+
+						</ace:dataTable>
+						<div class="rowCont">&#160;</div>
+						<h:panelGroup rendered="#{headerViewBean.production.type.canadaTalent}" style="width:auto;max-width:100%;">
+							<div style="text:align:center;">
+								<div style="display:inline-block;">
+								<div class="FL">
+								    <h:panelGroup styleClass=" pad20lt">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Send to Performer"
+												rendered="#{headerViewBean.production.type.canadaTalent}"
+												action="#{transferDocBean.actionTransfer('toPerformer')}"
+												title="Send the documents that are checked to the performer"
+												styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<span class=" pad10lt" style="font-size: 11px; color: #222; float: none; display: table; margin: 15px 0 0 0;">
+										<span class="FL" style="width: 15px; margin-right: 5px;">
+											<h:graphicImage alt="" style="width: 7px;height: 13px;position: relative;left: 4px;top: 1px;" value="" url="../../i/icon_doc_sent_to_performer.png" />
+										</span>
+										<span class="FL pad2tp"><h:outputText value=" Sent to Performer" /></span>
+									</span>
+								</div>
+								<div class="FL">
+									<h:panelGroup styleClass="pad20lt">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton id="sendToUnionBtn" value="Send to Union"
+												rendered="#{headerViewBean.production.type.canadaTalent}"
+												action="#{transferDocBean.actionTransfer('toOffice')}"
+												title="Send the documents that are checked to office"
+												styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<span class="FL pad10lt" style="font-size: 11px; color: #222; float: none; display: table; margin: 15px 0 0 0;">
+										<span class="FL" style="width: 15px; margin-right: 5px;">
+											<h:graphicImage alt="" style="width: 13px;height: 12px;position: relative;top: 1px;left: 3px;" value="" url="../../i/icon_doc_sent_to_union.png" />
+										</span>
+										<span class="FL pad2tp"><h:outputText value=" Sent to Union" /></span>
+								   </span>
+								</div>
+								<div class="FL">
+										<h:panelGroup styleClass="pad20lt">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton id="sendToTPSBtn" value="Send to TPS"
+												rendered="#{headerViewBean.production.type.canadaTalent}"
+												action="#{transferDocBean.actionTransfer('toBiller')}"
+												title="Send the documents that are checked to Biller"
+												styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<span class="FL pad10lt"
+											style="font-size: 11px; color: #222; float: none; display: table; margin: 15px 0 0 0;">
+											<span class="FL" style="width: 15px; margin-right: 5px;">
+											      <h:graphicImage alt="" style="width: 13px;position: relative;left: 3px;" value="" url="../../i/icon_doc_sent_to_tps.png" />
+										    </span>
+										    <span class="FL pad2tp"><h:outputText value=" Sent to TPS" /></span>
+										</span>
+								</div>		
+								<span class="FL">
+										<h:outputText styleClass="B pad15lt pad3tp" value="Account Manager:"/>
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu id="billersList" styleClass="W155 pad10lt"
+												value="#{transferDocBean.selectedBiller.id}"
+												valueChangeListener="#{transferDocBean.listenBillerChange}">
+												<f:selectItems value="#{transferDocBean.billersListDL}" />
+												<ace:ajax/>
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+										<div>
+											<span class="FL pad10lt"
+												style="font-size: 11px; color: #222; margin-left: 0; margin-top: 8px;">
+												<span class="FL" style="width: 30px"> 
+												  <h:graphicImage alt="" style=" width: 20px;position: relative;top: -2px;left: 3px" value="" url="../../i/icon_doc_10_appr.png" />
+											    </span>
+											    <span class="FL pad2tp"><h:outputText value=" Complete Document" /></span>
+											</span> 
+											<span class="FL pad20lt"
+												style="font-size: 11px; color: #222; margin-left: 18px; margin-top: 8px;">
+												<span class="FL" style="width: 30px"> 
+												   <h:graphicImage alt="" style="width: 18px;position: relative;top: -1px;left: 2px;" value="" url="../../i/icon_doc_00_pending.png" />
+											    </span>
+											    <span class="FL pad2tp"><h:outputText value=" Incomplete Document" /></span>
+											</span>
+										</div>
+									</span>
+								</div>
+							</div>
+						</h:panelGroup>	
+							<span class="FR pad5rt dhb" style="position:relative;margin-top: -29px;margin-bottom: 15px;">
+							<span class="FL" style="width:30px"> <h:graphicImage alt="" value="" url="../../i/icon_sent.png"/> </span>
+							<span class="FL pad5tp"><h:outputText value="- Document has been transferred to your Payroll Service."/></span>
+						</span>
+					</div>
+				</div>
+				<!-- blueLegendCont -->
+			</div>
+			<!-- blueLegendContWrap  -->
+            <div style="clear:both"></div>
+			<span class="FR pad15rt" style="position: relative;top: -6px;">
+			    <h:panelGroup rendered = "#{not headerViewBean.production.type.canadaTalent}">
+				  <span class="FL pad8tp"><h:outputText value="A number in the document table, above, indicates that multiple versions
+					of the same document exist for the employee. Click the number to select one."/></span>
+				</h:panelGroup>
+				<h:panelGroup rendered = "#{headerViewBean.production.type.canadaTalent}">
+				  <span class="FL pad8tp"><h:outputText value="If there's more than 1 document per category for a performer,you'll see a number in the table above. Click the number to open a new window and select the document individually. "/></span>
+			    </h:panelGroup>
+			</span>
+		</div>
+		<!-- scrollTop end  -->
+
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

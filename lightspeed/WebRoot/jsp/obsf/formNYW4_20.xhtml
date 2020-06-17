@@ -1,0 +1,378 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<c:set var="bean" value="#{formStateNYW4Bean}" />
+	<c:set var="employerEdit" value="#{contactFormBean.editMode and bean.appEdit}"/>
+	<c:set var="editable" value="#{contactFormBean.editMode and bean.empEdit}" />
+	<c:set var="form" value="#{bean.form}" />
+
+	<div class="miniTab pad15lt" style="width: 880px; height: 7920px">
+		<div class="BKwhite">
+			<div id="" class="scrollPnlTab"
+				onscroll="setScrollPos(this.scrollTop);">
+				<div class="w4_NY_20">
+					<!-- Employee Personal Info - Step 1 section -->
+					<div class="FL" style="margin-top: 109px; margin-left: -78px;">
+						<div class="FL">
+							<div class="FL">
+								<ace:textEntry value="#{form.firstAndInitial}" disabled="#{!editable}"
+									styleClass="W220" maxlength="30" id="nyW4MainFirstName"
+									style="margin-left:102px;height:12px" />
+							</div>
+							<div class="FL">
+								<ace:textEntry value="#{form.lastName}" disabled="#{!editable}"
+									styleClass="W220" maxlength="30" id="nyW4MainLastName"
+									style="margin-left:48px;height:12px" />
+							</div>
+							<div class="FL">
+								<ace:textEntry value="#{form.socialSecurity}"
+									disabled="#{!editable}" styleClass="W120" maxlength="12"
+									id="nyW4MainSsn" style="margin-left:103px;height:12px">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry>
+							</div>
+						</div>
+						<div class="FL">
+							<div class="FL" style="margin-top: 17px;">
+								<div class="FL">
+									<ace:textEntry value="#{form.address.addrLine1}"
+										disabled="#{!editable}" styleClass="W200" maxlength="30"
+										id="nyw4MainAddr1" style="margin-left:102px;height:12px" />
+								</div>
+								<div class="FL">
+									<ace:textEntry value="#{form.address.addrLine2}"
+										disabled="#{!editable}" styleClass="W200" maxlength="30"
+										id="nyw4MainAddr2" style="margin-left:175px;height:12px" />
+								</div>
+								<div class="FL" style="margin-top: -33px; margin-left: 832px;">
+									<ace:buttonGroup id="maritalStatus" mutuallyExclusive="true"
+										layout="lineDirection">
+										<h:panelGroup layout="block" styleClass="FL W44 "
+											style="height:25px;">
+											<h:panelGroup styleClass="FL pad5lt">
+												<ace:radioButton group="maritalStatus" labelPosition="right"
+													id="maritalStatus0" disabled="#{not editable}"
+													value="#{bean.maritalStatus[0]}"
+													valueChangeListener="#{bean.listenMaritalStatusChange}">
+													<ace:ajax execute="maritalStatus" event="activate"
+														render="maritalStatus" />
+												</ace:radioButton>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup layout="block" styleClass="FL W57 "
+											style="height:25px;margin-left: 45px;">
+											<h:panelGroup styleClass="FL pad5lt">
+												<ace:radioButton group="maritalStatus" labelPosition="right"
+													id="maritalStatus1" disabled="#{not editable}"
+													value="#{bean.maritalStatus[1]}"
+													valueChangeListener="#{bean.listenMaritalStatusChange}">
+													<ace:ajax execute="maritalStatus" event="activate"
+														render="maritalStatus" />
+												</ace:radioButton>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup layout="block" styleClass="FL W70 "
+											style="height: 17px;margin-left: 66px;margin-top: -5px;">
+											<h:panelGroup styleClass="FL pad5lt">
+												<ace:radioButton group="maritalStatus" labelPosition="right"
+													id="maritalStatus2" disabled="#{not editable}"
+													value="#{bean.maritalStatus[2]}"
+													valueChangeListener="#{bean.listenMaritalStatusChange}">
+													<ace:ajax execute="maritalStatus" event="activate"
+														render="maritalStatus" />
+												</ace:radioButton>
+											</h:panelGroup>
+										</h:panelGroup>
+									</ace:buttonGroup>
+								</div>
+							</div>
+						</div>
+						<div class="FL" style="margin-top: 11px;">
+							<div class="FL">
+								<ace:textEntry value="#{form.address.city}"
+									disabled="#{!editable}" styleClass="W300" maxlength="50"
+									id="nyw4MainAddrCity" style="margin-left:102px;height:12px" />
+							</div>
+							<div class="FL">
+								<h:selectOneMenu styleClass="FL W60" id="nyW4MainAddrState"
+									value="#{form.address.state}" style="margin-left:32px;"
+									disabled="#{!editable}">
+									<f:selectItems
+										value="#{applicationScopeBean.stateCodeDL['US']}" />
+								</h:selectOneMenu>
+							</div>
+							<div class="FL" style="margin-left: 82px;">
+								<ace:textEntry value="#{form.address.zip}"
+									disabled="#{!editable}" styleClass="W80" maxlength="10"
+									id="nyW4MainAddrZip" style="height:12px" />
+							</div>
+						</div>
+					</div>
+					<!-- End of Employee Personal Info - Step 1 section -->
+
+					<!-- Resident -step 2 section   -->
+					<div class="FL" style="margin-top: 4px; margin-left: 321px;">
+						<ace:buttonGroup id="nycResident" mutuallyExclusive="true"
+							layout="lineDirection">
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="nycResident" labelPosition="right"
+										id="nyResidentYes" disabled="#{not editable}"
+										value="#{bean.nycResident[0]}" valueChangeListener="#{bean.listenNycResidentChange}">
+										<ace:ajax execute="nycResident" event="activate"
+											render="nycResident" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;margin-left: 25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="nycResident" labelPosition="right"
+										id="nyResidentNo" disabled="#{not editable}"
+										value="#{bean.nycResident[1]}" valueChangeListener="#{bean.listenNycResidentChange}">
+										<ace:ajax execute="nycResident" event="activate"
+											render="nycResident" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+						</ace:buttonGroup>
+					</div>
+
+					<div class="FL"
+						style="margin-left: -165px; margin-top: 22px; height: 21px">
+						<ace:buttonGroup id="yonkersResident" mutuallyExclusive="true"
+							layout="lineDirection">
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="yonkersResident" labelPosition="right"
+										id="yonkersResidentYes" disabled="#{not editable}"
+										value="#{bean.yonkersResident[0]}" valueChangeListener="#{bean.listenYonkersResidentChange}">
+										<ace:ajax execute="yonkersResident" event="activate"
+											render="yonkersResident" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;margin-left: 25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="yonkersResident" labelPosition="right"
+										id="yonkersResidentNo" disabled="#{not editable}"
+										value="#{bean.yonkersResident[1]}" valueChangeListener="#{bean.listenYonkersResidentChange}">
+										<ace:ajax execute="yonkersResident" event="activate"
+											render="yonkersResident" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+						</ace:buttonGroup>
+					</div>
+					<!-- End of Resident -step 2 section   -->
+
+					<!-- Total allowances -step 3 section   -->
+					<div class="FL" style="margin-top: 29px;">
+						<div class="FL" style="margin-left: 746px;">
+							<ace:textEntry value="#{form.allowances}" disabled="#{!editable}"
+								styleClass="W90" maxlength="15" id="nyAndYonkersAllowances"
+								style="height:8px">
+								<f:convertNumber pattern="#,##0" />
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top: 3px; margin-left: 746px;">
+							<ace:textEntry value="#{form.nycAllownces}"
+								disabled="#{!editable}" styleClass="W90" maxlength="15"
+								id="allowncesforNYC" style="height:8px">
+								<f:convertNumber pattern="#,##0" />
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top: 38px; margin-left: 746px;">
+							<ace:textEntry value="#{form.nysAmount}" disabled="#{!editable}"
+								styleClass="W90" maxlength="15" id="nysAmount"
+								style="height:8px">
+								<f:convertNumber pattern="#,##0" />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top: 3px; margin-left: 746px;">
+							<ace:textEntry value="#{form.nycAmount}" disabled="#{!editable}"
+								styleClass="W90" maxlength="15" id="nycAmount"
+								style="height:8px">
+								<f:convertNumber pattern="#,##0" />
+							</ace:textEntry>
+						</div>
+						<div class="FL" style="margin-top: 2px; margin-left: 746px;">
+							<ace:textEntry value="#{form.yonkersAmount}"
+								disabled="#{!editable}" styleClass="W90" maxlength="15"
+								id="yonkersAmount" style="height:8px">
+								<f:convertNumber pattern="#,##0" />
+							</ace:textEntry>
+						</div>
+					</div>
+					<!-- end of Total allowances -step 3 section   -->
+
+
+					<!-- Signature Section 4 -->
+					<!-- SIGNATURE VALUE -->
+					<!-- Display the most recent employee signature. -->
+					<div class="FL"
+						style="margin-top: 7.5%; margin-left: 120px; height: 100px;">
+						<!-- SIGNATURE DATE -->
+						<div class="FL txt14" style="margin-left: 555px;width: 100%;margin-top: -17px;">
+							<h:outputText value="#{bean.contactDoc.empSignature.date}"
+								rendered="#{bean.contactDoc.empSignature ne null}">
+								<f:convertDateTime pattern="MM/dd/yyyy"
+									timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</div>
+						<!-- SIGNATURE DISPLAY -->
+						<div class="FL" style="width: 595px;margin-top: -22px;margin-left: 20px;">
+							<span> <h:outputText escape="false"
+									styleClass="txt12 W200"
+									rendered="#{bean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}"
+										styleClass="U B txtBlue" />
+									<h:outputText
+										value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br />
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+								</h:outputText>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup styleClass="FL"
+								rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend"
+									style="margin-top:15px; margin-right:10px;">
+									<h:panelGroup
+										rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt" />
+										<span> <h:commandLink value="Sign &amp; Submit"
+												onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+
+						<!-- SIGNATURE ROW END -->
+					</div>
+					<div class="FL B"
+						style="margin-top: -1px; margin-left: 355px;">
+						<h:outputText value="Employer section to be completed by TEAM."
+							style="color:red" />
+					</div>
+					<!-- Employer certificate -step 5 section   -->
+					<div class="FL" style="margin-top: 26px; margin-left: 180px;">
+						<div class="FL" style="margin-left: 325px;">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="empClaimNYS"
+								value="#{form.isNYEmpClaimed}" disabled="true" />
+						</div>
+					</div>
+					<div class="FL" style="margin-top: 4px; margin-left: -40px;">
+						<div class="FL" style="margin-left: 325px;">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="empNewHire"
+								value="#{form.isEmpNewHire}" disabled="true"  />
+						</div>
+						<div class="FL" style="margin-top: 2px; margin-left: 410px;">
+							<ace:dateTimeEntry tabindex="0" value="#{form.firstPayDate}"
+								title="Employee first date" renderAsPopup="true"
+								disabled="true">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</div>
+					</div>
+					<div class="FL" style="margin-top: 4px; margin-left: 553px;">
+						<ace:buttonGroup id="depHealthInsYes" mutuallyExclusive="true"
+							layout="lineDirection">
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="healthInsurance" labelPosition="right"
+										id="depHealthInsNo" disabled="true"
+										value="#{bean.depHealthIns[0]}" valueChangeListener="#{bean.listenDepHealthInsChange}">
+										<ace:ajax execute="healthInsurance" event="activate"
+											render="healthInsurance" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="FL W70 "
+								style="height:25px;margin-left: 25px;">
+								<h:panelGroup styleClass="FL pad5lt">
+									<ace:radioButton group="healthInsurance" labelPosition="right"
+										id="yonker1" disabled="true"
+										value="#{bean.depHealthIns[1]}" valueChangeListener="#{bean.listenDepHealthInsChange}">
+										<ace:ajax execute="healthInsurance" event="activate"
+											render="healthInsurance" />
+									</ace:radioButton>
+								</h:panelGroup>
+							</h:panelGroup>
+						</ace:buttonGroup>
+					</div>
+					<div class="FL" style="margin-left: 405px;">
+						<ace:dateTimeEntry tabindex="0" value="#{form.empQualifyDate}"
+							title="Employee qualifies date" renderAsPopup="true"
+							disabled="true">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+						</ace:dateTimeEntry>
+					</div>
+					<div class="FL" style="margin-top: 22px; margin-left: -40px;">
+						<div class="FL" style="margin-left: 100px;">
+							<ace:textAreaEntry value="#{form.employerNameAddr}"
+								disabled="true" styleClass="W90" maxlength="100"
+								id="empNameAddr" style="height: 32px;width: 435px;">
+							</ace:textAreaEntry>
+						</div>
+						<div class="FL" style="margin-top: 2px; margin-left: 132px;">
+							<ace:textEntry value="#{form.empIdNumber}"
+								disabled="true" styleClass="W90" maxlength="10"
+								id="empIdNumber" style="height:14px;width:100px;">
+							</ace:textEntry>
+						</div>
+					</div>
+					<!-- End of Employer certificate -step 5 section   -->
+
+				</div>
+
+			</div>
+			<!-- end scroll div -->
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form2nd.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form3rd.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form4th.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form5th.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form6th.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form7th.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form8th.png" />
+			<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/nyW4_form9th.png" />
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div>
+	</div>
+</ui:composition>

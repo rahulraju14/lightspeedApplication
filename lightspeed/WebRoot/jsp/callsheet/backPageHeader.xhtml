@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Top section of back page of call sheet: title, date, crew call, status  -->
+
+	<div class="W100percnt rowCont border B txt14" style="height:40px;">
+
+		<div class="W40percnt FL border H100p">
+			<div class="border" style="height:18px;">
+				<h:outputText value="#{callSheetViewBean.callsheet.title}" />
+			</div>
+			<div class="border" style="height:18px;">
+				<div class="W49percnt FL border H100p">
+					<h:outputText value="#{callSheetViewBean.callsheet.date}">
+						<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}"
+								pattern="EEE MMMM d, yyyy" />
+					</h:outputText>
+				</div>
+				<div class="W49percnt FL H100p">
+					<div class="CT">
+						<h:outputText value="Day #{callSheetViewBean.callsheet.shootDay}" />
+						<h:outputText value=" of #{callSheetViewBean.callsheet.shootDays}" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="W15percnt FL txt16 border H100p">
+			<div class="CT pad10tp">
+				CREW CALL:
+			</div>
+		</div>
+		<div class="W20percnt FL txt24 border H100p">
+			<div class="CT pad10tp">
+				<h:outputText value="#{callSheetViewBean.callsheet.callTime}">
+					<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="h:mm a" />
+				</h:outputText>
+			</div>
+		</div>
+		<div class="W24percnt FL border H100p">
+			<div class="CT txt24 pad10tp H100p">
+					Call Sheet -
+					<h:outputText value="FINAL"
+						rendered="#{callSheetViewBean.callsheet.status eq 'PUBLISHED'}" />
+					<h:outputText value="PRELIM"
+						rendered="#{callSheetViewBean.callsheet.status ne 'PUBLISHED'}" />
+			</div>
+		</div>
+
+	</div>
+
+	<div class="rowCont RT I txt12 pad10rt">Updated
+		<h:outputText value="#{callSheetViewBean.callsheet.updated}" >
+			<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern=" h:mm a MMM dd, yyyy" />
+		</h:outputText>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Section / Script Element Status -->
+	<h:panelGroup
+		rendered="#{(not empty messageCenterBean.elementStatusList) and (not empty authBean.pgFields['1.0,elements'])}">
+		<div id="sub_homeScptElemStatTab">
+			<div class="sub_homeScptElemStat">
+				<div class="homeScptElemContWrap MA">
+					<div id="homeScptElemCont">
+						<span class="subSecHdg_homeScptElem FL">
+							Script Element Status
+						</span>
+						<ace:dataTable
+							styleClass="bk_sl_grid"
+							style="width:100%;max-width:100%;"
+							value="#{messageCenterBean.elementStatusList}"
+							var="elem">
+							<ace:column id="column1" headerText="Category">
+								<h:outputText
+									value="#{elem.type.label}"
+									style="color:green;"
+									rendered="#{elem.satisfied}"></h:outputText>
+								<h:outputText
+									value="#{elem.type.label}"
+									rendered="#{not elem.satisfied}"></h:outputText>
+							</ace:column>
+							<ace:column id="column2" headerText="Production Element: Selected/Required">
+								<span class="rowCont CT">
+									<h:outputText value="#{elem.selected}"></h:outputText>
+									/
+									<h:outputText value="#{elem.required}"></h:outputText>
+								</span>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>

@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Column Widths -->
+	<!-- Commercial Section -->
+	<c:set var="col0Width" value="15px" />
+	<c:set var="col1Width" value="160px" />
+	<c:set var="col2Width" value="50px" />
+	<c:set var="col3Width" value="100px" />
+	<c:set var="col4Width" value="95px" />
+	<c:set var="col5Width" value="200px" />
+
+	<div style="width: 740px">
+		<h:panelGroup id="actraIntentTalentPanel">
+			<table class="tbleBorder W100percnt" style="width: 700px;">
+				<!-- HEADER LINE -->
+				<thead>
+					<tr style="height: 25px">
+						<th style="width: #{col0Width}">
+						    <h:panelGroup><h:outputText value="" /></h:panelGroup>
+						</th>
+						<th style="width: #{col1Width}">
+						    <h:panelGroup>
+						            <h:outputText style="margin-left:10%" value="Performer Name(s)" />
+						    </h:panelGroup>
+						</th>
+						<th style="width: #{col2Width}">
+						    <h:panelGroup styleClass="FL B pad5tp CT">
+						       <h:outputText style="margin-left:2%" value="- 16 yrs" />
+						    </h:panelGroup>
+						</th>
+						<th styleClass="CT" style="width: #{col3Width}">
+						    <h:panelGroup><h:outputText style="margin-left:24%" value="Category" /></h:panelGroup>
+						</th>
+						<th style="width: #{col4Width}">
+						    <h:panelGroup><h:outputText style="margin-left:34%" value="Date" /></h:panelGroup>
+						</th>
+						<th style="width: #{col5Width}">
+						    <h:panelGroup><h:outputText style="margin-left:35%" value="Location" /></h:panelGroup>
+						</th>
+					</tr>
+				</thead>
+				<!-- LS-2988  -->
+				<ui:repeat value="#{bean.talentList}" var="talent" varStatus="loop">
+					<tr style="height: 25px">
+						<!-- the delete [cross] buttons -->
+						<td styleClass="CT" style="width: #{col0Width}"><h:panelGroup
+								styleClass="CT" style="width:10%;">
+								<h:commandButton value="" styleClass="deleteXbtn"
+									rendered="#{editable}" id="actionRemoveLines_#{loop.index}"
+									action="#{bean.actionRemoveLines}" title="Remove">
+									<f:setPropertyActionListener value="#{loop.index}"
+										target="#{bean.talentToRemoveIndex}" />
+								</h:commandButton>
+							</h:panelGroup></td>
+						<td style="width: #{col1Width}"><h:panelGroup styleClass="FL">
+								<ace:textEntry maxlength="100" id="actraIntent_#{loop.index}"
+									disabled="#{not editable}" styleClass="txt10 W160"
+									value="#{talent.name}" />
+							</h:panelGroup></td>
+						<td style="width: #{col2Width}" styleClass="CT"><h:panelGroup
+								styleClass="CT">
+								<h:selectBooleanCheckbox styleClass="ckbx"
+									id="ActraTalentMinor_#{loop.index}" value="#{talent.minor}"
+									disabled="#{not editable}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</h:panelGroup></td>
+						<td styleClass="CT" style="width: #{col3Width}"><h:panelGroup
+								styleClass="FL">
+								<ace:textEntry maxlength="50" id="talentCategory_#{loop.index}"
+									disabled="#{not editable}" styleClass="txt10 W95"
+									value="#{talent.category}" />
+							</h:panelGroup></td>
+						<td style="width: #{col4Width}"><h:panelGroup styleClass="FL">
+								<ace:dateTimeEntry id="talentShootDate_#{loop.index}"
+									disabled="#{not editable}" renderAsPopup="true"
+									styleClass="txt10 W95" style="z-index:1000;display:grid"
+									value="#{talent.shootDate}">
+									<f:converter converterId="lightspeed.MultiDateConverter" />
+								</ace:dateTimeEntry>
+							</h:panelGroup></td>
+						<td style="width: #{col5Width}"><h:panelGroup styleClass="FL">
+								<ace:textEntry maxlength="150" id="talenLocation_#{loop.index}"
+									disabled="#{not editable}" styleClass="txt10 W200"
+									value="#{talent.location}" />
+							</h:panelGroup></td>
+					</tr>
+				</ui:repeat>
+			</table>
+		</h:panelGroup>
+	</div>
+</ui:composition>

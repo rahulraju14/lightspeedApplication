@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Create Production</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	</c:if>
+	element = document.getElementById('cptable');
+	resizeElement(element, 215, 300);
+}
+function doFocus() {
+	var elem = document.getElementById('cprodtab:apName');
+	if (elem == null) {
+		elem = document.getElementById('apName');
+	}
+	elem.focus();
+}
+var formname = "create";
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+	doFocus();
+});
+</script>
+</c:if>
+
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="myproductions" />
+</h:outputText>
+
+<div id="main">
+<h:form id="cprodheader">
+	<ui:include src="../common/header2.xhtml" />
+</h:form>
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+						<h:form id="cproderror">
+							<h:outputText id="errMsgContFull"
+									styleClass="errMsgContFull pad10tp">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:outputText>
+
+						</h:form>
+
+						<span class="FL pad6bm pnlHdrTxt" style="font-size:20px;">
+							<h:outputText value="Selected Production"/>
+						</span>
+
+						<div class="centerFullPg2 MA rowDivider CT" style="min-height:100px;">
+
+							<div id="cptable" class="rowCont pad20tp">
+								<h:form id="cprodtab">
+
+									<h:panelGroup>
+										<div id="sub_homeMatTab">
+											<div class="sub_homeMat">
+												<div class="homeMatContWrap MA">
+													<div id="homeMatCont" class="FL rowCont gradTbl2">
+														<span class="subSecHdg_homeMat FL"></span>
+															<ace:dataTable styleClass="gradTbl2 thinColHdr"
+																	rowStyleClass="evenRow B"
+																	style="width:100%;max-width:100%;"
+																	value="#{createProductionBean.productList}" var="item">
+
+															<ui:include src="productcolumns2.xhtml" />
+
+														</ace:dataTable>
+													</div>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup><!-- end -->
+
+									<div class="rowCont"><!-- Discounted price -->
+										<h:panelGroup styleClass="FR txt14 B pad30rt" rendered="#{createProductionBean.showCouponApplied}">
+											<h:outputText style="color:red;"
+													value="#{createProductionBean.currentProduct.price}">
+												<f:convertNumber maxFractionDigits="2" groupingUsed="true"
+														currencySymbol="$" maxIntegerDigits="6" minFractionDigits="2"
+														type="currency"/>
+											</h:outputText>
+											<h:outputText escape="false"
+													style="color:red;" value="per&lt;br/>month" />
+										</h:panelGroup>
+									</div>
+
+									<div class="MA rowCont" style="width:500px;">
+										<h:panelGroup styleClass="rowCont pad20tp">
+											<span class="LT rowCont">
+												<h:panelGroup styleClass="stdTxt FL pad15rt" rendered="#{not createProductionBean.showCheckout and
+														not createProductionBean.showUpgrade and
+														not createProductionBean.showResubscribe}">
+													<h:outputText rendered="#{createProductionBean.currentProduct.type.aicp}">
+														Enter the new Production Company's name:
+													</h:outputText>
+													<h:outputText rendered="#{! createProductionBean.currentProduct.type.aicp}">
+														Enter the new Production's name:
+													</h:outputText>
+												</h:panelGroup>
+												<h:panelGroup styleClass="stdTxt FL pad15rt" rendered="#{createProductionBean.showCheckout or
+														createProductionBean.showUpgrade or
+														createProductionBean.showResubscribe}">
+													Production name:
+												</h:panelGroup>
+												<span class="fd">
+													<ace:textEntry styleClass="FL" id="apName" style="width:200px;"
+															disabled="#{createProductionBean.showCheckout or
+																createProductionBean.showUpgrade or
+																createProductionBean.showResubscribe}"
+															maxlength="30"
+															value="#{createProductionBean.createProdName}">
+														<ace:ajax />
+													</ace:textEntry>
+												</span>
+											</span>
+										</h:panelGroup>
+
+										<!-- Coupon Section -->
+										<h:outputText
+												rendered="#{createProductionBean.showCouponPrompt}">
+											<h:panelGroup styleClass="LT rowCont pad20tp">
+												<h:panelGroup styleClass="stdTxt" rendered="#{not createProductionBean.showCheckout and
+														not createProductionBean.showUpgrade and
+														not createProductionBean.showResubscribe}">
+													Do you have a #{headerViewBean.domainTabTitle} pre-purchase or discount code?
+													If so, enter the code below and click Apply.
+												</h:panelGroup>
+											</h:panelGroup>
+											<h:panelGroup styleClass="LT rowCont pad10tp">
+													<span class="fd" style="margin-left:200px;">
+														<ace:textEntry style="width:150px;"
+															disabled="#{createProductionBean.showCouponApplied}"
+															maxlength="20"
+															value="#{createProductionBean.couponCode}" />
+													</span>
+													<h:outputText rendered="#{! createProductionBean.showCouponApplied}">
+														<span class="MA pad10lt" style="display:inline-block;top:8px;">
+															<span class="btnPriHotLt" />
+															<span>
+																<ace:linkButton value="Apply" styleClass="btnPriHotCt"
+																		action="#{createProductionBean.actionApplyCoupon}" />
+															</span>
+															<span class="btnPriHotRt" />
+														</span>
+													</h:outputText>
+													<h:outputText rendered="#{createProductionBean.showCouponApplied}">
+														<span class="MA pad10lt" style="display:inline-block;top:8px;">
+															<span class="btnPriDisLt" />
+															<span>
+																<ace:linkButton value="Apply" styleClass="btnPriDisCt" type="text" />
+															</span>
+															<span class="btnPriDisRt" />
+														</span>
+													</h:outputText>
+											</h:panelGroup>
+											<h:panelGroup styleClass="LT rowCont pad20tp" rendered="#{not empty createProductionBean.couponMsg}">
+												<h:outputText styleClass="txt12 B errors" value="CODE UNSUCCESSFUL" />
+												<br/>
+												<h:outputText styleClass="txt12 B errors" value="#{createProductionBean.couponMsg}" />
+												<br/><br/>
+												<h:outputText styleClass="txt12 B" value="#{headerViewBean.domainTabTitle} support may be reached at (323) 851-2000." />
+											</h:panelGroup>
+											<h:panelGroup styleClass="LT rowCont pad20tp" rendered="#{createProductionBean.showCouponApplied}">
+												<h:panelGroup styleClass="txt14 B">
+													CODE SUCCESSFULLY APPLIED!
+												</h:panelGroup>
+												<h:outputText styleClass="rowCont pad15tp stdTxt" value="#{createProductionBean.coupon.couponType.message}" />
+											</h:panelGroup>
+
+										</h:outputText>
+										<!-- END Coupon Section -->
+
+									</div>
+
+								</h:form>
+
+									<h:panelGroup styleClass="MA rowCont pad20tp" rendered="#{createProductionBean.showCheckout
+											and not createProductionBean.showUpgrade
+											and not createProductionBean.showResubscribe}">
+										<div class="MA W555" style="width:500px;">
+										Your new production,
+										<h:outputText styleClass="I" value=" #{createProductionBean.createProdName}," />
+										will be created as soon as you proceed through checkout and provide
+										payment.
+										You will be billed recurring monthly payments of&#160;
+										$<h:outputText
+												value="#{createProductionBean.amount}.">
+										</h:outputText>
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup styleClass="MA rowCont pad20tp" rendered="#{createProductionBean.showUpgrade}">
+										<div class="MA W555" style="width:500px;">
+										Your production,
+										<h:outputText styleClass="I" value=" #{createProductionBean.createProdName}," />
+										will be will be upgraded to an Indie subscription
+										as soon as you proceed through checkout and provide
+										payment.
+										You will be billed recurring monthly payments of&#160;
+										$<h:outputText
+												value="#{createProductionBean.amount}.">
+										</h:outputText>
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup styleClass="MA rowCont pad20tp" rendered="#{createProductionBean.showResubscribe}">
+										<div class="MA W555" style="width:500px;">
+										The subscription for your production,
+										<h:outputText styleClass="I" value=" #{createProductionBean.createProdName}," />
+										will be reactivated.
+										You will be billed recurring monthly payments of&#160;
+										$<h:outputText
+												value="#{createProductionBean.amount}.">
+										</h:outputText>
+										Please select the&#160;<b>Resubscribe</b> button to confirm your subscription.
+										</div>
+									</h:panelGroup>
+
+								<h:outputText rendered="#{createProductionBean.showCheckout}">
+									<div class="CB"></div>
+									<div class="MA pad30tp">
+										<form method="post" action="#{createProductionBean.postUrl}">
+											<!-- LS-style Checkout Button -->
+											<div class="MA pad30tp" style="width:100px;">
+												<span class="btnSecHotLt" />
+												<h:outputText rendered="#{createProductionBean.showResubscribe}">
+												<input type="submit" value="Resubscribe" class="btnSecHotCt" />
+												</h:outputText>
+												<h:outputText rendered="#{not createProductionBean.showResubscribe}">
+												<input type="submit" value="Checkout" class="btnSecHotCt" />
+												</h:outputText>
+												<span class="btnSecHotRt" />
+											</div>
+											<!-- recommended field -->
+											<input type="hidden" name="x_version" value="3.1" />
+											<!-- required transaction fields -->
+											<input type="hidden" name="x_login" value="#{createProductionBean.loginId}" />
+											<input type="hidden" name="x_type" value="AUTH_CAPTURE" />
+											<input type="hidden" name="x_show_form" value="PAYMENT_FORM" />
+											<input type="hidden" name="x_method" value="CC" />
+											<input type="hidden" name="x_invoice_num" value="#{createProductionBean.invoiceNumber}" />
+											<input type="hidden" name="x_amount" value="#{createProductionBean.amount}" />
+											<input type="hidden" name="x_fp_sequence" value="#{createProductionBean.sequence}" />
+											<input type="hidden" name="x_fp_timestamp" value="#{createProductionBean.timeStamp}" />
+											<input type="hidden" name="x_fp_hash" value="#{createProductionBean.fingerprint}" />
+											<!-- info we have available -->
+											<input type="hidden" name="x_description" value="#{createProductionBean.currentProduct.title}" />
+											<input type="hidden" name="x_first_name" value="#{headerViewBean.user.firstName}" />
+											<input type="hidden" name="x_last_name" value="#{headerViewBean.user.lastName}" />
+											<input type="hidden" name="x_email" value="#{headerViewBean.user.emailAddress}" />
+											<input type="hidden" name="x_address" value="#{headerViewBean.user.homeAddress.addrLine1}" />
+											<input type="hidden" name="x_city" value="#{headerViewBean.user.homeAddress.city}" />
+											<input type="hidden" name="x_state" value="#{headerViewBean.user.homeAddress.state}" />
+											<input type="hidden" name="x_zip" value="#{headerViewBean.user.homeAddress.zip}" />
+											<input type="hidden" name="x_cust_id" value="#{headerViewBean.user.accountNumber}" />
+											<!-- URLs -->
+											<input type="hidden" name="x_receipt_link_method" value="GET" />
+											<input type="hidden" name="x_receipt_link_url" value="#{createProductionBean.returnUrl}" />
+											<input type="hidden" name="x_receipt_link_text" value="Return to My Productions" />
+											<input type="hidden" name="x_cancel_url_text" value="Cancel" />
+											<input type="hidden" name="x_cancel_url" value="#{createProductionBean.cancelUrl}" />
+											<!-- fields just for LS use -->
+											<input type="hidden" name="account_number" value="#{headerViewBean.user.accountNumber}" />
+											<input type="hidden" name="production_name" value="#{createProductionBean.createProdName}" />
+											<input type="hidden" name="coupon_code" value="#{createProductionBean.couponCodeOut}" />
+											<input type="hidden" name="product_sku" value="#{createProductionBean.currentProduct.sku}" />
+											<h:outputText rendered="#{createProductionBean.showResubscribe or createProductionBean.showUpgrade}">
+												<input type="hidden" name="production_id" value="#{createProductionBean.production.id}" />
+											</h:outputText>
+
+										</form>
+									</div>
+								</h:outputText>
+
+								<h:outputText rendered="#{createProductionBean.showResubscribe and
+										(not createProductionBean.showCheckout)}">
+									<div class="CB"></div>
+									<div class="MA pad30tp">
+											<div class="MA pad30tp" style="width:100px;">
+									<h:form id="resubscribe">
+										<h:panelGroup>
+											<span class="FR pad10rt">
+												<span class="btnSecHotLt" />
+												<span>
+													<ace:linkButton value="Resubscribe"
+															action="#{createProductionBean.actionResubscribe}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+									</h:form>
+										</div>
+									</div>
+								</h:outputText>
+
+							</div><!-- end row -->
+
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtnFullPg">
+							<div class="rowBtnBdr"></div>
+							<div class="FL MA rowCont">
+								<h:outputText rendered="#{not createProductionBean.showCheckout and
+													not createProductionBean.showUpgrade and
+													not createProductionBean.showResubscribe}">
+									<h:form id="cprodname">
+										<h:panelGroup>
+											<span class="FR pad10rt">
+												<span class="btnPriEnbLt" />
+												<span>
+													<ace:linkButton value="Cancel"
+															action="purchase" styleClass="btnPriEnbCt" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:panelGroup>
+										<h:panelGroup>
+											<span class="FR pad5rt">
+												<span class="btnSecHotLt" />
+												<span>
+													<ace:linkButton value="Continue"
+															action="#{createProductionBean.actionCreateOk}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+									</h:form>
+								</h:outputText>
+
+							</div>
+						</div>
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- end pnlFull -->
+			</div><!-- end pnlCont -->
+		</div><!-- end ctrCont -->
+		<div class="CB"></div><!-- clears float for liquid layout -->
+	</div><!-- end mainCont -->
+
+<h:form id="cprodfooter">
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+</h:form>
+
+</div><!-- end main -->
+
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/releaseNotes.xhtml" />
+
+</h:body>
+</html>

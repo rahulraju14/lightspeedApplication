@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dpr" pageWidth="612" pageHeight="1008" whenNoDataType="NoDataSection" columnWidth="540" leftMargin="36" rightMargin="36" topMargin="20" bottomMargin="20" uuid="4004c72b-3f56-4de3-9234-8b1ddfb3daaf">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="grid">
+		<pen lineWidth="0.5" lineColor="#000000"/>
+	</style>
+	<style name="tag" markup="styled"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="productionLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="episodic" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dprId" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Used for testing only, in default sqlQry]]></parameterDescription>
+		<defaultValueExpression><![CDATA[91]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT distinct dpr.*,production.*, address.*, " +
+"  case dpr.status when 'APPROVED' then 'APPROVED' when 'SUBMITTED' then 'SUBMITTED' else 'PRELIMINARY' end as pubStatus, " +
+"  log.meal catering_1, log.meal_count catering_2, log.vendor catering_3, log.note catering_4 " +
+" FROM dpr, production, project, address, catering_log log " +
+" WHERE dpr.project_id = project.id and project.production_id = production.id and " +
+"  log.dpr_id = dpr.id and " +
+"  production.address_id = address.id and dpr.id = " + $P{dprId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQryCast" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT user.first_name, user.last_name, tc.castid, tc.role as name,  case tc.day_type  when 'WORK' then 'W'  when 'OTHER_TRAVEL' then 'T' when 'COMPANY_TRAVEL' then 'T' when 'HOLIDAY' then 'Y' when 'OFF' then ' ' when 'START' then 'SW' when 'START_FINISH' then 'SWF' when 'START_DROP' then 'SWD' when 'START_TRAVEL' then 'ST' when 'DROP' then 'WD' when 'PICKUP' then 'PW' when 'PICKUP_DROP' then 'PWD' when 'PICKUP_FINISH' then 'PWF' when 'FINISH' then 'WF' when 'HOLD' then 'H' when 'NOT_NEEDED' then ' ' else '?' end as status, tc.* FROM time_card tc, contact, user WHERE  contact.id = tc.contact_id  and user.id = contact.user_id  and tc.dpr_cast_id = " + $P{dprId} + " order by tc.castid;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+	</parameter>
+	<parameter name="column1dcIds" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1062,1048,1047,1068,105,103,101,104"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="column2dcIds" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1069,1049,1046,1054,1055,1056,108,102,107,114,113"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="column3dcIds" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1057,1059,1050,1058,1045,1060,1071,1072,1001,111,126,109,112,125,116,110,115"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitNumber" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Main"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="dateTimeFormat1" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("M/d/yyyy h:mm a", $P{REPORT_LOCALE}, $P{productionTimeZone})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="printMedia" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[True if any Film Use section should print]]></parameterDescription>
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="printMedia2" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[true if second row of Film Use needed]]></parameterDescription>
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Date" class="java.sql.Timestamp"/>
+	<field name="Start_Date" class="java.sql.Timestamp"/>
+	<field name="End_Date" class="java.sql.Timestamp"/>
+	<field name="Revised_End_Date" class="java.sql.Timestamp"/>
+	<field name="Shoot_Day" class="java.lang.Integer"/>
+	<field name="Shoot_Days" class="java.lang.Integer"/>
+	<field name="Director" class="java.lang.String"/>
+	<field name="Producer" class="java.lang.String"/>
+	<field name="UPM" class="java.lang.String"/>
+	<field name="First_AD" class="java.lang.String"/>
+	<field name="Second_AD" class="java.lang.String"/>
+	<field name="Sets" class="java.lang.String"/>
+	<field name="Days_Scheduled_Id" class="java.lang.Integer"/>
+	<field name="Days_To_Date_Id" class="java.lang.Integer"/>
+	<field name="Scene_Note" class="java.lang.String"/>
+	<field name="Ndm_End" class="java.sql.Timestamp"/>
+	<field name="Crew_Call" class="java.sql.Timestamp"/>
+	<field name="Shooting_Call" class="java.sql.Timestamp"/>
+	<field name="First_Shot" class="java.sql.Timestamp"/>
+	<field name="First_Meal_Begin" class="java.sql.Timestamp"/>
+	<field name="First_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Last_Man_In" class="java.sql.Timestamp"/>
+	<field name="First_Shot_After_1st_Meal" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_Begin" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_End" class="java.sql.Timestamp"/>
+	<field name="First_Shot_After_2nd_Meal" class="java.sql.Timestamp"/>
+	<field name="Camera_Wrap" class="java.sql.Timestamp"/>
+	<field name="Last_Man_Out" class="java.sql.Timestamp"/>
+	<field name="Overtime_Used_Prior" class="java.math.BigDecimal"/>
+	<field name="Overtime_Used_Today" class="java.math.BigDecimal"/>
+	<field name="Overtime_Used_Total" class="java.math.BigDecimal"/>
+	<field name="Overtime_Remaining" class="java.math.BigDecimal"/>
+	<field name="Sound_Card_Id_Num" class="java.lang.String"/>
+	<field name="Equipment_Notes" class="java.lang.String"/>
+	<field name="Production_Notes" class="java.lang.String"/>
+	<field name="Crew_Notes" class="java.lang.String"/>
+	<field name="Project_Id" class="java.lang.Integer"/>
+	<field name="Prod_Id" class="java.lang.String"/>
+	<field name="Studio" class="java.lang.String"/>
+	<field name="Title" class="java.lang.String"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Status" class="java.lang.String"/>
+	<field name="Max_Projects" class="java.lang.Integer"/>
+	<field name="Max_Logon_Attempts" class="java.lang.Integer"/>
+	<field name="Lock_Out_Delay" class="java.lang.Integer"/>
+	<field name="Contact_Name" class="java.lang.String"/>
+	<field name="Address_Id" class="java.lang.Integer"/>
+	<field name="Phone" class="java.lang.String"/>
+	<field name="Fax" class="java.lang.String"/>
+	<field name="Repository_Id" class="java.lang.Integer"/>
+	<field name="Time_Zone" class="java.lang.String"/>
+	<field name="Addr_Line1" class="java.lang.String"/>
+	<field name="Addr_Line2" class="java.lang.String"/>
+	<field name="City" class="java.lang.String"/>
+	<field name="State" class="java.lang.String"/>
+	<field name="Zip" class="java.lang.String"/>
+	<field name="Country" class="java.lang.String"/>
+	<field name="Timezone" class="java.lang.String"/>
+	<field name="Map_Start" class="java.lang.Boolean"/>
+	<field name="Map_Link" class="java.lang.String"/>
+	<field name="Updated" class="java.sql.Timestamp"/>
+	<field name="Comment1" class="java.lang.String"/>
+	<field name="Comment2" class="java.lang.String"/>
+	<field name="Comment3" class="java.lang.String"/>
+	<field name="Cast_Notes" class="java.lang.String"/>
+	<field name="catering_1" class="java.lang.String"/>
+	<field name="catering_2" class="java.lang.String"/>
+	<field name="catering_3" class="java.lang.String"/>
+	<field name="catering_4" class="java.lang.String"/>
+	<variable name="Inscene" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Inpages" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Inmins" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Insetups" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Addscene" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Addpages" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Addmins" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Addsetups" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Delscene" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Delpages" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Delmins" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Delsetups" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Prescene" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Prepages" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Premins" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Presetups" class="java.lang.Integer">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Toscene" class="java.lang.Integer"/>
+	<variable name="Topages" class="java.lang.Integer"/>
+	<variable name="Tomins" class="java.lang.Integer"/>
+	<variable name="Tosetups" class="java.lang.Integer"/>
+	<variable name="Invcheck2" class="java.lang.Integer" calculation="System"/>
+	<background>
+		<band height="968" splitType="Prevent">
+			<rectangle>
+				<reportElement uuid="3106c55c-703e-4b5e-a9ee-4ff442de410b" key="rectangle-22" x="0" y="0" width="540" height="950"/>
+			</rectangle>
+		</band>
+	</background>
+	<detail>
+		<band height="951" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="07e65aef-3ff4-4df8-b467-41227bde39f5" style="font12Box" x="0" y="0" width="135" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Production Report]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="false">
+				<reportElement uuid="3c36fdba-52b0-47f0-94d1-7ee6b4aefd30" key="textField-12" style="prDefBoxBold" x="0" y="15" width="135" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ee453f40-a96c-4704-96e4-745855e613ec" key="textField-28" style="prDefBoxBold" x="0" y="30" width="135" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Title}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fd00adca-3674-4b98-b0d8-b18129d086ad" key="textField-1" style="prDefBoxBold" x="0" y="40" width="135" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Studio}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bce5a71b-0bd9-4613-a2ab-667830930535" style="prDefBoxBold" x="0" y="50" width="135" height="10"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{projectName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="61201000-7c8d-4039-838b-652a901ea544" style="tag" x="0" y="60" width="171" height="50"/>
+				<textElement markup="styled">
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Producer}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="172" y="0" width="188" height="110"/>
+				<imageExpression><![CDATA[$P{productionLogo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="07e65aef-3ff4-4df8-b467-41227bde39f5" style="font12Box" x="405" y="0" width="135" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Production Report]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement uuid="3c36fdba-52b0-47f0-94d1-7ee6b4aefd30" key="textField-12" style="prDefBoxBold" x="405" y="15" width="135" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b6bb9792-4c92-4756-9a1e-8f7d99da504d" style="prDefault" x="405" y="30" width="135" height="10"/>
+				<textElement>
+					<font size="8" isItalic="true" pdfFontName="Times-Italic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Updated: " + $P{dateTimeFormat1}.format($F{Updated})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ae6b77a6-4f31-4874-a74d-2d84c72e33a5" key="textField-13" style="prDefBox" x="360" y="40" width="180" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Day  " + $F{Shoot_Day} + "  of  " + $F{Shoot_Days}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="b6e0abe8-9bc8-4e65-9d67-7626d81299aa" key="staticText-8" style="prDefBox" x="360" y="50" width="90" height="10"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[ReportsConstants.startdate]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="ae56efbd-c4cd-4b5e-b4fc-40ada5733efa" key="staticText-9" style="prDefBox" x="360" y="60" width="90" height="10"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[ReportsConstants.schdldfinish]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="3a4df9aa-3e6b-458b-8629-f46c3b66ee17" key="staticText-10" style="prDefBox" x="360" y="70" width="90" height="10"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[ReportsConstants.revisedfinish]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="M/d/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="e4451e2b-e098-40b7-b808-f0f95477d0b4" key="textField-15" style="prDefBox" x="450" y="50" width="90" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Start_Date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="M/d/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="b26075ab-db62-4ba3-8249-b1078bb079ce" key="textField-16" style="prDefBox" x="450" y="60" width="90" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{End_Date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="M/d/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="5ad46737-2a29-4dff-89ab-2b3a86efad8b" key="textField-17" style="prDefBox" x="450" y="70" width="90" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Revised_End_Date}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement uuid="0d83ed65-07d5-42a1-b337-39cfc49e89bf" positionType="Float" x="0" y="110" width="540" height="40"/>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[NDM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="45" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Crew]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="90" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Shooting]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="135" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[1st]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0febaeb1-3fd1-4a41-9b90-40730730a403" style="prDefBoxBold" positionType="Float" mode="Opaque" x="180" y="0" width="90" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[1st Meal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="270" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[1st Shot]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="1c22e109-6b63-470a-adf6-ea958aba949c" style="prDefBoxBold" positionType="Float" mode="Opaque" x="315" y="0" width="92" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[2nd Meal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c786cdc8-515a-4f0f-80d7-bbd43eb95b44" style="prDefBoxBold" positionType="Float" mode="Opaque" x="405" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[1st Shot]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d7e4f3c7-610d-4f0a-a431-5f2c90f9c634" style="prDefBoxBold" positionType="Float" mode="Opaque" x="450" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Camera]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ddc045f3-768b-4edb-8958-cf4faa60ae5c" style="prDefBoxBold" positionType="Float" mode="Opaque" x="495" y="0" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Last Man]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[End]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="45" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Call]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="90" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Call]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="135" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Shot]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="180" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Out]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="225" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[In]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="270" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[After]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="315" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Out	]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="360" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[In]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c786cdc8-515a-4f0f-80d7-bbd43eb95b44" style="prDefBoxBold" positionType="Float" mode="Opaque" x="405" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[After]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d7e4f3c7-610d-4f0a-a431-5f2c90f9c634" style="prDefBoxBold" positionType="Float" mode="Opaque" x="450" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Wrap]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ddc045f3-768b-4edb-8958-cf4faa60ae5c" style="prDefBoxBold" positionType="Float" mode="Opaque" x="495" y="10" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Out]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="90" y="30" width="45" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Last Man In:]]></text>
+				</staticText>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="676484ae-7cbc-4cfc-b9e3-daabb63f8f30" key="textField-39" style="prDefBox" positionType="Float" x="0" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Ndm_End}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="676484ae-7cbc-4cfc-b9e3-daabb63f8f30" key="textField-39" style="prDefBox" positionType="Float" x="45" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Crew_Call}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="676484ae-7cbc-4cfc-b9e3-daabb63f8f30" key="textField-39" style="prDefBox" positionType="Float" x="90" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Shooting_Call}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="bf19b9a7-601f-4fea-a046-858afee01bf0" key="textField-30" style="prDefBox" positionType="Float" x="135" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{First_Shot}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="53f2b31b-dc45-4e91-b697-295df07f561a" key="textField-31" style="prDefBox" positionType="Float" x="180" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{First_Meal_Begin}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="59183dc2-e4f2-4e5b-adcc-667e42b64eb1" key="textField-32" style="prDefBox" positionType="Float" x="225" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{First_Meal_End}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="44d29101-5721-458a-af64-a9fe451c62ca" key="textField-33" style="prDefBox" positionType="Float" x="270" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{First_Shot_After_1st_Meal}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="9e49b2dc-0913-491b-97f9-092c2326010e" key="textField" style="prDefBox" positionType="Float" x="315" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Second_Meal_Begin}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="408b4da8-e7a7-4504-b089-f22feeac2907" key="textField-35" style="prDefBox" positionType="Float" x="360" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Second_Meal_End}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="4b57467b-e9e2-4375-958b-30cff56fc568" key="textField-36" style="prDefBox" positionType="Float" x="405" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{First_Shot_After_2nd_Meal}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="dcb92ce7-a18f-4d6b-a833-9b39a80095f4" key="textField-37" style="prDefBox" positionType="Float" x="450" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Camera_Wrap}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="5ab1c35a-2126-4df2-a5ec-ddb1ba6dceca" key="textField-38" style="prDefBox" positionType="Float" x="495" y="20" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Last_Man_Out}]]></textFieldExpression>
+				</textField>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="59183dc2-e4f2-4e5b-adcc-667e42b64eb1" key="textField-32" style="prDefBox" positionType="Float" x="135" y="30" width="45" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Last_Man_In}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<subreport isUsingCache="true">
+				<reportElement uuid="047faabe-aed6-4e6f-994e-d3d57a1ca68d" key="scene location" positionType="Float" x="0" y="160" width="540" height="20"/>
+				<subreportParameter name="dprId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodic">
+					<subreportParameterExpression><![CDATA[$P{episodic}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/scenelocmile.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="190" width="63" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[DAYS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="63" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Main]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="108" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[2nd Unit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="153" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Rehearsal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="198" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Test]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="243" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Reshoot]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="288" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Holiday]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="333" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Insurance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="63658ed5-319f-4f1f-8615-a5eed4411089" style="prDefBoxBold" positionType="Float" mode="Opaque" x="378" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Travel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c786cdc8-515a-4f0f-80d7-bbd43eb95b44" style="prDefBoxBold" positionType="Float" mode="Opaque" x="423" y="190" width="45" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d7e4f3c7-610d-4f0a-a431-5f2c90f9c634" style="prDefBoxBold" positionType="Float" mode="Opaque" x="468" y="190" width="72" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Schedule Status]]></text>
+			</staticText>
+			<elementGroup>
+				<subreport isUsingCache="true">
+					<reportElement uuid="4aefb5d3-f589-4c91-9558-821d065189e0" key="days" positionType="Float" x="0" y="200" width="540" height="10"/>
+					<subreportParameter name="title">
+						<subreportParameterExpression><![CDATA["Scheduled"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprDaysId">
+						<subreportParameterExpression><![CDATA[$F{Days_Scheduled_Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/days.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport isUsingCache="true">
+					<reportElement uuid="f4f3f683-a517-4721-a829-4bcdb2d694a4" key="subreport-3" positionType="Float" x="0" y="210" width="540" height="10"/>
+					<subreportParameter name="title">
+						<subreportParameterExpression><![CDATA["Actual"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprDaysId">
+						<subreportParameterExpression><![CDATA[$F{Days_To_Date_Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/days.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport isUsingCache="true">
+					<reportElement uuid="afa11c08-83a3-4383-9584-4a90db954e45" key="subreport-13" positionType="Float" x="0" y="220" width="540" height="10"/>
+					<subreportParameter name="dprId">
+						<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/daysRemain.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport isUsingCache="true">
+					<reportElement uuid="b5b1c756-3c29-4391-b845-a3919934d4ea" key="scene" positionType="Float" x="0" y="240" width="270" height="100"/>
+					<subreportParameter name="title">
+						<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprId">
+						<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="reportsTemplate">
+						<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/shot.jasper"]]></subreportExpression>
+				</subreport>
+			</elementGroup>
+			<staticText>
+				<reportElement uuid="7fc224f0-b5ad-420b-aff3-d82ffb07a017" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="340" width="99" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[NOTES]]></text>
+			</staticText>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="676484ae-7cbc-4cfc-b9e3-daabb63f8f30" key="textField-39" style="prDefBox" positionType="Float" x="99" y="340" width="441" height="10"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Scene_Note}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="30d6b9d3-8df2-4e4e-9ea4-9e206ecc102a" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="390" width="45" height="20" isRemoveLineWhenBlank="true" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Camera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b494819-3b82-4ce2-a258-d8db3fd4db7b" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="410" width="45" height="10" isRemoveLineWhenBlank="true" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Previous]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e14b93b6-c5e9-4f27-ac01-520c1720d932" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="420" width="45" height="10" isRemoveLineWhenBlank="true" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Today]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7fc224f0-b5ad-420b-aff3-d82ffb07a017" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="430" width="45" height="10" isRemoveLineWhenBlank="true" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[To Date]]></text>
+			</staticText>
+			<subreport isUsingCache="true">
+				<reportElement uuid="eb687cae-1b4c-419a-b2a6-4bc5f2028770" key="filmused" positionType="Float" x="0" y="450" width="45" height="50" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia2}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAGE_COUNT" toVariable="Invcheck2"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmColHead.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="7d3fb2ff-52da-4b21-bc82-8bd144f959b4" key="filmused" positionType="Float" x="45" y="390" width="324" height="30" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused1.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="62a20739-f17b-442f-aad2-cf90d0de486c" key="filmused2" positionType="Float" x="45" y="420" width="324" height="10" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused2.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="fef6303a-f2bf-4260-a31a-121aa35d2b07" key="filmused3" positionType="Float" x="45" y="430" width="324" height="10" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused3.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="7915024e-dee0-4b87-baf1-2c062a70aeec" key="Film Inventory" positionType="Float" x="369" y="390" width="171" height="70" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filminvtry.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="677691bf-ff81-4dc7-ac57-f7dc73531eab" key="filmused2" positionType="Float" x="45" y="480" width="324" height="10" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia2}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused5.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0ff6874e-0a33-42f7-8623-3375539834e6" key="filmused3" positionType="Float" x="45" y="490" width="324" height="10" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia2}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused6.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="93acee8c-b5b0-49c2-a747-7ecd453334db" key="filmused" positionType="Float" x="45" y="450" width="324" height="30" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{printMedia2}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="project">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionId">
+					<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="PAGE_COUNT" toVariable="Invcheck2"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/filmused4.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="92764215-e111-4fc7-93cf-ee783e370f2b" style="prDefBox" positionType="Float" x="0" y="350" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Comment1}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="c6c0461f-de2e-42c0-b3e3-a825d1a67fe6" key="weekdayplyr" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="510" width="540" height="10"/>
+				<subreportParameter name="queryParam">
+					<subreportParameterExpression><![CDATA[$P{sqlQryCast}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/cast.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="7fc224f0-b5ad-420b-aff3-d82ffb07a017" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="520" width="36" height="10" isRemoveLineWhenBlank="true" backcolor="#CCCCCC"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="92764215-e111-4fc7-93cf-ee783e370f2b" style="prDefBox" positionType="Float" x="36" y="520" width="504" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Cast_Notes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="92764215-e111-4fc7-93cf-ee783e370f2b" style="prDefBox" positionType="Float" x="0" y="360" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Comment2}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="07f60afd-19a2-46c1-9df4-81b26ff27061" key="extras" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="540" width="540" height="40"/>
+				<subreportParameter name="dprId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/extras.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="true">
+				<reportElement uuid="c8396931-dfda-45a7-815b-3984fc6485da" key="upm" x="0" y="921" width="540" height="30"/>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{Project_Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="date">
+					<subreportParameterExpression><![CDATA[$F{Date}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/upm.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="92764215-e111-4fc7-93cf-ee783e370f2b" style="prDefBox" positionType="Float" x="0" y="370" width="540" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Comment3}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="951" splitType="Stretch">
+			<frame>
+				<reportElement uuid="784add0e-226b-45cc-ad85-4c212f7f1f0e" mode="Opaque" x="0" y="0" width="540" height="10"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<staticText>
+					<reportElement uuid="24b0cb38-84f7-4d7e-a0f5-9b6fb04e7f1e" key="staticText-62" style="prDefBoxBold" mode="Transparent" x="0" y="0" width="135" height="10"/>
+					<textElement textAlignment="Center" markup="none"/>
+					<text><![CDATA[Production Report]]></text>
+				</staticText>
+				<textField pattern="EEE, MMMM dd, yyyy" isBlankWhenNull="false">
+					<reportElement uuid="d486ae25-c08b-450b-88ff-e9c029a9bee5" key="textField-40" style="prDefBoxBold" mode="Transparent" x="135" y="0" width="135" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="e65b4345-4007-42d4-929c-4214f0a8a923" key="textField-41" style="prDefBoxBold" mode="Transparent" x="351" y="0" width="90" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA["Day " + $F{Shoot_Day} + " of " + $F{Shoot_Days}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="24b0cb38-84f7-4d7e-a0f5-9b6fb04e7f1e" key="staticText-62" style="prDefBoxBold" mode="Transparent" x="441" y="0" width="54" height="10"/>
+					<textElement textAlignment="Right" markup="none">
+						<paragraph rightIndent="2"/>
+					</textElement>
+					<text><![CDATA[Crew Call:]]></text>
+				</staticText>
+				<textField pattern="h:mm a" isBlankWhenNull="true">
+					<reportElement uuid="4985cc7e-39d9-4038-b454-9693d8a46a55" key="textField-43" style="prDefBoxBold" mode="Transparent" x="495" y="0" width="45" height="10"/>
+					<textElement>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Crew_Call}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<elementGroup>
+				<line>
+					<reportElement uuid="f250d9ee-2702-4ede-81df-929ec3f21922" x="9" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="c0e6546e-68d2-4f91-ad2e-62d245ec7ad3" x="63" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="96bf4caa-c2ee-46e1-991d-78dcf64b8d01" x="126" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="dc631c63-247c-40be-810c-b6cf99a3b999" x="144" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="dc631c63-247c-40be-810c-b6cf99a3b999" x="162" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="dc631c63-247c-40be-810c-b6cf99a3b999" x="171" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="6f369130-7935-486d-a0d3-1d3df7ffa735" x="189" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="de423462-d365-43a1-9ef8-bcaaf0da821f" x="243" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="ce0266d4-064d-4c0e-b663-b4e0db94866f" x="306" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="f176cea1-51ba-4bca-8b01-2e78a00ce7d6" x="324" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="f176cea1-51ba-4bca-8b01-2e78a00ce7d6" x="342" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="f176cea1-51ba-4bca-8b01-2e78a00ce7d6" x="351" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="a3a6c8b6-633b-49ae-8eb8-2cf748f43e79" x="369" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="3e416853-8570-4a5c-8480-cdb549efdc96" x="423" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="89b53312-8b3c-4a23-b489-678bd76b4c8d" x="486" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="9535086e-5d66-4112-9eb3-e69de5eca2e2" x="504" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="9535086e-5d66-4112-9eb3-e69de5eca2e2" x="522" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="9535086e-5d66-4112-9eb3-e69de5eca2e2" x="531" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="b2b185c9-faa8-4069-8307-b8aa305f4037" x="0" y="20" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="2d33e951-b227-41fe-b7b1-78a8cb114249" x="0" y="30" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="05aafdc8-5d26-4c8c-a4a1-1af932e65692" x="0" y="40" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="22dd635a-e160-4372-b82d-df6db9443194" x="0" y="50" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="cae75c4d-ddd6-41d5-afc7-a46774b3e543" x="0" y="60" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="095cfa95-9cab-4f0c-95af-5cf26abeb51f" x="0" y="70" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="4aa3f7c0-918d-4e08-837d-12f69f2f87af" x="0" y="80" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="6b248210-0ade-4088-8126-a522e81f3784" x="0" y="90" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="91de3631-a438-49a4-a2d3-0b8d4251bd69" x="0" y="100" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="378dcf6f-2f6a-4cd3-8727-905db2f6904c" x="0" y="110" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="fdc7cf5e-2fb2-4aaa-8288-4bfe08283445" x="0" y="120" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="9e275b0a-241c-494b-af77-5bb717dfd451" x="0" y="130" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c5ec1243-36da-46a9-97e9-cf7e0fd81ad7" x="0" y="140" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="f28c69a2-bbb6-443c-935a-b57a0ba5857f" x="0" y="150" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="62c84886-328e-4204-ac91-3f5d6df2d79f" x="0" y="160" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="73248aa9-169b-4364-9726-652c5ccb19d1" x="0" y="170" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="7ab5407d-1264-4c61-aac1-712d82834ef8" x="0" y="180" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="a0e4edf1-23e8-4381-b9ed-edb989bcd87d" x="0" y="190" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="8e728f45-c5a1-4bba-b835-148d7149b251" x="0" y="200" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="35e7a4fc-9d2a-4d23-b1fe-a6db86afc84c" x="0" y="210" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="2fa2a5a0-b29d-439f-97b1-18d92c2ead4f" x="0" y="220" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c48b870f-104d-4db5-a499-26eba6ad3e9b" x="0" y="230" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="b2cd586c-9361-4f48-96fb-91249da26b7d" x="0" y="240" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="2afef560-2bd2-4c61-931b-a6f62cd3616a" x="0" y="250" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c7aa0d45-d264-4b64-9027-fcd2f174c003" x="0" y="260" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="1c270ae0-f276-4303-ae72-fcc15ec3bd8f" x="0" y="270" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="20cce81b-2690-4edf-88cb-fd38c1c47084" x="0" y="280" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="f4122222-d142-4d99-9097-cc7a4f7920e5" x="0" y="290" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="e7a7b289-9a57-4d50-9606-79a6212dd2bc" x="0" y="300" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="0d9f86fa-586e-4635-87ad-0965ae892fca" x="0" y="310" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c1061d92-c827-43cb-8145-fd98ef782323" x="0" y="320" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="f8ff81fa-d566-4ddf-a758-53dae1a57c79" x="0" y="330" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="9226737e-ea68-4193-840d-8427d35d268c" x="0" y="340" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="4da6e995-0ae6-4d00-8ee2-9dd555f6add3" x="0" y="350" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="a10421af-063c-4374-bc26-0efc69fceb19" x="0" y="360" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="29437035-585d-472b-b2e3-82ce194ae624" x="0" y="370" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="6fa33c6e-7f24-46ee-9952-c04fdb7fc7d6" x="0" y="380" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="032821e0-8753-4bfe-87a9-88a8014750a1" x="0" y="390" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="57e333ee-641b-4bd6-b42a-b5d43636311a" x="0" y="400" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="ea0674f2-5247-40be-98c8-906ed72b347b" x="0" y="410" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="22a1b59b-f5d3-4760-9731-28bb4025c026" x="0" y="420" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="13c03327-9b54-43a6-ba00-f9a204f9d5df" x="0" y="430" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="3ffaa920-63de-47cb-94dd-393e091abdc4" x="0" y="440" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="cc8f3f46-67e0-43b5-a306-89f134c8c0d8" x="0" y="450" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c5725565-36ad-4b83-b586-e0dda0512743" x="0" y="460" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="b75ef644-9335-4f49-be10-14a5370bd5fb" x="0" y="470" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="20215b60-8d6c-4268-9df9-2de4a9c40c63" x="0" y="480" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="5f84f9ce-b8c9-4c29-88f4-0889ed9bf51d" x="0" y="490" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="59871526-7a5c-4f21-915e-2ebab93683d4" x="0" y="500" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="bcdf5103-e9e1-4166-8104-1f5111cd0335" x="0" y="510" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="d3ba2af1-9be3-4637-bf71-60bf6ec964ae" x="0" y="520" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="0928e7a8-b469-441b-91d9-eb224f87c77a" x="0" y="530" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c9f59d9c-ee4d-46aa-8e9f-c5df8c40a495" x="0" y="540" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="2331419d-62f6-42a0-b239-3be50f7f49b6" x="0" y="550" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="320bac6f-b70a-40ca-81b0-b9befd62fb12" x="0" y="560" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="4be6ee40-4db0-4cbb-b13d-add80d3d73ee" x="0" y="570" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="e753980e-d797-4e8b-9b75-47905ae3f767" x="0" y="580" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="06a3454a-224b-4393-8ff7-d9cefb30bec5" x="0" y="590" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="233ddccf-35f5-4093-8d4a-fcb05cb7a36f" x="0" y="600" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="13736fa7-81d3-4179-8bb7-e310cd467039" x="0" y="610" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="86ffad40-e2be-42fb-85d5-b2846ce93215" x="0" y="620" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="c4c53904-d921-4868-9aad-b8fcd8c53622" x="0" y="630" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="152565f8-7f00-49b2-9be7-e660a0768c25" x="0" y="640" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="1575f26f-6190-4334-8849-b04a9891c77e" x="0" y="650" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="171c4f0b-e075-4c23-be18-20daf7faa149" x="0" y="660" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="d7cbf5a6-8253-474e-9b41-107acfec93d3" x="0" y="670" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="7c2ed716-8915-418a-a378-126bcf75a8d6" x="0" y="680" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="98feabc9-37f4-41d1-9bac-de469ea62d4c" x="0" y="690" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="438a59e1-d601-42f9-990f-1a2b96457258" x="0" y="700" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="4d5284ae-7a58-42ee-ad7e-c721b2ef3f09" x="0" y="710" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="7db9dfb4-12bf-4928-9ccd-33926b604ac5" x="0" y="720" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="8c58d4c2-a3cb-4874-8888-07514337bf47" x="0" y="730" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="70790bc1-1a88-4a41-873a-1edc6b0df6c3" x="0" y="740" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="65a5be50-28a3-482f-a518-c2dc5195207a" x="0" y="750" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="5111397c-381d-4192-a141-1fb53bfbbc38" x="0" y="760" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="3c07de8c-e548-400d-a769-dbbf87855b4e" x="0" y="770" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="951936ca-7a78-4f8f-93f0-a59699a3d3f3" x="0" y="780" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="56679207-3bb2-4157-a821-ee40f041b722" x="0" y="790" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="fc9de7b7-7063-4e7d-aa9c-f5dfd0b8ef1d" x="0" y="800" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="ba1330cf-1728-4009-a1d8-dd8275146680" x="0" y="810" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="96e41db2-98ff-44ee-8ba1-5e045c41af57" x="0" y="819" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="957f8cff-3ba5-4509-be0e-3f1f0217d5bf" x="0" y="828" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="dd8144b7-7830-4ef2-bb01-bb7acfdfb831" x="0" y="837" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="8a981c72-b6d8-42c8-93dc-63b19f34f772" x="0" y="846" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="0c7270a4-1f97-4d9f-91d1-0b8951ffc8f8" x="0" y="855" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="f2427ded-5a6d-4faf-b64d-214b7093406c" x="0" y="864" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="cdd16b6e-2c79-476a-af14-20274b22a0bd" x="0" y="873" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="0ddb1efa-6055-4672-9640-0ee1f6897dc2" x="0" y="882" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="26a4ed00-76ec-4d59-b80a-7f123de2a9e7" x="0" y="891" width="540" height="1"/>
+				</line>
+				<line>
+					<reportElement uuid="8c7edccc-7a41-43cf-b400-6bba52689224" x="0" y="900" width="540" height="1"/>
+				</line>
+				<subreport isUsingCache="true">
+					<reportElement uuid="59de6584-41de-49be-a272-a49a0685682d" key="crew" positionType="Float" x="0" y="10" width="180" height="901"/>
+					<subreportParameter name="productionId">
+						<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="columnDcIds">
+						<subreportParameterExpression><![CDATA[$P{column1dcIds}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprId">
+						<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_1">
+						<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_2">
+						<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_3">
+						<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_4">
+						<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/crew.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport isUsingCache="true">
+					<reportElement uuid="cb9d2f89-ea25-4a3c-bed4-0c5b751d9517" key="crew" positionType="Float" x="180" y="10" width="180" height="901"/>
+					<subreportParameter name="productionId">
+						<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="columnDcIds">
+						<subreportParameterExpression><![CDATA[$P{column2dcIds}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprId">
+						<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_1">
+						<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_2">
+						<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_3">
+						<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_4">
+						<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/crew.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport isUsingCache="true">
+					<reportElement uuid="c19ea262-0055-4df1-98c0-309992b60309" key="crew" positionType="Float" x="360" y="10" width="180" height="901"/>
+					<subreportParameter name="productionId">
+						<subreportParameterExpression><![CDATA[$P{productionId}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="columnDcIds">
+						<subreportParameterExpression><![CDATA[$P{column3dcIds}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="dprId">
+						<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_1">
+						<subreportParameterExpression><![CDATA[$F{catering_1}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_2">
+						<subreportParameterExpression><![CDATA[$F{catering_2}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_3">
+						<subreportParameterExpression><![CDATA[$F{catering_3}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="catering_4">
+						<subreportParameterExpression><![CDATA[$F{catering_4}.toString()]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/crew.jasper"]]></subreportExpression>
+				</subreport>
+				<line>
+					<reportElement uuid="6f285b41-d6bf-48d1-8fda-705df42c26f5" x="180" y="10" width="1" height="901"/>
+				</line>
+				<line>
+					<reportElement uuid="7d07edc0-8742-4dc2-8c96-dabfff7d094c" x="360" y="10" width="1" height="901"/>
+				</line>
+			</elementGroup>
+			<subreport isUsingCache="true">
+				<reportElement uuid="297f942f-d9af-4774-b7f8-7ac745104242" key="notes" positionType="FixRelativeToBottom" mode="Opaque" x="0" y="881" width="540" height="70"/>
+				<subreportParameter name="dpr_id">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/notes.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="b2b5f592-11bd-45e3-994e-0adc9b4882ea" key="textField" x="520" y="0" width="20" height="17"/>
+				<textElement>
+					<font fontName="Arial" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="3e6ed2c1-9d27-453f-970d-2599a8bb7507" key="subreport-1" x="0" y="0" width="520" height="17"/>
+				<subreportParameter name="last_page">
+					<subreportParameterExpression><![CDATA[$V{PAGE_COUNT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/footer.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c3672c3d-391b-41e5-99c3-22a6b87c6c0c" key="staticText-1" x="0" y="20" width="540" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[No Production Report data available.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

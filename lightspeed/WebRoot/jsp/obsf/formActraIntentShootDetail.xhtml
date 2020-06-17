@@ -1,0 +1,311 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+	<div style="width:740px">
+		<!-- Begin Shoot Details Section -->
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+		<h:panelGrid columns="1" styleClass="txt12 actraIntentPanel" style="width:700px;">
+			
+			<!-- Row 1 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W150">
+					<h:panelGroup styleClass="FL B pad5tp">
+						<h:outputText styleClass="B" value="Children (under 16 yrs.)"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="minor" mutuallyExclusive="true"
+					layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W70 borderLeft" style="height:25px;">
+						<h:panelGroup styleClass="FL pad5lt">
+							<h:outputText styleClass="" value="Yes:"/>
+							<ace:radioButton group="minor" labelPosition="right"  id="shootMinor0"
+								disabled="#{not editable}" value="#{bean.minor[0]}">
+								<ace:ajax execute="minor" event="activate" render="minor"/>
+							</ace:radioButton>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W70 borderLeft" style="height:25px;">
+						<h:panelGroup styleClass="FL pad5lt">
+							<h:outputText styleClass="" value="No:"/>
+							<ace:radioButton group="minor" labelPosition="right"   id="shootMinor1"
+								disabled="#{not editable}" value="#{bean.minor[1]}">
+								<ace:ajax execute="minor" event="activate" render="minor"/>
+							</ace:radioButton>
+						</h:panelGroup>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				
+				<h:panelGroup layout="block" styleClass="FL W130 borderLeft" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad5lt" value="Total #:"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="11" id="shootNumMinors" disabled="#{not editable}" styleClass="LT txt10 W70" value="#{form.numMinors}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="FL W270 borderLeft pad2lt" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad10tp pad5lt" value="Ages:"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="75" id="shootMinorAges" disabled="#{not editable}" styleClass="LT txt10 W220" value="#{form.minorAges}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<!-- Row 2 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W310">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Background Talent"/>
+						<h:outputText styleClass="pad20lt" value="General BG #:" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="11" id="shootNumExtraGeneral" disabled="#{not editable}" styleClass="LT txt10 W90" value="#{form.numExtrasGeneral}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="FL W180 borderLeft" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad5lt" value="Group BG #:" />
+					</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="11" id="shootNumExtrasGroup" disabled="#{not editable}" styleClass="LT txt10 W90" value="#{form.numExtrasGroup}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="FL W200 borderLeft" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad5lt" value="Group BG 31+ #:" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="11" id="shootNumExtrasGroup31" disabled="#{not editable}" styleClass="LT txt10 W90" value="#{form.numExtrasGroup31}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<!-- LS-2984-Intent-to-Produce-UI-Enhancement -->
+			<!-- Row 3 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W100">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Stunts:"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="stunts" mutuallyExclusive="true"
+					layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W50 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad10tp pad5lt" value="Yes:"/>
+						<ace:radioButton group="stunts" labelPosition="right" id="shootStunts0"  
+							disabled="#{not editable}" value="#{bean.stunts[0]}">
+							<ace:ajax execute="stunts" event="activate" render="stunts"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W50 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad10tp pad5lt" value="No:"/>
+						<ace:radioButton group="stunts" labelPosition="right" id="shootStunts1"
+							disabled="#{not editable}" value="#{bean.stunts[1]}">
+							<ace:ajax execute="stunts" event="activate" render="stunts"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				<h:panelGroup layout="block" styleClass="FL W530 borderLeft" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad10tp pad5lt" value="Stunt Co-Ordinator:"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt" style="width:380px !important">
+						<ace:textEntry maxlength="25" id="shootStuntCoordinator" disabled="#{not editable}" styleClass="LT txt10 W360" value="#{form.stuntCoordinator}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+				
+			</h:panelGroup>
+			
+			<!-- Row 3.2 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W700" style="height:25px;">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad10tp pad5lt B" value="Type of Stunt(s):" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="100" id="shootStuntType" disabled="#{not editable}" styleClass="LT txt10 W560" style="font:bold;" value="#{form.stuntType}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<!-- Row 4 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W250">
+					<h:panelGroup styleClass="FL pad5tp">					
+						<h:outputText styleClass="B" value="Exterior Scenes"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="extScenes" mutuallyExclusive="true"
+						layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad10tp pad5lt" value="Yes:"/>
+						<ace:radioButton group="extScenes" labelPosition="right" id="shootExtScenes0"
+							disabled="#{not editable}" value="#{bean.extScenes[0]}">
+							<ace:ajax execute="extScenes" event="activate" render="extScenes"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="No:"/>
+						<ace:radioButton group="extScenes" labelPosition="right" id="shootExtScenes1"
+							disabled="#{not editable}" value="#{bean.extScenes[1]}">
+							<ace:ajax execute="extScenes" event="activate" render="extScenes"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				
+				<h:panelGroup layout="block" styleClass="FL W380 borderLeft" style="height:25px;width:219px">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="pad10tp pad5lt" value="Type:"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="100" id="shootextScenesType" disabled="#{not editable}" styleClass="LT txt10 W170" value="#{form.extScenesType}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<!-- Row 5 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W250">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Location Shoot - beyond 40 km radius"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="locationShoot40Radius" mutuallyExclusive="true"
+						layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad10tp pad5lt" value="Yes:"/>
+						<ace:radioButton group="locationShoot40Radius" labelPosition="right" id="locationShoot40Radius0"
+							disabled="#{not editable}" value="#{bean.locationShoot40Radius[0]}">
+							<ace:ajax execute="locationShoot40Radius" event="activate" render="locationShoot40Radius"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="No:"/>
+						<ace:radioButton group="locationShoot40Radius" labelPosition="right" id="locationShoot40Radius1" 
+							disabled="#{not editable}" value="#{bean.locationShoot40Radius[1]}">
+							<ace:ajax execute="locationShoot40Radius" event="activate" render="locationShoot40Radius"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				<h:panelGroup layout="block" styleClass="FL borderLeft" style="height:25px;width:219px">
+					<h:panelGroup styleClass="FL pad5lt">
+							<ace:textEntry maxlength="100" id="shootLocationDetail" disabled="#{not editable}" styleClass="LT txt10 W210" value="#{form.locationShootDetails}"/>
+					</h:panelGroup>			
+				</h:panelGroup>				
+			</h:panelGroup>
+			
+			<!-- Row 6 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W250">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Weather Permitting"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="weatherPermitting" mutuallyExclusive="true"
+					layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="Yes:"/>
+						<ace:radioButton group="weatherPermitting" labelPosition="right" id="weatherPermitting0" 
+							disabled="#{not editable}" value="#{bean.weatherPermitting[0]}">
+							<ace:ajax execute="weatherPermitting" event="activate" render="weatherPermitting"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="No:"/>
+						<ace:radioButton group="weatherPermitting" labelPosition="right" id="weatherPermitting1" 
+							disabled="#{not editable}" value="#{bean.weatherPermitting[1]}">
+							<ace:ajax execute="weatherPermitting" event="activate" render="weatherPermitting"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				
+				<h:panelGroup layout="block" styleClass="FL borderLeft" style="height:25px;width:219px">
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="100" id="weatherPermittingDetails" disabled="#{not editable}" styleClass="LT txt10 W210" value="#{form.weatherPermittingDetails}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+					
+			</h:panelGroup>
+			
+			<!-- Row 7 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W250">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Weekend or Night Production"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="weekendNight" mutuallyExclusive="true"
+						layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="Yes:"/>
+						<ace:radioButton group="weekendNight" labelPosition="right"  id="weekendNight0" 
+							disabled="#{not editable}" value="#{bean.weekendNight[0]}">
+							<ace:ajax execute="weekendNight" event="activate" render="weekendNight"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="No:"/>
+						<ace:radioButton group="weekendNight" labelPosition="right" id="weekendNight1" 
+							disabled="#{not editable}" value="#{bean.weekendNight[1]}">
+							<ace:ajax execute="weekendNight" event="activate" render="weekendNight"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				
+				<h:panelGroup layout="block" styleClass="FL borderLeft" style="height:25px;width:219px">
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="100" id="weekEndNightDetails" disabled="#{not editable}" styleClass="LT txt10 W210" value="#{form.weekEndNightDetails}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+			
+			<!-- Row 8 -->
+			<h:panelGroup layout="block">
+				<h:panelGroup layout="block" styleClass="FL W250">
+					<h:panelGroup styleClass="FL pad5tp">
+						<h:outputText styleClass="B" value="Nude/Intimate Scenes"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<ace:buttonGroup id="nudeScenes" mutuallyExclusive="true"
+						layout="lineDirection">
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad10tp pad5lt" value="Yes:"/>
+						<ace:radioButton group="nudeScenes" labelPosition="right" id="nudeScenes0" 
+							disabled="#{not editable}" value="#{bean.nudeScenes[0]}">
+							<ace:ajax execute="nudeScenes" event="activate" render="nudeScenes"/>
+						</ace:radioButton>
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="FL W110 borderLeft" style="height:25px;">
+						<h:outputText styleClass="pad5lt" value="No:"/>
+						<ace:radioButton group="nudeScenes" labelPosition="right"  id="nudeScenes1" 
+							disabled="#{not editable}" value="#{bean.nudeScenes[1]}">
+							<ace:ajax execute="nudeScenes" event="activate" render="nudeScenes"/>
+						</ace:radioButton>
+					</h:panelGroup>
+				</ace:buttonGroup>
+				
+				<h:panelGroup layout="block" styleClass="FL borderLeft" style="height:25px;width:219px">
+					<h:panelGroup styleClass="FL pad5lt">
+						<ace:textEntry maxlength="100" id="nudeScenesDetails" disabled="#{not editable}" styleClass="LT txt10 W210" value="#{form.nudeScenesDetails}"/>
+					</h:panelGroup>			
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:panelGrid>
+		</icecore:setEventPhase>
+		<!-- End Shoot Details Section -->
+	</div>
+</ui:composition>

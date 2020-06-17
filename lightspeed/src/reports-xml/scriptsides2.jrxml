@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="scriptsides2" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="396" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b5d8eaf6-ee08-41a9-ab9b-8da01db55fa1">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT * FROM script_report  where report_id like '%38'  order by id"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Report_id" class="java.lang.String"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Page_number" class="java.lang.Integer"/>
+	<field name="Line_number" class="java.lang.Integer"/>
+	<field name="Changed" class="java.lang.String"/>
+	<field name="Text" class="java.lang.String"/>
+	<field name="rev_color" class="java.lang.Integer"/>
+	<field name="Status" class="java.lang.Integer"/>
+	<variable name="Status" class="java.lang.Integer" resetType="Group" resetGroup="status" calculation="Sum">
+		<variableExpression><![CDATA[$F{Status}]]></variableExpression>
+	</variable>
+	<group name="heading" isStartNewColumn="true">
+		<groupExpression><![CDATA[$F{Page_number}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<group name="status">
+		<groupExpression><![CDATA[$F{Status}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="1">
+				<line>
+					<reportElement uuid="3789f4d9-fa7c-4e15-befe-286c5bacc05a" stretchType="RelativeToBandHeight" x="0" y="0" width="792" height="1" printWhenGroupChanges="status">
+						<printWhenExpression><![CDATA[($F{Status}.intValue()==1)]]></printWhenExpression>
+					</reportElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="20" splitType="Prevent"/>
+	</pageHeader>
+	<detail>
+		<band height="9" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="07d36516-da16-4af3-bf5d-60395a360ee3" mode="Transparent" x="0" y="0" width="396" height="9" forecolor="#AAAAAA">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="DejaVu Sans Mono" size="7" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Text}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="bd090b50-fe86-437d-91ee-e0e6535cb2cc" mode="Opaque" x="108" y="0" width="187" height="9" backcolor="#FFFF5F">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==2)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="203eebe9-2df2-4998-90d4-b73a40c58848" mode="Transparent" x="0" y="0" width="396" height="9" forecolor="#000000">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()!=1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="DejaVu Sans Mono" size="7" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Text}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="4bfcb616-9a43-4005-a5c4-3863236628c5" x="198" y="0" width="1" height="9">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==1)]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement uuid="b91a0714-383a-41e1-9255-5a99b5c03ac0" x="0" y="0" width="792" height="1" printWhenGroupChanges="status">
+					<printWhenExpression><![CDATA[($V{Status}.intValue()==1)]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d6c9687c-d132-47ad-839d-51e4bd8f007f" mode="Transparent" x="396" y="0" width="396" height="9" forecolor="#AAAAAA">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="DejaVu Sans Mono" size="7" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Text}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="022b9e14-ed8c-493f-8faa-3bd3d6b4594e" mode="Opaque" x="504" y="0" width="187" height="9" backcolor="#FFFF5F">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==2)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b362250f-0c16-4991-9c6b-0ac96e50c5fe" mode="Transparent" x="396" y="0" width="396" height="9" forecolor="#000000">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()!=1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="DejaVu Sans Mono" size="7" pdfFontName="Courier"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Text}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="ee8014e4-66b6-4e43-b943-8d92ccf1c339" x="594" y="0" width="1" height="9">
+					<printWhenExpression><![CDATA[($F{Status}.intValue()==1)]]></printWhenExpression>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<noData>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="5c98ffcb-da2f-4332-b5c3-716f341a0cfb" key="staticText-1" x="240" y="9" width="312" height="17"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[No script text was within the requested range.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

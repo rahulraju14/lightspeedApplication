@@ -1,0 +1,306 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">   
+
+	<!-- DECLARATION SECTION -->
+
+	<div class="BKwhite" style="width:820px;">
+
+		<!-- Main Form Start -->
+		<div class="FL pad10lt pad8tp W95percnt sfFormBorder3" style="height:173px">
+			<span>
+				<h:outputText styleClass="FL pad5tp pad15lt" value="I," />
+			</span>
+
+			<!-- <span class="pad2lt FL pad3tp B"><ice:radio for="parentOrGuardian" index="0" /></span>
+			<span class="pad1lt FL pad3tp B"><ice:radio for="parentOrGuardian" index="1" /></span>
+			<ice:selectOneRadio id="parentOrGuardian" styleClass="radioTxtLbl fd_sm"
+				layout="spread"
+				value="#{formMtaBean.form.parentOrGuardian}"
+				disabled="#{not formMtaBean.empEdit}">
+				<f:selectItem itemLabel="PARENT /" itemValue="false" />
+				<f:selectItem itemLabel="GUARDIAN"  itemValue="true" />
+			</ice:selectOneRadio> -->
+
+			<h:outputText styleClass="FL pad5tp pad5lt" escape="false"
+				value=" &lt;em&gt;(check one)&lt;/em&gt; of the above-named minor, declare under penalty of perjury that the foregoing is true and" />
+			<h:outputText styleClass="FL pad15lt"
+				value="correct, and do hereby direct that applicable minor trust set-aside funds be deposited to the account listed above or be deposited in the" />
+			<h:outputText styleClass="FL pad15lt" escape="false"
+					value="minor &apos;s name to the mandated applicable fund." />
+
+			<!-- FIRST ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- SIGNATURE START -->
+				<div class="FL" style="width:62%">
+					<div class="rowCont pad10lt" style="height:26px;">
+						<span class="fdNm" style="width:85px">
+							<h:outputText value="SIGNATURE:" />
+						</span>
+						<div class="FL" style="height:25px; width:81%; border-bottom:solid 1px;">
+							<!-- Display the most recent employee signature. -->
+							<span>
+								<h:outputText escape="false" styleClass="txt12" rendered="#{formMtaBean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{formMtaBean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+									<h:outputText value=" #{formMtaBean.contactDoc.empSignature.displayTime}" />
+									<br/>
+									<h:outputText value="# #{formMtaBean.contactDoc.empSignature.uuid}"/>
+								</h:outputText>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup rendered="#{(formMtaBean.contactDoc.submitable) or (formMtaBean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend_left" style="margin-top:11px;">
+									<h:panelGroup rendered="#{(formMtaBean.contactDoc.status ne 'PENDING') and (formMtaBean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											and (formMtaBean.hasRequiredFields)}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{not (formMtaBean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (formMtaBean.contactDoc.status eq 'PENDING')
+											or (not formMtaBean.hasRequiredFields)}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+					</div>
+				</div>
+				<!-- SIGNATURE END -->
+
+				<!-- DATE START -->
+				<div class="W31percnt FL">
+					<div class="rowCont pad45lt" style="height:26px;">
+						<span class="fdNm" style="width:46px">
+							<h:outputText value="DATE:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="30"
+									disabled="#{true}"
+									value="#{formMtaBean.contactDoc.empSignature.date}"
+									style="width:75%;border-bottom:solid 1px;">
+									<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- DATE END -->
+			</div> <!-- FIRST ROW END -->
+
+			<!-- SECOND ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- PARENT NAME START -->
+				<div class="FL" style="width:62%">
+					<div class="rowCont pad10lt" style="height:26px;">
+						<span class="fdNm" style="width:85px">
+							<h:outputText value="PRINT NAME:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{(formMtaBean.form.parentName eq null) ? 'requiredDiv' : ''}">
+								<ace:textEntry maxlength="30"
+									disabled="#{not formMtaBean.empEdit}"
+									value="#{formMtaBean.form.parentName}"
+									style="width:80%;border-bottom:solid 1px;" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- PARENT NAME END -->
+
+				<!-- PARENT PHONE START -->
+				<div class="W35percnt FL">
+					<div class="rowCont pad12lt" style="height:26px;">
+						<span class="fdNm" style="width:80px">
+							<h:outputText value="TELEPHONE:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{(formMtaBean.form.parentPhone eq null) ? 'requiredDiv' : ''}">
+								<ace:textEntry maxlength="25"
+									disabled="#{not formMtaBean.empEdit}"
+									value="#{formMtaBean.form.parentPhone}"
+									style="width:66%;border-bottom:solid 1px;">
+									<f:converter converterId="lightspeed.PhoneNumberConverter" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- PARENT PHONE END -->
+			</div> <!-- SECOND ROW END -->
+
+			<!-- THIRD ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- EMAIL START -->
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm">
+						<h:outputText value="EMAIL:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{(formMtaBean.form.emailAddress eq null) ? 'requiredDiv' : ''}">
+							<ace:textEntry maxlength="100"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.emailAddress}"
+								style="width:85%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- EMAIL END -->
+			</div> <!-- THIRD ROW END -->
+
+			<span class="BKwhite FL pad80lt pad5tp" style="height:22px;margin-left:100px">
+				<h:outputText styleClass="FL B txt15 pad5lt pad4tp" escape="false" style="color:red;"
+					value="&amp;#9654; &amp;#9654; &lt;em&gt;Attach a copy of proof of Minor Trust Account
+						from Financial Institution &lt;/em&gt; &amp;#9664; &amp;#9664; &#160;" />
+			</span>
+		</div>
+
+		<!-- FIRST ROW START -->
+		<div class="rowCont FL pad8tp">
+			<!-- TTC CLIENT START -->
+			<div class="W60percnt FL">
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm" style="width:85px">
+						<h:outputText value="TTC CLIENT:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.teamClient}"
+								style="width:79%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- TEAM CLIENT END -->
+
+			<!-- DATE(S) WORKED START -->
+			<div class="W37percnt FL">
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm" style="width:115px">
+						<h:outputText value="DATE(S) WORKED:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.datesWorked}"
+								style="min-width:55%;width:55%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- DATE(S) WORKED END -->
+		</div> <!-- FIRST ROW END -->
+
+		<!-- SECOND ROW START -->
+		<div class="rowCont FL pad4tp">
+			<!-- PRODUCTION COMPANY START -->
+			<div class="FL W50percnt">
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm" style="width:155px">
+						<h:outputText value="PRODUCTION COMPANY:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.productionCompany}"
+								style="width:60%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- PRODUCTION COMPANY END -->
+
+			<!-- PROJECT START -->
+			<div class="W48percnt FL">
+				<div class="rowCont pad20lt" style="height:26px;">
+					<span class="fdNm" style="width:66px">
+						<h:outputText value="PROJECT:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.project}"
+								style="width:73%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- PROJECT END -->
+		</div> <!-- SECOND ROW END -->
+
+		<!-- THIRD ROW START -->
+		<div class="rowCont FL pad4tp">
+			<!-- PRODUCER START -->
+			<div class="FL W60percnt">
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm" style="width:82px">
+						<h:outputText value="PRODUCER:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.producer}"
+								style="width:80%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- PRODUCER END -->
+
+			<!-- PRODUCER PHONE START -->
+			<div class="W35percnt FL">
+				<div class="rowCont pad12lt" style="height:26px;">
+					<span class="fdNm" style="width:81px">
+						<h:outputText value="TELEPHONE:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="25"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.producerPhone}"
+								style="width:69%;border-bottom:solid 1px;">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- PRODUCER PHONE END -->
+		</div> <!-- THIRD ROW END -->
+
+		<div class="FL pad65lt W80percnt BKgrey sfFormBorder3 pad10tp" style="height:50px">
+			<h:outputText styleClass="FL B txt13 pad30lt pad10tp" escape="false"
+				value="RETURN TO: The TEAM Companies by email:" />
+			<h:outputLink value="mailto:minortrust@teamservices.net">
+				<h:outputText styleClass="FL B txt13 pad5lt pad10tp" value = "minortrust@theteamcompanies.com" />
+			</h:outputLink>
+			<h:outputText styleClass="FL B pad3lt pad10tp txt13" escape="false" value="-  &lt;u&gt; OR &lt;/u&gt; by mail:" />
+			<h:outputText styleClass="FL rowCont pad45lt txt13 pad4tp B" escape="false"
+					value="The TEAM Companies, Minor Trust &amp;#9632; 901 W. Alameda Ave., Suite 100, Burbank, CA 91506" />
+		</div>
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH22" value="&#160;" />
+		</div>
+	</div>
+</ui:composition>

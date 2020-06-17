@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{contactRoleSelectBean.visible}"
+				header="#{contactRoleSelectBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{contactRoleSelectBean.actionCancel}"/>	
+			
+			<div id="popBdy">
+				<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div id="addroleCont">
+					<div class="popup_main">
+						<span class="infoTxtnopad rowCont padPop20tp">
+							To select a Person, first choose the desired department.
+						</span>
+						<span class="rowCont pad15lt padPop20tp">
+							<span class="FL">
+								 <h:outputText styleClass="fdNm B" value="Department:" />
+							</span>
+							<span class="fd FL">
+								<h:selectOneMenu 
+									valueChangeListener="#{contactRoleSelectBean.changeDepartment}"
+									value="#{contactRoleSelectBean.departmentId}" styleClass="selRole">
+									<f:selectItems value="#{contactRoleSelectBean.departmentCrewDL}" />
+									<f:ajax execute="@this" render="@all"/>
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="rowCont pad15lt padPop20tp">
+							<span class="FL">
+								 <h:outputText styleClass="fdNm B" value="Person:" />
+							</span>
+							<span class="fd FL">
+								<h:selectOneMenu
+									value="#{contactRoleSelectBean.newContact}" styleClass="selRole">
+									<f:converter converterId="lightspeed.ContactRoleConverter" />
+									<f:selectItems value="#{contactRoleSelectBean.contactRoleDL}" />
+								</h:selectOneMenu>
+							</span>
+						</span>
+						<span class="rowCont padPop20tp infoTxtnopad">
+							<h:outputText styleClass="B" rendered="#{empty contactRoleSelectBean.contactRoleDL}"
+								value="#{contactRoleSelectBean.message}"/>
+						</span>
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{contactRoleSelectBean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Add"
+								action="#{contactRoleSelectBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+
+</ui:composition>

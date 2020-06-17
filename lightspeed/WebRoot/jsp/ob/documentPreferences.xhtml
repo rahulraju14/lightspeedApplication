@@ -1,0 +1,388 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+<c:set var="canada" value="#{payrollSetupBean.production.type.canadaTalent}" scope="request" />
+
+<!-- Preferences tab for Onboarding -->
+
+	<c:set var="show" value="#{(not empty authBean.pgFields['10.7,view'])}" />
+
+	<ace:tabPane label="#{show ? 'Preferences' : ''}" disabled="#{not show}">
+
+		<div id="prefScrolldiv" class="scrollPnlTab">
+          <c:if test="${canada == false}">
+			<!-- START FORM DEFAULTS -->
+			<div class="rowCont rowGradient">
+				<div class="rowCont pad30tp">
+					<h:outputText styleClass="FL B W80percnt pad30lt" value="Payroll Start Form Defaults:" />
+				</div>
+				<div class="rowCont pad-10tp">
+					<ui:include src="../tcpref/setupStartDef.xhtml">
+						<ui:param name="aicp" value="#{aicp}" />
+					</ui:include>
+				</div>
+				<div class="CB FL pad10tp">&#160;</div><!-- bottom padding for gradient -->
+			</div>
+
+			<!-- WTPA DEFAULTS -->
+			<div class="rowCont pad15tp rowGradient" style="height:auto;">
+				<div class="W98percnt MA">
+					<div class="rowCont pad15tp">
+						<h:outputText styleClass="FL B W80percnt pad15lt" value="WTPA Defaults for Employer:" />
+					</div>
+
+					<!-- DBA AND FEIN START -->
+					<div class="rowCont FL pad15tp">
+						<span class="fdNm_w pad45lt" style="width:95px;">
+							<h:outputText value="Employer FEIN:" />
+						 </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="10" immediate="true" styleClass="FL"
+									disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.production.payrollPref.fedidNumber}"
+									style="min-width:80px; width:90px;" />
+							</span>
+						</h:panelGroup>
+
+						<span class="fdNm_w2 pad45lt" style="width:135px;">
+							<h:outputText value="Employer DBA (if any):" />
+						 </span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry styleClass="FL" maxlength="50" style="min-width:132px;width:132px;"
+									disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.production.payrollPref.dba}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- DBA AND FEIN END -->
+
+					<!-- REGULAR PAYDAY START -->
+					<div class="rowCont FL pad10tp">
+						<span  class="fdNm_w pad45lt" style="width:98px;">
+							<h:outputText styleClass="FL" escape="false" value="Regular Payday:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:selectOneMenu styleClass="FL"
+									style="width:120px;"
+									disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.production.payrollPref.regularPayDay}">
+									<f:selectItems value="#{payrollSetupBean.regularPayDayWeekDayList}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</span>
+						</h:panelGroup>
+
+						<!-- PAYDAY FREQUENCY -->
+						<div class="W75percnt FL">
+
+							<div class="rowCont FL W100percnt">
+								<span class="fdNm_w2 pad20lt" style="width:135px;">
+									<h:outputText value="Payday Frequency:" />
+								 </span>
+
+								<div class="FL pad3tp">
+									<h:selectOneRadio style="width:100%;" styleClass="h_radio fd_sm I" 
+											value="#{payrollSetupBean.production.payrollPref.paydayFreq}"
+											disabled="#{not payrollSetupBean.editMode}"
+											layout="lineDirection">
+										<f:selectItem itemValue="W" itemLabel="Weekly"/>
+										<f:selectItem itemValue="B" itemLabel="Bi-Weekly"/>
+										<f:selectItem itemValue="O" itemLabel="other (if more frequent):"/>
+										<f:converter converterId="lightspeed.PaydayFrequencyConverter" />
+										<ace:ajax/>
+									</h:selectOneRadio>		
+
+								</div>
+								<h:panelGroup>
+									<span class="fd_sm2">
+										<ace:textEntry styleClass="FL pad3lt" maxlength="50"
+											style="min-width:21%;width:21%"
+											value="#{payrollSetupBean.production.payrollPref.paydayFreqOther}"
+											disabled="#{not payrollSetupBean.editMode or
+												payrollSetupBean.production.payrollPref.paydayFreq.name ne 'O'}"/>
+									</span>
+								</h:panelGroup>		
+							</div>
+						</div>
+					</div>
+					<!-- REGULAR PAYDAY/FREQUENCY END -->
+
+					<!-- CA SICK LEAVE -->
+					<div class="rowCont FL pad10tp">
+						<div class="rowCont">
+							<h:outputText styleClass="FL B W80percnt pad45lt" value="CA Sick Leave:" />
+						</div>
+						<div class="FL W55percnt pad10tp pad45lt">
+							<div class="rowCont FL">
+								<div class="rowCont FL">
+									<div class="FL pad3tp W4percnt">
+										<h:selectOneRadio style="width:100%;white-space: pre;" styleClass="h_radio fd_sm" 
+												value="#{payrollSetupBean.production.payrollPref.sickLeaveType}"
+												disabled="#{(not payrollSetupBean.editMode) or (empty authBean.pgFields['10.7,edit_sick'])}"
+												layout="pageDirection">
+											<f:selectItem itemValue="CA" itemLabel=""/>
+											<f:selectItem itemValue="POLICY" itemLabel=" &#13; "/>
+											<f:selectItem itemValue="PLUS_24" itemLabel=""/>
+											<f:selectItem itemValue="EXEMPT" itemLabel=""/>
+											<f:converter converterId="lightspeed.CalifSickLeaveTypeConverter" />
+											<ace:ajax/>
+										</h:selectOneRadio>		
+									</div>	
+									<div class="FL W95percnt">
+										<div class="FL pad3tp">
+											<h:outputText value="1. Accrues paid sick leave persuant to the requirements of CA Labor Code &#167;245." />
+										</div>
+										<div class="FL pad10tp">
+											<h:outputText value="2. Accrues paid sick leave persuant to the employer's policy which satisfies or exceeds" />
+											<h:outputText styleClass="FL rowCont" value="the requirements of CA Labor Code &#167;246." />
+										</div>									
+										<div class="FL pad6tp">
+											<h:outputText value="3. Employer provides no less than 24 hours (or 3 days) of paid sick leave at the
+													 beginning of each 12-month period." />
+										</div>
+										<div class="FL W95percnt pad1tp">
+											<h:outputText value="4. Is exempt from paid sick leave under CA Labor Code &#167;245.5. because:" />
+											<span class="fd_sm2">
+												<ace:textEntry styleClass="pad3tp" maxlength="50" style="min-width:28%;"
+													value="#{payrollSetupBean.production.payrollPref.sickLeaveReason}"
+													disabled="#{(not payrollSetupBean.editMode) or
+														(payrollSetupBean.production.payrollPref.sickLeaveType ne 'EXEMPT')}"/>
+											</span>
+										</div>
+										<div class="FL pad10tp">
+											<h:outputText styleClass="B" escape="false"
+												value="If your company has a paid sick time accrual policy that differs from the state minimum 
+													&lt;/br&gt; requirement, please contact your payroll rep." />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- EMPLOYEE NOTICE END -->
+
+						<!-- NOTICE GIVEN START -->
+						<div class="FL W45percnt" style="width:6%">
+							<span  class="fdNm" style="width:83px">
+								<h:outputText styleClass="FL" value="Notice Given:" />
+							</span>
+						</div>
+
+						<div class="FL W45percnt pad15lt" style="width:33%">
+							<div class="W85percnt FL pad2tp">
+								<div class="rowCont FL">
+									<h:selectOneRadio style="width:100%;white-space: pre;" styleClass="h_radio fd_sm" 
+											value="#{payrollSetupBean.noticeGivenType}" disabled="#{not payrollSetupBean.editMode}"
+											layout="pageDirection">
+										<f:selectItem itemValue="a" itemLabel="Do not specify a default notice given"/>
+										<f:selectItem itemValue="b" itemLabel="At time of hire"/>
+										<f:selectItem itemValue="c" itemLabel="Within 7 days of any change to the above information&#13; that is not shown on employee wage statement."/>
+										<ace:ajax/>
+									</h:selectOneRadio>										
+								</div>
+							</div>
+						</div>
+						<!-- NOTICE GIVEN END -->
+					</div>
+
+					<!-- LEFT portion -->
+					<!-- MAILING ADDRESS -->
+					<div class="W33percnt FL pad45lt pad20tp">
+						<div class="rowCont FL">
+							<span class="fdNm_w"> <h:outputText value="Mailing Address:" /> </span>
+						</div>
+
+						<!-- ADDRESS LINE 1 -->
+						<div class="rowCont FL pad5tp">
+							<span class="fdNm">
+								<h:outputText value="Address:" />
+							 </span>
+							<h:panelGroup rendered="#{not payrollSetupBean.editMode}" styleClass="pad3tp">
+								<span class="fd_sm2">
+									<h:outputText value="#{payrollSetupBean.production.payrollPref.mailingAddress.addrLine1}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="50"
+										value="#{payrollSetupBean.production.payrollPref.mailingAddress.addrLine1}" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- ADDRESS LINE 2 -->
+						<div class="rowCont FL pad2tp">
+							<span class="fdNm"><h:outputText value=" " /> </span>
+							<h:panelGroup rendered="#{not payrollSetupBean.editMode}">
+								<span class="fd_sm">
+									<h:outputText value="#{payrollSetupBean.production.payrollPref.mailingAddress.addrLine2}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="50"
+										value="#{payrollSetupBean.production.payrollPref.mailingAddress.addrLine2}" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- CITY -->
+						<div class="rowCont FL pad2tp">
+							<span class="fdNm"><h:outputText value="City:" /></span>
+							<h:panelGroup rendered="#{not payrollSetupBean.editMode}">
+								<span class="fd_sm">
+									<h:outputText value="#{payrollSetupBean.production.payrollPref.mailingAddress.city}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="35"
+										value="#{payrollSetupBean.production.payrollPref.mailingAddress.city}" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- STATE + ZIP -->
+						<div class="rowCont FL pad2tp">
+							<span class="fdNm"> State:</span>
+							<h:selectOneMenu styleClass="FL"
+								disabled="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.production.payrollPref.mailingAddress.state}">
+								<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+							</h:selectOneMenu>
+							<span class="fdNm_sm" style="width:40px;">
+								<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+							</span>
+							<h:panelGroup rendered="#{not payrollSetupBean.editMode}">
+								<span class="fd_sm" style="width:20px;min-width:20px;">
+									<h:outputText value="#{payrollSetupBean.production.payrollPref.mailingAddress.zip}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+								<span class="fd_xsm" >
+									<ace:textEntry maxlength="10" style="width: 55px;"
+										value="#{payrollSetupBean.production.payrollPref.mailingAddress.zip}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- LEFT portion END-->
+
+				</div>
+
+				<div class="CB FL pad10tp">&#160;</div><!-- bottom padding for gradient -->
+			</div>
+
+			<!-- EARNED SICK LEAVE SECTION -->
+			<div class="rowCont rowGradient pad15tp pad30bm">
+				<div class="W98percnt MA">
+					<div class="rowCont pad15tp">
+						<h:outputText styleClass="FL B W80percnt pad15lt" value="Earned Sick Leave:" />
+					</div>
+					<div class="pad15tp pad30lt">
+						<h:outputText value="Start of Benefit Year:" styleClass="B"/>
+						<h:panelGroup styleClass="pad10lt">
+							<ace:dateTimeEntry rendered="#{payrollSetupBean.editMode}" value="#{payrollSetupBean.production.payrollPref.benefitYearStart}"
+								renderAsPopup="true" styleClass="cal_date">	
+								<f:converter converterId="lightspeed.MultiDateConverter"/>
+							</ace:dateTimeEntry>
+							<h:outputText rendered="#{not payrollSetupBean.editMode}" value="#{payrollSetupBean.production.payrollPref.benefitYearStart}">
+								<f:convertDateTime pattern="M/d" timeZone="#{applicationScopeBean.timeZone}"/>							
+							</h:outputText>
+						</h:panelGroup>					
+					</div>
+					<div class="pad15tp pad30lt">
+						<h:outputText value="End of Benefit Year:" styleClass="B"/>
+						<h:panelGroup styleClass="pad16lt">
+							<ace:dateTimeEntry rendered="#{payrollSetupBean.editMode}" value="#{payrollSetupBean.production.payrollPref.benefitYearEnd}"
+								renderAsPopup="true" styleClass="cal_date">	
+								<f:converter converterId="lightspeed.MultiDateConverter"/>
+							</ace:dateTimeEntry>
+							<h:outputText rendered="#{not payrollSetupBean.editMode}" value="#{payrollSetupBean.production.payrollPref.benefitYearEnd}">
+								<f:convertDateTime pattern="MM/dd" timeZone="#{applicationScopeBean.timeZone}"/>							
+							</h:outputText>
+						</h:panelGroup>
+					</div>
+					
+				</div>
+			</div>
+			</c:if>
+			<!-- PAYROLL SERVICE START -->
+			<div class="rowCont rowGradient">
+				<div class="rowCont pad20tp">
+					<div class="FL pad30lt">
+						<h:outputText styleClass="B" value="Payroll Service: " />
+						<h:panelGroup styleClass="pad10lt B_false">
+							<h:outputText value="#{payrollSetupBean.payrollService.name}" />
+							<h:outputText value="(None)"
+									rendered="#{payrollSetupBean.payrollService eq null}" />
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<div class="rowCont">
+					<div class="pad10tp pad40lt">
+						<h:outputText styleClass="B" value="Data transfer to Payroll Service:"/>
+						<br/>
+					</div>
+				</div>
+
+				<div class="rowCont">
+					<div class="rowCont pad10tp">
+						<div class="FL pad50lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox styleClass="FL ckbx"
+										valueChangeListener="#{payrollSetupBean.listenOnboardEmail}"
+										disabled="#{! payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.useOnboardEmail}" >
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+							<div class="FL pad5lt W90percnt">
+								<h:panelGroup styleClass="ckbxTxtLbl">
+									Email payroll Start Forms to my Payroll Company representative using the Onboarding Transfer screen.
+								</h:panelGroup>
+								<div class="rowCont pad5tp">
+									<h:panelGroup styleClass="FL B_false pad3tp pad10rt">
+											Representative's Email:
+									</h:panelGroup>
+									<ace:textEntry styleClass="W200"
+											maxlength="100" disabled="#{not payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.onboardEmailAddress}" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- First day of payroll week - ->
+				<div class="rowCont FL pad10tp">
+					<span  class="fdNm_w" style="width:auto;">
+						<h:outputText styleClass="FL" escape="false" value="First day on timecard:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad10lt">
+							<h:selectOneMenu styleClass="FL"
+								style="width:120px;"
+								disabled="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.production.payrollPref.weekFirstDay}">
+								<f:selectItems value="#{payrollSetupBean.weekDayNameDl}" />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+				</div><!- - -->
+
+				<div class="CB FL pad10tp">&#160;</div><!-- bottom padding for gradient -->
+			</div>
+			<!-- PAYROLL SERVICE END -->
+
+		</div> <!-- scrolltop -->
+	</ace:tabPane>
+</ui:composition>

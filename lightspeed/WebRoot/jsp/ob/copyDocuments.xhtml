@@ -1,0 +1,257 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<!-- Copy Documents mini-tab on Onboarding page -->
+
+<c:set var="show" value="#{not empty authBean.pgFields['0.2,admin_tab']}" /> <!-- admin only for now -->
+
+<ace:tabPane label="#{show ? 'Copy Documents' : ''}" disabled="#{not show}">
+
+	<div class="rowCont">
+		<div class="FL" style="width:46%">
+			<!-- legend for documents list -->
+			<div class="blueLegendContWrap pad25tp">
+				<div class="blueLegendCont" style="width:96%; margin-left:15px;">
+					<!-- Blue content -->
+					<span class="legendHdg">
+						<h:outputText value="Documents"/>
+					</span>
+					<!-- legend buttons -->
+					<h:panelGroup rendered="#{(headerViewBean.miniTab eq 0) and (not empty authBean.pgFields['10.5,update_master'])}">
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Load XFDF"
+									title="Load Master XFDF"
+									action="#{documentListBean.actionLoadXFDF}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- <h:panelGroup styleClass="btn_legend pad5rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Copy"
+								title="Copy the checked documents."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup> -->
+					<!-- legend buttons end -->
+
+					<h:panelGroup styleClass="btn_legend LH18">
+						<!-- No legend buttons, so do this to align the table below with the one on the left -->
+					</h:panelGroup>
+
+					<div>
+						<ace:dataTable id="docstable"
+							value="#{copyDocumentBean.documentChainList}" var="doc"
+							singleSort="true"
+							rowIndexVar="idx"
+							scrollable="true"
+							scrollHeight="310"
+							styleClass="bk_sl_grid">
+
+							<ace:column styleClass="W5percnt CT">
+								<f:facet name="header">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox
+											value="#{copyDocumentBean.checkedForAllDocChains}"
+											styleClass="iceSelBoolChkbx"
+											valueChangeListener="#{copyDocumentBean.listenCheckedForAllDocChains}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</f:facet>
+								<div style="text-align:center">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{doc.checked}"
+											valueChangeListener="#{copyDocumentBean.listenSingleDocumentCheck}"
+											styleClass="iceSelBoolChkbx">
+											<f:attribute name="selectedRow" value="#{doc}"></f:attribute>
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</ace:column>
+
+							<!-- The Icons -->
+							<ace:column styleClass="W8percnt CT">
+								<div>
+									<!-- <div class="FL">
+										the following only renders in Document rows
+										<h:outputText rendered="#{doc ne null}">
+											<h:graphicImage rendered="#{! doc.oldest}"
+												value="../../i/tree_line_middle_node.gif" alt=""/>
+											<h:graphicImage rendered="#{doc.oldest}"
+												value="../../i/tree_line_last_node.gif" alt=""/>
+										</h:outputText>
+									</div> -->
+
+									<!-- For document chain icon -->
+									<h:commandLink action="#{documentListBean.actionPreviewDocument}"
+											rendered="#{doc.type ne 'LS_FORM'}">
+										<h:panelGroup rendered="#{doc ne null}">
+											<h:graphicImage	value="../../i/icon_pdf_18.png" alt=""/>
+										</h:panelGroup>
+										<f:setPropertyActionListener target="#{documentListBean.documentChainId}"
+											 value="#{doc.id}" />
+									</h:commandLink>
+
+									<!-- for document chain -->
+									<h:commandLink action="payrollStart" rendered="#{doc.type eq 'LS_FORM'}">
+										<h:panelGroup rendered="#{doc ne null}">
+											<h:graphicImage	value="../../i/icon_pdf_18.png" alt=""/>
+										</h:panelGroup>
+										<f:setPropertyActionListener value="com.lightspeedeps.documentChainId" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="#{doc.id}" target="#{jumpBean.value}"/>
+										<!-- clear contactId to prevent the last-viewed Start document from displaying -->
+										<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+										<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+									</h:commandLink>
+								</div>
+							</ace:column>
+
+							<!-- Name -->
+							<ace:column  headerText="Name" styleClass="W40percnt CT"
+								sortBy="#{doc.normalizedName}" >
+								<h:outputText rendered="#{doc ne null}" value="#{doc.normalizedName}"
+									title="#{doc.displayName}"
+								    styleClass="FL pad20lt" style="text-align:left;">
+								</h:outputText>
+							</ace:column>
+
+							<!-- Modified -->
+							<ace:column  headerText="Modified" styleClass="W22percnt CT"
+								sortBy="#{doc.revised}">
+								<h:outputText rendered="#{doc ne null}"
+									value="#{doc.revised}">
+								<f:convertDateTime pattern="M/d/yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+					<!-- end of dataTable wrapper -->
+				</div>
+				<!-- end of blue content -->
+			</div>
+		</div>
+		<!-- END DOCUMENT LIST -->
+
+		<!-- COPY BUTTON -->
+		<div class="FL" style="width:10%;margin-top:9%;">
+			<span >
+				<h:outputText class="pad5tp FL" escape="false" style="text-align:center;"
+					value="Copy selected &lt;/br&gt; documents into selected Productions">
+				</h:outputText>
+				<h:commandButton value=""
+					action="#{copyDocumentBean.actionCopyDocuments}" styleClass="Btn btnArrowRightCircle pad5tp pad50lt"
+					title="Copy the checked documents into the selected Productions">
+				</h:commandButton>
+			</span>
+		</div>
+
+		<div class="FL" style="width:44%">
+			<!-- PRODUCTION LIST START -->
+			<!-- legend for documents list -->
+			<div class="blueLegendContWrap pad25tp">
+				<div class="blueLegendCont" style="width:96%; margin-left:10px;">
+					<!-- Blue content -->
+					<span class="legendHdg">
+						<h:outputText value="Productions"/>
+					</span>
+					<!-- LISTED / SELECTED counts -->
+					<span class="legendHdg" style="float:right; margin-right:15px">
+						<span>Productions in List: </span>
+						<h:outputText value="#{fn:length(copyDocumentBean.productionList)}" />
+						<span class="pad15lt">Selected: </span>
+						<h:outputText value="#{fn:length(copyDocumentBean.checkedProductionList)}" />
+					</span>
+					<div>
+						<ace:dataTable id="prodTable" var="prod"
+							value="#{copyDocumentBean.productionList}"
+							singleSort="true" rowIndexVar="idx"
+							scrollable="true" scrollHeight="310"
+							styleClass="bk_sl_grid">
+
+							<ace:column styleClass="W5percnt CT">
+								<f:facet name="header">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox
+											value="#{copyDocumentBean.checkedForAllProductions}"
+											valueChangeListener="#{copyDocumentBean.listenCheckedForAllProductions}"
+											styleClass="iceSelBoolChkbx">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</f:facet>
+								<div>
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{prod.selected}"
+											valueChangeListener="#{copyDocumentBean.listenSingleProductionCheck}"
+											styleClass="iceSelBoolChkbx">
+											<f:attribute name="selectedRow" value="#{prod}"></f:attribute>
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</ace:column>
+
+							<!-- Name -->
+							<ace:column  headerText="Name" styleClass="W45percnt CT"
+								sortBy="#{prod.title}" filterBy="#{prod.title}">
+								<h:outputText value="#{prod.title}"
+					                styleClass="FL pad20lt" style="text-align:left;">
+								</h:outputText>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+					<!-- end of dataTable wrapper -->
+				</div>
+				<!-- end of blue content -->
+			</div> <!-- PRODUCTION LIST END -->
+
+			<!-- legend for selected productions list start -->
+			<div class="blueLegendContWrap">
+				<div class="blueLegendCont"  style="width:96%; margin-left:10px; margin-top:5%">
+					<span class="legendHdg">
+						<h:outputText value="Selected Productions"/>
+					</span>
+					<div class="FL W100percnt"> <!-- Selected document table -->
+						<ace:dataTable id="selectedProdTable" var="prod"
+							value="#{copyDocumentBean.checkedProductionList}"
+							rowIndexVar="idx" scrollable="true"
+							styleClass="bk_sl_grid" scrollHeight="130">
+
+							<!-- the delete [cross] buttons -->
+							<ace:column styleClass="W10percnt CT">
+								<h:commandButton value="" title="Remove" styleClass="deleteXbtn"
+									action="#{copyDocumentBean.actionRemoveSelectedProd}">
+								<f:setPropertyActionListener value="#{prod}" target="#{copyDocumentBean.prodToUncheck}"/>
+								</h:commandButton>
+							</ace:column>
+
+							<!-- the Name -->
+							<ace:column headerText="Name" selected="true" styleClass="W50percnt CT">
+								<h:outputText value="#{prod.title}" styleClass="FL">
+								</h:outputText>
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- selected productions table end -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</ace:tabPane>
+
+</ui:composition>

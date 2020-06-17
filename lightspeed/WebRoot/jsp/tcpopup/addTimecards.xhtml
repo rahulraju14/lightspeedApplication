@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Dialog box to ADD new employees to a TOURS TIMESHEET -->
+
+	<!-- Uses params:  -->
+	<h:form>
+		<ace:dialog visible="#{addTimecardsBean.visible}"
+				header="#{addTimecardsBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{addTimecardsBean.actionCancel}"/>			
+			<div class="confPopBdy4">
+				<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="popup_main pad15tp">
+					<div class="FL rowCont W100percnt">
+
+						<h:panelGroup rendered="#{true}">
+							<div class="popup_inner pad15tp">
+								<span class="popup_inner_leg">
+									Select Employees
+								</span>
+								<div class="MA pad10bm" style="width:90%;">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<span class="pad5lt">
+											<h:panelGroup styleClass="ckbx">
+													<h:selectBooleanCheckbox value="#{addTimecardsBean.selectAllTargets}"
+															valueChangeListener="#{addTimecardsBean.listenSelectAllTargets}" >
+														<ace:ajax/>
+													</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl_B pad3lt">
+													Select All Employees
+												</span>
+											</h:panelGroup>
+										</span>
+									</icecore:setEventPhase>
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<ace:dataTable styleClass="gradTbl3 W100percnt CT"
+												style="width:100%;max-width:100%;" rowStyleClass="CT"
+												scrollable="true" scrollHeight="190"
+												value="#{addTimecardsBean.startFormList}" var="recip">
+											<!-- Checkbox -->
+											<ace:column style="width:10%;border:0;">
+												<h:selectBooleanCheckbox
+														valueChangeListener="#{addTimecardsBean.listenSelectTarget}"
+														value="#{recip.checked}" >
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+											</ace:column>
+											<!-- Name and Occupation -->
+											<ace:column styleClass="B_false" style="width:90%;border:0;">
+												<h:outputText value="#{recip.lastName}, #{recip.firstName} - " />
+												<h:outputText value="#{recip.employment.occupation}" />
+											</ace:column>
+										</ace:dataTable>
+									</icecore:setEventPhase>
+								</div>
+							</div><!-- end inner box -->
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 padPop25rt">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt"/>
+						<span>
+						<ace:linkButton value="Cancel"
+							action="#{addTimecardsBean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt"/>
+					</span>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt"/>
+						<span>
+						<ace:linkButton value="Add"
+							action="#{addTimecardsBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt"/>
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

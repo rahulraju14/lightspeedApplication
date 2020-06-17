@@ -1,0 +1,409 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="FORM L-4"
+			rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+
+		<div class="miniTab pad15lt" style="width:840px;">
+			<div class="scrollPnlTab BKwhite sfFormBorder1" >
+				<div class="pad10rt pad10tp" style="width:820px;margin-left:11px;">
+
+					<h:graphicImage alt="" value="" style="width:815px;" url="../../i/forms/formL4_inst1.png"/>
+
+					<div class="FL rowCont">
+						<div class="FL" style="width:83%">
+							<h:graphicImage alt="" value="" style="width:685px;" url="../../i/forms/formL4_inst2.png"/>
+						</div>
+						<div class="FL" style="width:15%">
+							<div class="FL sfFormBorder1 pad5lt pad10tp" style="width:120px;height:54px">
+								<h:panelGroup styleClass="pad15tp">
+									<span class="fd_sm pad2lt">
+										<h:outputText styleClass="FL pad3lt B" value="A." style="margin-top:34px;"/>
+										<ace:textEntry styleClass="FL pad3lt" maxlength="1"
+											disabled="#{not formL4Bean.empEdit}"
+											value="#{formL4Bean.form.blockA}"
+											style="min-width:22%; width:77%;margin-top:10px;height:18px" />
+									</span>
+								</h:panelGroup>
+							</div>
+							<div class="FL sfFormBorder1 pad5lt pad55tp" style="width:120px;height:54px">
+								<h:panelGroup styleClass="pad15tp">
+									<span class="fd_sm pad2lt">
+										<h:outputText styleClass="FL pad3lt B" value="B." style="margin-top:34px;"/>
+										<ace:textEntry styleClass="FL pad3lt"
+											maxlength="2" disabled="#{not formL4Bean.empEdit}"
+											value="#{formL4Bean.form.blockB}"
+											style="min-width:22%; width:77%;margin-top:10px;height:18px" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+					<div class="FL" style="border-bottom:solid 1px;">
+						<h:graphicImage alt="" value="" style="width:815px;" url="../../i/forms/formL4_header.png"/>
+					</div>
+
+					<!-- FIRST ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- FULL NAME -->
+						<div class="W49percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 280px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 1. &lt;/strong&gt;
+									Type or print first name and middle initial" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+										style="width:96%; margin-top:-2px; height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.firstNameMidInitial}" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- LAST NAME -->
+						<div class="W49percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm_w3 pad2tp" style="width:280px; font-weight:normal">
+								<h:outputText value="Last name" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+									style="width:97%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.lastName}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- FIRST ROW END -->
+
+					<!-- SECOND ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- SOCIAL SECURITY NUMBER -->
+						<div class="W49percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 200px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 2. &lt;/strong&gt; Social Security Number" />
+							</span>
+							<h:panelGroup rendered="#{not formL4Bean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="11"
+										style="width:96%;margin-top:-2px;height:13px"
+										disabled="#{true}"
+										value="#{formL4Bean.form.viewSSN}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{formL4Bean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="11"
+										style="width:96%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.socialSecurity}">
+										<f:converter converterId="lightspeed.SSNConverter" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- SELECT ONE -->
+						<div class="W49percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm_w3 pad2tp" style="width:280px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 3. &lt;/strong&gt; Select one" />
+							</span>
+							<div class="FL rowCont">
+								<h:selectOneRadio id="status"
+										styleClass="h_radio"
+										value="#{formL4Bean.form.maritalStatus}"
+										disabled="#{not formL4Bean.empEdit}"
+										layout="lineDirection">
+									<f:selectItem itemValue="ne" itemLabel="No exemptions or dependents claimed " />
+									<f:selectItem itemValue="s" itemLabel="Single" />
+									<f:selectItem itemValue="m" itemLabel="Married" />
+								</h:selectOneRadio>
+							</div>
+						</div>
+					</div>
+					<!-- SECOND ROW END -->
+
+					<!-- THIRD ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- Home address (number and street or rural route) -->
+						<div class="FL W99percnt pad5lt" style="height:47px;">
+							<span class="fdNm_w2 pad2tp" style="width: 300px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 4. &lt;/strong&gt;
+								Home address (number and street or rural route)" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="50"
+										style="width:98%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.address.addrLine1}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- THIRD ROW END -->
+
+					<!-- FOURTH ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- CITY -->
+						<div class="W60percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 200px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 5. &lt;/strong&gt; City" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="50"
+										style="width:97%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.address.city}" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- STATE -->
+						<div class="W12percnt FL pad7lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 200px; font-weight:normal">
+								<h:outputText escape="false" value="State" />
+							</span>
+							<h:selectOneMenu styleClass="FL W95percnt"
+								disabled="#{not formL4Bean.empEdit}"
+								value="#{formL4Bean.form.address.state}"
+								style="width:95%; height:21px; ">
+								<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							</h:selectOneMenu>
+						</div>
+
+						<!-- ZIP -->
+						<div class="W25percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm pad2tp" style="font-weight:normal">
+								<h:outputText escape="false" value="ZIP" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="10"
+										style="width:95%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.address.zip}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- FOURTH ROW END -->
+
+					<!-- FIFTH ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- Total number of exemptions claimed in Block A -->
+						<div class="W73percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 300px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 6. &lt;/strong&gt;
+									Total number of exemptions claimed in Block A" />
+							</span>
+						</div>
+
+						<div class="W25percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm pad2tp" style="font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 6. &lt;/strong&gt;" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+										style="width:95%;margin-top:-2px;height:13px"
+										disabled="#{true}"
+										value="#{formL4Bean.form.blockA}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- FIFTH ROW END -->
+
+					<!-- SIXTH ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- Total number of dependents claimed in Block B -->
+						<div class="W73percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 300px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 7. &lt;/strong&gt;
+									Total number of dependents claimed in Block B" />
+							</span>
+						</div>
+
+						<div class="W25percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm pad2tp" style="font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 7. &lt;/strong&gt;" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+										style="width:95%;margin-top:-2px;height:13px"
+										disabled="#{true}"
+										value="#{formL4Bean.form.blockB}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- SIXTH ROW END -->
+
+					<!-- SEVENTH ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 3px;">
+						<!-- Increase or decrease in the amount to be withheld each pay period. Decreases should be indicated as a negative amount. -->
+						<div class="W81percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 666px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 8. &lt;/strong&gt;
+									Increase or decrease in the amount to be withheld each pay period. Decreases
+									 should be indicated as a negative amount." />
+							</span>
+						</div>
+
+						<div class="W17percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm pad2tp" style="font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 8. &lt;/strong&gt;" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="7"
+											style="width:95%;margin-top:-2px;height:13px"
+											disabled="#{not formL4Bean.empEdit}"
+											value="#{formL4Bean.form.withheldAmountChange}">
+										<f:convertNumber type="number" pattern="#,###" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- SEVENTH ROW END -->
+
+					<!-- EIGHTH ROW START -->
+					<div class="rowCont FL" style="height:32px;border-bottom:solid 1px;">
+						<div class="rowCont pad5lt pad3tp">
+							<h:outputText escape="false" value="I declare under the penalties imposed for
+								filing false reports that the number of exemptions and dependency credits claimed
+								on this certificate do not" />
+						</div>
+						<div class="rowCont pad5lt">
+								<h:outputText escape="false" value="exceed the number to which I am entitled." />
+						</div>
+					</div>
+					<!-- EIGHTH ROW END -->
+
+					<!-- NINTH ROW SIGNATURE START -->
+					<div class="rowCont FL" style="height:50px;border-bottom:solid 3px;">
+						<div class="W73percnt FL pad5lt" style="height:50px; border-right:solid 1px;">
+							<div class="rowCont">
+								<span class="fdNm pad2tp" style="width:125px; font-weight:normal">
+									<h:outputText escape="false" value="Employee&apos;s signature:" />
+								</span>
+								<!-- Sign Button -->
+								<h:panelGroup rendered="#{(formL4Bean.contactDoc.submitable) or (formL4Bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend_left" style="float:left; margin-top:16px">
+									<h:panelGroup rendered="#{true}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{false}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+								</h:panelGroup>
+								<!-- Sign Button End -->
+								<span class="FL pad5tp">
+									<h:outputText escape="false" styleClass="txt12" rendered="#{formL4Bean.contactDoc.empSignature ne null}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{formL4Bean.contactDoc.empSignature.name}" styleClass="U B txtBlue pad5tp" />
+										<h:outputText value=" #{formL4Bean.contactDoc.empSignature.displayTime}" />
+										<br/>
+										<h:outputText value="# #{formL4Bean.contactDoc.empSignature.uuid}"/>
+									</h:outputText>
+								</span>
+							</div>
+						</div>
+
+						<div class="W25percnt FL pad10lt" style="height:47px;">
+							<div class="pad6tp"><h:outputText styleClass="FL txt12" value="Date:"/>
+								<span class="FL pad8lt">
+									<h:outputText value="#{formL4Bean.contactDoc.empSignature.date}">
+										<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+									</h:outputText>
+								</span>
+							</div>
+						</div>
+					</div>
+					<!-- NINTH ROW END -->
+
+					<!-- TENTH ROW START -->
+					<div class="rowCont FL" style="height:18px;border-bottom:solid 1px;">
+						<div class="rowCont pad3tp">
+								<h:outputText escape="false" styleClass="B" style="margin-left:275px"
+									value="The following is to be completed by employer." />
+						</div>
+					</div>
+					<!-- TENTH ROW END -->
+
+					<!-- ELEVENTH ROW START -->
+					<div class="rowCont FL" style="height:46px;border-bottom:solid 1px;">
+						<!-- Employer’s name and address -->
+						<div class="W49percnt FL pad5lt" style="height:47px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad2tp" style="width: 200px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 9. &lt;/strong&gt;
+									Employer&apos;s name and address" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+										style="width:96%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.employerName}"/>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<!-- Employer's state withholding account number -->
+						<div class="W49percnt FL pad5lt" style="height:47px;">
+							<span class="fdNm_w3 pad2tp" style="width:280px; font-weight:normal">
+								<h:outputText escape="false" value="&lt;strong&gt; 10. &lt;/strong&gt;
+									Employer&apos;s state withholding account number" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30"
+										style="width:97%;margin-top:-2px;height:13px"
+										disabled="#{not formL4Bean.empEdit}"
+										value="#{formL4Bean.form.employerStateAcctNum}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- ELEVENTH ROW END -->
+
+					<div class="FL rowCont"><h:outputText value="&#160;" styleClass="FL LH60"/></div>
+				</div>
+			</div>
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formL4Bean}" />
+						<ui:param name="events" value="#{formL4Bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

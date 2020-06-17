@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tc2JobDays" pageWidth="25" pageHeight="104" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="25" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="32305ae2-d62d-440b-a4d2-00199133370b">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="jobId" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[Do not set default!]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payJobDailyQuery" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select date, false as fillFlag from pay_job_daily where job_id=" + $P{jobId} +
+" union all (SELECT NULL, true FROM pay_job_daily limit 7) " +
+" order by fillFlag, date limit 7"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{payJobDailyQuery}]]>
+	</queryString>
+	<field name="date" class="java.sql.Date"/>
+	<detail>
+		<band height="13" splitType="Prevent">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4068a519-0305-42f2-b7a4-08aee83d8c73" style="tcDefBox" x="0" y="0" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("EEE").format($F{date}).toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

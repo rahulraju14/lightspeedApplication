@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+<!-- Popup for stripboard editor, to edit text on a "banner" strip -->
+
+<h:form>
+	<c:set var="bean" value="#{stripBoardEditBean}"></c:set>
+
+	<ace:dialog visible="#{bean.showPopup}"
+			header="Edit Banner Text"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCloseBannerPopup}"/>
+
+		<div class="xtraSmPopBdy">
+
+			<div class="popCont80">
+				<div class="stdTxt padPop15tp">
+					<div>
+						<h:outputText value="Please enter Banner text:" />
+					</div>
+				</div>
+				<div class="stdTxt padPop15tp">
+					<ace:textAreaEntry id="banner_focus" resizable="false"
+							rows="4" styleClass="stdTxt W98percnt"
+							value="#{bean.bannerText}"
+							maxlength="150"/>
+				</div>
+			</div>
+
+			<div class="popBtnCont4">
+				<span class="FR pad15rt">
+					<span class="btnPriEnbLt" />
+					<span>
+					<ace:linkButton value="Cancel"
+							action="#{bean.actionCloseBannerPopup}"
+							styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad10rt">
+					<span class="btnSecHotLt" />
+					<span>
+					<ace:linkButton value="Save"
+							action="#{bean.actionSaveBannerText}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

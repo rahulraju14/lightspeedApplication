@@ -1,0 +1,418 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ace:dataTable styleClass="gridExG LT"
+		style="width:100%;max-width:100%;" 
+		value="#{exhibitGViewBean.exhibitG.timeCards}" var="timeCard">
+		<ace:columnGroup  type="header">
+			<ace:row>
+				<ace:column rowspan="1" colspan="4" styleClass="W360 NW">
+					<span class="FL">
+						<span class="FL W55">Work-W</span>
+						<span class="FL W70">Rehearsal-R</span>
+						<span class="FL W60 pad3lt">Fitting-FT</span>
+						<span class="FL W55">Travel-TR</span>
+					</span><br/>
+					<span class="FL">
+						<span class="FL W55">Start-S</span>
+						<span class="FL W70">Hold-H</span>
+						<span class="FL W60 pad3lt">Test-T</span>
+						<span class="FL W55">Finish-F</span>
+					</span>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="txt10 LH8 CT">
+					<span class="FL pad20tp pad2lt">
+						Rept<br/>M/U<br/>Wdbe
+					</span>
+				</ace:column>
+				<ace:column rowspan="1" colspan="2" styleClass="CT">
+					<div class="W100percnt bdrBtm LH20">
+						WorkTime
+					</div>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="LH8 CT">
+					<span class="FL pad20tp pad2lt">
+						Dsms<br/>M/U<br/>Wdbe
+					</span>
+				</ace:column>
+				<ace:column rowspan="1" colspan="2" styleClass="CT">
+					<div class="W100percnt bdrBtm LH20">
+						ND Meal
+					</div>
+				</ace:column>
+				<ace:column rowspan="1" colspan="4" styleClass="CT">
+					<div class="W100percnt bdrBtm LH20">
+						Meals
+					</div>
+				</ace:column>
+				<ace:column rowspan="1" colspan="4" styleClass="CT">
+					<div class="W100percnt bdrBtm LH20">
+						Travel Time
+					</div>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="LH11 CT">
+					<span>
+						<br/><br/>Stunt<br/>Adj
+					</span>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="LH11 CT">
+					<span class="pad20tp">
+						<br/>Minrs<br/>Tutor<br/>Time
+					</span>
+				</ace:column>
+				<ace:column rowspan="1" colspan="1" styleClass="CT">
+					<div class="W100percnt bdrBtm LH20">
+						Wdbe
+					</div>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="LH11 CT">
+					<span>
+						<br/><br/>Frcd<br/>Call
+					</span>
+				</ace:column>
+				<ace:column rowspan="3" colspan="1" styleClass="LH11">
+					M<br/>P<br/>V<br/>S
+				</ace:column>
+				<ace:column rendered="#{not editMode}"
+						rowspan="3" colspan="1" styleClass="LH11 LT">
+					<span class="FL pad9tp">
+						PERFORMER'S<br/>SIGNATURE
+					</span>
+				</ace:column>
+			</ace:row>
+			<ace:row>
+				<ace:column rowspan="2" colspan="1" styleClass="bdrTop LH8">
+					<div class="FL W100percnt pad-18tp">&#160;</div>
+					<div class="FL pad-5tp">
+						Cast
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="bdrTop">
+						M<br/>
+						I<br/>
+						N<br/>
+						O<br/>
+						R
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8">
+					<div class="FL bdrTop W100percnt pad-18tp">&#160;</div>
+					<div class="FL pad-5tp">
+						Character
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="W25 CT">
+					<div class="pad-5tp">
+						Stat
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp">
+						Rept<br/>on<br/>Set
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp">
+						Dsms<br/>on<br/>Set
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="W25 CT">
+					<div class="pad-4tp ">
+						In
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="W25 CT">
+					<div class="pad-4tp ">
+						Out
+					</div>
+				</ace:column>
+				<ace:column colspan="2" rowspan="1" styleClass="CT">
+					<div class="padtp">1st Meal</div>
+				</ace:column>
+				<ace:column colspan="2" rowspan="1" styleClass="CT">
+					<div class="padtp">2nd Meal</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp pad2lt">
+						Leave <br/>for<br/>Loc
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp">
+						Arrive<br/>on<br/>Loc
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad6tp">
+						Leave<br/>Loc
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp">
+						Arrive<br/>at<br/>Studio
+					</div>
+				</ace:column>
+				<ace:column rowspan="2" colspan="1" styleClass="LH8 CT">
+					<div class="pad-4tp">
+						# of<br/>out-<br/>fits
+					</div>
+				</ace:column>
+			</ace:row>
+
+			<ace:row>
+				<ace:column rowspan="1" colspan="1" styleClass="CT">
+					Start
+				</ace:column>
+				<ace:column rowspan="1" colspan="1" styleClass="CT">
+					Finish
+				</ace:column>
+				<ace:column rowspan="1" colspan="1" styleClass="CT">
+					Start
+				</ace:column>
+				<ace:column rowspan="1" colspan="1" styleClass="CT">
+					Finish
+				</ace:column>
+			</ace:row>
+		</ace:columnGroup>
+
+		<ace:column style="width:11%;min-width:120px;">
+			<h:panelGroup styleClass="W15" rendered="#{editMode}">
+				<h:panelGroup styleClass="FL">
+					<h:commandButton value="" image="../../i/icon_deleteX.gif"
+						action="#{exhibitGViewBean.actionDeleteCast}" title="Delete Cast Entry">
+						<f:setPropertyActionListener value="#{timeCard.id}"
+							target="#{exhibitGViewBean.removeId}"/>
+					</h:commandButton>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:outputText styleClass="pad5lt" value="#{timeCard.contact.user.displayName}"/>
+		</ace:column>
+		<ace:column styleClass="W15 CT">
+			<h:selectBooleanCheckbox disabled="#{not editMode}"
+					value="#{timeCard.minor}" />
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.role}">&#160;</h:outputText>
+			<!--
+			<h:outputText rendered="#{editMode}">
+				<ace:textEntry value="#{timeCard.role}" styleClass="W98percnt" maxlength="50"/>
+			</h:outputText>
+			 -->
+		</ace:column>
+		<ace:column styleClass="CT">
+			<h:outputText rendered="#{not editMode}" value="#{timeCard.dayType}"/>
+			<h:panelGrid rendered="#{editMode}">
+				<ace:textEntry value="#{timeCard.dayType}" styleClass="W40 CT" maxlength="20"/>
+			</h:panelGrid>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.reportMakeup}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.reportMakeup}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column styleClass="CT">
+			<h:outputText value="#{timeCard.reportSet}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter"/>
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.reportSet}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.dismissSet}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.dismissSet}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.dismissMakeup}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.dismissMakeup}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.ndMealStart}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.ndMealStart}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.ndMealEnd}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.ndMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.firstMealStart}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter"/>
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.firstMealStart}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.firstMealEnd}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.firstMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.secondMealStart}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.secondMealStart}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.secondMealEnd}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.secondMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.leaveForLocation}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.leaveForLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.arriveLocation}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.arriveLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.leaveLocation}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.leaveLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.arriveStudio}"
+						rendered="#{not editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</h:outputText>
+			<ace:textEntry styleClass="W36" maxlength="8"
+					rendered="#{editMode}"
+					value="#{timeCard.arriveStudio}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.stuntAdjust}"
+						rendered="#{not editMode}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</h:outputText>
+			<ace:textEntry styleClass="W30" maxlength="5"
+					rendered="#{editMode}"
+					value="#{timeCard.stuntAdjust}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.tutoringHours}"
+						rendered="#{not editMode}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</h:outputText>
+			<ace:textEntry styleClass="W30" maxlength="5"
+					rendered="#{editMode}"
+					value="#{timeCard.tutoringHours}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.wardrobeOutfits}"
+						rendered="#{not editMode}"/>
+			<ace:textEntry styleClass="W20" maxlength="3"
+					rendered="#{editMode}"
+					value="#{timeCard.wardrobeOutfits}">
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText rendered="#{timeCard.forcedCall eq '1' and not editMode}"
+				value="Y"/>
+			<h:outputText rendered="#{timeCard.forcedCall eq '0' and not editMode}"
+				value=""/>
+			<ace:textEntry styleClass="W15" maxlength="1"
+					rendered="#{editMode}"
+					value="#{timeCard.forcedCall}">&#160;
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.mpv1}"
+						rendered="#{not editMode}"/>
+			<ace:textEntry styleClass="W15" maxlength="1"
+					rendered="#{editMode}"
+					value="#{timeCard.mpv1}">
+			</ace:textEntry>
+		</ace:column>
+		<ace:column rendered="#{not editMode}">
+			<h:outputText value=""/>
+		</ace:column>
+	</ace:dataTable>
+</ui:composition>

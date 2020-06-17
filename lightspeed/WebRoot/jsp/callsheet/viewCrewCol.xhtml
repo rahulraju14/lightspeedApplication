@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div class="CT" style="line-height:15px;width:100%;min-width:306px;">
+		<ui:repeat value="#{deptCalls}" var="deptCall">
+
+			<h:panelGroup styleClass="callShtCrewHdr">
+				<div class="FL callShtCrewHdr" style="width:6%;">
+					#
+				</div>
+				<div class="FL callShtCrewHdr" style="width:81%;">
+					<h:outputText value="#{deptCall.deptName}" />
+				</div>
+				<div class="FL callShtCrewHdr" style="width:13%;">
+					Time
+				</div>
+			</h:panelGroup>
+
+			<ace:dataTable 
+				style="width:100%;max-width:100%;"
+				styleClass="callShtTbl" value="#{deptCall.crewCalls}" var="crewCall">
+
+				<ace:column style="border-right:1px solid #ccc;width:6%;">
+					<h:outputText value="#{crewCall.count}" />
+				</ace:column>
+
+				<ace:column style="text-align:left;width:46%;">
+					<h:outputText value="#{crewCall.roleName}" />
+				</ace:column>
+
+				<ace:column style="text-align:left;width:35%;">
+					<h:outputText value="#{crewCall.name}" />
+				</ace:column>
+
+				<ace:column style="border-left:1px solid #ccc;width:13%;">
+					<h:outputText value="#{crewCall.time}" >
+						<f:converter converterId="lightspeed.TimeConverterOC" />
+					</h:outputText>
+				</ace:column>
+
+			</ace:dataTable>
+
+			<!-- OPTIONAL CATERING INFORMATION -->
+			<h:panelGroup rendered="#{deptCall.department.id eq 115 or deptCall.department.standardDeptId eq 115}">
+				<ui:include src="../dpr/catering.xhtml">
+					<ui:param name="dept" value="#{deptCall.department}" />
+					<ui:param name="logs" value="#{callSheetViewBean.cateringLogs}" />
+					<ui:param name="editMode" value="false" />
+				</ui:include>
+			</h:panelGroup>
+
+		</ui:repeat>
+	</div>
+
+</ui:composition>

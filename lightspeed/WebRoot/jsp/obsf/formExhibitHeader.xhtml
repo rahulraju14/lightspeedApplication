@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+
+	<div class="W1000">
+		<div class="FL W150">
+			<h:graphicImage value="" url="../../i/ca_wtpa_logo_team.png" alt="" height="75px" />
+		</div>
+		<div class="FL CT W650 pad10tp pad10lt">
+			<h:panelGroup rendered="#{isA1}">
+				<h:outputText styleClass="txt20 B" value="#{msg.Talent_US_A1_Title_Pt1}"/>
+				<br/>
+				<h:outputText styleClass="txt18 B" value="#{msg.Talent_US_A1_Title_Pt2}"/>
+				<br/>
+				<h:outputText styleClass="txt18 B" value="#{msg.Talent_US_A1_Title_Pt3}"/>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not isA1}">
+				<h:outputText styleClass="txt20 B" value="#{msg.Talent_US_A2_Title_Pt1}"/>
+				<br/>
+				<h:outputText styleClass="txt11" value="#{msg.Talent_US_A2_Title_Pt2}"/>
+				<br/>
+				<h:outputText styleClass="txt11 B" value="#{msg.Talent_US_A2_Title_Pt3} "/>
+				<h:outputText styleClass="txt11" value="#{msg.Talent_US_A2_Title_Pt4}"/>
+			</h:panelGroup>
+		</div>
+		<div class="FL W170 pad10lt txt14">
+			<div class="FL pad20tp">
+				<h:outputText styleClass="FL pad5tp" value="Date:" />
+				<span class="txt12 W140 pad6lt">
+					<ace:dateTimeEntry id="headerDate" disabled="#{not editable}"  renderAsPopup="true" tabOrder="1" styleClass="W150"/>
+				</span>
+			</div>
+			<div class="FL pad5tp W180">
+				<h:outputText styleClass="FL pad5tp" value="Est.#:" />
+				<span class="txt12 FL pad3lt">
+					<ace:textEntry id="headerEstNum" value="" disabled="#{not editable}"  tabOrder="2" styleClass="W100"/>
+				</span>	
+			</div>
+			<div class="FL pad5tp W180">
+				<h:outputText styleClass="FL pad5tp" value="Job #:" />
+				<span class="txt12 FL pad2lt">
+					<ace:textEntry id="headerJobNum" value="" disabled="#{not editable}" tabOrder="3" styleClass="W100"/>
+				</span>
+			</div>
+		</div>	
+	</div>
+	
+	<h:panelGroup rendered="#{not isA1}">
+		<div class="FL W1000 pad15tp">
+			<div class="CT B txt16">
+				<h:outputText value="#{msg.Talent_US_A2_Title_Contract_Disclaimer}" />
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>	

@@ -1,0 +1,279 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Batch Setup tab of the Payroll Preferences page (screen number 9.8) -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+
+<ace:tabPane label="Batch Setup"
+		rendered="#{(not empty authBean.pgFields['9.8,view']) and (not headerViewBean.production.type.tours)}">
+
+	<!-- left half of controls area -->
+	<div class="pad10tp FL pad5lt W60percnt" style="height:30px;">
+			<div class="FL pad2tp">
+				<h:outputText styleClass="txt12 B" value="Department" />
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectOneMenu immediate="true" styleClass="pad8lt"
+							value="#{batchSetupBean.departmentId}" style="width:150px;"
+							valueChangeListener="#{batchSetupBean.listenDeptChange}">
+					 	<f:selectItems value="#{batchSetupBean.departmentList}"/>
+						<ace:ajax />
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+			</div>
+	</div>
+
+	<!-- right half of controls area -->
+	<div class="pad10tp FR pad5rt W37percnt" >
+			<div class="FL pad2tp">
+				<h:outputText styleClass="txt12 B" value="Batch" />
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu immediate="true" styleClass="pad8lt"
+						value="#{batchSetupBean.batchId}" style="width:150px;"
+						valueChangeListener="#{batchSetupBean.listenBatchChange}">
+				 	<f:selectItems value="#{batchSetupBean.prodBatchList}"/>
+					<ace:ajax />
+				</h:selectOneMenu>
+				</icecore:setEventPhase>
+			</div>
+	</div>
+
+
+	<!-- left half of page; scrollable StartForm list -->
+	<div id="scrollleft" class="FL pad5lt W60percnt scrollPnlTab">
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad20tp">
+			<div class="blueLegendCont"> <!-- Blue content -->
+				<span class="legendHdg" >
+					<h:outputText value="#{batchSetupBean.departmentName} Unbatched Starts"/>
+				</span>
+
+				<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite}">
+					<!-- left-side legend buttons - ->
+					<h:panelGroup styleClass="btn_legend_left pad10rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Lock"
+								action="#{batchSetupBean.actionLockBatch}"
+								title="Lock the timecards that are checked."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<!- -  -->
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="btn_legend" rendered="#{(not empty authBean.pgFields['9.8,edit'])}">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value=">>>"
+							action="#{batchSetupBean.actionAddToBatch}"
+							title="Add the checked Start forms to the batch on the right."
+							styleClass="btnMiniCt" />
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+
+				<div class="FL rowCont gradTbl3">
+					<ace:dataTable id="unbatchedtable" styleClass="gradTbl3 txt11"
+							singleSort="true"
+							value="#{batchSetupBean.sortedItemList}"
+							var="form"
+							rowStyleClass="txt12"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '290'}"
+							style="width:100%;max-width:100%;overflow-x:hidden;">
+
+						<!-- CHECKBOX -->
+						<ace:column styleClass="CT LH24 txt11">
+							<f:facet name="header">
+								<div class="CT pad2lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<ace:triStateCheckbox indeterminateBeforeChecked="true"
+											valueChangeListener="#{batchSetupBean.listenSfMasterCheck}"
+											value="#{batchSetupBean.sfMasterCheck.value}">
+										<ace:ajax execute="@this" render="@all" />
+									</ace:triStateCheckbox>
+							</icecore:setEventPhase>
+								</div>
+							</f:facet>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{form.checked}"
+										valueChangeListener="#{batchSetupBean.listenUnbatchedCheckEntry}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column headerText="Name" styleClass="txt11" sortBy="#{form.contact.user.lastName} #{form.contact.user.firstName}">
+							<h:outputText styleClass="pad5lt" value="#{form.contact.user.lastName}" />,&#160;
+							<h:outputText styleClass=" " value="#{form.contact.user.firstName}" />
+						</ace:column>
+
+						<!-- SSN -->
+						<ace:column headerText="SS #" styleClass="CT txt11">
+							<h:outputText rendered="#{form.startForm ne null}" value="#{form.startForm.viewSSNmin}" />
+							<h:outputText rendered="#{form.startForm eq null}" value= " " />
+						</ace:column>
+
+						<!-- DEPARTMENT -->
+						<ace:column headerText="Department" sortBy="#{form.department.name}">
+							<h:outputText styleClass="FL pad5lt" value="#{form.department.name}" />
+						</ace:column>
+
+						<!-- UNION -->
+						<ace:column headerText="Union" styleClass="CT txt11" sortBy="#{form.startForm.unionLocalNum}">
+							<h:outputText rendered="#{form.startForm ne null}" value="#{form.startForm.unionLocalNum}" />
+							<h:outputText rendered="#{form.startForm eq null}" value= " " />
+						</ace:column>
+
+						<!-- OCCUPATION -->
+						<ace:column headerText="Occupation" styleClass="txt11" sortBy="#{form.occupation}">
+							<h:outputText styleClass="FL pad5lt txt11" value="#{form.occupation}" />
+						</ace:column>
+
+						<!-- ACCOUNT CODES -->
+						<ace:column headerText="Account Code" styleClass="CT txt11" rendered="#{not aicp}">
+							<!-- <x:facet name="header">
+							<div class="CT pad5lt">
+							<ice:commandSortHeader columnName="acct" arrow="true">
+							<h:outputText styleClass="gradNoBkSort" value=" headerText: Account Code  " />
+							</ice:commandSortHeader>
+								</div>
+	</f:facet> -->
+							<h:outputText styleClass="W30percnt" value="#{form.accountMajor}" rendered="#{not empty form.accountMajor}"/>
+							<h:panelGroup styleClass="DIB W30percnt" rendered="#{empty form.accountMajor}">&#160;
+							</h:panelGroup>
+							<h:outputText value="-" rendered="#{not empty form.accountDtl or not empty form.accountMajor}" />
+							<h:outputText styleClass="W25percnt" value="#{form.accountDtl}" rendered="#{not empty form.accountDtl}" />
+							<h:panelGroup styleClass="DIB W25percnt" rendered="#{empty form.accountDtl}">&#160;
+							</h:panelGroup>
+							<h:outputText value="-" rendered="#{not empty form.accountDtl or not empty form.accountSet}" />
+							<h:outputText styleClass="W25percnt" value="#{form.accountSet}" rendered="#{not empty form.accountSet}" />
+							<h:panelGroup styleClass="DIB W25percnt" rendered="#{empty form.accountSet}">&#160;
+							</h:panelGroup>
+						</ace:column>
+
+						<!-- FREE -->
+						<ace:column headerText="Free" styleClass="CT txt11" rendered="#{not aicp}">
+							<!-- rowSelector causes use of .iceRowSel classes, for gradient rows -->
+							<!-- <ice:rowSelector value="#{form.selected}" immediate="false">
+							</ice:rowSelector> -->
+							<!-- <x:facet name="header">
+							<div class="CT pad5lt">
+							<ice:commandSortHeader columnName="free" arrow="true">
+							<h:outputText styleClass="gradNoBkSort" value=" headerText: Free  " />
+							</ice:commandSortHeader>
+								</div>
+	</f:facet> -->
+							<h:outputText styleClass="FL pad5lt" value="#{form.accountFree}" />
+						</ace:column>
+
+					</ace:dataTable>
+				</div><!-- end of dataTable wrapper -->
+			</div><!-- end of blue content -->
+		</div><!-- end of blue wrapper -->
+	</div><!-- end scrollleft div -->
+
+	<!-- right half of page; scrollable StartForm list -->
+	<div id="scrollright" class="FR pad5rt W37percnt scrollPnlTab" >
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad20tp">
+			<div class="blueLegendCont"> <!-- Blue content -->
+
+				<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and
+						(not empty authBean.pgFields['9.8,edit'])}">
+					<!-- left-side legend buttons -->
+					<h:panelGroup styleClass="btn_legend_left pad10rt">
+						<span class="btnMiniLtHot"/>
+							<ace:linkButton value="&lt;&lt;&lt;"
+								action="#{batchSetupBean.actionRemoveFromBatch}"
+								title="Remove the checked Start forms from this batch."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+
+					<span class="legendHdg" >
+						<h:outputText value="#{batchSetupBean.batchName}"/>
+					</span>
+
+					<h:panelGroup styleClass="btn_legend"
+							rendered="#{batchSetupBean.batchId ne null}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Delete Batch"
+								action="#{batchSetupBean.actionDeleteBatch}"
+								title="Delete this batch name; the Start forms will become unbatched."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend">
+						<span class="btnMiniLtHot"/>
+							<ace:linkButton value="New Batch"
+								onfocus="focusOn('popInput');"
+								action="#{batchSetupBean.actionNewBatch}"
+								title="Create a new (empty) batch."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+
+				</h:panelGroup>
+
+				<div class="FL rowCont gradTbl3">
+					<ace:dataTable id="batchedtable" styleClass="gradTbl3"
+						singleSort="true"
+						value="#{batchSetupBean.sortedBatchedSfList.list}"
+						var="form" rowStyleClass="txt12 CT"
+						scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+						scrollHeight="#{headerViewBean.mobile ? '' : '290'}"
+						style="width:100%;max-width:100%;overflow-x:hidden;">
+
+						<!-- CHECKBOX -->
+						<ace:column headerText="" styleClass="CT LH24">
+							<f:facet name="header">
+								<div class="CT pad2lt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<ace:triStateCheckbox indeterminateBeforeChecked="true"
+											disabled="#{batchSetupBean.batchMasterCheck.disabled}"
+											valueChangeListener="#{batchSetupBean.listenBatchMasterCheck}"
+											value="#{batchSetupBean.batchMasterCheck.value}">
+										<ace:ajax execute="@this" render="@all" />
+									</ace:triStateCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</f:facet>
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectBooleanCheckbox value="#{form.checked}"
+										valueChangeListener="#{batchSetupBean.listenBatchedCheckEntry}">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</icecore:setEventPhase>
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column headerText="Name" sortBy="#{form.contact.user.lastName} #{form.contact.user.firstName}">
+							<h:outputText styleClass="pad5lt" value="#{form.contact.user.lastName}" />,&#160;
+							<h:outputText styleClass=" " value="#{form.contact.user.firstName}" />
+						</ace:column>
+
+						<!-- SSN -->
+						<ace:column headerText="SS #" styleClass="CT">
+							<h:outputText rendered="#{form.startForm ne null}" value="#{form.startForm.viewSSNmin}" />
+							<h:outputText rendered="#{form.startForm eq null}" value= " " />
+						</ace:column>
+
+						<!-- OCCUPATION -->
+						<ace:column headerText="Occupation" sortBy="#{form.occupation}">
+							<h:outputText styleClass="FL pad5lt" value="#{form.occupation}" />
+						</ace:column>
+
+					</ace:dataTable>
+				</div><!-- end of dataTable wrapper -->
+			</div><!-- end of blue content -->
+		</div><!-- end of blue wrapper -->
+	</div><!-- end scrollright div -->
+
+</ace:tabPane><!-- End mini-Tab -->
+</ui:composition>

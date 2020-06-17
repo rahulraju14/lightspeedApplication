@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Projects</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="mytimecardsm" />
+
+		<c:set var="aicp" value="#{mobileTimecardBean.production.type.aicp}" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.production.title}" />
+				</div>
+
+				<div class="pageTitle">
+						<h:outputText rendered="#{not aicp}" value="My Projects" />
+						<h:outputText rendered="#{aicp}" value="My Jobs" />
+				</div>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="CB txt12">&#160;</div>
+
+				<ui:repeat value="#{mobileTimecardBean.projects}" var="item">
+
+					<div class="CT pad8tp">
+						<span class="inBlock">
+							<span class="FL btnPriHotLt"></span>
+							<span>
+								<h:commandLink value="#{item.name}"
+									action="#{mobileTimecardBean.actionSelectProject}"
+									styleClass="btnPriHotCt mBtnWide" >
+											<!--
+									<f:setPropertyActionListener value="#{item.id}"
+											target="#{mobileTimecardBean.projectId}" />
+											 -->
+									<f:setPropertyActionListener value="com.lightspeedeps.mtcProjectId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{item.id}" target="#{jumpBean.value}"/>
+								</h:commandLink>
+							</span>
+							<span class="FL btnPriHotRt"></span>
+						</span>
+					</div>
+
+				</ui:repeat>
+
+			</div>
+
+			<div class="CB txt12">&#160;</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

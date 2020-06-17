@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptFooterLogo" pageWidth="521" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="521" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="165bddd2-dc10-4f41-b810-a5ad3382b71b">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/.."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="page_number" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="unused" class="java.lang.String"/>
+	<pageFooter>
+		<band height="17" splitType="Prevent">
+			<image>
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="0" width="180" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} == null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportsTemplate}+"/common/LightSpeedEPSLogo.png"]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" isUsingCache="true">
+				<reportElement uuid="d58a6a86-0cde-434d-ab6d-97547e03f061" x="0" y="0" width="130" height="17">
+					<printWhenExpression><![CDATA[$P{reportLogo} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{reportLogo}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="155e5b0c-6d81-48cf-8c6f-ad0ac498463b" key="textField" x="130" y="0" width="283" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["&#169; 2020 The Team Companies, LLC. All Rights Reserved."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="155e5b0c-6d81-48cf-8c6f-ad0ac498463b" key="textField" x="413" y="0" width="108" height="17">
+					<printWhenExpression><![CDATA[$P{page_number} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $P{page_number} + " of "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- CLONE HOTCOSTS dialog box -->
+
+<!-- Uses params:  -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<h:form>
+		<ace:dialog visible="#{addHotCostsBean.visible}"
+				header="#{addHotCostsBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false"
+				styleClass="popupAddNewContact">
+				
+			<ace:ajax event="close" execute="@this" listener="#{addHotCostsBean.actionCancel}"/>		
+
+			<div class="popNewContactBdy">
+				<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="addcontactCont">
+					<div class="popup_main pad15tp">
+						<div id="qcform">
+							<div class="FL rowCont W100percnt">
+								<!-- DELETE NOT DONE YET - display controls for performing delete -->
+								<h:panelGroup>
+									<div class="W90percnt MA txt12 B_false pad5tp">
+										<span class="">
+											<h:outputText value="#{msg.HotCosts_AddHotCostsText} #{addHotCostsBean.weekEndDate}" />
+										</span>
+									</div>
+									<div class="popup_inner pad30tp">
+										<span class="popup_inner_leg">
+											<h:outputText value="#{msg.HotCosts_SelectRecipients}" />
+										</span>
+										<div class="MA pad10bm" style="width:90%;">
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<span class="pad10lt">
+													<h:panelGroup styleClass="ckbx">
+															<h:selectBooleanCheckbox value="#{addHotCostsBean.selectAllRecipients}"
+																	valueChangeListener="#{addHotCostsBean.listenSelectAllRecipients}">
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														<span class="ckbxTxtLbl_B pad3lt">
+															<h:outputText value="#{msg.HotCosts_SelectAllRecipients}" />
+														</span>
+													</h:panelGroup>
+												</span>
+											</icecore:setEventPhase>
+
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<ace:dataTable styleClass="gradTbl3 CT txt11 W100percnt"
+													selectionMode="single" rowStyleClass="CT txt11"
+													style="width:100%;max-width:100%;"
+													scrollable="true" scrollHeight="370" id="addHotCostsTable"
+													value="#{addHotCostsBean.recipients}" var="recip">
+
+													<ace:column style="width:10%;border:0;">
+														<h:selectBooleanCheckbox id="recipChecked"
+																 value="#{recip.checked}" />
+													</ace:column>
+
+													<ace:column styleClass="B_false" style="width:90%;">
+														<h:outputText value="#{recip.employment.contact.displayName} - " />
+														<h:outputText value="#{recip.employment.occupation}" />
+													</ace:column>
+												</ace:dataTable>
+											</icecore:setEventPhase>
+
+										</div>
+									</div><!-- end inner box -->
+									<div class="MA W90percnt"></div>
+								</h:panelGroup><!-- end "not done" section -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 padPop50rt pad10tp">
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{addHotCostsBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Ok"
+								action="#{addHotCostsBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

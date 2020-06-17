@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} File Repository</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	element = document.getElementById('innerView');
+	resizeElement(element, 185, 450);
+
+	</c:if>
+}
+var formname = "files";
+
+</script>
+</h:head>
+<h:body enctype="multipart/form-data">
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="files">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="filerepository" />
+	</h:outputText>
+
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+					<h:panelGroup>
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+				<!-- Begin files pnlFull -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">
+							<h:outputText value="File Repository"/>
+						</span>
+
+						<h:panelGroup styleClass="pad5lt">
+							<h:panelGroup styleClass="FR pad5rt" rendered="false"><!-- sample top button -->
+								<span class="btnPriHotLt" />
+								<ace:linkButton styleClass="btnPriHotCt"
+										value="Add" action="filerepository" />
+								<span class="btnPriHotRt" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="centerFullTb MA pad3tp">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+							<!-- 
+							<div id="innerView" class="FL W100percnt">
+							 -->
+
+									<!-- Tabs for File Repository -->
+									<ace:tabSet id="tabs" selectedIndex="0">
+
+										<!--  Files Tab   -->
+										<ace:tabPane label="Files">
+
+											<table width="100%">
+												<!-- TREE and DETAILS panels (side-by-side) -->
+												<tr>
+													<td align="center">
+															<table width="100%">
+																<tr>
+																	<td width="2%" valign="top">&#160;
+																	</td>
+
+																	<!--  LEFT SIDE of page: TREE -->
+																	<td width="50%" valign="top"><div style="border: 1px solid gray;height:270px;overflow:auto;">
+																		<h:panelGroup
+																			style="text-align: left">
+																			<!-- 
+																			<ice:tree id="tree"  immediate="true"
+																				value="#{fileRepositoryBean.model}" var="item"
+																				hideRootNode="false" hideNavigation="false"
+																				imageDir="../../i/">
+																				<ice:treeNode>
+																					<f:facet name="icon">
+																						<h:panelGroup style="display: inline">
+																							<h:graphicImage value="#{item.userObject.icon}" alt="?"/>
+																						</h:panelGroup>
+																					</f:facet>
+																					<f:facet name="content">
+																						<h:panelGroup style="display: inline">
+																							<ace:linkButton
+																								actionListener="#{item.userObject.nodeClicked}"
+																								value="#{item.userObject.text}" />
+																						</h:panelGroup>
+																					</f:facet>
+																				</ice:treeNode>
+																			</ice:tree>
+																			 -->
+																		</h:panelGroup></div>
+																	</td>
+																	<td width="2%" valign="top">
+																		&#160;
+																	</td>
+
+																	<!--  RIGHT SIDE of page: DETAILS -->
+																	<td width="44%" valign="top" align="center"><div style="border: 1px solid gray;height:270px;overflow:auto;">
+																		<table width="98%" border="0"
+																			cellpadding="0" cellspacing="0">
+																			<tr>
+																				<td colspan="2">
+																					<strong>File Attributes </strong>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td align="left" colspan="2">
+																					<h:panelGrid
+																							rendered="#{fileRepositoryBean.showfolder}"
+																							columns="1">
+																						<h:outputText value="Folder Name:" />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.folder.name}" />
+																						<h:outputText value="Created: " />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.folder.created}">
+																							<f:convertDateTime pattern="MMM d, yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+																						</h:outputText>
+																						<h:outputText value="Owner:" />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.folder.user.anyName}" />
+																					</h:panelGrid>
+																					<h:panelGrid
+																							rendered="#{fileRepositoryBean.showdocument}"
+																							columns="1">
+																						<h:outputText value="File Name: #{fileRepositoryBean.document.name}" />
+																						<h:outputText value="File Description: #{fileRepositoryBean.document.description}" />
+																						<h:outputText value="Created: " />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.document.created}">
+																							<f:convertDateTime pattern="MMM d, yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+																						</h:outputText>
+																						<h:outputText value="Uploaded: " />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.document.loaded}">
+																							<f:convertDateTime pattern="MMM d, yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+																						</h:outputText>
+																						<h:outputText value="Updated: " />
+																						<h:outputText styleClass="pad10lt" value="#{fileRepositoryBean.document.updated}">
+																							<f:convertDateTime pattern="MMM d, yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+																						</h:outputText>
+																						<h:outputText value="Author: #{fileRepositoryBean.document.author}" />
+																						<h:outputText value="Owner: #{fileRepositoryBean.document.user.anyName}" />
+																						<h:outputText value="Content length: #{fileRepositoryBean.documentLength}" />
+																						<h:outputText value="XFDF length: #{fileRepositoryBean.xfdfLength}" />
+																						<h:outputText value="XOD length: #{fileRepositoryBean.xodLength}" />
+																					</h:panelGrid>
+																				</td>
+																			</tr>
+																		</table></div>
+																	</td>
+																	<td width="2%">&#160;</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<!-- vertical spacer -->
+													<tr>
+														<td height="30">
+															&#160;
+														</td>
+													</tr>
+
+													<!-- BUTTONS -->
+													<tr>
+														<td>
+															<table width="100%" border="0" cellspacing="0"
+																cellpadding="0">
+																<tr>
+																	<td width="55%" valign="top">
+																		<table width="97%" border="0" cellspacing="0"
+																			cellpadding="0">
+																			<tr>
+																				<td align="center" >
+
+														<div class="DIB">
+
+															<!-- NEW FOLDER -->
+															<h:panelGroup rendered="#{! fileRepositoryBean.showfolder}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="Create Folder" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<h:panelGroup rendered="#{fileRepositoryBean.showfolder}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="Create Folder" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionCreateFolder}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:panelGroup>
+															<span class="FL pad20rt">&#160;</span>
+
+															<!-- RENAME -->
+															<h:panelGroup rendered="#{fileRepositoryBean.deleteDisabled}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="Rename" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<h:panelGroup rendered="#{! fileRepositoryBean.deleteDisabled}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="Rename" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionRename}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:panelGroup>
+															<span class="FL pad20rt">&#160;</span>
+
+															<!-- DELETE -->
+															<h:panelGroup rendered="#{fileRepositoryBean.deleteDisabled}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="Delete" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<h:panelGroup rendered="#{! fileRepositoryBean.deleteDisabled}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="Delete" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionDelete}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:panelGroup>
+															<span class="FL pad20rt">&#160;</span>
+
+															<!-- VIEW -->
+															<h:panelGroup
+																	rendered="#{fileRepositoryBean.deleteDisabled or fileRepositoryBean.showfolder}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="View" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<h:panelGroup rendered="#{! (fileRepositoryBean.deleteDisabled or fileRepositoryBean.showfolder)}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="View" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionViewDocument}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:panelGroup>
+															<span class="FL pad20rt">&#160;</span>
+
+															<!-- DOWNLOAD -->
+															<h:panelGroup
+																	rendered="#{fileRepositoryBean.deleteDisabled or fileRepositoryBean.showfolder}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="Download" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<h:panelGroup rendered="#{! (fileRepositoryBean.deleteDisabled or fileRepositoryBean.showfolder)}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="Download" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionDownloadDocument}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:panelGroup>
+															<span class="FL pad20rt">&#160;</span>
+
+															<!-- EMAIL -->
+															<h:panelGroup
+																	rendered="#{true}">
+																<span class="btnPriDisLt" />
+																<span>
+																	<ace:linkButton value="E-Mail" styleClass="btnPriDisCt" type="text" />
+																</span>
+																<span class="btnPriDisRt" />
+															</h:panelGroup>
+															<!--
+															<h:outputText rendered="#{! (fileRepositoryBean.deleteDisabled or fileRepositoryBean.showfolder)}">
+																<span>
+																	<span class="btnPriHotLt" />
+																	<span>
+																		<ace:linkButton value="Download" styleClass="btnPriHotCt"
+																				action="#{fileRepositoryBean.actionSend}" />
+																	</span>
+																	<span class="btnPriHotRt" />
+																</span>
+															</h:outputText>
+															 -->
+
+														</div>
+
+																				</td>
+																			</tr>
+
+																		</table>
+																	</td>
+
+																</tr>
+															</table>
+														</td>
+													</tr>
+
+													<!-- vertical spacing + horizontal separator line -->
+													<tr>
+														<td>
+															&#160;
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<table width="98%" border="0" align="center"
+																cellpadding="0" cellspacing="0">
+																<tr>
+																	<td class="line">
+																		<img src="../../i/line.gif" width="1" height="1" />
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															&#160;
+														</td>
+													</tr>
+
+													<!-- UPLOAD CONTROLS -->
+													<tr>
+														<td>
+															<table width="90%" border="0" align="center"
+																cellpadding="0" cellspacing="0">
+																<tr>
+																	<td>
+																		&#160;
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<table width="100%" border="0" cellspacing="2"
+																			cellpadding="2">
+																			<tr>
+																				<td width="1%">
+																					&#160;
+																				</td>
+																				<td align="left" width="800">
+																						<h:outputText styleClass="B I txt14" value="Upload file into folder: " />
+																						<h:outputText styleClass="B pad10lt txt14" value="#{fileRepositoryBean.folder.name}" />
+																						<br/>
+																						<br/>
+<!-- 
+																					<ace:fileEntry id="inputFileComponent" label="Upload File"
+																						fileEntryListener="#{fileRepositoryBean.listenUploadFile}"
+																						styleClass="pad20lt"
+																						relativePath="upload"
+																						maxFileSize="6291456"
+																						required="false"
+																						useOriginalFilename="true" />
+																						<br/>
+																	                    <h:commandButton value="Upload File" styleClass="btn" />
+ -->
+
+																						<h:outputText styleClass="B pad20lt" value="Make it private:" />
+																						<h:selectBooleanCheckbox
+																							value="#{fileRepositoryBean.makePrivate}" />
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		&#160;
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+											</table>
+
+
+										</ace:tabPane>
+									</ace:tabSet>
+
+							</h:panelGrid><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+								<h:panelGroup rendered="false"><!-- bottom button example -->
+									<span class="FR pad10rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton value="Cancel"
+													action="filerepository"
+													styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+
+	<ui:include src="../common/confirmpopup.xhtml" />
+	<ui:include src="../common/popupinput.xhtml" />
+
+</h:body>
+</html>

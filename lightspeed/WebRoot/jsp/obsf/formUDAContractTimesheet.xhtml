@@ -1,0 +1,2039 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup>
+		<div class="scrollPnlTab BKwhite sfFormBorder1">
+			<div class="pad10rt pad10tp" style="width:820px;margin-left:11px;">
+			
+				<div class="FL rowCont">
+					<div class="FL W75percnt">
+						<!-- Header image -->
+						<h:graphicImage value=""
+							style="width:830px;margin-left:-8px;height:150px"
+							url="../../i/forms/formUDAContractPage2Header.png" alt="" />
+					</div>
+					<div class="FL W25percnt pad50tp">
+							<div class="rowCont H26">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B txt14 " style="width:88px"
+										value="INM No" />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm pad3lt" style="min-width:37%;width:43%;">
+										<ace:textEntry id="inmNumber2" maxlength="60"
+											disabled="#{true}"
+											value="#{form.inmNumber}"
+											style="width:99%;border-bottom:solid 1px;">
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+							</div>
+							<div class="rowCont H26 pad10tp">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" style="width:90px"
+										value="Production No" />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm pad3lt" style="min-width:37%;width:43%">
+										<ace:textEntry id="prodNumber2" maxlength="60"
+											disabled="#{true}"
+											value="#{form.prodNumber}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax render="@this prodNumber"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+							</div>
+						</div>
+				</div>
+					
+				<!-- PRODUCER & ARTIST DETAILS START -->	
+				<div class="FL rowCont sfFormBorder1" style="width:815px;">
+					<!-- ROW 1 -->
+					<div class="FL BKgrey rowCont borderBottom">
+						<div class="FL DIB W49percnt borderRight H24"><h:outputText styleClass="B FL pad5lt pad4tp" value="PRODUCTEUR / AGENCE /PRODUCER/AGENCY" /></div>
+						<div class="FL DIB W50percnt H24"><h:outputText styleClass="B FL pad5lt pad4tp" value="ARTISTE/ ARTIST" /></div>
+					</div>
+							
+					<!-- ROW 2 -->
+					<div class="FL rowCont borderBottom">
+						<div class="FL DIB W49percnt borderRight H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText value="Nom/Name:" />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:78%;">
+										<ace:textEntry id="producerName" maxlength="60"
+											disabled="#{true}"
+											value="#{form.producerName}"
+											style="width:99%;"/>
+									</span>
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<div class="FL DIB W50percnt H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText value="Nom/Name:" />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:80%;">
+										<ace:textEntry id="artistName" maxlength="60"
+											disabled="#{true}"
+											value="#{form.artistName}"
+											style="width:99%;">
+                                             <ace:ajax render="@this artistName"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+					</div>	
+		
+				</div> <!-- PRODUCER & ARTIST DETAILS END -->	
+				
+				
+				<!--ENREGISTREMENT & RECORDING  START-->	
+				
+				 <div class="FL rowCont pad10tp">
+				   <div class="FL BKgrey rowCont sfFormBorder1" style="width:815px;">
+				      <div class="FL DIB  H24">
+				         <h:outputText styleClass="B FL pad5lt pad4tp" value="Enregistrement / Recording :" />
+				      </div>
+				   </div>
+				   <ace:dataTable styleClass="gradTbl2 txt11 CT " id="udaContractRecordingList"
+				      value="#{formUDAContractBean.udaTimesheetList}"
+				      var="entry" rowIndexVar="rowix"
+				      rowStyleClass="CT txt12 sfFormBorder1"
+				      style="width:815px;max-width:100%;overflow-x:hidden; 
+				      border-width:1px 1px 1px 1px;border-style:solid;border-color:#232121;margin-top:-5px;">
+				      <ace:columnGroup type="header">
+				         <ace:row>
+				           <!--1. DATE OF RECORDING-->
+				            <ace:column styleClass="sfFormBorder1"   style="width:116px;">Date d’enregistrement / Date of recording</ace:column>
+				           <!--2. TIME OF ARRIVAL-->
+				            <ace:column styleClass="sfFormBorder1"  style="width:80px;">Heure d’arrivée / Time of arrival</ace:column>
+				           <!--3. CALL TIME--> 
+				            <ace:column style="width:100px;" >Heure de convocation / Call Time</ace:column>
+				           <!--4. TRAVEL TIME--> 
+				            <ace:column  colspan="2">Déplacements / Travel time</ace:column>
+				           <!--5. REST-MEALS --> 
+				            <ace:column colspan="2">Repos / Repas Rest / Meals</ace:column>
+				           <!--6. FINISH TIME--> 
+				            <ace:column style="width:100px;">Fin de la séance / Finish Time</ace:column>
+				         </ace:row>
+				         <ace:row>
+				           <!--1. DATE OF RECORDING-->
+				            <ace:column style="80px;"></ace:column>
+				           <!--2. TIME OF ARRIVAL-->
+				            <ace:column style="width:60px;"></ace:column>
+				           <!--3. CALL TIME--> 
+				            <ace:column style="width:60px;"></ace:column>
+				           <!--4. TRAVEL TIME--> 
+				           <!--4.1 FROM --> 
+				            <ace:column style="width:60px;">De /From</ace:column>
+				           <!--4.2 TO --> 
+				            <ace:column style="width:60px;">À / To</ace:column>
+				            <!--5. REST-MEALS-->
+				            <!--5.1 FROM -->
+				            <ace:column style="width:60px;">De /From</ace:column>
+				            <!--5.2 TO -->
+				            <ace:column style="width:60px;">À / To</ace:column>
+				            <ace:column></ace:column>
+				         </ace:row>
+				      </ace:columnGroup>
+				     <!--1. DATE OF RECORDING-->
+				      <ace:column styleClass="sfFormBorder1" style="padding-left:0px;padding-right:0px;">
+				       <ace:dateTimeEntry id="DateOfRecording"
+							tabindex="0"
+							pattern="dd/MM/yyyy"
+							renderAsPopup="true"
+							styleClass="pad3lt FL"
+							value="#{entry.dateOfRecording}"
+							disabled="#{not isAppEdit}"
+							style="width:115px; display: grid;">
+						   <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+						</ace:dateTimeEntry>
+				      </ace:column>
+				     <!--2. TIME OF ARRIVAL-->
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.timeOfArrival}"  id="timeOfArr" maxlength="8"  style="width:100%;">
+				           <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				      <!--3. CALL TIME--> 
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.callTime1}" id="callT" maxlength="8"  style="width:100%;">
+				         <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				       <!--4. TRAVEL TIME-->
+				        <!--4.1 FROM --> 
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.travelFrom1}" id="travelTFrom" maxlength="8"  style="width:100%;;">
+				          <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				       <!--4.2 TO --> 
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.travelTo1}" id="travelTTo" maxlength="8"  style="width:100%;">
+				          <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				      <!--5. REST-MEALS-->
+				        <!--5.1 FROM -->
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.m1Out}" id="restMeFrom" maxlength="8" style="width:100%;">
+				          <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				         <!--5.2 FROM -->
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.m1In}" id="restMlTO" maxlength="8"  style="width:100%;">
+				          <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				      <!--6. FINISH TIME--> 
+				      <ace:column style="padding-left:0px;padding-right:0px;">
+				         <ace:textEntry disabled="#{not isAppEdit}" value="#{entry.finishTime1}" id="finTime"  maxlength="8"  style="width:100%;">
+				          <f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+				         </ace:textEntry>
+				      </ace:column>
+				   </ace:dataTable>
+				</div>
+				<!--ENREGISTREMENT  & RECORDING END-->	
+				
+				<!-- SIGNATURES START -->
+				<div class="FL rowCont">
+					<!-- DATE START -->
+					<div class="FL W14percnt pad10lt">
+						<div class="FL H26" />
+						<div class="FL H26 borderBottom rowCont">
+							<span class="fd_sm">
+							<ace:dateTimeEntry id="entrydate1"
+								tabindex="0"
+								pattern="dd/MM/yyyy"
+								renderAsPopup="true"
+								styleClass="pad3lt FL"
+								value="#{form.signatureDate}"
+								disabled="#{not isAppEdit}"
+								style="width:60px; display: grid;">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</ace:dateTimeEntry>
+						</span>
+						</div>
+						<div class="FL H26 rowCont">
+							<h:outputText styleClass="B pad2tp pad5lt" value="Date"/>
+						</div>
+					</div>
+					<!-- DATE END -->
+					
+					<div class="FL W5percnt">
+						<div class="FL H26" />
+					</div>
+					
+					<!-- SIGNATURE OF EMPLOYER/PRODUCER -->
+					 <div class="FL W35percnt">
+					   <div class="FL H26 rowCont" style="width: 420px;">
+					      <h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;margin-left: 20px;">
+					         <h:panelGroup rendered="#{((isApprover and bean.contactDoc.approvalSignature eq null) and bean.contactDoc.employerSignature ne null)}">
+					            <h:panelGroup rendered="#{bean.contactDoc.employerSignature ne null and  bean.contactDoc.empSignature ne null and bean.contactDoc.optSignature ne null}">
+					               <span class="btnMiniLtHot" />
+					               <ace:linkButton value="Sign &amp; Approve" id="actionApproveUda"
+					                  action="#{contactFormBean.actionApprove}"
+					                  title="Signature field" styleClass="btnMiniCt" />
+					               <span class="btnMiniRtHot" />
+					            </h:panelGroup>
+					            <h:panelGroup rendered="#{!(bean.contactDoc.employerSignature ne null and  bean.contactDoc.empSignature ne null and bean.contactDoc.optSignature ne null)}">
+					               <span class="btnMiniLt"/>
+					               <span>
+					                  <h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					               </span>
+					               <span class="btnMiniRt"/>
+					            </h:panelGroup>
+					         </h:panelGroup>
+					         <h:panelGroup rendered="#{not ((isApprover and bean.contactDoc.approvalSignature eq null) and bean.contactDoc.employerSignature ne null)}">
+					            <h:panelGroup rendered="#{bean.contactDoc.approvalSignature eq null}">
+					               <span class="btnMiniLt"/>
+					               <span>
+					                  <h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					               </span>
+					               <span class="btnMiniRt"/>
+					            </h:panelGroup>
+					         </h:panelGroup>
+					      </h:panelGroup>
+					      <span>
+					         <h:outputText  escape="false" styleClass="txt12"
+					            rendered="#{(bean.contactDoc.approvalSignature ne null)}">
+					            <h:outputText value="E-signed by" styleClass="U" />
+					            <h:outputText value=" #{bean.contactDoc.approvalSignature.name}" styleClass="U B txtBlue" />
+					            <h:outputText value=" #{bean.contactDoc.approvalSignature.displayTime}" />
+					            <br/>
+					            <h:outputText style="margin-left: 20px;" value="# #{bean.contactDoc.approvalSignature.uuid}"/>
+					         </h:outputText>
+					      </span>
+					   </div>
+					   <div class="FL  borderBottom rowCont">
+					   </div>
+					   <div class="FL H26 rowCont">
+					      <h:outputText styleClass="B pad2tp pad5lt" value="Signature du producteur"/>
+					      <h:outputText styleClass="B pad2tp I pad1lt" value="/ Producer’s signatur"/>
+					   </div>
+					</div>
+					<!-- SIGNATURE OF PRODUCER END -->
+					
+					<div class="FL W5percnt">
+						<div class="FL H26" />
+					</div>
+					
+					<!-- SIGNATURE OF EMPLOYER/PRODUCER -->
+					 <div class="FL W34percnt ">
+					   <div class="FL H26  rowCont" style="width: 420px;">
+					      <h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;margin-left: 20px;">
+					         <h:panelGroup rendered="#{not ((isApprover and bean.contactDoc.optSignature eq null) and bean.contactDoc.empSignature ne null)}">
+					            <h:panelGroup rendered="#{bean.contactDoc.employerSignature ne null and  bean.contactDoc.empSignature ne null}">
+					               <h:panelGroup rendered="#{bean.contactDoc.optSignature eq null}">
+					                  <span class="btnMiniLtHot" />
+					                  <ace:linkButton value="Sign &amp; Submit" id="actionSubmitOptUda"
+					                     action="#{contactFormBean.actionSignOptional }"
+					                     title="Signature field" styleClass="btnMiniCt" />
+					                  <span class="btnMiniRtHot" />
+					               </h:panelGroup>
+					            </h:panelGroup>
+					            <h:panelGroup rendered="#{not (bean.contactDoc.employerSignature ne null and  bean.contactDoc.empSignature ne null)}">
+					               <h:panelGroup rendered="#{bean.contactDoc.optSignature eq null}">
+					                  <span class="btnMiniLt"/>
+					                  <span>
+					                     <h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					                  </span>
+					                  <span class="btnMiniRt"/>
+					               </h:panelGroup>
+					            </h:panelGroup>
+					         </h:panelGroup>
+					         <h:panelGroup rendered="#{((isApprover and bean.contactDoc.optSignature eq null) and bean.contactDoc.empSignature ne null)}">
+					            <h:panelGroup rendered="#{bean.contactDoc.optSignature eq null}">
+					               <span class="btnMiniLt"/>
+					               <span>
+					                  <h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+					               </span>
+					               <span class="btnMiniRt"/>
+					            </h:panelGroup>
+					         </h:panelGroup>
+					      </h:panelGroup>
+					      <span>
+					         <h:outputText escape="false" styleClass="txt12"
+					            rendered="#{(bean.contactDoc.optSignature ne null)}">
+					            <h:outputText value="E-signed by" styleClass="U" />
+					            <h:outputText value=" #{bean.contactDoc.optSignature.name}" styleClass="U B txtBlue" />
+					            <h:outputText value=" #{bean.contactDoc.optSignature.displayTime}" />
+					            <br/>
+					            <h:outputText style="margin-left: 20px;" value="# #{bean.contactDoc.optSignature.uuid}"/>
+					         </h:outputText>
+					      </span>
+					   </div>
+					   <div class="FL  borderBottom rowCont">
+					   </div>
+					   <div class="FL H26 rowCont">
+					      <h:outputText styleClass="B pad2tp pad5lt" value="Signature de l’artiste"/>
+					      <h:outputText styleClass="B pad2tp I pad1lt" value=" / Performer’s signature"/>
+					   </div>
+					</div>
+					<!-- SIGNATURE OF PRODUCER END -->
+				</div>
+				<!-- SIGNATURES END -->
+				
+				<!-- Fonction / Function START -->
+				<div class="FL BKgrey pad10tp" style="width:815px;">
+						<div class="FL H24"><h:outputText styleClass="B FL pad4tp pad5lt" value="Fonction / Function : " /></div>
+					</div>
+				<div class="FL rowCont">
+					<!-- LEFT PART START -->
+					<div  class="FL W80percnt">
+						<!-- PART A START -->
+						<!-- ROW 15 START -->
+						<div class="FL rowCont">
+							<div class="FL rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp">
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:50%;">
+											<ace:textEntry id="functionName" maxlength="60"
+											    disabled="true"
+											    value="#{form.functionName}"
+											    style="width:99%;border-bottom:solid 1px;"/>
+										</span>
+									</h:panelGroup>
+									<h:panelGroup styleClass="FL pad3tp pad85lt" style="width:61px;margin-left:85px">
+										<h:outputText styleClass="FL" value="Tarif" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Rate " />
+									</h:panelGroup>	
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="functionRate" maxlength="60"
+											    disabled="#{not isAppEdit}"
+											    value="#{form.functionRate}"
+											    style="width:99%;border-bottom:solid 1px;">
+											     <ace:ajax render="@form"/>
+											    <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 1 END -->
+						
+						<!-- ROW 2 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) supplémentaire(s) /" />
+										<h:outputText styleClass="FL I pad1lt" value="Overtime Hour(s) " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="otHour"  maxlength="60"
+											    disabled="#{not isAppEdit}"
+											    value="#{form.otHour}"
+											    style="width:99%;border-bottom:solid 1px;">
+											    <ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA otHourTotal"/>
+											    <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="otHourAmount"  maxlength="60"
+											    disabled="#{not isAppEdit}"
+											    value="#{form.otHourAmount}"
+											    style="width:99%;border-bottom:solid 1px;">
+											    <ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA otHourTotal"/>
+											    <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 2 END -->
+						
+						<!-- ROW 3 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) supplémentaire(s) majorée(s) /" />
+										<h:outputText styleClass="FL I pad1lt" value="Add. Overtime H(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="addOtHour" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.addOtHour}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA addOtHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+										    </ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="addOtHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.addOtHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<f:convertNumber type="number" pattern="#,##0.00" />
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA addOtHourTotal"/>
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 3 END -->
+						
+						<!-- ROW 4 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) de nuit incluse(s) /" />
+										<h:outputText styleClass="FL I pad1lt" value="Night Hour(s) included" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry  id="nightHour" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.nightHour}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA nightHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+										    </ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="nightHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.nightHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA nightHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 4 END -->
+						
+						<!-- ROW 5 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) de nuit supplémentaire(s) /" />
+										<h:outputText styleClass="FL I pad1lt" value=" Overtime Night H(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="otNightHour" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.otNightHour}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA otNightHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="otNightHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.otNightHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA otNightHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 5 END -->
+						
+						<!-- ROW 6 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) fériée(s) /" />
+										<h:outputText styleClass="FL I pad1lt" value="Holiday Hour(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="holidayHour" maxlength="60" 
+											    disabled="#{not isAppEdit}"
+											    value="#{form.holidayHour}"
+											    style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA holidayHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry  id="holidayHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.holidayHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA holidayHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 6 END -->
+						
+						<!-- ROW 7 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) de déplacement / " />
+										<h:outputText styleClass="FL I pad1lt" value="Travel Hour(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="travelHour" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.travelHour}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee travelHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="travelHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.travelHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee travelHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 7 END -->
+						
+						<!-- ROW 8 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Heure(s) d’attente /" />
+										<h:outputText styleClass="FL I pad1lt" value="Waiting Hour(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="waitingHour" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.waitingHour}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee waitingHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+										    </ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:45px" value="hre(s) x " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="waitingHourAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.waitingHourAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee waitingHourTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 8 END -->
+						
+						<!-- ROW 9 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Mise en disponibilité /" />
+										<h:outputText styleClass="FL I pad1lt" value="Stand-by day(s)" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="standByDay" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.standByDay}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee standByDayTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											 </ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText escape="false" styleClass="FL" style="width:45px" value="jr(s) &#160; &#160; x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="standByDayAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.standByDayAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA netFee standByDayTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											 </ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value=" / jr " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 9 END -->
+						
+						<!-- ROW 10 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+									<h:outputText styleClass="FL" value="Frais de séjour" />
+									<h:outputText styleClass="FL I pad1lt" value="/ Per diem accommodation expenses : " />
+								</h:panelGroup>				
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 10 END -->
+						
+						<!-- ROW 10.a START -->
+						<div class="FL rowCont">
+							<div class="FL DIB H26 W8percnt pad1tp" style="height:51px">
+							   <h:panelGroup styleClass="FL rowCont  pad8lt" style="margin-left: 8px">
+								   <h:panelGroup styleClass="FL W8percnt">
+								      <h:selectBooleanCheckbox id="meals"
+								         disabled="#{not isAppEdit}"
+								         value="#{form.lodgingAndMeal}"
+								         valueChangeListener="#{bean.listenLogementRepas}"
+								         styleClass="iceSelBoolChkbx FL pad3tp" style="margin-left: 16px;">
+								         <ace:ajax render="@form"/>
+								      </h:selectBooleanCheckbox>
+								   </h:panelGroup>
+								   <h:panelGroup styleClass="FL pad11tp W8percnt pad8lt" >
+								      <h:selectBooleanCheckbox id="lodging"
+								         disabled="#{not isAppEdit}"
+								         value="#{form.mealsOnly}"
+								         valueChangeListener="#{bean.listenRepasMealsOnly}"
+								         styleClass="iceSelBoolChkbx FL pad3tp" style="margin-top: 20px;margin-left: 3px;">
+								         <ace:ajax render="@form"/>
+								      </h:selectBooleanCheckbox>
+								   </h:panelGroup>
+                               </h:panelGroup>
+							</div>
+							<div class="FL DIB H26 W43percnt">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:233px;">
+										<h:outputText styleClass="FL" value="Logement et repas" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Lodging and Meals" />
+									</h:panelGroup>				
+									<h:panelGroup styleClass="FL pad11tp" style="width:233px;margin-top: 14px;">
+										<h:outputText styleClass="FL" value="Repas " />
+										<h:outputText styleClass="FL I pad1lt" value="/ Meal only" />
+									</h:panelGroup>
+								</h:panelGroup>	
+							</div>
+							
+							<div class="FL DIB W18percnt H26 pad5lt">
+								<div class="FL pad2tp">
+									<span class="FL fd_sm2 pad1lt" style="width:92%;">
+										<ace:textEntry id="LodgingAndMealsNumber" maxlength="60" 
+										    disabled="#{not isAppEdit or not form.lodgingAndMeal }"
+											style="width:99%;border-bottom:solid 1px;"
+											value="#{form.lodgingAndMealsNumber}">
+											<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA lodgingAndMealsTotal"/>
+											<f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</div>	
+								<div class="FL pad3tp">
+									<span class="FL fd_sm2 pad1lt" style="width:92%;">
+										<ace:textEntry maxlength="60" id="MealOnlyNumber"
+										    disabled="#{not isAppEdit or not form.mealsOnly }"
+											style="width:99%;border-bottom:solid 1px;"
+											value="#{form.mealOnlyNumber}">
+											<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA mealOnlyTotal"/>
+											<f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</div>	
+							</div>
+							
+							<div class="FL DIB W30percnt H26">
+								<div class="FL">
+									<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+										<h:panelGroup styleClass="FL pad3tp">
+											<h:outputText escape="false" styleClass="FL" style="width:45px" value="jr(s) &#160; &#160; x" />
+										</h:panelGroup>				
+										<h:panelGroup>
+											<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+												<ace:textEntry id="lodgingAndMealsAmount"  maxlength="60"
+													disabled="#{not isAppEdit or not form.lodgingAndMeal }"
+													value="#{form.lodgingAndMealsAmount}"
+													style="width:99%;border-bottom:solid 1px;">
+													<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA lodgingAndMealsTotal"/>
+													<f:convertNumber type="number" pattern="#,##0.00" />
+										        </ace:textEntry>
+											</span>
+										</h:panelGroup>	
+										<h:panelGroup styleClass="FL pad3tp pad14lt">
+											<h:outputText styleClass="FL B" value="$" />
+											<h:outputText styleClass="FL pad1lt" value=" / jr " />
+										</h:panelGroup>	
+									</h:panelGroup>	
+								</div>
+								<div class="FL">
+									<h:panelGroup styleClass="FL rowCont pad3tp pad7lt">
+										<h:panelGroup styleClass="FL pad3tp">
+											<h:outputText escape="false" styleClass="FL" style="width:45px" value="jr(s) &#160; &#160; x" />
+										</h:panelGroup>				
+										<h:panelGroup>
+											<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+												<ace:textEntry id="mealOnlyAmount"  maxlength="60"
+												    disabled="#{not isAppEdit or not form.mealsOnly}"
+												    value="#{form.mealOnlyAmount}"
+													style="width:99%;border-bottom:solid 1px;">
+													<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA mealOnlyTotal"/>
+													<f:convertNumber type="number" pattern="#,##0.00" />
+										        </ace:textEntry>
+											</span>
+										</h:panelGroup>	
+										<h:panelGroup styleClass="FL pad3tp pad14lt">
+											<h:outputText styleClass="FL B" value="$" />
+											<h:outputText styleClass="FL pad1lt" value=" / jr " />
+										</h:panelGroup>	
+									</h:panelGroup>	
+								</div>
+							</div>
+						</div>
+						<!-- ROW 10.a END -->
+						
+						<!-- ROW 11 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Essayage – Répétition – Autres" />
+										<h:outputText styleClass="FL I pad1lt" value=" /Fitting-Rehearsal-Others" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:24%;width:24%;">
+											<ace:textEntry  id="fittingRehearsal" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.fittingRehearsal}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA fittingRehearsalTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText escape="false" styleClass="FL" style="width:45px" value="hre(s) x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="fittingRehearsalAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.fittingRehearsalAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA fittingRehearsalTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value=" / hre" />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 11 END -->
+						
+						<!-- ROW 12 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Frais de kilométrage" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Mileage rate : " />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:24%;width:24%;">
+											<ace:textEntry  id="mileageRate" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.mileageRate}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA mileageRateTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText escape="false" styleClass="FL" style="width:45px" value="km &#160; &#160;&#160; x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="mileageRateAmount" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.mileageRateAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA mileageRateTotal"/>
+												 <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="  / km" />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 12 END -->
+						
+						<!-- ROW 13 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Rappel au travail en champ (E.C.)" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Call back - On-camera" />
+									</h:panelGroup>		
+									<h:panelGroup styleClass="FR pad3tp">
+										<h:outputText styleClass="FR" style="width:10px" value="4" />
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:43px" value="hres &#160; x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="callBackOnCamera" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.callBackOnCamera}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA callBackOnCameraTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 13 END -->
+						
+						<!-- ROW 14 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W70percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:333px;">
+										<h:outputText styleClass="FL" value="Rappel au travail hors champ (H.C.)" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Call back - Off-camera " />
+									</h:panelGroup>		
+									<h:panelGroup styleClass="FR pad3tp">
+										<h:outputText styleClass="FR" style="width:10px" value="2" />
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad3tp">
+										<h:outputText styleClass="FL" style="width:43px" value="hres &#160; x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="min-width:47%;width:48%;">
+											<ace:textEntry id="callBackOffCamera" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.callBackOffCamera}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA callBackOffCameraTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+										<h:outputText styleClass="FL pad1lt" value="/ hre " />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 14 END -->
+						
+						<!-- ROW 15 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W75percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:255px;">
+										<h:outputText styleClass="FL" value="Étiquette(s)" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Tag(s) " />
+									</h:panelGroup>		
+									<h:panelGroup styleClass="FL pad3tp" style="width:100px;">
+										<h:outputText styleClass="FL" value="Nombre" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Number " />
+									</h:panelGroup>	
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="min-width:24%;width:24%;">
+											<ace:textEntry id="tagNumber" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.tagNumber}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA tagTotal"/>
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W20percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad1lt pad3tp">
+										<h:outputText styleClass="FL" style="width:9px" value="x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="width:72%;">
+											<ace:textEntry id="tag" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.tagValue}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA tagTotal"/>
+												<f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$" />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 15 END -->
+						
+						<!-- ROW 16 START -->
+						<div class="FL rowCont">
+							<div class="FL rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:97px;">
+										<h:outputText styleClass="FL" value="Autre(s)" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Other(s) " />
+									</h:panelGroup>		
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad1lt" style="width:79%;">
+											<ace:textEntry id="others" maxlength="60"
+												disabled="#{not isAppEdit}"
+												value="#{form.others}"
+												style="width:99%;border-bottom:solid 1px;">
+												<ace:ajax render="@this grossFee grossFeeUda netFee feeBeforeTaxes totalAmountToCSA others"/>
+											</ace:textEntry>	
+										</span>
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 16 END -->
+						<!-- PART A END -->
+						
+						
+						<!-- PART B START -->
+						<!-- ROW 17 START -->
+						<div class="FL rowCont">
+							<div class="FR rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FR pad3tp" style="width:155px;">
+										<h:outputText styleClass="FL B" value="CACHET BRUT" />
+									</h:panelGroup>		
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 17 END -->
+						
+						<!-- ROW 18 START -->
+						<div class="FL rowCont">
+							<div class="FR rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FR pad3tp" style="width:355px;">
+										<h:outputText styleClass="FL" value="Membre actif ou stagiaire" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Active Member or Apprentice (4,5%)" />
+									</h:panelGroup>		
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 18 END -->
+						
+						<!-- ROW 19 START -->
+						<div class="FL rowCont">
+							<div class="FR rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FR pad3tp" style="width:225px;">
+										<h:outputText styleClass="FL" value="Permissionnaire" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Permit Holder (12%) " />
+									</h:panelGroup>		
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 19 END -->
+						
+						<!-- ROW 20 START -->
+						<div class="FL rowCont">
+							<div class="FL DIB W26percnt H26">&#160;</div>
+							<div class="FL DIB W43percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FL pad3tp" style="width:100px;">
+										<h:outputText styleClass="FL" value="Permis" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Permits :" />
+									</h:panelGroup>		
+									<h:panelGroup styleClass="FL pad3tp" style="width:100px;">
+										<h:outputText styleClass="FL" value="nombre" />
+										<h:outputText styleClass="FL I pad1lt" value="/number " />
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL" style="width:25%">
+										<span class="FL fd_sm2 pad1lt" style="width:89%;">
+											<ace:textEntry maxlength="60" 
+											    disabled="#{not isAppEdit}"
+												value="#{form.permitNumber}"
+												style="width:99%;border-bottom:solid 1px;">
+												 <ace:ajax render="@this feeBeforeTaxes netFee totalAmountToCSA permit permitTotal"/>
+												 <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>				
+								</h:panelGroup>	
+							</div>
+							<div class="FL DIB W30percnt H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad7lt">
+									<h:panelGroup styleClass="FL pad1lt pad3tp">
+										<h:outputText styleClass="FL" style="width:9px" value="x" />
+									</h:panelGroup>				
+									<h:panelGroup>
+										<span class="FL fd_sm2 pad3lt" style="width:34%; min-width:30%;">
+											<ace:textEntry maxlength="60"
+											    disabled="#{not isAppEdit}"
+												value="#{form.permitAmount}"
+												style="width:99%;border-bottom:solid 1px;">
+												 <ace:ajax render="@this netFee feeBeforeTaxes totalAmountToCSA permit permitTotal"/>
+												 <f:convertNumber type="number" pattern="#,##0.00" />
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>	
+									<h:panelGroup styleClass="FL pad3tp pad14lt">
+										<h:outputText styleClass="FL B" value="$ / permis/permit" />
+									</h:panelGroup>	
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 20 END -->
+						
+						<!-- ROW 21 START -->
+						<div class="FL rowCont">
+							<div class="FR rowCont H26">
+								<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+									<h:panelGroup styleClass="FR pad3tp" style="width:325px;">
+										<h:outputText styleClass="FL" value="Fonds enfants-artistes" />
+										<h:outputText styleClass="FL I pad1lt" value=" / Minority-Aged Artists Fund (25%) " />
+									</h:panelGroup>		
+								</h:panelGroup>	
+							</div>
+						</div>
+						<!-- ROW 21 END -->
+						<!-- PART B END -->
+						
+						<!-- PART C START -->
+						<div class="FL rowCont pad5tp">
+							<div class="FL DIB W56percnt">
+								<div class="pad10lt sfFormBorder1 CT W99percnt">
+									<h:panelGroup styleClass="pad3tp rowCont">
+										<h:outputText styleClass="B" value="MONTANT TAXABLE" />
+										<h:outputText styleClass="I pad1lt" value=" / Taxable amount" />
+									</h:panelGroup>	
+									<h:panelGroup styleClass="pa13tp rowCont">
+										<h:outputText styleClass="B" value="=" />
+									</h:panelGroup>	
+									<h:panelGroup styleClass="pad1tp rowCont">
+										<h:outputText styleClass="B" value="CACHET BRUT" />
+										<h:outputText styleClass="I pad1lt" value=" / Gross fee" />
+									</h:panelGroup>		
+									<h:panelGroup styleClass="pa13tp rowCont">
+										<h:outputText styleClass="B" value="+" />
+									</h:panelGroup>	
+									<h:panelGroup styleClass="pad3tp rowCont">
+										<h:outputText styleClass="B" value="PART DU PRODUCTEUR À LA CSA" />
+										<h:outputText styleClass="I pad1lt" value=" / Producer’s share" />
+									</h:panelGroup>	
+									<h:panelGroup styleClass="pad3tp rowCont">
+										<h:outputText styleClass="B" value="(13 % du cachet brut)" />
+										<h:outputText styleClass="I pad1lt" value=" / (13% of the gross fee) " />
+									</h:panelGroup>			
+								</div>	
+							</div>
+							<div class="FL DIB W42percnt H26">
+								<!-- ROW 21 -->
+								<div class="FR H26">
+									<h:panelGroup styleClass="pad2tp rowCont FR">
+										<h:outputText styleClass="B" value="CACHET AVANT TAXES" />
+										<h:outputText styleClass="I pad1lt B" value=" / Fee before taxes" />
+									</h:panelGroup>
+								</div>
+								
+								<!-- ROW 22 -->
+								<!-- <div class="FR H26 W100percnt">
+									<h:panelGroup styleClass="pad2tp FR">
+										<h:outputText styleClass="B" value="taxes" />
+									</h:panelGroup>
+								</div> -->
+								
+								<!-- ROW 23 -->
+								<div class="FR H26">
+									<h:panelGroup styleClass="pad2tp rowCont FR">
+										<h:outputText styleClass="B" value="TPS (s’il y a lieu) " />
+										<h:outputText styleClass="I pad1lt" value=" / GST (if applicable)" />
+									</h:panelGroup>
+								</div>
+								
+								<!-- ROW 24 -->
+								<div class="FR H26">
+									<h:panelGroup styleClass="pad2tp rowCont FR">
+										<h:outputText styleClass="B" value="TVQ (s’il y a lieu) " />
+										<h:outputText styleClass="I pad1lt" value=" / QST (if applicable)" />
+									</h:panelGroup>
+								</div>
+								
+								<!-- ROW 25 -->
+								<div class="FR H26">
+									<h:panelGroup styleClass="pad2tp rowCont FR">
+										<h:outputText styleClass="B" value="CACHET NET " />
+										<h:outputText styleClass="I pad1lt B" value=" / Net fee " />
+									</h:panelGroup>
+								</div>
+							</div>
+						</div>
+						<!-- PART C END -->
+					</div>
+					<!-- LEFT PART END -->
+					
+					<!-- RIGHT PART START -->
+					<div  class="FL W19percnt">
+						<!-- ROW 1 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="additionalAmount" maxlength="60"
+											disabled="true"
+											value="#{form.functionRate}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax render="@form"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>	
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 1 END -->
+						
+						<!-- ROW 2 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="otHourTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.otHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 2 END -->
+						
+						<!-- ROW 3 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="addOtHourTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.addOtHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 3 END -->
+						
+						<!-- ROW 4 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="nightHourTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.nightHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>	
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 4 END -->
+						
+						<!-- ROW 5 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="otNightHourTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.otNightHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 5 END -->
+						
+						<!-- ROW 6 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="holidayHourTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.holidayHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 6 END -->
+						
+						<!-- ROW 7 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="travelHourTotal" maxlength="60"
+										    disabled="#{true}"
+										    value="#{form.travelHourTotal}"
+										    style="width:99%;border-bottom:solid 1px;">
+										     <ace:ajax execute="@this" render="@all"/>
+										     <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 7 END -->
+						
+						<!-- ROW 8 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="waitingHourTotal" maxlength="60"
+										    disabled="#{true}"
+										    value="#{form.waitingHourTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 8 END -->
+						
+						<!-- ROW 9 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="standByDayTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.standByDayTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+										     <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 9 END -->
+						
+						<!-- ROW 10 START -->
+						<div class="FL rowCont H26">
+							<h:outputText value="&#160;" />
+						</div>
+						<!-- ROW 10 END -->
+						
+						<!-- ROW 11 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="lodgingAndMealsTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.lodgingAndMealsTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 11 END -->
+						
+						<!-- ROW 12 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="mealOnlyTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.mealOnlyTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 12 END -->
+						
+						<!-- ROW 13 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="fittingRehearsalTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.fittingRehearsalTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 13 END -->
+						
+						<!-- ROW 14 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="mileageRateTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.mileageRateTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 14 END -->
+						
+						<!-- ROW 15 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="callBackOnCameraTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.callBackOnCameraTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 15 END -->
+						
+						<!-- ROW 16 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="callBackOffCameraTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.callBackOffCameraTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 16 END -->
+						
+						<!-- ROW 17 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry  id="tagTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.tagTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 17 END -->
+						
+						<!-- ROW 18 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="+ " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="othersTotal" maxlength="60"
+											disabled="#{not isAppEdit}"
+											value="#{form.othersTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 18 END -->
+						
+						<!-- PART B START -->
+						<!-- ROW 19 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="= " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad1lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="grossFeeUda" maxlength="60"
+											disabled="#{true}"
+											value="#{form.grossFee}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax render="grossFeeUda" />
+											<f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 19 END -->
+						
+						<!-- ROW 20 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="apprenticeUda" maxlength="60"
+											disabled="#{not isAppEdit}"
+											value="#{form.apprentice}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 20 END -->
+						
+						<!-- ROW 21 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="PermitHolder" maxlength="60"
+											disabled="#{not isAppEdit}"
+											value="#{form.permitHolderNumber}"
+											style="width:99%;border-bottom:solid 1px;">
+										     <ace:ajax execute="@this" render="@this permitHolder1 feeBeforeTaxes netFee totalAmountToCSA"/>
+										     <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 21 END -->
+						
+						<!-- ROW 22 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="permitTotal" maxlength="60"
+											disabled="#{true}"
+											value="#{form.permitTotal}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax render="@this permitTotal"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 22 END -->
+						
+						<!-- ROW 23 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="minorityAgedArtistsFund" maxlength="60"
+											disabled="#{not isAppEdit}"
+											value="#{form.minorityAgedArtistsFund}"
+											style="width:99%;border-bottom:solid 1px;">
+											<ace:ajax execute="@this" render="@all"/>
+											<f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 23 END -->
+						<!-- PART B END -->
+						
+						<!-- PART C START -->
+						<!-- ROW 24 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="= " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad1lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="feeBeforeTaxes" maxlength="60"
+											disabled="#{true}"
+											value="#{form.feeBeforeTaxes}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@all"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 24 END -->
+						
+						<!-- ROW 25 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="gstUda" maxlength="60"
+											disabled="#{not isAppEdit}"
+											value="#{form.gst}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@this netFee"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+									    </ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 25 END -->
+						
+						<!-- ROW 26 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="- " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad3lt" style="min-width:75%;width:76%;">
+										<ace:textEntry maxlength="60"  disabled="#{not isAppEdit}"
+											style="width:99%;border-bottom:solid 1px;"
+											value="#{form.qst}">
+											<ace:ajax execute="@this" render="@this netFee"/>
+											<f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>	
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 26 END -->
+						
+						<!-- ROW 27 START -->
+						<div class="FL rowCont H26">
+							<h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText styleClass="FL B" value="= " />
+								</h:panelGroup>				
+								<h:panelGroup>
+									<span class="FL fd_sm2 pad1lt" style="min-width:75%;width:76%;">
+										<ace:textEntry id="netFee" maxlength="60"
+											disabled="#{true}" value="#{form.netFee}"
+											style="width:99%;border-bottom:solid 1px;">
+											 <ace:ajax execute="@this" render="@this netFee"/>
+											 <f:convertNumber type="number" pattern="#,##0.00" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>	
+								<h:panelGroup styleClass="FL pad3tp pad15lt">
+									<h:outputText styleClass="FL B" value="$ " />
+								</h:panelGroup>	
+							</h:panelGroup>	
+						</div>
+						<!-- ROW 27 END -->
+						<!-- PART C END -->
+					</div>
+					<!-- RIGHT PART END -->
+				</div>
+				<!-- Fonction / Function END -->
+				
+				<div class="FL rowCont pad15lt pad10tp" style="width:680px;">
+					<div class="FL rowCont">
+						<div class="FL W75percnt">
+							<h:graphicImage value=""
+								style="width:800px;margin-left:-8px;height:450px"
+								url="../../i/forms/formUDAFooter.png" alt="" />
+						</div>
+						<div class="FL W25percnt pad50tp pad-2lt">
+							<!-- ROW 1 -->
+							<h:panelGroup styleClass="FL rowCont pad1tp">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="grossFee" maxlength="60"
+										disabled="#{true}"
+										value="#{form.grossFee}"
+										style="width:99%;border-bottom:solid 1px;">
+										 <ace:ajax render="@this grossFee"/>
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>	
+							
+							<!-- ROW 2 -->
+							<h:panelGroup styleClass="FL rowCont pad35tp">
+								<span class="FL fd_sm2 pad1tp" style="width:65%;">
+									<ace:textEntry id="apprentice" maxlength="60"
+										disabled="#{true}"
+										value="#{form.apprentice}"
+										style="width:99%;border-bottom:solid 1px;">
+										 <ace:ajax render="@this apprentice"/>
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>	
+							
+							<!-- ROW 3 -->
+							<h:panelGroup styleClass="FL rowCont">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="permitHolder1" maxlength="60"
+										disabled="#{true}"
+										value="#{form.permitHolderNumber}"
+										style="width:99%;border-bottom:solid 1px;height:12px">
+										 <ace:ajax render="@this permitHolder1"/>
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+							
+							<!-- ROW 4 -->
+							<h:panelGroup styleClass="FL rowCont">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="producerShare" maxlength="60"
+										disabled="#{not isAppEdit}"
+										value="#{form.producerShare}"
+										style="width:99%;border-bottom:solid 1px;height:12px">
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+										 <ace:ajax render="totalAmountToCSA" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+							
+							<!-- ROW 5 -->
+							<h:panelGroup styleClass="FL rowCont">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="permit" maxlength="60"
+										disabled="#{true}"
+										value="#{form.permitTotal}"
+										style="width:99%;border-bottom:solid 1px;height:12px">
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+							
+							<!-- ROW 7 -->
+							<h:panelGroup styleClass="FL rowCont pad2tp">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="minorityAgedArtistsFunds" maxlength="60"
+										disabled="#{true}"
+										value="#{form.minorityAgedArtistsFund}"
+										style="width:99%;border-bottom:solid 1px;height:12px">
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>	
+							
+							<!-- ROW 8 -->
+							<h:panelGroup styleClass="FL rowCont pad1tp">
+								<span class="FL fd_sm2" style="width:65%;">
+									<ace:textEntry id="totalAmountToCSA" maxlength="60"
+                                        disabled="#{true}"
+                                        value="#{form.totalAmountToCSA}"
+										style="width:99%;border-bottom:solid 1px;height:12px">
+										 <f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>	
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>		
+	</h:panelGroup>
+</ui:composition>

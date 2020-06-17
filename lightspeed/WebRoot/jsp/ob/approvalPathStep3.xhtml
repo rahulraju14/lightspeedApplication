@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL rowCont stepBorder pad15tp">
+		<h:commandButton id="step3" value=""
+			styleClass="FL pad3lt pad2tp #{approvalPathsBean.showStep3 ? 'stepCloseIcon' : 'stepOpenIcon'}" tabindex="-1"
+			actionListener="#{approvalPathsBean.listenShowStep}"
+			title="#{approvalPathsBean.showStep3 ? 'Click to hide the Step.' : 'Click to view the Step.'}">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" value="Step 3: "/>
+			<h:outputText styleClass="stepHdr" value="Assign Department-level Approvers. (Optional)"/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep3}">
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<!-- <div class="rowCont FL pad10lt pad30tp">
+				<h:outputText styleClass="stepNum" value="Step 3: "/>
+				<h:outputText styleClass="stepHdr" value="Assign Department-level Approvers. (Optional)"/>
+			</div> -->
+			<div class="rowCont FL pad18tp">
+				<span class="FL pad20lt">
+					<h:outputText styleClass="apText" escape="false"
+						value="Select and create a group of Department Approvers and then select which Departments they need to approve."/>
+	
+					<h:outputText styleClass="rowCont apText FL" escape="false" value="Departments can have one, many, or no  Approvers.
+						If you need to assign different Approvers to a different Department then create a new Approver &lt;/br&gt; Group and assign it to that Department."/>
+	
+					<h:outputText styleClass="rowCont apText FL" escape="false" value="An Approver Group can follow a Linear Hirarchy or use an Approver Pool.
+						A Linear Hierarchy means that each Approver gets to review and approve &lt;/br&gt; the document in order."/>
+				</span>
+			</div>
+			<div class="rowCont pad18tp FL">
+				<span class="FL" style="margin-left:110px"><h:outputText style="margin-left:86px" value="1"/></span>
+				<span class="FL"><h:outputText style="margin-left:40px" value="2"/></span>
+				<span class="FL"><h:outputText style="margin-left:42px" value="3"/></span>
+			</div>
+			<div class="rowCont FL">
+				<span class="FL pad50lt"><h:outputText styleClass="B FL pad3tp" escape="false" value="Linear Hierarchy:"/></span>
+				<span class="FL"><h:graphicImage value="" style="margin-left:10px;" url="../../i/right_pathArrow.png" alt=""/></span>
+				<span class="FL"><h:graphicImage value="" style="margin-top:-1px; margin-left:-2px;" url="../../i/linear_path_icon.png" alt=""/></span>
+				<span class="FL"><h:graphicImage value="" style="margin-left:-1px;" url="../../i/right_pathArrow.png"  alt=""/></span>
+				<span class="FL"><h:outputText styleClass="FL pad8lt pad3tp" escape="false" value="To Production Approvers"/></span>
+			</div>
+			<div class="rowCont FL pad18tp">
+			<span class="FL pad20lt">
+				<h:outputText styleClass="apText" escape="false" value="An Approver Pool sends the document to a &quot;Pool&quot; of Approvers
+					where any Approver may select and approve any of the documents. Once the &lt;/br&gt; document is approved by an
+					Approver it moves on to the Production Approvers."/>
+			</span>
+			</div>
+			<div class="rowCont FL">
+				<span class="FL pad50lt"><h:outputText styleClass="B FL pad18tp" escape="false" value="Approver Pool:"/></span>
+				<span class="FL"><h:graphicImage value="" style="margin-top:11px; margin-left:25px;" url="../../i/pool_path_icon.png"/></span>
+				<span class="FL"><h:outputText styleClass="FL pad18tp pad8lt" escape="false" value="To Production Approvers"/></span>
+			</div>
+			<div class="rowCont FL pad18tp">
+				<h:outputText styleClass="apText pad20lt" escape="false" value="A Department may only be assigned to one Approver Group."/>
+			</div>
+		</h:panelGroup>
+
+		<!-- DEPARTMENT APPROVAL START  -->
+		<div class="blueLegendContWrap">
+			<div class="blueLegendCont pad25tp pad10lt" style="width:60%; height:240px;">
+				<div class="legendHdg">Department Approval</div>
+				<!-- LEGEND BUTTONS START -->
+				<div style="margin-left:-6px; margin-top:-38px;">
+					<!--  Render condition for edit mode start -->
+					<h:panelGroup rendered="#{approvalPathsBean.editMode}">
+						<!-- DELETE BUTTON -->
+						<h:panelGroup styleClass="btn_legend pad10rt"
+							rendered="#{(not empty approvalPathsBean.selectedAppGroupId)
+								and (approvalPathsBean.selectedAppGroupId ne null)
+								and (approvalPathsBean.selectedAppGroupId gt 0)}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Delete"
+									action="#{approvalPathsBean.actionDeleteApproverGroup}"
+									styleClass="btnMiniCt" title="Delete the Approval Path." />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<!-- NEW BUTTON  -->
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="New"
+									action="#{approvalPathsBean.actionCreateApproverGroup}"
+									title="Create a new Approver Group."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup><!--  Render condition for edit mode end -->
+				</div> <!-- LEGEND BUTTONS END -->
+
+				<div class="FL rowCont">
+					<!-- FIRST BLOCK START -->
+					<div class="W60percnt FL">
+						<!-- APPROVER GROUP NAME LIST START -->
+						<div class="FL rowCont pad2tp">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu styleClass="W70percnt pad20lt"
+									immediate="true" disabled="#{false}"
+									valueChangeListener="#{approvalPathsBean.listenApproverGroupChange}"
+									value="#{approvalPathsBean.selectedAppGroupId}">
+									<f:selectItems value="#{approvalPathsBean.appGroupNameList}" />
+									<ace:ajax execute="@form" render="@this ob:approvalDocTable2 ob:groupApprovers"/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</div> <!-- APPROVER GROUP NAME LIST END -->
+
+						<!-- APPROVER METHOD START -->
+						 <div class="pad8tp FL">
+							<span class="FL pad20lt"><h:outputText styleClass="B" escape="false" value="Approver Method"/></span>
+							<h:selectOneRadio id="pathMethod"
+								styleClass="h_radio"
+								value="#{approvalPathsBean.selectedApproverGroup eq null ? 'false' :
+										approvalPathsBean.selectedApproverGroup.usePool}"
+								disabled="#{true}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="Linear Hierarchy" itemValue="false" />
+								<f:selectItem itemLabel="Approver Pool" itemValue="true" />
+							</h:selectOneRadio>
+							<!-- <span class="FL pad5lt"><ice:radio for="pathMethod" index="0" /></span>
+							<span class="FL pad5lt"><ice:radio for="pathMethod" index="1" /></span> -->
+						</div>  <!-- APPROVER METHOD END -->
+
+						<div class="FL rowCont">
+
+							<!-- SELECTED GROUP APPROVERS LIST START -->
+							<div class="blueLegendContWrap">
+								<div class="blueLegendCont pad12tp pad8lt" id="deptAppLegend" style="width:90%; background: white;">
+									<!-- Edit Group button -->
+									<h:panelGroup styleClass="btn_legend pad10rt"
+										rendered="#{(not empty approvalPathsBean.selectedAppGroupId) and (approvalPathsBean.editMode)
+											and (approvalPathsBean.selectedAppGroupId ne null) and (approvalPathsBean.selectedAppGroupId gt 0)}">
+										<span class="btnMiniLtHot" />
+											<ace:linkButton value="Edit Group"
+												action="#{approvalPathsBean.actionEditApproverGroup}"
+												styleClass="btnMiniCt" title="Edit Group Approvers." />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<!-- legend buttons end -->
+
+									<h:panelGroup styleClass="btn_legend LH18">
+										<!-- No legend buttons, so do this to align the table below with the one on the left -->
+									</h:panelGroup>
+
+									<div class="FL W100percnt">
+										<ace:dataTable id="groupApprovers"
+											value="#{approvalPathsBean.groupApproverList}"
+											var="item" scrollHeight="130"
+											rowIndexVar="idx" scrollable="true"
+											styleClass="bk_sl_grid"
+											style="min-height: 130px;">
+											<!-- selectionMode="single"
+											rowSelectListener="#{approvalPathsBean.listenRowClicked}"
+											stateMap="#{approvalPathsBean.groupStateMap}" -->
+
+											<!-- THE APPROVER -->
+											<ace:column styleClass="W100percnt" style="text-align:left;">
+													<h:outputText styleClass="pad10lt" value="#{item.label}" />
+											</ace:column>
+										</ace:dataTable>
+									</div><!-- selected productions table end -->
+								</div>
+							</div> <!-- SELECTED GROUP APPROVERS LIST END -->
+						</div>
+					</div> <!-- FIRST BLOCK END -->
+
+					<!-- SECOND BLOCK START -->
+					<div class="W40percnt FL">
+						<!-- HEADER TEXT -->
+						<span class="FL pad2tp pad20lt">
+							<h:outputText styleClass="pad-1tp B" escape="false" value="Select Applicable Departments:"/>
+						</span>
+						<!-- DEPARTMENT LIST TABLE START -->
+						<div class="blueLegendContWrap">
+							<div class="blueLegendCont pad8tp pad20lt" id="deptTable" style="width:85%;">
+								<div class="FL W100percnt">
+									<ace:dataTable id="approvalDocTable2"
+										value="#{approvalPathsBean.departmentList}"
+										var="item" scrollHeight="185"
+										rowIndexVar="idx" scrollable="true"
+										styleClass="bk_sl_grid">
+
+										<!-- CHECHKBOX -->
+										<ace:column styleClass="W5percnt CT">
+											<div>
+												<icecore:setEventPhase events="ValueChangeEvent"
+													phase="INVOKE_APPLICATION">
+													<h:selectBooleanCheckbox value="#{item.selected}"
+														valueChangeListener="#{approvalPathsBean.listenSingleCheckDept}"
+														disabled="#{(not approvalPathsBean.editMode)
+															or (item.disabled) or (approvalPathsBean.selectedAppGroupId eq null)
+															or (approvalPathsBean.selectedAppGroupId lt 0)}">
+														<f:attribute name="selectedRow" value="#{item}"></f:attribute>
+														<ace:ajax />
+													</h:selectBooleanCheckbox>
+												</icecore:setEventPhase>
+											</div>
+										</ace:column>
+
+										<!-- DEPARTMENT NAME -->
+										<ace:column styleClass="W20percnt"
+											style="text-align:left;">
+											<h:outputText styleClass="pad10lt FL" value="#{item.name}" />
+										</ace:column>
+									</ace:dataTable>
+								</div>
+							</div> <!-- blueLegendCont -->
+						</div> <!-- DEPARTMENT LIST TABLE END -->
+					</div> <!-- SECOND BLOCK END -->
+				</div>
+			</div>
+		</div> <!-- DEPARTMENT APPROVAL END  -->
+
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 's'}">
+		<div class="rowCont pad12tp FL">
+			<span class="FL pad20lt"><h:outputText styleClass="B FL pad3tp" escape="false" value="Linear Hierarchy:"/></span>
+			<span class="FL"><h:graphicImage value="" style="margin-left:10px;" url="../../i/right_pathArrow.png" alt=""/></span>
+			<span class="FL"><h:graphicImage value="" style="margin-top:-1px; margin-left:-2px;" url="../../i/linear_path_icon.png" alt=""/></span>
+			<span class="FL"><h:graphicImage value="" style="margin-left:-1px;" url="../../i/right_pathArrow.png" alt=""/></span>
+			<span class="FL"><h:outputText styleClass="FL pad8lt pad3tp" escape="false" value="To Production Approvers"/></span>
+		</div>
+		<div class="rowCont FL">
+			<span class="FL pad20lt"><h:outputText styleClass="B FL pad18tp" escape="false" value="Approver Pool:"/></span>
+			<span class="FL"><h:graphicImage value="" style="margin-top:11px; margin-left:25px;" url="../../i/pool_path_icon.png" alt=""/></span>
+			<span class="FL"><h:outputText styleClass="FL pad18tp pad8lt" escape="false" value="To Production Approvers"/></span>
+		</div>
+		</h:panelGroup>
+	</h:panelGroup>
+</ui:composition>

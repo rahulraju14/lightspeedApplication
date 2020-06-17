@@ -1,0 +1,209 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Expense/reimbursements section of both the Basic and Full Timecard pages -->
+
+	<!-- Uses params:
+			"timecardBean" : the supporting bean (either fullTimecardBean or indivTimecardBean)
+			"categoryDL" : the drop-down list of SelectItems (differs between Full and Basic TC pages)
+			"aicp" : true if AICP Timecard (for Commercial production)
+			"projectActive": true if either non-Commercial, or the timecard being viewed belongs to an active project; LS-2849
+	 -->
+
+	<c:set var="editExp" value="#{timecardBean.editHtg or
+			(timecardBean.payrollPref.allowEmployeeExpense and timecardBean.editRaw)}"/>
+
+	<c:set var="showReceiptMsg" value="#{(! timecardBean.editMode) and (not empty timecardBean.weeklyTimecard.expenseLines)}"/>
+
+	<h:panelGroup rendered="#{isBasicView and showReceiptMsg}">
+		<div class="W98percnt pad12tp FL pad8lt">
+			<h:outputText styleClass="RED B FL" value="For Expenses/Reimbursements, receipts are required, 
+				otherwise the amount may be considered wages, and would be subject to payroll taxes."/>
+		</div>
+	</h:panelGroup>
+	<!-- Expenses/Reimbursements wrapper -->
+	<div class="blueLegendContWrap MA">
+		<div class="blueLegendCont pad12tp FL">
+			<span class="legendHdg">Expenses/Reimbursements</span>
+			<h:panelGroup styleClass="btn_legend"
+				rendered="#{(! timecardBean.editMode) and
+						timecardBean.viewProduction.status.allowsWrite and projectActive}">
+				<span class="btnMiniLtHot"/>
+					<ace:linkButton value="Add Attachment"
+						action="#{timecardBean.actionUploadAttachment}"
+						title="Add attachment to the timecard"
+						styleClass="btnMiniCt" />
+				<span class="btnMiniRtHot"/>
+			</h:panelGroup>
+			<ace:dataTable styleClass="gradTbl2 txt11 CT" id="expenseTable"
+					value="#{timecardBean.weeklyTimecard.expenseLines}"
+					var="entry" rowIndexVar="rowix"
+					rowStyleClass="CT txt12"
+					style="width:100%;max-width:100%;overflow-x:hidden;">
+
+				<ace:columnGroup type="header">
+					<ace:row>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">&#160;</ace:column>
+						<ace:column style="width:#{aicp ? '14%' : '38%'}">
+							<h:outputText value="#{aicp ? '' : 'Account'}"/>
+						</ace:column>
+						<ace:column style="width:#{aicp ? '8%' : '0%'}" rendered="#{aicp}"></ace:column>
+						<ace:column style="width:#{aicp ? '30%' : '26%'}"></ace:column>
+						<ace:column style="width:#{aicp ? '17%' : '7%'}"></ace:column>
+						<ace:column style="width:#{aicp ? '12%' : '10%'}"></ace:column>
+						<ace:column style="width:#{aicp ? '15%' : '14%'}"></ace:column>
+					</ace:row>
+					<ace:row>
+						<ace:column>&#160;</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">
+							<h:outputText rendered="#{not aicp}">
+								<div class="W100percnt">
+									<div class="acLoc acHdr">Loc</div>
+									<div class="acPrd acHdr">Prd/Ep</div>
+									<div class="acDtl acHdr">Detail</div>
+									<div class="acSub acHdr">Sub</div>
+									<div class="acSet acHdr">Set</div>
+									<div class="acFr1 acHdr">F1</div>
+									<div class="acFr acHdr">F2</div>
+								</div>
+							</h:outputText>
+							<h:outputText rendered="#{aicp}" value="Acct #" />
+						</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}" rendered="#{aicp}">FREE</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">Item</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">Qty</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">Rate</ace:column>
+						<ace:column style="width:#{aicp ? '4%' : '5%'}">Total</ace:column>
+					</ace:row>
+				</ace:columnGroup>
+
+				<!-- LINE NUMBER + DELETE ICON -->
+				<ace:column>
+					<h:panelGroup rendered="#{editExp and entry.category ne null}">
+						<h:commandButton value=""  tabindex="-1"
+								style="width:45%;" styleClass="LT deleteXbtn" title="Delete this Line Item"
+								action="#{timecardBean.actionDeleteExpenseLine(entry.lineNumber)}">
+						</h:commandButton>
+						<h:outputText value="#{rowix+1}" styleClass="LT" style="width:50%;"/>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{! editExp}">
+						<h:outputText value="#{rowix+1}" styleClass="FL" style="width:99%;"
+								rendered="#{entry.category ne null}" />
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- ACCOUNT CODES -->
+				<ace:column>
+					<h:panelGroup rendered="#{(entry.category eq null) and editExp}">
+						&#160;
+					</h:panelGroup>
+					<h:panelGroup rendered="#{(entry.category ne null)}">
+
+						<!-- ACCOUNT COLUMNS -->
+						<ui:include src="accountCodes.xhtml">
+							<ui:param name="edit" value="#{timecardBean.editMode}" />
+							<ui:param name="appEdit" value="#{timecardBean.editMode}" />
+							<ui:param name="rate" value="#{entry.account}" />
+							<ui:param name="aicp" value="#{aicp}" />
+						</ui:include>
+
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- COMMERCIAL FREE -->
+				<ace:column rendered="#{aicp}">
+					<h:panelGroup rendered="#{(entry.category ne null)}">
+						<ace:textEntry styleClass="W80percnt CT pad2lt" maxlength="2"
+							value="#{entry.accountFree}"
+									rendered="#{editExp}">
+								<ace:ajax />
+							</ace:textEntry>
+						<h:panelGroup styleClass="txt11" rendered="#{(not editExp)}">
+							<h:outputText value="#{entry.accountFree}" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- CATEGORY -->
+				<ace:column>
+					<h:panelGroup>
+						<h:outputText value="#{entry.category}" rendered="#{entry.category ne null}" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{entry.category eq null and editExp}">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu
+									style="width:90%;"  id="EXP_CATEGORY"
+									valueChangeListener="#{timecardBean.listenExpenseCategory}"
+									value="#{timecardBean.expCategory}">
+								<f:selectItems value="#{categoryDL}" />
+								<f:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- QUANTITY -->
+				<ace:column styleClass="RT">
+					<h:panelGroup rendered="#{(entry.category ne null)}">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:textEntry value="#{entry.quantity}" id="EXP_QUANTITY"
+								valueChangeListener="#{timecardBean.listenExpenseChange}"
+								maxlength="8" styleClass="tcEdDlr CT" 
+								rendered="#{(editExp)}" >
+							<f:convertNumber type="number" pattern="#,##0.0#" />
+							<ace:ajax />
+						</ace:textEntry>
+						</icecore:setEventPhase>
+						<h:outputText value="#{entry.quantity}" styleClass="pad3rt"
+								rendered="#{! editExp}">
+							<f:convertNumber type="number" pattern="#,##0.0#" />
+						</h:outputText>
+					</h:panelGroup>
+					<h:outputText rendered="#{! timecardBean.showPrivate}" value=" " />
+				</ace:column>
+
+				<!-- RATE -->
+				<ace:column>
+					<!-- don't generate this column for Other/Advances -->
+					<h:panelGroup rendered="#{(entry.category ne null)}">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<ace:textEntry value="#{entry.rate}" id="EXP_RATE"
+									valueChangeListener="#{timecardBean.listenExpenseChange}"
+									maxlength="11" styleClass="tcEdHr RT" 
+									rendered="#{editExp}" >
+								<f:convertNumber type="number" pattern="#,###.00##" />
+							<ace:ajax />
+							</ace:textEntry>
+						</icecore:setEventPhase>
+						<h:outputText value="#{entry.rate}"
+							rendered="#{! editExp}">
+							<f:convertNumber type="number" pattern="#,###.00##" />
+						</h:outputText>
+					</h:panelGroup>
+					<h:outputText rendered="#{! timecardBean.showPrivate}" value=" " />
+				</ace:column>
+
+				<!-- TOTAL -->
+				<ace:column styleClass="RT">
+					<h:panelGroup rendered="#{(entry.category ne null)}">
+						<h:outputText value="#{entry.total}" styleClass="pad3rt">
+							<f:convertNumber type="number" pattern="#,###.00" />
+						</h:outputText>
+					</h:panelGroup>
+					<h:outputText rendered="#{! timecardBean.showPrivate}" value=" " />
+				</ace:column>
+			</ace:dataTable>
+		</div>
+	</div><!-- end expenses table -->
+	<h:panelGroup rendered="#{(! isBasicView) and showReceiptMsg}">
+		<div class="W96percnt pad5tp FL pad6lt">
+			<h:outputText styleClass="RED B FL" value="For Expenses/Reimbursements, receipts are required, 
+				otherwise the amount may be considered wages, and would be subject to payroll taxes."/>
+		</div>
+	</h:panelGroup>
+</ui:composition>

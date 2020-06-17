@@ -1,0 +1,217 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!--"Production Setup" section of Setup mini-tab of Payroll Preferences page (screen number 9.9) -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+
+		<div class="rowCont B">
+			Production Setup:
+		</div>
+		<div class="rowCont pad15lt">
+
+			<!-- STUDIO TYPE -->
+			<div class="rowCont B pad15tp">
+				<div class="FL W80">
+					<h:outputText value="#{ aicp ? 'Contract:' : 'Studio:'}"/>
+				</div>
+				<div class="FL">
+					<div class=" ">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectOneRadio id="studio" styleClass="h_radio"
+								disabled="#{not payrollSetupBean.editMode}"
+								value="#{payrollSetupBean.payrollPref.studioType}"
+								valueChangeListener="#{payrollSetupBean.listenChangeStudio}"
+								layout="pageDirection">
+							<f:selectItems value="#{payrollSetupBean.studioTypeDL}"/>
+						</h:selectOneRadio>
+
+					</icecore:setEventPhase>
+				</div>
+				</div>
+			</div>
+
+			<!-- PRODUCTION TYPE -->
+			<h:panelGroup styleClass="rowCont B pad15tp" rendered="#{! aicp}">
+				<div class="FL W25percnt">
+					<div class="FL W80">
+						<div class=" ">
+						Prod. Type:
+						</div>
+					</div>
+					<div class="FL ">
+						<div class=" ">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneRadio id="medium" styleClass="h_radio"
+									disabled="#{not payrollSetupBean.editMode}"
+									value="#{payrollSetupBean.payrollPref.mediumType}"
+									valueChangeListener="#{payrollSetupBean.listenChangeMedium}"
+									layout="pageDirection">
+								<f:selectItems value="#{payrollSetupBean.mediumTypeDL}"/>
+								<ace:ajax />
+							</h:selectOneRadio>
+						</icecore:setEventPhase>
+						</div>
+					</div>
+				</div>
+				<div class="FL W25percnt">
+					<h:panelGroup rendered="#{payrollSetupBean.payrollPref.mediumType eq 'TV'}">
+						<div class="FL">
+							<h:panelGroup styleClass="FL B pad2tp">
+									Contract:
+							</h:panelGroup>
+							<span class="FL pad10lt">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectOneMenu styleClass="FL"
+											disabled="#{not payrollSetupBean.editMode}"
+											valueChangeListener="#{payrollSetupBean.listenChangeDetailType}"
+											value="#{payrollSetupBean.payrollPref.detailType}">
+										<f:selectItems value="#{payrollSetupBean.productionDetailTypeDL}" />
+											<ace:ajax />
+									</h:selectOneMenu>
+								</icecore:setEventPhase>
+							</span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{payrollSetupBean.payrollPref.mediumType eq 'FT'}">
+						<div class="FL">
+							<h:panelGroup styleClass="FL B pad2tp">
+									Contract:
+							</h:panelGroup>
+							<span class="FL pad10lt">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectOneMenu styleClass="FL"
+											disabled="#{not payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.detailType}">
+										<f:selectItems value="#{payrollSetupBean.productionDetailTypeDL}" />
+											<ace:ajax />
+									</h:selectOneMenu>
+								</icecore:setEventPhase>
+							</span>
+						</div>
+					</h:panelGroup>
+				</div>
+
+				<div class="FL W40percnt">
+
+					<!-- ADDITIONAL FOR TV SERIES -->
+					<h:panelGroup rendered="#{payrollSetupBean.payrollPref.detailType eq 'H5' or
+							payrollSetupBean.payrollPref.detailType eq 'H1'}">
+						<!-- SEASON -->
+							<div class="FL">
+								<h:panelGroup styleClass="FL B pad2tp W80">
+										TV Season:
+								</h:panelGroup>
+								<span class="FL pad10lt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu styleClass="FL"
+												disabled="#{not payrollSetupBean.editMode}"
+												valueChangeListener="#{payrollSetupBean.listenChangeSeason}"
+												value="#{payrollSetupBean.payrollPref.tvSeason}">
+											<f:selectItems value="#{payrollSetupBean.televisionSeasonDL}" />
+												<ace:ajax />
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</span>
+							</div>
+						<!-- START DATE -->
+						<div class="rowCont B pad15tp">
+							<div class="FL">
+								<h:panelGroup styleClass="FL B pad2tp W80">
+										Series began:
+								</h:panelGroup>
+								<span class="FL pad10lt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu styleClass="FL"
+												disabled="#{not payrollSetupBean.editMode}"
+												value="#{payrollSetupBean.payrollPref.tvEra}">
+											<f:selectItems value="#{payrollSetupBean.televisionEraDL}" />
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</span>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<!-- ADDITIONAL FOR LOW BUDGET TIER 2 & 3 -->
+					<h:panelGroup rendered="#{payrollSetupBean.payrollPref.detailType eq 'T2' or
+							payrollSetupBean.payrollPref.detailType eq 'T3'}">
+						<!-- PRODUCTION CITY? -->
+							<div class="FL">
+								<h:panelGroup styleClass="FL B pad2tp W120">
+										In Production City?
+								</h:panelGroup>
+								<span class="FL">
+									<h:selectBooleanCheckbox styleClass="ckbx"
+											disabled="#{! payrollSetupBean.editMode}"
+											value="#{payrollSetupBean.payrollPref.inProductionCity}" >
+									</h:selectBooleanCheckbox>
+								</span>
+							</div>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup styleClass="FL W50percnt" rendered="#{! aicp}">
+
+				<h:panelGroup styleClass="rowCont pad15tp" rendered="#{payrollSetupBean.usesASA}">
+					<div class="FL">
+						<h:panelGroup styleClass="FL B pad2tp W100">
+							ASA Contract:
+						</h:panelGroup>
+						<span class="FL pad10lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu styleClass="FL"
+										disabled="#{not payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.asaContract}">
+									<f:selectItems value="#{payrollSetupBean.productionAsaTypeDL}" />
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</span>
+					</div>
+				</h:panelGroup>
+
+				<div class="rowCont pad10tp">
+					<div class="FL">
+						<h:panelGroup styleClass="FL B pad2tp W100">
+							NY Region:
+						</h:panelGroup>
+						<span class="FL pad10lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu styleClass="FL"
+										disabled="#{not payrollSetupBean.editMode}"
+										value="#{payrollSetupBean.payrollPref.nyRegion}">
+									<f:selectItems value="#{payrollSetupBean.nyRegionDL}" />
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</span>
+					</div>
+				</div>
+
+				<div class="rowCont pad10tp">
+					<div class="FL">
+						<h:panelGroup styleClass="FL B pad2tp W100">
+							Last Day of Prep:
+						</h:panelGroup>
+						<span class="FL pad10lt">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:dateTimeEntry disabled="#{not payrollSetupBean.editMode}" tabindex="0"
+										value="#{payrollSetupBean.payrollPref.prepEndDate}"
+										renderAsPopup="true">
+									<f:converter converterId="lightspeed.MultiDateConverter"/>
+										<ace:ajax />
+								</ace:dateTimeEntry>
+							</icecore:setEventPhase>
+						</span>
+					</div>
+				</div>
+			</h:panelGroup><!-- end left side - ASA/region/prep -->
+
+		</div><!-- end indent for all Production Setup items -->
+
+</ui:composition>

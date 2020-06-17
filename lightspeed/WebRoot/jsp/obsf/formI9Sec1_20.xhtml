@@ -1,0 +1,418 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Employee information -->
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+	<div class="BKwhite">
+		<hr class="rowCont FL"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Employee's Name Start -->
+		<div>
+			<!-- LEFT portion Start-->
+			<div class="W75percnt FL" style="margin-bottom:-4px;">
+				<!-- left border Start -->
+				<div class="rowCont sfFormBorder1 pad-1lt pad-1tp"
+					style="height:56px;">
+
+					<!-- first block Start -->
+					<div class="W42percnt FL">
+						<!-- LAST NAME (FAMILY NAME) -->
+						<div class="rowCont pad5lt" style="height:56px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad4tp pad3rt"> <h:outputText escape="false" value="Last Name &lt;em&gt; (Family Name) &lt;/em&gt;" /> </span>
+							<!-- Help Icon/Button -->
+							<h:commandButton value="" id="lastName_20-1" styleClass="i9InfoIcon pad6tp" tabindex="-1"
+								actionListener="#{formI9Bean.listenShowHelp}"
+								title="Last Name (Family Name) - Click for more information">
+							</h:commandButton>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formI9Bean.form.lastName) ? 'requiredField' : ''}">
+									<ace:textEntry id="USER_LAST_NAME_20"
+										maxlength="30" style="width:96%;"
+										disabled="#{not formI9Bean.empEdit}"
+										value="#{formI9Bean.form.lastName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}">
+										 <ace:ajax render="@this SEC2_LAST_NAME_20" />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- first block End -->
+
+					<!-- Second block Start -->
+					<div class="W40percnt FL">
+						<!-- FIRST NAME (GIVEN NAME) -->
+						<div class="rowCont pad10lt" style="height:56px; border-right:solid 1px;">
+							<span class="fdNm_w2 pad4tp">
+								<h:outputText escape="false" value="First Name &lt;em&gt; (Given Name) &lt;/em&gt;" />
+							</span>
+							<h:commandButton value="" id="firstName_20-1" styleClass="i9InfoIcon pad6tp" tabindex="-1"
+								actionListener="#{formI9Bean.listenShowHelp}"
+								title="First Name (Given Name) - Click for more information">
+							</h:commandButton>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formI9Bean.form.firstName) ? 'requiredField' : ''}">
+								<ace:textEntry id="USER_FIRST_NAME_20"
+									maxlength="15" style="width:95%;"
+									disabled="#{not formI9Bean.empEdit}"
+									value="#{formI9Bean.form.firstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}">
+										<ace:ajax render="@this SEC2_FIRST_NAME_20"/>
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- Second block End -->
+
+					<!-- Third block Start -->
+					<div class="W15percnt FR pad2lt">
+						<!-- MIDDLE INITIAL -->
+						<div class="rowCont">
+							<span class="fdNm_w2 pad4tp" style="width:73px"> <h:outputText value="Middle Initial" /> </span>
+							<!-- Help Icon/Button -->
+							<h:commandButton value="" id="middleInitial_20-1" styleClass="i9InfoIcon pad6tp" tabindex="-1"
+								actionListener="#{formI9Bean.listenShowHelp}"
+								title="Middle Initial - Click for more information">
+							</h:commandButton>
+							<h:panelGroup>
+								<span class="fd_sm2 #{empty (formI9Bean.form.middleName) ? 'requiredField' : ''}">
+									<ace:textEntry id="USER_MIDDLE_NAME_20"
+										maxlength="3" style="width:85%;"
+										disabled="#{not formI9Bean.empEdit}"
+										value="#{formI9Bean.form.middleName}"
+										valueChangeListener="#{formI9Bean.listenValueChange}">
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+					<!-- Third block End-->
+				</div>
+				<!-- left border End -->
+			</div>
+			<!-- LEFT portion End -->
+
+			<!-- RIGHT portion Start-->
+			<div class="W25percnt FL" style="margin-bottom:-4px;">
+				<!-- Fourth block Start -->
+				<div class="rowCont pad5lt">
+					<!-- OTHER LAST NAMES USED -->
+					<span class="fdNm_w2 pad4tp" style="width:181px"> <h:outputText escape="false" value="Other Last Names Used &lt;em&gt; (if any) &lt;/em&gt;" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="otherName_20-1" styleClass="i9InfoIcon pad6tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Other Last Names Used (if any) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 #{empty (formI9Bean.form.otherName) ? 'requiredField' : ''}">
+							<ace:textEntry id="OTHER_NAME_20"
+								maxlength="30" style="width:92%;"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.otherName}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- RIGHT portion End-->
+		</div>
+		<!-- Employee's Name end -->
+
+		<hr class="rowCont FL"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Help Text's Row 1 -->
+		<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '1'}">
+			<div class="i9HelpTextBoxBottom">
+				<h:commandButton value="" styleClass="closeHelpText"
+					action="#{formI9Bean.actionCloseHelp}" />
+				<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+			</div>
+		</h:panelGroup>
+
+		<!-- Employee's Address start -->
+		<div class="FL" style="margin-bottom:-2px;">
+			<!-- first block-->
+			<div class="W35percnt FL">
+				<!-- ADDRESS STREET START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt" style="width:215px;">
+						<h:outputText escape="false" value="Address &lt;em&gt; (Street Number And Name) &lt;/em&gt; " />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s1_addr_20-2" styleClass="i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Address (Street Number And Name) - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt #{empty (formI9Bean.form.address.addrLine1) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:94%;"
+								id="HOME_ADDR_STREET_20" maxlength="60"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.addrLine1}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- ADDRESS STREET END -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block Start-->
+			<div class="W13percnt FL">
+				<!-- APT NUMBER START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad5lt" style="width:77px"> <h:outputText value="Apt. Number" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="aptNumber_20-2" styleClass="i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Apartment Number - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt #{empty (formI9Bean.form.aptNumber) ? 'requiredField' : ''}">
+							<ace:textEntry id="HOME_APT_NUMBER_20"
+								maxlength="5" style="width:84%;"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.aptNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- APT NUMBER END -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- third block-->
+			<div class="W25percnt FL">
+				<!-- CITY OR TOWN START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad8lt" style="width:77px;">
+						<h:outputText value="City or Town" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s1_city_20-2" styleClass="i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="City or Town - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.address.city) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:90%;"
+								id="HOME_ADDR_CITY_ONLY_20" maxlength="30"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.city}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!--  CITY OR TOWN END -->
+			</div>
+			<!-- third block End-->
+
+			<!-- Fourth block Start-->
+			<div class="W10percnt FL">
+				<!-- STATE START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad8lt" style="width:35px"> <h:outputText value="State" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s1_state_20-2" styleClass="i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="State - Click for more information">
+					</h:commandButton>
+					<h:selectOneMenu id="HOME_ADDR_STATE_20"
+						styleClass="FL W80percnt pad8lt"
+						disabled="#{not formI9Bean.empEdit}"
+						value="#{formI9Bean.form.address.state}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						style="#{formI9Bean.form.address.state eq null  ? 'background-color: rgb(255,255,170)' : ''};">
+						<f:selectItems value="#{formI9Bean.stateCodeDL}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</div>
+				<!--State End -->
+			</div>
+			<!-- STATE END-->
+
+			<!-- Fifth block Start-->
+			<div class="W15percnt FL">
+				<!-- ZIP CODE START -->
+				<div class="rowCont" style="height:54px;">
+					<span class="fdNm_w pad8lt" style="width:57px"> <h:outputText value="ZIP Code" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s1_zip_20-2" styleClass="i9InfoIcon pad2tp"
+						actionListener="#{formI9Bean.listenShowHelp}" tabindex="-1"
+						title="ZIP Code - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.address.zip) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:96%;"
+								id="HOME_ADDR_ZIP_20" maxlength="10"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.address.zip}"
+								valueChangeListener="#{formI9Bean.listenValueChange}">
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- ZIP CODE END -->
+			</div>
+			<!-- Fifth block End-->
+
+		</div>
+		<!-- Employee's Address end -->
+		<hr class="rowCont FL pad-1tp"
+			style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+		<!-- Help Text's Row 2 -->
+		<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '2'}">
+			<div class="i9HelpTextBoxBottom">
+				<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+				<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+			</div>
+		</h:panelGroup>
+
+		<!-- Employee Information Start -->
+		<div>
+			<!-- first block-->
+			<div class="W22percnt FL">
+				<!-- DATE OF BIRTH START -->
+				<div class="rowCont pad5lt"
+					style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad1tp" style="width:158px;">
+						<h:outputText escape="false" value="Date of Birth &lt;em&gt;(mm/dd/yyyy)&lt;/em&gt;" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="dob_20-3" styleClass="i9InfoIcon pad3tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Date of Birth - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad1lt #{empty (formI9Bean.form.dateOfBirth) ? 'requiredField' : ''}">
+							<ace:textEntry style="min-width:85%; width:92%;"
+									id="USER_DOB_MDY_20" maxlength="11"
+									disabled="#{not formI9Bean.empEdit}"
+									value="#{formI9Bean.form.dateOfBirth}"
+									valueChangeListener="#{formI9Bean.listenValueChange}">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+					<!-- <ace:dateTimeEntry id="USER_DOB_MDY_20"
+						tabindex="0" value="#{formI9Bean.form.dateOfBirth}"
+						renderAsPopup="true" disabled="#{not formI9Bean.empEdit}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						style="min-width:92%; width:92%"
+						 styleClass="fd_sm3 #{empty (formI9Bean.form.dateOfBirth) ? 'requiredField' : ''}">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+					</ace:dateTimeEntry> -->
+				</div>
+				<!-- DATE OF BIRTH END -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block Start-->
+			<div class="W23percnt FL">
+				<!-- SOCIAL SECURITY NUMBER START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w pad6lt pad1tp" style="width:162px;">
+						<h:outputText value="U.S. Social Security Number"/>
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="socialSecurity_20-3" styleClass="i9InfoIcon pad3tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="U.S. Social Security Number - Click for more information">
+					</h:commandButton>
+					<h:panelGroup rendered="#{not formI9Bean.empEdit}">
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry value="#{formI9Bean.form.viewSSN}" disabled="true" style="width:87%">
+								<f:converter converterId="lightspeed.SSNFormatter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{formI9Bean.empEdit}">
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry style="min-width:85%; width:87%;"
+									id="SOCIAL_SECURITY_20" maxlength="11"
+									disabled="#{not formI9Bean.empEdit}"
+									value="#{formI9Bean.form.socialSecurity}"
+									valueChangeListener="#{formI9Bean.listenValueChange}">
+								<f:converter converterId="lightspeed.SSNFormatter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- SOCIAL SECURITY NUMBER END -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- third block-->
+			<div class="W30percnt FL">
+				<!-- EMAIL ADDRESS START -->
+				<div class="rowCont" style="height:54px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad8lt pad1tp" style="width:163px;">
+						<h:outputText value="Employee's E-mail Address" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="email_20-3" styleClass="i9InfoIcon pad3tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Employee's E-mail Address - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.emailAddress) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:92%;"
+								id="USER_EMAIL_ADDRESS_20" maxlength="30"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.emailAddress}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- EMAIL ADDRESS END -->
+			</div>
+			<!-- third block End-->
+
+			<!-- Fourth block Start-->
+			<div class="W25percnt FL">
+				<!-- TELEPHONE NUMBER START -->
+				<div class="rowCont" style="height:54px;">
+					<span class="fdNm_w pad3lt pad1tp" style="width:181px;"> <h:outputText value="Employee's Telephone Number" /> </span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="telephone_20-3" styleClass="i9InfoIcon pad3tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Employee's Telephone Number - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt #{empty (formI9Bean.form.telephoneNumber) ? 'requiredField' : ''}">
+							<ace:textEntry style="width:90%;"
+								id="TELEPHONE_NUMBER_20" maxlength="12"
+								disabled="#{not formI9Bean.empEdit}"
+								value="#{formI9Bean.form.telephoneNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}">
+								<f:converter converterId="lightspeed.PhoneNumberOrNAConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- TELEPHONE NUMBER END -->
+			</div>
+			<!-- Fourth block End-->
+
+		</div>
+		<!-- Employee Information End -->
+		<!-- Help Text's Row 3 -->
+		<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '3'}">
+			<div class="i9HelpTextBoxTop">
+				<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+				<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}" />
+			</div>
+		</h:panelGroup>
+	</div>
+</ui:composition>

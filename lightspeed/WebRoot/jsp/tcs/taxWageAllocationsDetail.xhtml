@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	
+	<c:set var="allocationForm" value="#{bean.allocationForm}" />
+	<ace:tabPane label="Form">
+		<div id="scrolldiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+			<h:panelGroup rendered="#{allocationForm ne null}">
+
+				<div class="rowCont">&#160;</div>
+				<ui:include src="taxWageAllocationsHeader.xhtml">
+					<ui:param name="bean" value="#{bean}" />
+				</ui:include>
+
+				<div class="rowCont">&#160;</div>
+				<ui:include src="taxWageAllocationsTable.xhtml">
+					<ui:param name="bean" value="#{bean}" />
+				</ui:include>
+
+				<div class="rowCont">&#160;</div>
+				<ui:include src="taxWageAllocationsFooter.xhtml">
+					<ui:param name="bean" value="#{bean}" />
+				</ui:include>
+
+			</h:panelGroup>
+			<div class="rowCont">&#160;</div>
+			<div class="rowCont">&#160;</div>
+			<div class="pad40lt">
+				<h:panelGroup rendered="#{allocationForm eq null}" styleClass="txt12">
+					<h:outputText value="#{msg.Tours_Allocation_No_Forms1}" />
+					<h:outputText value="#{msg.Tours_Allocation_No_Forms2}" styleClass="B"/>
+					<h:outputText value="#{msg.Tours_Allocation_No_Forms3}"/>
+				</h:panelGroup>
+			</div>
+		</div>
+		<c:if test="#{bean.showWarningDialog}">
+			<ui:include src="popupTaxWagesTable.xhtml">
+			<ui:param name="bean" value="#{bean}" />
+			</ui:include>
+		</c:if>
+	</ace:tabPane>
+
+</ui:composition>
+

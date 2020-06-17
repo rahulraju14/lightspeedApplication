@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+<c:set var="showUS" value="#{userViewBean.user.showUS}" />
+<c:set var="showCanada" value="#{userViewBean.user.showCanada}" />
+<c:set var="isAddrUnification" value="#{fFApplicationScopeBean.useFeature('TTCO_ADDR_UNIF_USER_PROFILE')}" scope="request"/>	
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+	 
+	 LS-3926 Fetch feature flag for Address Unification once per request and pass the 
+	 value to the child xhtml pages.
+-->
+<title>#{headerViewBean.domainTabTitle} My Account</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	element = document.getElementById('myacct:innerView');
+	resizeElement(element, 185, 380);
+
+	element = document.getElementById('scrolldiv');
+	resizeElement(element, 225, 340); // extends into "rowBtnBdr" gradient!
+
+	if (scrollme > 0) { // scrollToPos was called...
+		scrollme = 0;
+		scrollToPos(); // re-do scroll after resize of div is done.
+	}
+
+	</c:if>
+}
+
+var mainListId = "scrolldiv";
+var formname = "myacct";
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="myacct">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="myaccount" />
+	</h:outputText>
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+					<h:panelGroup styleClass="errMsgCont" rendered="#{!preferencesBean.showChangePassword and !imageAddBean.showNewImage
+								and !userViewBean.showChangePin}">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</h:panelGroup>
+
+				<!-- Begin User pnlFull -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="FL rowCont ltrtBdr BKwhite">
+						<span class="FL pnlHdrTxt">
+							<h:outputText
+								rendered="#{userViewBean.user.displayName ne null}"
+								value="#{userViewBean.user.displayName}" />&#160;
+							<h:outputText rendered="#{userViewBean.user.student}"
+								 styleClass="noteTxt pad5lt" value="(Student)"/>
+						</span>
+						<!-- LS-3707 Add General Disclaimer on My Account Page  -->
+								<h:outputText class="FL pnlHdrTxt"
+									value="Complete your account information below to auto-fill your onboarding forms."
+									style="color:#dc3535;margin-left: 343px;" />
+								<h:outputText rendered="#{userViewBean.editMode or (headerViewBean.miniTab eq 1 and not empty bean.user.agentLists)}">
+							<span class="FR pad5rt">
+								<span class="btnPriDisLt" />
+								<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;" />
+								</span>
+								<span class="btnPriDisRt" />
+							</span>
+						</h:outputText>
+
+						<h:outputText rendered="#{(not userViewBean.editMode) and
+									(not empty authBean.pgFields['0.1,account'])}">
+							<span class="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										value="Edit" action="#{userViewBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+								</span>
+								<span class="btnPriHotRt" />
+							</span>
+						</h:outputText>
+
+					</div>
+
+					<div id="detailCont" class="ltrtBdr BKwhite">
+
+						<h:panelGrid id="innerView" styleClass="miniPanel">
+
+							<!-- Tabs for Contact Details -->
+							<ace:tabSet selectedIndex="#{userViewBean.selectedTab}">
+
+								<!--  Personal Tab  -->
+								<ace:tabPane label="Personal" id="personaltab">
+								<div id="scrolldiv" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+									<div class="rowGradient">
+
+										<div class="subMyAcctLt FL pad15lt pad15tp">
+
+											<!-- EMAIL - VIEW -->
+											<div class="rowCont FL">
+												<h:panelGroup
+														rendered="#{not userViewBean.editMode and (not (empty authBean.pgFields['3.1.1,email'] and userViewBean.hidden))}">
+												<span class="fdNm">
+													<h:outputText value="E-mail:" />
+													<span class="mandatory">*</span>
+												</span>
+													<span class="fd">
+														<h:outputLink value="mailto:#{userViewBean.user.emailAddress}">
+														<h:outputText value="#{userViewBean.user.emailAddress}"></h:outputText>
+														</h:outputLink>
+													</span>
+												</h:panelGroup>
+											</div>
+
+											<!-- EMAIL & NAME - EDIT -->
+											<h:panelGroup rendered="#{userViewBean.editMode}"
+													styleClass="subPersonal FL pad2tp">
+
+												<div class="rowCont FL">
+													<span class="fdNm">
+														<h:outputText value="E-mail:"
+																styleClass="#{empty userViewBean.user.emailAddress ? 'mandatory' : ''}" />
+														<span class="mandatory">*</span>
+													</span>
+														<ace:textEntry styleClass="fd_sm2" id="empEmailAddress"
+																rendered="#{(not (empty authBean.pgFields['3.1.1,email'] and userViewBean.hidden))}"
+																maxlength="100" value="#{userViewBean.user.emailAddress}">
+															<ace:ajax />
+														</ace:textEntry>
+												</div><!-- end personal Email -->
+
+												<!-- First name -->
+												<div class="rowCont LH20">
+													<span class="fdNm">
+														<h:outputText value="First Name:"
+																styleClass="#{empty userViewBean.user.firstName ? 'mandatory' : ''}" />
+														<span class="mandatory">*</span>
+													</span>
+													<ace:textEntry maxlength="20" style="min-width:100px;" id="empFirstName"
+															value="#{userViewBean.user.firstName}"
+															styleClass="fd_sm2">
+														<ace:ajax />
+													</ace:textEntry>
+													<!-- MIDDLE INITIAL -->
+													<span class="fdNm pad10lt" style="float:none;">
+														<h:outputText value="Middle Initial:"/>
+													</span>
+													<ace:textEntry maxlength="1" id="empMidInit"
+															value="#{userViewBean.user.middleName}"
+															styleClass="W30">
+													</ace:textEntry>
+												</div>
+
+												<!-- Last name -->
+												<div class="rowCont LH20 pad2tp">
+													<span class="fdNm">
+														<h:outputText value="Last Name:"
+																styleClass="#{empty userViewBean.user.lastName ? 'mandatory' : ''}" />
+														<span class="mandatory">*</span>
+													</span>
+													<ace:textEntry styleClass="fd_sm2" style="min-width:100px;" id="empLastName"
+															maxlength="25" value="#{userViewBean.user.lastName}" >
+														<ace:ajax />
+													</ace:textEntry>
+												</div>
+											</h:panelGroup>
+
+											<!-- PHONE NUMBERS -->
+											<ui:include src="acctPhone.xhtml">
+												<ui:param name="showCanada" value="#{showCanada}" />
+											</ui:include>
+											
+											<!-- IM, IMDB -->
+											<ui:include src="acctMessaging.xhtml" />
+
+										</div><!-- end personalCont -->
+
+										<!-- subPersonalRt -->
+										<div class="subMyAcctRt FR">
+
+											<!-- IMAGES (on Personal Mini-tab) -->
+											<div class="W96percnt pad40tp">
+										
+												<ui:include src="../common/imageTable.xhtml">
+													<ui:param name="list" value="#{userViewBean.user.imageResources}" />
+													<ui:param name="imageTitle" value="Image" />
+												</ui:include>
+										
+											</div>
+
+											<div class="pad80tp">
+												<h:outputText rendered="false">
+													<h:outputText styleClass="B U" value="Tip:"/>
+													<br/>
+													You can automatically fill out
+													<h:outputText styleClass="B" value="Start Forms"/>
+													using<br/>
+													your information from this
+													<h:outputText styleClass="B" value="My Account"/>
+													page
+												</h:outputText>
+											</div>
+
+										</div><!-- end subPersonal Right -->
+
+									</div><!-- end row gradient -->
+
+									<!-- Canada Payroll Information -->
+									<c:if test="${showCanada ==  true and showUS == false}">
+									<div class="rowGradient">
+										<ui:include src="acctCanadaPayrollInfo.xhtml" />
+										<div class="CB"></div>
+										<div class="pad15tp"> </div>
+									</div>
+									</c:if>
+									
+									<!-- US Payroll Information -->
+                                    <c:if test="${showUS == true}">
+									<div class="rowGradient">
+										<ui:include src="acctPayrollInfo.xhtml">
+											<ui:param name="isAddrUnification" value="#{isAddrUnification}"/>
+										</ui:include>
+										<div class="CB"></div>
+										<div class="pad15tp"> </div>
+									</div>
+									
+									<!-- W-4 INFORMATION -->
+									<div class="rowGradient">
+										<ui:include src="acctW4Info.xhtml" />
+
+										<div class="CB"></div>
+										<div class="pad15tp"> </div>
+									</div>
+
+									<!-- LOANOUT CORP INFO -->
+									<div class="rowGradient">
+										<ui:include src="acctLoanout.xhtml" />
+
+										<div class="CB"></div>
+										<div class="pad15tp"> </div>
+									</div>
+	                            </c:if>
+									<!-- password and delete links -->
+									<div class="rowCont pad80lt pad5tp">
+										<div class="subSecHdg">Account Settings</div>
+										<div class="pad20lt">
+
+											<!-- change password -->
+											<div class="pad30tp">
+												<h:panelGroup styleClass="homeCngPwdContWrap MA"
+														rendered="#{not headerViewBean.offline}">
+													<ace:linkButton value="Change My Password" id="changePassword"
+															action="#{preferencesBean.actionOpenChangePassword}" />
+												</h:panelGroup>
+											</div><!-- end change password -->
+
+											<div class="pad20tp">
+												<h:panelGroup styleClass="homeCngPwdContWrap MA"
+														rendered="#{not headerViewBean.offline}">
+													<ace:linkButton value="Change My PIN" id="changePin"
+															action="#{userViewBean.actionOpenChangePin}" />
+												</h:panelGroup>
+											</div><!-- end change pin -->
+
+											<div class="pad20tp pad10bm">
+												<h:panelGroup styleClass="homeCngPwdContWrap MA"
+														rendered="#{not headerViewBean.offline}">
+													<ace:linkButton value="Delete My Account" id="deleteAcct"
+															action="deleteaccount" />
+												</h:panelGroup>
+											</div><!-- end delete account -->
+										</div>
+									</div><!-- end Account Settings -->
+								
+								</div>
+
+								</ace:tabPane>
+								<!--  End Personal Mini-Tab  -->
+
+								<!-- Show Agents tab for talent only -->
+								<ui:include src="acctAgentsTab.xhtml">
+									<ui:param name="showTab" value="#{showCanada and not showUS}" />
+								</ui:include>
+
+								<!-- IMAGES MINI-TAB -->
+								<ui:include src="acctImageTab.xhtml" />
+
+							</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+						</h:panelGrid><!-- end miniView -->
+
+						<!-- secondary buttons -->
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<!-- Cancel btn -->
+							<h:outputText rendered="#{userViewBean.editMode}">
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+										<ace:linkButton styleClass="btnPriEnbCt"
+											onclick="queueClick(this,event);" id="actionCancel"
+											value="Cancel" action="#{userViewBean.actionCancel}" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:outputText>
+							<!-- end Cancel btn -->
+							<!-- Save btn for account and image tabs -->
+							<h:outputText rendered="#{userViewBean.editMode and headerViewBean.miniTab ne 1}">
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+									<ace:linkButton value="Save" onmouseup="showErrors();"
+										onclick="queueClick(this,event);" id="actionSave"
+										action="#{userViewBean.actionSave}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+								</span>
+							</h:outputText>
+							<!-- Save btn for the Agents tab -->
+							<h:outputText rendered="#{userViewBean.editMode and headerViewBean.miniTab eq 1}">
+								<span class="FR pad5rt">
+									<span class="btnSecHotLt" />
+									<span>
+									<ace:linkButton value="Save" onmouseup="showErrors();"
+										onclick="queueClick(this,event);" id="actionSaveAgent"
+										action="#{userViewBean.actionSaveAgent}" styleClass="btnSecHotCt" />
+									</span>
+									<span class="btnSecHotRt" />
+								</span>
+							</h:outputText>							
+						</div><!-- end secondary buttons -->
+
+					</div><!-- end contactDetailCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End List - pnlLt -->
+
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+		</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+	<ace:textEntry style="visibility:hidden;" id="scrollPos" value="#{userViewBean.scrollPos}" />
+
+</h:form>
+
+<ui:include src="changepassword.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+<ui:include src="../tcpopup/changePin.xhtml" />
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/zipCitiesDialog.xhtml" />
+
+</h:body>
+</html>

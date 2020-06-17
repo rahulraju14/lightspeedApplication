@@ -1,0 +1,286 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- ACCOUNT & BANK OR FINANCIAL INSTITUTION INFORMATION -->
+
+	<div class="BKwhite" style="width:820px;">
+
+		<!-- Main Form Start -->
+		<div class="FL pad10lt pad8tp W95percnt BKwhite sfFormBorder2" style="height:377px">
+			<div class="rowCont FL" style="margin-left:18%">
+				<h:outputText styleClass="FL B pad10tp txt16" value="ACCOUNT &amp; BANK OR FINANCIAL INSTITUTION INFORMATION" />
+			</div>
+
+			<!-- FIRST ROW START -->
+			<div class="rowCont FL pad10tp">
+				<!-- NAME OF ACCOUNT START -->
+				<div class="rowCont pad15lt pad4tp" style="height:26px;">
+					<span class="fdNm_w2" style="width:140px">
+						<h:outputText value="Name of Account:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.accountName) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30" styleClass="FL"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.accountName}"
+								style="width:69%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+					<span class="fdNm pad10lt" style="width:55px"><h:outputText styleClass="B FL" value=", MINOR" /> </span>
+				</div>
+				<span class="pad5lt">
+					<h:outputText styleClass="B FL txt10" style="margin-left:165px" escape="false"
+						value="Fill in name of Minor Trust Account &amp;#8210; usually minor&apos;s full legal name &amp;#8210; include middle initial, if any." />
+				</span>
+				<!-- NAME OF ACCOUNT END -->
+			</div> <!-- FIRST ROW END -->
+
+			<!-- SECOND ROW START -->
+			<div class="rowCont FL pad10tp">
+				<!-- NAME OF TRUSTEE START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:140px">
+						<h:outputText value="Name of Trustee:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.trusteeName) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30" styleClass="FL"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.trusteeName}"
+								style="width:69%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+					<h:outputText styleClass="FL B pad10lt" value=", TRUSTEE" />
+				</div>
+				<!-- NAME OF TRUSTEE END -->
+			</div> <!-- SECOND ROW END -->
+
+			<!-- THIRD ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- TYPE OF TRUST ACCOUNT START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:170px">
+						<h:outputText value="Type of Trust Account:" />
+					</span>
+					<div style="width:600px">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:buttonGroup id="trustAcctType" layout="spread"
+							mutuallyExclusive="true">
+							<span class="pad5lt FL B #{(formMtaBean.form.trustAccountType eq null) ? 'requiredDiv' : ''}">
+								<ace:radioButton group="trustAcctType" id="COOGAN"
+									labelPosition="right" label="COOGAN/BLOCKED TRUST ACCOUNT"
+									value="#{formMtaBean.trustAcctType[0]}"
+									valueChangeListener="#{formMtaBean.listenTrustAccountType}"
+									disabled="#{formMtaBean.nativeNy}">
+									<ace:ajax execute="trustAcctType" event="activate" render="trustAcctType"/>
+								</ace:radioButton>
+							</span>
+						<span class="pad5lt FL B #{(formMtaBean.form.trustAccountType eq null) ? 'requiredDiv' : ''}">
+							<ace:radioButton group="trustAcctType" id="UGMA"
+								labelPosition="right" label="UGMA ACCOUNT (NY ONLY)"
+								value="#{formMtaBean.trustAcctType[1]}"
+								valueChangeListener="#{formMtaBean.listenTrustAccountType}"
+								disabled="#{formMtaBean.nativeCa}">
+								<ace:ajax execute="trustAcctType" event="activate" render="trustAcctType"/>
+							</ace:radioButton>
+						</span>
+						<span class="pad15lt FL B #{(formMtaBean.form.trustAccountType eq null) ? 'requiredDiv' : ''}">
+							<ace:radioButton group="trustAcctType" id="UTMA"
+								disabled="#{formMtaBean.nativeCa}"
+								value="#{formMtaBean.trustAcctType[2]}"
+								valueChangeListener="#{formMtaBean.listenTrustAccountType}"
+								labelPosition="right" label="UTMA ACCOUNT (NY ONLY)">
+								<ace:ajax execute="trustAcctType" event="activate" render="trustAcctType"/>
+							</ace:radioButton>
+						</span>
+						</ace:buttonGroup>
+					</icecore:setEventPhase>
+					</div>
+				</div>
+				<!-- TYPE OF TRUST ACCOUNT END -->
+			</div> <!-- THIRD ROW END -->
+
+			<!-- FOURTH ROW START -->
+			<div class="rowCont FL pad15tp">
+				<!-- BANK OR FINANCIAL INST. NAME START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:170px">
+						<h:outputText value="Bank or Financial Inst. Name:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.bankName) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.bankName}"
+								style="width:74%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- BANK OR FINANCIAL INST. NAME END -->
+			</div> <!-- FOURTH ROW END -->
+
+			<!-- FIFTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- STREET ADDRESS START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:100px">
+						<h:outputText value="Street Address:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.bankAddress.addrLine1) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="50"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.bankAddress.addrLine1}"
+								style="width:83%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- STREET ADDRESS END -->
+			</div> <!-- FIFTH ROW END -->
+
+			<!-- SIXTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- CITY START -->
+				<div class="W33percnt FL">
+					<div class="rowCont pad15lt" style="height:26px;">
+						<span class="fdNm" style="width:35px">
+							<h:outputText value="City:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 #{(empty formMtaBean.form.bankAddress.city) ? 'requiredField' : ''}">
+								<ace:textEntry maxlength="35"
+									disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+									value="#{formMtaBean.form.bankAddress.city}"
+									style="width:80%;border-bottom:solid 1px;" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- CITY END -->
+
+				<!-- STATE START -->
+				<div class="W30percnt FL">
+					<div class="rowCont pad12lt" style="height:26px;">
+						<span class="fdNm" style="width:38px">
+							<h:outputText value="State:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<h:selectOneMenu styleClass="FL W77percnt pad6lt pad2tp"
+									disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+									value="#{formMtaBean.form.bankAddress.state}"
+									style="border-bottom:solid 1px; #{formMtaBean.form.bankAddress.state eq null ? 'background-color: rgb(255,255,170)' : ''};">
+									<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- STATE END -->
+
+				<!-- POSTAL CODE START -->
+				<div class="W35percnt FL">
+					<div class="rowCont pad10lt" style="height:26px;">
+						<span class="fdNm" style="width:75px">
+							<h:outputText value="Postal Code:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt #{(empty formMtaBean.form.bankAddress.zip) ? 'requiredField' : ''}">
+								<ace:textEntry maxlength="10"
+									disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+									value="#{formMtaBean.form.bankAddress.zip}"
+									style="width:66%;border-bottom:solid 1px;"/>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+				<!-- POSTAL CODE END -->
+			</div> <!-- SIXTH ROW END -->
+
+			<!-- SEVENTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- ROUTING/TRANSIT # START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:170px">
+						<h:outputText value="ROUTING/TRANSIT #:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.routingNumber) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="10"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.routingNumber}"
+								style="width:74%;border-bottom:solid 1px;">
+								<f:converter converterId="lightspeed.ABARoutingConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- ROUTING/TRANSIT # END -->
+			</div> <!-- SEVENTH ROW END -->
+
+			<!-- EIGHTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- ACCOUNT NUMBER START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:170px">
+						<h:outputText value="ACCOUNT NUMBER:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.accountNumber) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.accountNumber}"
+								style="width:74%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- ACCOUNT NUMBER END -->
+			</div> <!-- EIGHTH ROW END -->
+
+			<!-- NINTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- BANK OR FINANCIAL INST. REP. START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:170px">
+						<h:outputText value="Bank or Financial Inst. Rep:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+								value="#{formMtaBean.form.bankRepresentative}"
+								style="width:74%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- BANK OR FINANCIAL INST. REP. END -->
+			</div> <!-- NINTH ROW END -->
+
+			<!-- TENTH ROW START -->
+			<div class="rowCont FL pad4tp">
+				<!-- BANK OR FINANCIAL INST. PHONE START -->
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:173px">
+						<h:outputText value="Bank or Financial Inst. Phone:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="25"
+									disabled="#{not formMtaBean.empEdit or formMtaBean.form.noTrustAccount}"
+									value="#{formMtaBean.form.bankPhone}"
+									style="border-bottom:solid 1px;width:74%">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- BANK OR FINANCIAL INST. PHONE END -->
+			</div> <!-- TENTH ROW END -->
+		</div>
+	</div>
+</ui:composition>

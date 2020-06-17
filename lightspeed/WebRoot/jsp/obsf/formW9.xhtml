@@ -1,0 +1,578 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<style>
+.ipad .sec3 {
+	top: -4px;
+	line-height: 12px;
+}
+.ipad .sec3b {
+	line-height: 12px;
+}
+.ipad .sec3c {
+	top: -2px;
+	line-height: 12px;
+}
+</style>
+
+	<c:set var="formVersion" value="#{formW9Bean.form.version}" scope="request" />
+	<c:set var="formDir" value="w9_20#{formVersion}" scope="request" />
+	<c:set var="pre2018style" value="#{formVersion lt 18}" scope="request" />
+	<c:set var="is2018style" value="#{formVersion ge 18}" scope="request" />
+
+	<h:panelGroup label="Form W-9">
+		<div class="miniTab pad15lt" style="width: 840px;">
+
+			<!-- scrolling container -->
+			<div class="BKwhite sfFormBorder1" style="padding-bottom: 25px;">
+				<div class="pad10lt pad10rt" style="width: 840px;">
+					<!-- Header image -->
+					<h:graphicImage alt="" style="width:820px;margin-top:15px;" url="../../i/forms/#{formDir}/w9Header.png"/>
+					<!-- INFO DIV -->
+					<div class="FL rowCont pad4tp">
+						<!-- LEFT PART -->
+						<div class="FL" style="width:3%">
+							<h:graphicImage alt="" style="margin-top:-5px;#{is2018style ? 'height:390px; width:37px ' : 'height:348px; width:40px'};" 
+								url="../../i/forms/#{formDir}/w9PrintInstruction.png"/>
+						</div>
+						<!-- RIGHT PART -->
+						<div class="W95percnt FL">
+
+							<!-- FIRST ROW START -->
+							<div class="rowCont FL pad-5tp">
+								<!-- NAME START -->
+								<div class="rowCont pad20lt" style="height:26px;">
+									<span class="rowCont">
+										<h:outputText escape="false" value="&lt;strong&gt;1 &lt;/strong&gt; Name (as shown on your income tax return).
+											Name is required on this line; do not leave this line blank." />
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm3 #{empty (formW9Bean.form.fullName) ? 'requiredField' : ''}">
+											<ace:textEntry id="w9Name" maxlength="60"
+												disabled="#{not formW9Bean.empEdit}"
+												value="#{formW9Bean.form.fullName}"
+												style="width:96%"/>
+										</span>
+									</h:panelGroup>
+								</div>
+								<!-- NAME END -->
+							</div> <!-- FIRST ROW END -->
+
+							<!-- Horizontal rule -->
+							<hr class="pad11lt FL W98percnt" style="height:1px;background:black;border:0;margin-right:-3px;margin-top:11px;" />
+
+							<!-- SECOND ROW START -->
+							<div class="rowCont FL pad-5tp">
+								<!-- BUSINESS NAME START -->
+								<div class="rowCont pad20lt" style="height:26px;">
+									<span class="rowCont">
+										<h:outputText escape="false" value="&lt;strong&gt;2 &lt;/strong&gt; Business name/disregarded
+											entity name, if different from above" />
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm3">
+											<ace:textEntry maxlength="150"
+												disabled="#{not formW9Bean.empEdit}"
+												value="#{formW9Bean.form.businessName}"
+												style="width:96%" id="w9BusinessName"/>
+										</span>
+									</h:panelGroup>
+								</div>
+								<!-- BUSINESS NAME END -->
+							</div> <!-- SECOND ROW END -->
+
+							<!-- Horizontal rule -->
+							<hr class="pad11lt FL W98percnt" style="height:1px;background:black;border:0;margin-right:-3px;margin-top:11px;" />
+
+							<!-- THIRD ROW START -->
+							<div class="rowCont FL pad-5tp">
+								<!-- LEFT (3) -->
+								<div class="W75percnt FL" style="border-right:solid 1px;height:#{is2018style ? '160px' :'120px'};">
+									<!-- FEDERAL TAX CLASSIFICATION START -->
+									<div class="rowCont pad12lt" style="height:22px;">
+										<span class="rowCont pad5lt">
+											<h:outputText rendered="#{! is2018style}" escape="false" value="&lt;strong&gt;3 &lt;/strong&gt; Check appropriate box
+												for federal tax classification; check only one of the following seven boxes:" />
+											<h:outputText rendered="#{is2018style}" escape="false" value="&lt;strong&gt;3 &lt;/strong&gt; Check appropriate 
+												box for federal tax classification of the person whose name is entered on 
+												line 1. Check &lt;/br&gt; &#160; only one of the following seven boxes:" />
+										</span>
+										<div class="sec3">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<ace:buttonGroup id="w9CompanyType"
+											mutuallyExclusive="true" layout="spread">
+											<!-- Individual/sole proprietor or single-member LLC --> 
+											<span class="FL sec3b pad2tp #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}" style="width:172px;">
+												<ace:radioButton group="w9CompanyType" id="I"
+														label="Individual/sole proprietor or" labelPosition="right"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.taxClassType[0]}"
+														valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+													<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+												</ace:radioButton>
+												<span class="pad20lt"><h:outputText escape="false" value="single-member LLC" /></span>
+											</span>
+											<!-- C Corporation -->
+											<span class="pad2lt FL pad2tp #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}">
+												<ace:radioButton group="w9CompanyType" id="C"
+													label="C Corporation" labelPosition="right"
+													disabled="#{not formW9Bean.empEdit}"
+													value="#{formW9Bean.taxClassType[1]}"
+													valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+													<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+												</ace:radioButton>
+											</span>
+											<!-- S Corporation -->
+											<span class="pad5lt FL pad2tp #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}">
+												<ace:radioButton group="w9CompanyType" id="S"
+													label="S Corporation" labelPosition="right"
+													disabled="#{not formW9Bean.empEdit}"
+													value="#{formW9Bean.taxClassType[2]}"
+													valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+													<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+												</ace:radioButton>
+											</span>
+											<!-- Partnership -->
+											<span class="pad5lt FL pad2tp #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}">
+												<ace:radioButton group="w9CompanyType" id="P"
+													label="Partnership" labelPosition="right"
+													disabled="#{not formW9Bean.empEdit}"
+													value="#{formW9Bean.taxClassType[3]}"
+													valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+													<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+												</ace:radioButton>
+											</span>
+											<!-- Trust/estate -->
+											<span class="pad5lt FL pad2tp #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}">
+												<ace:radioButton group="w9CompanyType" id="T"
+													label="Trust/estate" labelPosition="right"
+													disabled="#{not formW9Bean.empEdit}"
+													value="#{formW9Bean.taxClassType[4]}"
+													valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+													<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+												</ace:radioButton>
+											</span>
+											<!-- Limited liability company -->
+											<div class="FL sec3b rowCont pad1tp">
+												<span class="FL txt11 #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}"
+														style="top:-2px;">
+													<ace:radioButton group="w9CompanyType" id="L"
+														labelPosition="right"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.taxClassType[5]}"
+														valueChangeListener="#{formW9Bean.listenChangeCompanyType}"
+														label="Limited liability company. Enter the tax classification 
+															(C=C corporation, S=S corporation, P=partnership)">
+															<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+													</ace:radioButton>
+												</span>
+												<span style="width:100px">
+													<span class="txt11 pad-2tp pad2lt"> <h:outputText escape="false" value="&amp;#9654;" /> </span>
+													<span class="fd_sm pad3lt #{((formW9Bean.form.companyType eq 'L') and
+													empty (formW9Bean.form.taxClassification)) ? 'requiredField' : ''}">
+														<ace:textEntry maxlength="2" styleClass="pad-2tp"
+															value="#{formW9Bean.form.taxClassification}"
+															style="width:25px;height:13px;"
+															disabled="#{(not formW9Bean.empEdit) or (formW9Bean.form.companyType ne 'L')}"/>
+													</span>
+												</span>
+											</div>
+											<div class="FL">
+												<span class="FL txt11 pad10lt">
+													<h:outputText escape="false" rendered="#{! is2018style}"
+														value="&lt;strong&gt;Note.&lt;/strong&gt; For a single-member LLC that is disregarded,
+															do not check LLC; check the appropriate box in the line above for &lt;/br&gt;
+															the tax classification of the single-member owner." />
+													<h:outputText escape="false" rendered="#{is2018style}"
+														value="&lt;strong&gt;Note.&lt;/strong&gt; Check the appropriate box in the line above for 
+															the tax classification of the single-member owner. Do not check &lt;/br&gt;
+															LLC if the LLC is classified as a single-member LLC that is disregarded from 
+															the owner unless the owner of the LLC is &lt;/br&gt;
+															another LLC that is not disregarded from the owner for U.S. federal 
+															tax purposes. Otherwise, a single-member LLC &lt;/br&gt;
+															that is disregarded from the owner should check the appropriate box for 
+															the tax classification of its owner." />
+												</span>
+											</div>
+											<!-- Other -->
+											<div class="FL sec3c rowCont #{is2018style ? 'pad5tp' : 'pad2tp'}">
+												<span class="FL #{(formW9Bean.form.companyType eq null) ? 'requiredDiv' : ''}">
+													<ace:radioButton group="w9CompanyType" id="O"
+														labelPosition="right" label="Other (see instructions)"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.taxClassType[6]}"
+														valueChangeListener="#{formW9Bean.listenChangeCompanyType}">
+														<ace:ajax execute="w9CompanyType" event="activate" render="w9CompanyType"/>
+													</ace:radioButton>
+												</span>
+												<span class="txt11 pad2lt"> <h:outputText escape="false" value="&amp;#9654;" /> </span>
+												<span class="fd_sm pad3lt #{((formW9Bean.form.companyType eq 'O') and
+													empty (formW9Bean.form.otherTaxClassification)) ? 'requiredField' : ''}">
+													<ace:textEntry maxlength="60" id="w9CompanyTypeOther"
+														value="#{formW9Bean.form.otherTaxClassification}"
+														style="width:68%;height:11px;"
+														disabled="#{(not formW9Bean.empEdit) or (formW9Bean.form.companyType ne 'O')}"/>
+												</span>
+											</div>
+										</ace:buttonGroup>
+										</icecore:setEventPhase>
+										</div>
+									</div> 
+									<!-- FEDERAL TAX CLASSIFICATION END -->
+								</div>
+								<!-- RIGHT (4) -->
+								<div class="W24percnt FL">
+									<!-- EXEMPTIONS START -->
+									<div class="rowCont pad5lt" style="height:26px;">
+										<span class="rowCont">
+											<h:outputText escape="false" value="&lt;strong&gt;4 &lt;/strong&gt; Exemptions (codes apply
+											only to certain entities, not individuals; see instructions on page 3):" />
+										</span>
+										
+										<h:panelGroup styleClass="FL rowCont #{is2018style ? 'pad15tp' : ''}">
+											<h:outputText escape="false" value="Exempt payee code (if any)" />
+											<h:panelGroup>
+												<span class="fd_sm">
+													<ace:textEntry maxlength="2" id="w9ExemptPayee"
+														style="width:16%;height:11px;border-bottom:solid 1px;"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.form.exemptPayeeCode}" />
+												</span>
+											</h:panelGroup>
+										</h:panelGroup>
+										
+										<h:panelGroup styleClass="FL rowCont #{is2018style ? 'pad15tp' : ''}">
+											<h:outputText styleClass="pad5tp" escape="false" value="Exemption from FATCA reporting code (if any)" />
+											<h:panelGroup>
+												<span class="fd_sm">
+													<ace:textEntry maxlength="1" id="w9FATCACode"
+														style="width:58%;height:12px;border-bottom:solid 1px;"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.form.fATCAReportingCode}" />
+												</span>
+											</h:panelGroup>
+										</h:panelGroup>
+										
+										<div class="rowCont FL #{is2018style ? 'pad12tp' : 'pad5tp'}">
+											<h:outputText escape="false" styleClass="txt8 I B "
+											value="(Applies to accounts maintained outside the U.S.)" />
+										</div>
+									</div>
+									<!-- EXEMPTIONS END -->
+								</div>
+							</div> <!-- THIRD ROW END -->
+
+							<!-- Horizontal rule -->
+							<hr class="pad11lt FL W98percnt pad-1tp" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+							<!-- FOURTH ROW START -->
+							<div class="rowCont FL pad-5tp">
+								<div class="W67percnt FL" style="height:102px;border-right:solid 1px;">
+									<!-- ADDRESS START -->
+									<div class="rowCont pad20lt" style="height:43px;">
+										<span class="rowCont">
+											<h:outputText escape="false" value="&lt;strong&gt;5 &lt;/strong&gt;
+												Address (number, street, and apt. or suite no.) #{is2018style ? 'See instructions.' : ''}" />
+										</span>
+										<h:panelGroup>
+											<div class="FL W50percnt">
+												<div class="FL">
+													<span class="">
+														<h:outputText value="Street Address"/>
+													</span>
+												</div>
+												<div class="rowCont FL">
+													<span class="fd_sm2 #{empty (formW9Bean.form.address.addrLine1) ? 'requiredField' : ''}">
+														<ace:textEntry maxlength="30"
+															style="width:94%" id="w9AddrLine1"
+															disabled="#{not formW9Bean.empEdit}"
+															value="#{formW9Bean.form.address.addrLine1}" />
+													</span>
+												</div>
+											</div>
+												<div class="FL W45percnt">
+													<div class="FL">
+														<span class="">
+															<h:outputText value="Apt/Unit # (Optional)"/>
+														</span>
+													</div>
+													<div class="rowCont FL">
+														<span class="fd_sm2">
+															<ace:textEntry maxlength="30"
+																style="width:97%" id="w9AddrLine2"
+																disabled="#{not formW9Bean.empEdit}"
+																value="#{formW9Bean.form.address.addrLine2}" />
+														</span>
+													</div>
+												</div>
+										</h:panelGroup>
+									</div>
+									<!-- ADDRESS END -->
+
+									<!-- Horizontal rule -->
+									<hr class="pad11lt FL W98percnt pad-1tp" style="height:1px;background:black;border:0;margin-right:-3px;margin-top:11px;" />
+
+									<!-- CITY STATE ZIP START -->
+									<div class="rowCont pad20lt pad-5tp" style="height: 31px;">
+										<span class="rowCont"> <h:outputText escape="false"
+												value="&lt;strong&gt;6 &lt;/strong&gt;
+												  ZIP code" />
+											<h:outputText escape="false"
+												value="City"
+												style="margin-left: 84px;" /> <h:outputText escape="false"
+												value="State"
+												style="margin-left: 271px;" />
+										</span>
+										<h:panelGroup>
+											<span class="FL rowCont"> <span
+												class="#{empty (formW9Bean.form.address.city) ? 'requiredField' : ''}">
+													<ace:textEntry maxlength="5" style="width:20%" id="w9Zip"
+														styleClass="fd_sm FL pad9lt"
+														disabled="#{not formW9Bean.empEdit}"
+														value="#{formW9Bean.form.address.zip}"
+														valueChangeListener="#{formW9Bean.listenZipCode}">
+														<ace:ajax execute="@this" render="@all" />
+													</ace:textEntry>
+											</span> <span>
+													<ace:textEntry maxlength="30"
+														style="width:52%;margin-left: 19px;" id="w9City"
+														styleClass="fd_sm FL" disabled="true"
+														value="#{formW9Bean.form.address.city}" />
+											</span> <h:selectOneMenu styleClass="FL W12percnt pad10lt"
+													disabled="true" id="w9State"
+													value="#{formW9Bean.form.address.state}"
+													style="margin-top:1px;">
+													<f:selectItems
+														value="#{applicationScopeBean.stateCodeProdDL}" />
+													<ace:ajax />
+												</h:selectOneMenu>
+
+											</span>
+										</h:panelGroup>
+									</div>
+									<!-- CITY STATE ZIP END -->
+								</div>
+								<div class="W31percnt FL" style="height:77px;">
+									<!-- REQUESTER'S NAME AND ADDRESS START -->
+									<div class="rowCont pad8lt" style="height:26px;">
+										<span class="rowCont">
+											<h:outputText escape="false" value="Requester&apos;s name and address (optional)" />
+										</span>
+										<h:panelGroup>
+											<span class="fd_sm2">
+												<ace:textEntry maxlength="30"
+													style="width:98%" id="w9Requester"
+													disabled="#{not formW9Bean.empEdit}"
+													value="#{formW9Bean.form.requesterNameAddress}"/>
+											</span>
+										</h:panelGroup>
+									</div>
+									<!-- REQUESTER'S NAME AND ADDRESS END -->
+								</div>
+							</div> <!-- FOURTH ROW END -->
+
+							<!-- Horizontal rule -->
+							<hr class="pad11lt FL W98percnt pad-1tp" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+							<!-- SIXTH ROW START -->
+							<div class="rowCont FL" style="margin-top:-3px;">
+								<!-- ACCOUNT NUMBER(S) START -->
+								<div class="rowCont pad20lt" style="height:26px;">
+									<span class="rowCont">
+										<h:outputText escape="false" value="&lt;strong&gt;7 &lt;/strong&gt;
+											List account number(s) here (optional)" />
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm3">
+											<ace:textEntry maxlength="100"
+												style="width:96%" id="w9AccountNum"
+												disabled="#{not formW9Bean.empEdit}"
+												value="#{formW9Bean.form.accountNumbers}" />
+										</span>
+									</h:panelGroup>
+								</div>
+								<!-- ACCOUNT NUMBER(S) END -->
+							</div> <!-- SIXTH ROW END -->
+
+							<!-- Horizontal rule -->
+							<hr class="pad11lt FL W98percnt" style="height:2px;background:black;border:0;margin-right:-3px;margin-top:11px;" />
+						</div>
+					</div> <!-- INFO DIV -->
+					<div class="FL" style="width:73%">
+						<h:graphicImage alt="" style="width:610px;margin-top:-9px;" url="../../i/forms/#{formDir}/w9_inst1.png"/>
+					</div>
+					<div class="FL W25percnt pad-5lt" style="margin-top:11px">
+						<!-- SOCIAL SECURITY NUMBER -->
+						<div class="FL rowCont sfFormBorder1">
+							<h:outputText styleClass="pad10lt fdNm_w2" escape="false" value="Social security number" />
+						</div>
+						<h:panelGroup rendered="#{not formW9Bean.empEdit}">
+							<span class="fd_sm  #{empty (formW9Bean.form.socialSecurity) ? 'requiredField' : ''}">
+								<ace:textEntry styleClass="pad4tp" value="#{formW9Bean.form.viewSSN}" disabled="true" style="width:97%"/>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{formW9Bean.empEdit}">
+							<span class="fd_sm #{empty (formW9Bean.form.socialSecurity) ? 'requiredField' : ''}">
+								<ace:textEntry style="width:97%;" maxlength="11"
+										disabled="#{not formW9Bean.empEdit}" 
+										value="#{formW9Bean.form.socialSecurity}"
+										styleClass="pad4tp" id="w9SocialSecurity">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+
+						<div class="FL rowCont">
+							<h:outputText styleClass="pad5lt fdNm_w2" escape="false" value="or" />
+						</div>
+
+						<!-- EMPLOYER IDENTIFICATION NUMBER -->
+						<div class="FL rowCont sfFormBorder1">
+							<h:outputText styleClass="pad10lt fdNm_w2" style="width:200px" escape="false" value="Employer identification number" />
+						</div>
+						<h:panelGroup styleClass="pad2tp">
+							<span class="fd_sm #{empty (formW9Bean.form.fedidNumber) ? 'requiredField' : ''}">
+								<ace:textEntry maxlength="11" id="w9FedidNumber"
+										styleClass="pad4tp" style="width:97%"
+										disabled="#{not formW9Bean.empEdit}"
+										value="#{formW9Bean.form.fedidNumber}">
+									<f:converter converterId="lightspeed.FedIdConverter" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+					<h:graphicImage alt="" style="width:820px;" url="../../i/forms/#{formDir}/w9_inst2.png"/>
+
+					<div class="FL rowCont pad-3tp" style="height:35px;">
+						<span class="FL pad5lt" style="border-right:solid 1px; width:52px; height:35px;">
+							<h:outputText styleClass="pad4tp txt15 B " value="Sign Here" />
+						</span>
+
+						<!-- SIGNATURE ROW START -->
+						<!-- SIGNATURE LABEL -->
+						<div class="FL pad6tp pad5lt" style="height: 27px;width:85px">
+							<h:outputText escape="false" styleClass="txt12 B"
+									value="Signature of U.S. person &amp;#9658;"/>
+						</div>
+
+						<!-- SIGNATURE VALUE -->
+						<div class="W50percnt FL pad3tp" style="height:35px;">
+							<div class="rowCont">
+								<span>
+									<h:outputText escape="false" styleClass="txt12" rendered="#{formW9Bean.contactDoc.empSignature ne null}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{formW9Bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+										<h:outputText value=" #{formW9Bean.contactDoc.empSignature.displayTime}" />
+										<br/>
+										<h:outputText value="# #{formW9Bean.contactDoc.empSignature.uuid}"/>
+									</h:outputText>
+								</span>
+								<!-- SIGN AND SUBMIT BUTTON START -->
+								<h:panelGroup rendered="#{(formW9Bean.contactDoc.submitable) or (formW9Bean.contactDoc.status eq 'PENDING')}">
+									<h:panelGroup styleClass="btn_legend_left" style="margin-top:15px; margin-right:10px;">
+										<h:panelGroup rendered="#{(formW9Bean.contactDoc.status ne 'PENDING') and (formW9Bean.empEdit or
+												(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Sign &amp; Submit"
+												action="#{contactFormBean.actionSubmit}"
+												title="Signature field" styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" id="w9Signature" />
+										</h:panelGroup>
+										<h:panelGroup rendered="#{not (formW9Bean.empEdit or
+												(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+												or (formW9Bean.contactDoc.status eq 'PENDING')}">
+											<span class="btnMiniLt"/>
+											<span>
+												<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+											</span>
+											<span class="btnMiniRt"/>
+										</h:panelGroup>
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- SIGN AND SUBMIT BUTTON END -->
+							</div>
+						</div>
+
+						<!-- SIGNATURE DATE -->
+						<div class="W20percnt FL pad17tp">
+							<h:outputText styleClass="B txt12" escape="false" value="Date &amp;#9658; "/>
+							<h:outputText value="#{formW9Bean.contactDoc.empSignature.date}">
+								<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+						</div>
+						<!-- SIGNATURE ROW END -->
+					</div>
+
+					<h:graphicImage alt="" style="width:820px;margin-top:-1px;" url="../../i/forms/#{formDir}/w9_inst3.png"/>
+					<h:outputText value="&#160;" styleClass="LH18"/>
+				</div>
+			</div><!-- scrolling container End-->
+
+			<!-- PAGE 2 -->
+			<div class="BKwhite sfFormBorder1 pad20tp" style="padding-bottom:25px;">
+				<div class="pad10lt pad10rt pad30tp" style="width:840px;">
+					<h:graphicImage alt="" style="width:820px;margin-top:1px;" url="../../i/forms/#{formDir}/w9_inst4.png"/>
+					<h:graphicImage alt="" style="width:820px;#{is2018style ? 'margin-left:-1px;margin-top:-4px;' : 'margin-top:-1px;'}" 
+						url="../../i/forms/#{formDir}/w9_inst5.png"/>
+				</div>
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH22" value="&#160;" />
+				</div>
+			</div>
+
+			<!-- PAGE 3 -->
+			<div class="BKwhite sfFormBorder1 pad20tp" style="padding-bottom:25px;">
+				<div class="pad10lt pad10rt pad30tp" style="width:840px;">
+					<h:graphicImage alt="" style="width:820px;margin-top:1px;" url="../../i/forms/#{formDir}/w9_inst6.png"/>
+					<h:graphicImage alt="" style="width:820px;margin-top:#{is2018style ? '-6px' : '-1px'};" 
+						url="../../i/forms/#{formDir}/w9_inst7.png"/>
+				</div>
+			</div>
+
+			<!-- PAGE 4 -->
+			<div class="BKwhite sfFormBorder1 pad20tp" style="padding-bottom:30px;">
+				<div class="pad10lt pad10rt pad30tp" style="width:840px;">
+					<h:graphicImage alt="" style="width:820px;margin-top:1px;" url="../../i/forms/#{formDir}/w9_inst8.png"/>
+					<h:graphicImage alt="" style="width:820px; #{is2018style ? 'margin-top:-6px;margin-left:-2px;':'margin-top:-1px;'}" 
+						url="../../i/forms/#{formDir}/w9_inst9.png"/>
+				</div>
+			</div>
+			
+			<h:panelGroup rendered="#{is2018style}">
+				<!-- PAGE 5 -->
+				<div class="BKwhite sfFormBorder1 pad20tp" style="padding-bottom:30px;">
+					<div class="pad10lt pad10rt pad30tp" style="width:840px;">
+						<h:graphicImage alt="" style="width:820px;margin-top:1px;" url="../../i/forms/#{formDir}/w9_inst10.png"/>
+						<h:graphicImage alt="" style="width:818px;margin-top:-2px;margin-left:-1px;" 
+							url="../../i/forms/#{formDir}/w9_inst11.png"/>
+					</div>
+				</div>
+				
+				<!-- PAGE 6 -->
+				<div class="BKwhite sfFormBorder1 pad20tp" style="padding-bottom:30px;">
+					<div class="pad10lt pad10rt pad10tp" style="width:840px;">
+						<h:graphicImage alt="" style="width:820px;margin-top:1px;" url="../../i/forms/#{formDir}/w9_inst12.png"/>
+					</div>
+					<div class="rowCont" style="height:150px;"/>
+				</div>
+			</h:panelGroup>
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formW9Bean}" />
+						<ui:param name="events" value="#{formW9Bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+</ui:composition>

@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL rowCont stepBorder pad15tp">
+		<h:commandButton id="step6" value=""
+			styleClass="FL pad3lt pad2tp  #{approvalPathsBean.showStep6 ? 'stepCloseIcon' : 'stepOpenIcon'}"
+			tabindex="-1" actionListener="#{approvalPathsBean.listenShowStep}"
+			title="Click to view the Step.">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" rendered="#{not isCanadaProd}" value="Step 6: "/>
+			<h:outputText styleClass="stepNum" rendered="#{isCanadaProd}" value="Step 4: "/>
+			<h:outputText styleClass="stepHdr" value="Save your Approval Path!"/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep6}">
+		<!-- <div class="rowCont FL pad10lt pad30tp">
+			<h:outputText styleClass="stepNum" value="Step 6: "/>
+			<h:outputText styleClass="stepHdr" value="Save your Approval Path!"/>
+		</div> -->
+
+		<div class="FL rowCont pad20tp">
+			<h:outputText styleClass="FL pad5tp pad20lt" escape="false"
+				value="Click &lt;strong&gt;Save&lt;/strong&gt; or &lt;strong&gt;Cancel:&lt;/strong&gt;"/>
+			<!-- SAVE BUTTON -->
+			<h:panelGroup rendered="#{(approvalPathsBean.editMode)}">
+				<span class="FL pad5rt pad15lt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Save" onmouseup="showErrors();"
+							action="#{approvalPathsBean.actionSave}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</h:panelGroup>
+			<!-- CANCEL BUTTON -->
+			<h:panelGroup rendered="#{(approvalPathsBean.editMode)}">
+				<span class="FL pad10rt pad10lt">
+					<span class="btnPriEnbLt" />
+					<span>
+					<ace:linkButton styleClass="btnPriEnbCt" value="Cancel"
+						action="#{approvalPathsBean.actionCancel}" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+			</h:panelGroup>
+		</div>
+	</h:panelGroup>
+</ui:composition>

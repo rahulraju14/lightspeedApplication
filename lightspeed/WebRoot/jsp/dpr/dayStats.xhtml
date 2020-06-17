@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- DAYS table in DPR - number of days scheduled, actual, remaining -->
+
+	<div class="FL">
+
+		<!-- header row -->
+		<div class="rowCont W100percnt">
+			<div class="dprDayColHdr dprDayRowHdr">DAYS        </div>
+			<div class="dprDayColHdr"><span>Main</span></div>
+			<div class="dprDayColHdr"><span>2nd Unit</span>    </div>
+			<div class="dprDayColHdr"><span>Rehearsal</span>   </div>
+			<div class="dprDayColHdr"><span>Test</span>        </div>
+			<div class="dprDayColHdr"><span>Reshoot</span>     </div>
+			<div class="dprDayColHdr"><span>Holiday</span>     </div>
+			<div class="dprDayColHdr"><span>Insurance</span>   </div>
+			<div class="dprDayColHdr"><span>Travel</span>      </div>
+			<div class="dprDayColHdr"><span>Total</span>       </div>
+			<div class="dprDayColHdr dprDayStatus"><span>Schedule Status</span></div>
+		</div>
+
+		<ui:include src="dayStatRow.xhtml">
+			<ui:param name="editMode" value="#{dprViewBean.editMode}"></ui:param>
+			<ui:param name="title" value="Scheduled"></ui:param>
+			<ui:param name="dprDays" value="#{dprViewBean.dpr.dprDaysScheduled}"></ui:param>
+			<ui:param name="daysStatus" value="#{dprViewBean.dpr.dprDaysScheduled.status}"></ui:param>
+		</ui:include>
+
+		<ui:include src="dayStatRow.xhtml">
+			<ui:param name="editMode" value="#{dprViewBean.editMode}"></ui:param>
+			<ui:param name="title" value="Actual"></ui:param>
+			<ui:param name="dprDays" value="#{dprViewBean.dpr.dprDaysToDate}"></ui:param>
+			<ui:param name="daysStatus" value="#{dprViewBean.dpr.dprDaysToDate.status}"></ui:param>
+		</ui:include>
+
+		<ui:include src="dayStatRow.xhtml">
+			<ui:param name="title" value="Remaining"></ui:param>
+			<ui:param name="editMode" value="false"></ui:param>
+			<ui:param name="editStatusMode" value="#{dprViewBean.editMode}"></ui:param>
+			<ui:param name="dprDays" value="#{dprViewBean.dpr.dprDaysScheduled}"></ui:param>
+			<ui:param name="dprDays2" value="#{dprViewBean.dpr.dprDaysToDate}"></ui:param>
+			<ui:param name="daysStatus" value="#{dprViewBean.dpr.daysStatus}"></ui:param>
+		</ui:include>
+	</div>
+
+</ui:composition>

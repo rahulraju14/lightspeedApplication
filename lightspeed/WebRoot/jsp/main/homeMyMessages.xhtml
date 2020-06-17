@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+										<!--  My Notifications Tab   -->
+										<ace:tabPane label="My Notifications" id="mymsgtabs"
+												rendered="#{not headerViewBean.offline}">
+											<div id="homeMyNotifTab">
+												<!-- My Notifications when NO messages Exist -->
+												<h:panelGroup
+													rendered="#{empty messageCenterBean.sortedItemList}">
+													<h:outputText
+														styleClass="B rowCont pad15lt pad10tp"
+														value="You have no notifications." />
+												</h:panelGroup>
+												<!-- END My Notifications when NO messages Exist -->
+
+												<!-- My Notifications when 1 or more messages Exist -->
+												<h:panelGroup layout="block" styleClass="W100percnt"
+														rendered="#{not empty messageCenterBean.sortedItemList}">
+														<div class="rowCont CT pad10tp">
+															<ace:dataTable
+																	styleClass="bk_sl_grid"
+																	value="#{messageCenterBean.sortedItemList}"
+																	scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+																	scrollHeight="#{headerViewBean.mobile ? '' : 107}"
+																	rows="50"
+																	id="mymessages" var="messageInstance"
+																	style="width:96%;max-width:100%;"
+																	rowSelectListener="#{messageCenterBean.listenRowClicked}"
+																	selectionMode="single" singleSort="true"
+																	paginator="true"
+																	paginatorPosition="bottom">
+
+																<ace:column sortBy="#{messageInstance.message.subject}" headerText="Subject" style="width:70%;">
+																	<span style="vertical-align:middle;">
+																		<ace:linkButton
+																				styleClass="B_#{not messageInstance.ackFlag}"
+																				value="#{messageInstance.message.subject}"
+																				actionListener="#{messageCenterBean.showMessage}">
+																			<f:attribute name="msgInstance" value="#{messageInstance}" />
+																		</ace:linkButton>
+																	</span>
+																</ace:column>
+																<ace:column headerText="Date/Time" sortBy="#{messageInstance.sent}" style="width:30%;">
+																	<ace:linkButton value=""
+																			actionListener="#{messageCenterBean.showMessage}">
+																		<f:attribute name="msgInstance" value="#{messageInstance}" />
+																		<h:outputText value="#{messageInstance.sent}">
+																			<f:convertDateTime
+																				pattern="M/d/yyyy h:mm a"
+																				timeZone="#{headerViewBean.production.timeZoneStr}" />
+																		</h:outputText>
+																	</ace:linkButton>
+																</ace:column>
+															</ace:dataTable>
+														</div>
+													<div class="FL W96percnt" style="margin-left:2%;">
+														<h:panelGroup
+															styleClass="pad5tp FL"
+															rendered="#{messageCenterBean.selectedRow ge 0}">
+															<div class="FL">
+																<h:outputText
+																	styleClass="pad5lt"
+																	value="#{messageCenterBean.messageInstance.sent}">
+																	<f:convertDateTime
+																		pattern="M/d/yyyy h:mm a"
+																		timeZone="#{headerViewBean.production.timeZoneStr}" />
+																</h:outputText>
+																<br />
+																<h:outputText value="Subject:"
+																	styleClass="pad5lt text_b1 B FL"></h:outputText>&#160;
+																<h:outputText
+																	value="#{messageCenterBean.messageInstance.message.subject}" />
+															</div>
+															<div id="myNotifBtnCont" class="FR">
+																<h:panelGroup rendered="#{headerViewBean.production.status=='ACTIVE'}">
+																	<span class="FR pad5rt">
+																		<span class="btnPriEnbLt" />
+																		<span>
+																			<ace:linkButton
+																				value="Delete"
+																				action="#{messageCenterBean.actionDelete}"
+																				styleClass="btnPriEnbCt" />
+																		</span>
+																		<span class="btnPriEnbRt" />
+																	</span>
+																</h:panelGroup>
+															</div>
+															<div class="rowCont FL">
+																<h:panelGroup layout="block"
+																		styleClass="notifMsgBody">
+																	<h:outputText escape="false"
+																		value="#{messageCenterBean.msgBody}">
+																	</h:outputText>
+																</h:panelGroup>
+															</div>
+														</h:panelGroup>
+														<h:panelGroup
+															styleClass="rowCont pad5tp FL"
+															rendered="#{messageCenterBean.selectedRow lt 0}">
+															<h:panelGroup
+																styleClass="notifNoMsgBody">
+																<h:outputText
+																	styleClass="pad5lt infoTxtnopad"
+																	value="Click on the subject of any notification listed above to read the notification details.">
+																</h:outputText>
+															</h:panelGroup>
+														</h:panelGroup>
+													</div>
+												</h:panelGroup><!-- END My Notifications when 1 or more messages Exist -->
+											</div>
+										</ace:tabPane><!--  END My Notifications Tab -->
+
+
+</ui:composition>

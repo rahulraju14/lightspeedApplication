@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="scene" pageWidth="540" pageHeight="1008" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="d26eb6ad-9d47-438f-b2e4-0f745502a206">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="callsheetId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[279]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select sc.* from scene_call sc where sc.advance_id = " + $P{callsheetId} +
+" order by date, line_number "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="advance" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[if true, generate "advance schedule" style report]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="episodic" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[if true, display 'episode' column]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Episode" class="java.lang.String"/>
+	<field name="Day_Number" class="java.lang.Integer"/>
+	<field name="Line_Number" class="java.lang.Integer"/>
+	<field name="Date" class="java.util.Date"/>
+	<field name="Heading" class="java.lang.String"/>
+	<field name="Number" class="java.lang.String"/>
+	<field name="Cast_Ids" class="java.lang.String"/>
+	<field name="Day_Night" class="java.lang.String"/>
+	<field name="Page_Length" class="java.lang.Integer"/>
+	<field name="Pages" class="java.lang.String"/>
+	<field name="Location" class="java.lang.String"/>
+	<field name="Callsheet_Id" class="java.lang.Integer"/>
+	<field name="Advance_Id" class="java.lang.Integer"/>
+	<variable name="totalPages" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Page_Length}]]></variableExpression>
+	</variable>
+	<variable name="dayPages" class="java.lang.Integer" resetType="Group" resetGroup="date" calculation="Sum">
+		<variableExpression><![CDATA[$F{Page_Length}]]></variableExpression>
+	</variable>
+	<group name="date">
+		<groupExpression><![CDATA[$F{Day_Number}]]></groupExpression>
+		<groupHeader>
+			<band height="10" splitType="Stretch">
+				<printWhenExpression><![CDATA[$P{advance}]]></printWhenExpression>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement uuid="e03a9b23-5d57-41c5-a910-9f282914fdce" key="textField" style="csDefBox" x="0" y="0" width="54" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $F{Day_Number}!=null ? "Day "+$F{Day_Number} : "" )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMM d, yyyy" isBlankWhenNull="true">
+					<reportElement uuid="e03a9b23-5d57-41c5-a910-9f282914fdce" key="textField" style="csDefBox" x="54" y="0" width="486" height="10"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10" splitType="Stretch">
+				<printWhenExpression><![CDATA[$P{advance} && ($V{totalPages} > 0)]]></printWhenExpression>
+				<staticText>
+					<reportElement uuid="c2d8ca82-7c25-4859-9e9d-195247256185" key="element-90" style="csDefault" x="0" y="0" width="288" height="10" forecolor="#333300"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Pages:]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="4607c034-1b75-4762-b4fe-e00886ef28ab" key="textField" style="csDefault" stretchType="RelativeToBandHeight" x="288" y="0" width="36" height="10"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($V{dayPages})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="10" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{advance}]]></printWhenExpression>
+			<staticText>
+				<reportElement uuid="e8df6bc3-0476-4eca-9221-b48ca1303c16" key="element-90" style="csDefBoxBold" mode="Opaque" x="0" y="0" width="540" height="10" forecolor="#330033" backcolor="#CCCCCC"/>
+				<textElement/>
+				<text><![CDATA[ADVANCE SCHEDULE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement uuid="71a1d71f-18fb-4a38-b674-e4f821a4545f" key="element-22" mode="Opaque" x="0" y="0" width="540" height="10" forecolor="#000000" backcolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="7f0e8e67-67b6-4694-8ccc-3ee7d1621a63" key="element-90" style="csDefBoxBold" x="0" y="0" width="27" height="10" forecolor="#330033">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Scene]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7f0e8e67-67b6-4694-8ccc-3ee7d1621a63" key="element-90" style="csDefBoxBold" x="27" y="0" width="27" height="10" forecolor="#330033">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Scene]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e8df6bc3-0476-4eca-9221-b48ca1303c16" key="element-90" style="csDefBoxBold" x="27" y="0" width="243" height="10" forecolor="#330033">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[Set/Scene Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e8df6bc3-0476-4eca-9221-b48ca1303c16" key="element-90" style="csDefBoxBold" x="54" y="0" width="216" height="10" forecolor="#330033">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[Set/Scene Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c41f1114-89b2-46d0-a215-9167fbfdd65a" key="element-90" style="csDefBoxBold" x="270" y="0" width="27" height="10" forecolor="#333300"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[D/N]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="721b3fc8-c5d3-4474-aa1b-37f182299b0c" key="element-90" style="csDefBoxBold" x="297" y="0" width="27" height="10" forecolor="#333300"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Pages]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c2d8ca82-7c25-4859-9e9d-195247256185" key="element-90" style="csDefBoxBold" x="324" y="0" width="63" height="10" forecolor="#333300"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Cast]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b6643039-d39c-4dc2-96d6-e496b80b4b36" key="element-90" style="csDefBoxBold" x="387" y="0" width="153" height="10" forecolor="#333300"/>
+				<textElement/>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7f0e8e67-67b6-4694-8ccc-3ee7d1621a63" key="element-90" style="csDefBoxBold" x="0" y="0" width="27" height="10" forecolor="#330033">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Epi #]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="eacfe213-49d8-465d-8b80-16e6e60b2ab8" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="0" y="0" width="27" height="10">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Number}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="eacfe213-49d8-465d-8b80-16e6e60b2ab8" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="27" y="0" width="27" height="10">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="855fc62a-fb7a-42ad-953a-f40ff8a06fb8" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="27" y="0" width="243" height="10">
+					<printWhenExpression><![CDATA[! $P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Heading}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="855fc62a-fb7a-42ad-953a-f40ff8a06fb8" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="54" y="0" width="216" height="10">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Heading}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="9cc77e7e-93f2-43cb-b09b-de5094348d23" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="270" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Day_Night}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4607c034-1b75-4762-b4fe-e00886ef28ab" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="297" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Pages}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="8bc3c4f9-972e-4382-bbcf-7d4d62b7e1de" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="324" y="0" width="63" height="10" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Cast_Ids}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="974f6b19-330b-4c50-8a04-bf3362f229ae" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="387" y="0" width="153" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Location}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="eacfe213-49d8-465d-8b80-16e6e60b2ab8" key="textField" style="csDefBox" stretchType="RelativeToBandHeight" x="0" y="0" width="27" height="10">
+					<printWhenExpression><![CDATA[$P{episodic}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Episode}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="10" splitType="Stretch">
+			<printWhenExpression><![CDATA[! $P{advance}]]></printWhenExpression>
+			<staticText>
+				<reportElement uuid="c2d8ca82-7c25-4859-9e9d-195247256185" key="element-90" style="csDefBox" x="0" y="0" width="540" height="10" forecolor="#333300"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c2d8ca82-7c25-4859-9e9d-195247256185" key="element-90" style="csDefault" x="0" y="0" width="288" height="10" forecolor="#333300"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total Pages:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4607c034-1b75-4762-b4fe-e00886ef28ab" key="textField" style="csDefault" stretchType="RelativeToBandHeight" x="288" y="0" width="36" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($V{totalPages})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

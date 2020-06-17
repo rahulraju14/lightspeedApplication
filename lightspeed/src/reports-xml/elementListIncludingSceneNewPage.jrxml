@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="elementListIncludingSceneNewPage" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="0641a339-49f3-433f-9beb-b84e2eb79366">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.lightspeedeps.util.report.ReportsConstants"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="defFont" isDefault="true" fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT distinct se.id, se.element_id, se.element_id_str castId, se.type, se.name,   unit.name unit_name,    case when rl.status = 'SELECTED'     then 'Selected'     else 'Not Selected'     end as status,    case se.type  when 'CHARACTER' then 'Characters'  when 'EXTRA' then 'Extras'  when 'PROP' then 'Props'  when 'MAKEUP_HAIR' then 'Makeup/Hair'  when 'WARDROBE' then 'Costumes'  when 'SET_DECORATION' then 'Set Dressing'  when 'STUNT' then 'Stunts'  when 'SPECIAL_EFFECT' then 'Special Effects'  when 'VEHICLE' then 'Vehicles'  when 'LIVESTOCK' then 'Livestock'  when 'ANIMAL' then 'Animal Handler'  when 'GREENERY' then 'Greenery'  when 'MUSIC' then 'Music'  when 'SOUND' then 'Sound'  when 'EQUIPMENT' then 'Special Equipment'  when 'ADDITIONAL_LABOR' then 'Additional Labor'  when 'OPTICAL_FX' then 'Optical FX'  when 'MECHANICAL_FX' then 'Mechanical FX'  when 'SECURITY' then 'Security'  when 'MISC' then 'Misc'  when 'LOCATION' then 'Sets'  else '?'  end as element_type  FROM project proj, scene sce, scene_script_element sse, strip sp, unit,    script_element se left outer join real_link rl on (se.id = rl.script_element_id) WHERE proj.current_stripboard_id = sp.Stripboard_Id and    sp.Type = 'BREAKDOWN' and    sp.unit_id = unit.id and   sce.Script_Id = proj.Current_Script_Id and   ((sse.scene_id = sce.id and sse.script_element_id = se.id ) or   \t (sce.set_id = se.id)) and   (concat(',', sp.scene_numbers, ',' ) like concat('%,', sce.number, ',%' )) and    se.type in (  'CHARACTER' ) and   unit.id = 6 and   se.project_id = 5 GROUP by se.id "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportId" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="projectName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="productionName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="constant" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[ReportsConstants.ReportName]]></defaultValueExpression>
+	</parameter>
+	<parameter name="scriptId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unitName" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Main"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="showUnit" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="castid" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="element_type" class="java.lang.String"/>
+	<variable name="currentPage" class="java.lang.Integer" incrementType="Page" calculation="Count">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(1)]]></initialValueExpression>
+	</variable>
+	<group name="department_name" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{element_type}]]></groupExpression>
+		<groupHeader>
+			<band height="47" splitType="Prevent">
+				<line>
+					<reportElement uuid="d5e1e9a1-15a5-4e44-a326-a2ecbfe78f1f" key="line-8" positionType="Float" mode="Transparent" x="16" y="23" width="503" height="1"/>
+				</line>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="7fd9c65e-f9c8-4b99-87f1-cd3be5449b88" key="textField-1" x="390" y="26" width="141" height="18"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.status]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="bfda8c1f-74de-4767-88c3-d08c0b60251c" key="textField-2" x="309" y="26" width="65" height="18"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Finish]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="dddb8544-dd5b-40ae-b13d-e6e0479b8b64" key="textField-3" x="221" y="26" width="65" height="18"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Start]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="cc869b15-369d-414d-ab57-37658af14600" key="textField-4" x="17" y="26" width="33" height="18"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Id]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement uuid="6e467e31-a1d6-4758-bdd6-956e76b6cc4e" key="textField-5" x="55" y="26" width="65" height="18"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ReportsConstants.Name]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="ff1c0514-7f17-4352-bc83-9503f2acae94" key="textField" positionType="Float" x="16" y="8" width="202" height="14"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{element_type}+"   "+($V{department_name_COUNT}.intValue()==0? "": "(Cont'd)")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Prevent"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="752" splitType="Prevent">
+			<rectangle>
+				<reportElement uuid="81d28cd5-c7f1-4c24-8411-fec2e14cb4f4" key="rectangle-1" x="1" y="0" width="551" height="733"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="55" splitType="Prevent">
+			<subreport isUsingCache="true">
+				<reportElement uuid="1b98b848-541c-44f4-8d91-a07ec15a65bd" key="subreport-1" x="0" y="0" width="552" height="55"/>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$P{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="unitName">
+					<subreportParameterExpression><![CDATA[$P{unitName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="showUnit">
+					<subreportParameterExpression><![CDATA[$P{showUnit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="45" splitType="Prevent">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="366a796c-4db5-4a8b-8daa-aa5aff54f093" key="textField" positionType="Float" x="17" y="0" width="33" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{castid}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="8c863de0-32d4-497f-9ca7-90b984fd5780" key="textField" positionType="Float" x="55" y="0" width="163" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5048378-f6bc-41e3-ae4a-6d1ed44cca25" key="staticText-8" positionType="Float" stretchType="RelativeToBandHeight" x="49" y="15" width="52" height="12" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[In Scenes:]]></text>
+			</staticText>
+			<subreport isUsingCache="true">
+				<reportElement uuid="2df69206-896e-47b9-9e7a-29da221949d3" key="subreport-1" positionType="Float" mode="Transparent" x="101" y="15" width="430" height="24" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="scriptElement">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="scriptId">
+					<subreportParameterExpression><![CDATA[$P{scriptId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/element/elementListSubrept.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4c718aab-ffe9-4986-b9e3-2cebe7d3848b" key="textField" x="390" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="6bf6aedf-a2ee-4520-b0c4-a0156cd3454a" key="subreport-2" x="218" y="0" width="103" height="15"/>
+				<subreportParameter name="scriptElement_Id">
+					<subreportParameterExpression><![CDATA[$F{id}.toString()]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportId">
+					<subreportParameterExpression><![CDATA[$P{reportId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/element/elementListDoodValues.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Prevent">
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement uuid="3dfe9827-e7bd-4747-b72d-3b89602abd72" key="textField" x="521" y="0" width="31" height="17"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0c70544e-dec0-4140-a7c2-427013749b1d" key="subreport-1" x="0" y="0" width="521" height="17"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="constant">
+					<subreportParameterExpression><![CDATA[$P{constant}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName">
+					<subreportParameterExpression><![CDATA[$P{productionName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="page_number">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName">
+					<subreportParameterExpression><![CDATA[$P{projectName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/common/rptFooterLogo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e7e20fc2-da92-4ebf-a031-92f670ad4320" key="staticText-1" x="175" y="14" width="216" height="17"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No elements matched your selection criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

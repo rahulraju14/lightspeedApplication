@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- DPR - controls at top of View page -->
+	<div class="rowCont ltrtBdr BKwhite FL">
+
+		<span class="pnlHdrTxt FL">
+			Reports
+			<h:panelGroup styleClass="pad10lt" rendered="#{dprViewBean.dprId ne null and
+						(not empty dprViewBean.dateDL)}">
+				<h:selectOneMenu styleClass="stdDd"
+					valueChangeListener="#{dprViewBean.listenDate}"
+					value="#{dprViewBean.dprId}">
+					<f:selectItems value="#{dprViewBean.dateDL}"/>
+						<ace:ajax execute="@this" render="@all"/>
+				</h:selectOneMenu>
+			</h:panelGroup>
+		</span>
+
+			<!-- TOP BUTTONS -->
+		<h:panelGroup styleClass="pad10lt"
+			rendered="#{not (dprViewBean.dpr.status eq 'APPROVED') and not empty authBean.pgFields['7.0.1,edit']}">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriHotLt" />
+				<ace:linkButton
+					value="Edit"
+					action="#{dprViewBean.actionEdit}"
+					styleClass="btnPriHotCt">
+					<f:setPropertyActionListener value="com.lightspeedeps.dprid" target="#{jumpBean.attribute}"/>
+					<f:setPropertyActionListener value="#{dprViewBean.dpr.id}" target="#{jumpBean.value}"/>
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt"
+			rendered="#{dprViewBean.dpr.status eq 'UPDATED' and not empty authBean.pgFields['7.0.1,submit']}">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriHotLt" />
+				<ace:linkButton
+					value="Submit"
+					actionListener="#{dprViewBean.actionSubmit}"
+					action="reports"
+					styleClass="btnPriHotCt">
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt"
+		  rendered="#{dprViewBean.dpr.status eq 'SUBMITTED' and not empty authBean.pgFields['7.0.1,approve']}">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriHotLt" />
+				<ace:linkButton
+					value="Reject"
+					actionListener="#{dprViewBean.actionReject}"
+					action="reports"
+					styleClass="btnPriHotCt">
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt"
+			rendered="#{dprViewBean.dpr.status eq 'SUBMITTED' and not empty authBean.pgFields['7.0.1,approve']}">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriHotLt" />
+				<ace:linkButton
+					value="Approve"
+					actionListener="#{dprViewBean.actionApprove}"
+					action="reports"
+					styleClass="btnPriHotCt">
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriEnbLt" />
+				<ace:linkButton
+					value="Email"
+					styleClass="btnPriEnbCt"
+					action="#{printDailyReportBean.actionSendDpr}">
+					<f:setPropertyActionListener target="#{printDailyReportBean.reportId}"
+						value="#{dprViewBean.dpr.id}" />
+				</ace:linkButton>
+				<span class="btnPriEnbRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriEnbLt" />
+				<ace:linkButton
+					value="Print"
+					styleClass="btnPriEnbCt"
+					action="#{printDailyReportBean.actionPrintDpr}">
+					<f:setPropertyActionListener target="#{printDailyReportBean.reportId}"
+						value="#{dprViewBean.dpr.id}" />
+				</ace:linkButton>
+				<span class="btnPriEnbRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="pad5lt">
+			<h:panelGroup styleClass="FR pad5rt">
+				<span class="btnPriHotLt" />
+				<ace:linkButton value="Export"
+						styleClass="btnPriHotCt" action="#{printDailyReportBean.actionExportDpr}">
+					<f:setPropertyActionListener target="#{printDailyReportBean.reportId}" value="#{dprViewBean.dpr.id}" />
+				</ace:linkButton>
+				<span class="btnPriHotRt" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+	</div>
+	<!-- End Top Buttons -->
+
+</ui:composition>

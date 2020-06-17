@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The "Transmit to Payroll" dialog for the Transfer to Payroll page that is used when the
+	  files are to be sent via email to the payroll service. -->
+	<!-- This is the similar to popupSelect.xhtml with the addition of a second drop-down field. -->
+	<h:form>
+		<ace:dialog visible="#{emailBatchPopupBean.visible}"
+				header="#{emailBatchPopupBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{emailBatchPopupBean.actionCancel}"/>		
+
+			<div class="popupBdyA">
+				<div class="popCont80">
+					<div class="popup_main">
+						<h:panelGroup rendered="#{emailBatchPopupBean.showWarningMessage}" styleClass="pad10bm">
+							<h:outputText value="#{emailBatchPopupBean.warningMessage}" styleClass="loginErrMsgTxt" escape="false"/>
+						</h:panelGroup>					
+						<h:outputText styleClass="stdTxt" escape="false" value="#{emailBatchPopupBean.message}"/>
+
+						<div class="rowCont pad10tp pad15lt txt12">
+							<!-- report style selection -->
+							<div class="padPop3tp FL W40percnt">
+								<span class="B">Timecard PDF Style:</span>
+							</div>
+							<div class="FL W55percnt">
+								<h:panelGroup>
+									<h:selectOneMenu 
+											value="#{emailBatchPopupBean.reportStyle}">
+										<f:selectItems value="#{emailBatchPopupBean.reportStyleDL}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+							</div>
+
+							<!-- EXPORT TYPE selection -->
+							<h:panelGroup rendered="#{emailBatchPopupBean.exportTypeDL ne null}">
+								<div class="rowCont pad10tp txt12">
+									<div class="padPop3tp FL W40percnt">
+										<span class="B">Data file export:</span>
+									</div>
+									<div class="FL W55percnt">
+										<h:panelGroup>
+											<h:selectOneMenu 
+													value="#{emailBatchPopupBean.exportType}">
+												<f:selectItems value="#{emailBatchPopupBean.exportTypeDL}" itemLabelEscaped="false" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+					</div><!-- popup_main -->
+				</div><!-- confPopCont2 -->
+
+				<div class="popBtnCont4">
+					<h:panelGroup rendered="#{not empty emailBatchPopupBean.buttonCancelLabel}">
+						<span class="FR pad5rt">
+							<span class="btnPriEnbLt" />
+							<span>
+								<ace:linkButton value="#{emailBatchPopupBean.buttonCancelLabel}"
+								action="#{emailBatchPopupBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR pad10rt" rendered="#{(emailBatchPopupBean.exportType ne 'NONE') or
+								(emailBatchPopupBean.reportStyle ne 'N_A')}">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Send" onclick="override();"
+									action="#{emailBatchPopupBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR pad10rt" rendered="#{(emailBatchPopupBean.exportType eq 'NONE') and
+								(emailBatchPopupBean.reportStyle eq 'N_A')}">
+						<span class="btnPriDisLt"/>
+						<span>
+							<ace:linkButton value="Send" styleClass="btnPriDisCt" onclick="return false;"/>
+						</span>
+						<span class="btnPriDisRt"/>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,820 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL" style="width:810px;">
+		<!-- Certification Start -->
+		<div class="FL">
+			<div class="FL rowCont">
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH10" value="&#160;" />
+				</div>
+				<!-- <h:outputText styleClass="txt16 B" escape="false"
+					value="Certification" /> -->
+			</div>
+
+			<div class="FL">
+				<h:outputText styleClass="rowCont txt13 B" escape="false" style="width:821px;"
+					value="Certification : I attest, under penalty of perjury, that (1) I have examined the
+						document(s) presented by the above-named employee, &lt;br/&gt;  (2) the above-listed document(s)
+						appear to be genuine and to relate to the employee named, and (3) to the best of my knowledge the &lt;br/&gt;
+						employee is authorized to work in the United States."/>
+			</div>
+
+			<!-- First Day Of Employment -->
+			<div class="rowCont">
+				<div class="rowCont FL">
+					<h:outputText styleClass="LH10" value="&#160;" />
+				</div>
+				<span class="txt13 B" style="width:821px;">
+					<h:outputText escape="false" styleClass="FL pad5tp"
+						value="The employee's first day of employment &lt;em&gt;(mm/dd/yyyy):&lt;/em&gt;" />
+				</span>
+				<!-- Help Icon/Button -->
+				<h:commandButton value="" id="firstDayOfEmp-13"
+					styleClass="FL i9InfoIcon pad2lt pad3tp" tabindex="-1"
+					actionListener="#{formI9Bean.listenShowHelp}"
+					title="Employee's first day of employment - Click for more information">
+				</h:commandButton>
+				<ace:dateTimeEntry id="FIRST_DAY_OF_EMPLOYMENT_17"
+					styleClass="fd_sm pad-2tp" style="display: inline;" tabindex="0"
+					value="#{formI9Bean.form.firstDayOfEmployment}"
+					renderAsPopup="true" disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+					valueChangeListener="#{formI9Bean.listenValueChange}">
+					<f:converter converterId="lightspeed.MultiDateConverter" />
+					<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/> -->
+				</ace:dateTimeEntry>
+				<h:outputText styleClass="txt13 B I pad-2tp"
+					value=" (See instructions for exemptions.)" />
+
+				<!-- AUTO-FILL BUTTON -->
+				<div class="pad5lt pad-10tp pad10rt" style="min-height:19px;"> <!-- keeps size even if button is hidden -->
+					<h:panelGroup rendered="#{(formI9Bean.contactDoc.employerSignature eq null)}">
+						<h:panelGroup styleClass="btn_legend">
+							<h:panelGroup rendered="#{(contactFormBean.editAuth) and
+									(not formI9Bean.contactDoc.submitable)}">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Auto-fill" id="AUTO_FILL_17"
+									action="#{formI9Bean.actionAutoFillCertification}"
+									title="Signature field" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</div>
+				<!-- AUTO-FILL BUTTON End -->
+
+			</div>
+
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div> -->
+		</div>
+		<!-- Certification End -->
+
+		<!-- Employer's Signature start -->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp" style="min-height:150px;overflow:hidden;">
+
+			<!-- Help Text's Row 13 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '13'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- First Row Start -->
+			<!-- first block-->
+			<div class="W42percnt FL" style="margin-bottom:-3px;">
+				<!-- Signature of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_w2 pad5lt" style="width:301px;">
+						<h:outputText value="Signature of Employer or Authorized Representative" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="employerSign-14" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2lt pad3tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Signature of Employer or Authorized Representative - Click for more information">
+					</h:commandButton>
+					<div class="FL rowCont pad2lt">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.employerSignature ne null}">
+							<h:outputText value="E-signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.employerSignature.displayTime}" />
+							<br/>
+							<h:outputText styleClass="pad5lt" value="# #{formI9Bean.contactDoc.employerSignature.uuid}"/>
+						</h:outputText>
+					</div>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend pad10tp" style="float:left;"
+									rendered="#{formI9Bean.contactDoc.employerSignature eq null}">
+						<h:panelGroup rendered="#{(! formI9Bean.contactDoc.submitable)
+												and (! formI9Bean.contactDoc.status.finalized)
+												and (formI9Bean.contactDoc.status ne 'PENDING')
+												and (contactFormBean.mayApprove)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Sign &amp; Approve" id="APPROVER_SIGN_1_17"
+								action="#{contactFormBean.actionEmployerSign}"
+								title="Signature field" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{(formI9Bean.contactDoc.submitable) or
+												(formI9Bean.contactDoc.status eq 'PENDING') or
+												(not contactFormBean.mayApprove)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+
+				</div>
+				<!-- Signature of Employer or Authorized Representative field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W22percnt FL" style="margin-bottom:-3px;">
+				<!-- Employer's Signature Date Start -->
+				<div class="rowCont pad5lt"
+					style="height:50px; border-right:solid 1px;">
+					<span class="FL fdNm_wa">
+						<h:outputText escape="false" value="Today's Date &lt;em&gt;(mm/dd/yyyy)&lt;/em&gt;" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="employerSignDate-14"
+						styleClass="FL i9InfoIcon pad2lt pad3tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Today's Date - Click for more information">
+					</h:commandButton>
+					<h:outputText value="#{formI9Bean.contactDoc.employerSignature.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!--  Employer's Signature Date Start End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- Third block-->
+			<div class="W35percnt FL">
+				<!--Title of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="FL fdNm_wa pad10lt">
+						<h:outputText value="Title of Employer or Authorized Representative" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="empTitle-14" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2lt pad3tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Title of Employer or Authorized Representative - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad10lt">
+							<ace:textEntry id="EMP_TITLE_17"
+								maxlength="35" style="width:95%;"
+								disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+								value="#{formI9Bean.form.empTitle}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"/>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Title of Employer or Authorized Representative field End -->
+			</div>
+			<!-- Third block End-->
+			<!-- First Row End -->
+
+			<hr class="rowCont FL pad-1tp"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Help Text's Row 14 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '14'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- Second Row Start -->
+			<div class="rowCont FL">
+				<!-- first block Start -->
+				<div class="W35percnt FL">
+					<!-- Employer's Last Name (Family Name) Start-->
+					<div class="rowCont pad2lt" style="height:50px; border-right:solid 1px;">
+						<span class="FL fdNm_wa txt11" style="width:auto">
+							<h:outputText value="Last Name of Employer or Authorized Representative" />
+						</span>
+						<h:commandButton value="" id="empLastName-15"
+							styleClass="FL i9InfoIcon pad1lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Last Name of the Employer or Authorized Representative - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="EMP_LAST_NAME_17"
+									maxlength="30" style="width:95%;"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empLastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Last Name (Family Name) End-->
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="FL pad-1lt" style="width:36%">
+					<!-- Employer's First Name (Given Name) Start-->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="FL fdNm_wa txt11 pad7lt" style="width:auto;">
+							<h:outputText value="First Name of Employer or Authorized Representative" />
+						</span>
+						<h:commandButton value="" id="empFirstName-15"
+							styleClass="FL i9InfoIcon pad1lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="First Name of the Employer or Authorized Representative - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="EMP_FIRST_NAME_17"
+									styleClass="pad7lt"
+									maxlength="30" style="width:94%;"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empFirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's First Name (Given Name) End-->
+				</div>
+				<!-- Second block End -->
+
+				<!-- Third block-->
+				<div class="W30percnt FL" style="width:29%">
+					<!--Employer's Business or Organization Name field Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="FL fdNm_wa txt11 pad2lt" style="width:auto;">
+							<h:outputText value="Employer's Business or Organization Name" />
+						</span>
+						<h:commandButton value="" id="empBusinessName-15"
+							styleClass="FL i9InfoIcon pad1lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Employer's Business or Organization Name - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad6lt">
+								<ace:textEntry style="width:93%;"
+									id="EMP_BUSINESS_NAME_17" maxlength="40"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empBusinessName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Business or Organization Name field End -->
+				</div>
+				<!-- Third block End-->
+			</div>
+			<!-- Second Row End -->
+
+			<hr class="rowCont FL"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Help Text's Row 15 -->
+			<h:panelGroup styleClass="FL rowCont" rendered="#{formI9Bean.helpRow eq '15'}">
+				<div class="i9HelpTextBoxBottom">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+			<!-- Third row start -->
+			<div>
+				<!-- first block-->
+				<div class="W53percnt FL">
+					<!-- Employer's Address field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="FL fdNm_wa pad5lt">
+							<h:outputText
+								value="Employer's Business or Organization Address (Street Number and Name)" />
+						</span>
+						<h:commandButton value="" id="s2_empAddr-16"
+							styleClass="FL i9InfoIcon pad1lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Employer's Business or Organization Address (Street Number and Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:96%;"
+									id="EMP_ADDR_STREET_17" maxlength="65"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.addrLine1}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Employer's Address field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W28percnt FL">
+					<!-- City or Town field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="FL fdNm_wa pad5lt">
+							<h:outputText value="City or Town" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s2_empCity-16"
+							styleClass="FL i9InfoIcon pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="City or Town - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:93%;"
+									id="EMP_ADDR_CITY_17" maxlength="45"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.city}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- City or Town field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- third block Start-->
+				<div class="W8percnt FL" style="height:50px;">
+					<!-- State Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="FL fdNm_wa pad5lt"> <h:outputText value="State" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s2_empState-16"
+							styleClass="FL i9InfoIcon pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="State - Click for more information">
+						</h:commandButton>
+						<h:selectOneMenu id="EMP_ADDR_STATE_17"
+							styleClass="FL W80percnt pad8lt"
+							disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+							value="#{formI9Bean.form.empAddress.state}"
+							valueChangeListener="#{formI9Bean.listenValueChange}">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+					<!--State End -->
+				</div>
+				<!-- third block End-->
+
+				<!-- Fourth block Start-->
+				<div class="W10percnt FL">
+					<!-- Zip Code Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="FL fdNm_wa pad5lt"> <h:outputText value="ZIP Code" /> </span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s2_empZip-16"
+							styleClass="FL i9InfoIcon pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="ZIP Code - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:90%;"
+									id="EMP_ADDR_ZIP_17" maxlength="10"
+									disabled="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"
+									value="#{formI9Bean.form.empAddress.zip}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!--Zip Code End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- Third row end -->
+
+			<!-- Help Text's Row 16 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '16'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+
+		</div>
+		<!-- Employer's Signature end -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH15" value="&#160;" />
+		</div>
+
+		<!-- SECTION-3 Start  -->
+		<div class="FL BKgrey sfFormBorder1 rowCont" style="height:45px;">
+			<!-- <div class="rowCont FL">
+				<h:outputText styleClass="LH3" value="&#160;" />
+			</div> -->
+			<h:outputText styleClass="pad5lt txt15" escape="false"
+				value="&lt;strong&gt; Section 3. Reverification and Rehires &lt;/strong&gt;
+			 			&lt;em&gt;(To be completed and signed by employer or authorized
+			 			representative.)&lt;/em&gt;" />
+			 <div class="pad5tp" style="border-top:solid 1px;">
+			 	<div class="FL" style="width:536px; border-right:solid 1px; height:18px">
+			 		<h:outputText styleClass="FL pad2tp pad5lt" escape="false"
+						value="&lt;strong&gt; A. &lt;/strong&gt; New Name &lt;em&gt;(if applicable)&lt;/em&gt;" />
+					<h:commandButton value="" id="s3_newName-17" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2lt"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="New Name - Click for more information">
+					</h:commandButton>
+				</div>
+				<div class="FL pad2tp" style="width:200px;">
+				 	<h:outputText styleClass="pad5lt" escape="false"
+					value="&lt;strong&gt; B. &lt;/strong&gt; Date of Rehire &lt;em&gt;(if applicable)&lt;/em&gt;" />
+				</div>
+			 </div>
+		</div>
+
+		<div class="rowCont sfFormBorder1 pad-1tp" style="min-height:50px; overflow:hidden;">
+			<!-- First Row Start -->
+			<div class="rowCont FL">
+
+				<!-- first block Start -->
+				<div class="W29percnt FL" style="border-right:solid 1px;">
+					<!-- Sec-3 Last Name (Family Name) Start -->
+					<div class="rowCont pad5lt" style="height:50px;">
+						<span class="fdNm_wa">
+							<h:outputText escape="false" value="Last Name &lt;em&gt; (Family Name) &lt;/em&gt;" />
+						</span>
+						<h:commandButton value="" id="s3_lastName-17" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2lt pad3tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Last Name (Family Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="SEC3_LAST_NAME_17"
+									maxlength="30" style="width:93%;"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3LastName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Last Name (Family Name) End -->
+				</div>
+				<!-- first block End -->
+
+				<!-- Second block Start -->
+				<div class="W29percnt FL pad2lt" style="border-right:solid 1px;">
+					<!-- Sec-3 First Name (Given Name) Start-->
+					<div class="rowCont pad2lt" style="height:50px;">
+						<span class="fdNm_wa"> <h:outputText escape="false" value="First Name &lt;em&gt; (Given Name) &lt;/em&gt;" /> </span>
+						<h:commandButton value="" id="s3_firstName-17" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2lt pad3tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="First Name (Given Name) - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry id="SEC3_FIRST_NAME_17"
+									maxlength="30" style="width:94%;"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3FirstName}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 First Name (Given Name) End-->
+				</div>
+				<!-- Second block End -->
+
+				<!-- Third block Start -->
+				<div class="W13percnt FL pad3lt" style="border-right:solid 1px;">
+					<!-- Middle Initial Start-->
+					<div class="rowCont pad2lt" style="height:50px;">
+						<span class="fdNm_wa"> <h:outputText value="Middle Initial" /> </span>
+						<h:commandButton value="" id="s3_middleInitial-17" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2lt pad3tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Middle Initial - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry style="width:86%;"
+									id="SEC3_MIDDLE_INITIAL_17" maxlength="5"
+									disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+									value="#{formI9Bean.form.sec3MiddleInitial}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Middle Initial End-->
+				</div>
+				<!-- Third block End-->
+
+				<!-- Fourth block-->
+				<div class="W28percnt FL">
+					<!-- Sec-3 Rehire Date Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_wa pad6lt">
+							<h:outputText escape="false" value="Date &lt;em&gt;(mm/dd/yyyy) &lt;/em&gt;" />
+						</span>
+						<h:commandButton value="" id="s3_rehireDate-17" tabindex="-1"
+							styleClass="FL i9InfoIcon pad2lt pad3tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Date of Rehire - Click for more information">
+						</h:commandButton>
+						<ace:dateTimeEntry id="SEC3_REHIRE_DATE_17"
+							styleClass="fd_sm3 pad6lt" tabindex="0"
+							value="#{formI9Bean.form.sec3RehireDate}"
+							disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true" style="min-width:94%" >
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+						</ace:dateTimeEntry>
+					</div>
+					<!-- Sec-3 Rehire Date Start End -->
+				</div>
+				<!-- Fourth block End-->
+			</div>
+			<!-- First row end  -->
+
+			<!-- Help Text's Row 17 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '17'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<!-- C part Start-->
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+
+		<div class="rowCont sfFormBorder1 pad-1tp" style="min-height:81px;overflow:hidden">
+			<!-- First Row Start -->
+			<div class="FL">
+				<div class="rowCont" style="height:30px;">
+					<h:outputText escape="false"
+						value="&#160; &lt;strong&gt;C.&lt;/strong&gt; If employee's previous
+							grant of employment authorization has expired, provide the
+							information for the document or receipt that establishes
+							&lt;/br&gt; &#160; &#160; &#160; continuing employment authorization in
+							presented that establishes in the space provided below." />
+				</div>
+			</div>
+			<!-- First Row End -->
+
+			<hr class="rowCont FL"
+				style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<!-- Second row start -->
+			<div>
+				<!-- first block-->
+				<div class="W35percnt FL" style="margin-bottom:-3px;">
+					<!-- Sec-3 Document Title field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_wa pad5lt">
+							<h:outputText value="Document Title" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s3_docTitle-18"
+							styleClass="FL i9InfoIcon pad2tp pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Title - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad6lt"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.sec3DocTitle}"
+									id="SEC3_DOC_TITLE_17" style="width:96%;"
+									disabled="#{not formI9Bean.appEdit or
+											 formI9Bean.contactDoc.employerSignature eq null}">
+								<f:selectItems value="#{formI9Bean.i9DocListSec3}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Document Title field End -->
+				</div>
+				<!-- first block End-->
+
+				<!-- Second block Start-->
+				<div class="W35percnt FL">
+					<!-- Sec-3 Document Number field Start -->
+					<div class="rowCont" style="height:50px; border-right:solid 1px;">
+						<span class="fdNm_wa pad5lt">
+							<h:outputText value="Document Number" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s3_docNumber-18"
+							styleClass="FL i9InfoIcon pad2tp pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Document Number - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<span class="fd_sm2 pad5lt">
+								<ace:textEntry style="width:94%;"
+									id="SEC3_DOC_NUMBER_17" maxlength="30"
+									value="#{formI9Bean.form.sec3DocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									disabled="#{not formI9Bean.appEdit or
+												formI9Bean.contactDoc.employerSignature eq null}"/>
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Document Number field End -->
+				</div>
+				<!-- Second block End-->
+
+				<!-- third block Start-->
+				<div class="W30percnt FL">
+					<!-- Sec-3 Expiration Date Start -->
+					<div class="rowCont pad5lt" style="height:50px;">
+						<span class="fdNm_wa">
+							<h:outputText escape="false" value="Expiration Date &lt;em&gt;(if any)(mm/dd/yyyy)&lt;/em&gt;" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="s3_docExpiration-18"
+							styleClass="FL i9InfoIcon pad2tp pad2lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Expiration Date - Click for more information">
+						</h:commandButton>
+						<h:panelGroup>
+							<ace:dateTimeEntry id="SEC3_DOC_EXPIRATION_17"
+								styleClass="fd_sm3" tabindex="0" style="width:93%;"
+								value="#{formI9Bean.form.sec3DocExpiration}" renderAsPopup="true"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+								<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+							</ace:dateTimeEntry>
+						</h:panelGroup>
+					</div>
+					<!-- Sec-3 Expiration Date End -->
+				</div>
+				<!-- third block End-->
+			</div>
+			<!-- Second row end -->
+
+			<!-- Help Text's Row 18 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '18'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+		</div>
+		<!-- C partEnd -->
+		<!-- Section 3 Start  -->
+
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I attest, under penalty of perjury, that to the best of my knowledge, this
+						employee is authorized to work in the United States, and if the employee
+						presented document(s), the document(s) I have examined appear to be
+						genuine and to relate to the individual." />
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+		</div>
+
+		<!-- Signature start -->
+		<div class="rowCont sfFormBorder1 pad-1lt pad-1tp" style="min-height:50px;overflow:hidden;">
+			<!-- First Row Start -->
+
+			<!-- first block-->
+			<div class="FL" style="width:40%">
+				<!-- Section-3 Signature of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_wa pad5lt">
+						<h:outputText value="Signature of Employer or Authorized Representative" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s3_employerSign-19"
+						styleClass="FL i9InfoIcon pad2tp pad2lt" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Signature of Employer or Authorized Representative - Click for more information">
+					</h:commandButton>
+					<span class="pad5lt">
+						<h:outputText escape="false" styleClass="txt12" rendered="#{formI9Bean.contactDoc.sec3Signature ne null}">
+							<h:outputText value="Electronically signed by" styleClass="U" />
+							<h:outputText value=" #{formI9Bean.contactDoc.sec3Signature.name}" styleClass="U B txtBlue" />
+							<h:outputText value=" #{formI9Bean.contactDoc.sec3Signature.displayTime}" />
+							<br/>
+							<h:outputText styleClass="pad5lt" value="# #{formI9Bean.contactDoc.sec3Signature.uuid}"/>
+						</h:outputText>
+					</span>
+
+					<!-- Sign Button Start -->
+					<h:panelGroup styleClass="btn_legend pad10tp" style="float:left"
+									rendered="#{formI9Bean.contactDoc.sec3Signature eq null}">
+						<h:outputText rendered="#{(! formI9Bean.contactDoc.submitable)
+												and (! formI9Bean.contactDoc.status.finalized)
+												and (formI9Bean.contactDoc.status ne 'PENDING')
+												and (formI9Bean.contactDoc.employerSignature ne null)
+												and (contactFormBean.editAuth)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Sign &amp; Approve" id="APPROVER_SIGN_2_17"
+								action="#{contactFormBean.actionEmployerSign}"
+								title="Signature field" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:outputText>
+						<h:outputText rendered="#{(formI9Bean.contactDoc.submitable)
+												or (formI9Bean.contactDoc.status eq 'PENDING')
+												or (formI9Bean.contactDoc.employerSignature eq null)
+												or (not contactFormBean.editAuth)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:outputText>
+					</h:panelGroup>
+					<!-- Sign Button End -->
+
+				</div>
+				<!-- Section-3 Signature of Employer or Authorized Representative field End -->
+			</div>
+			<!-- first block End-->
+
+			<!-- Second block-->
+			<div class="W20percnt FL pad5lt">
+				<!-- Section-3 Signature Date Start -->
+				<div class="rowCont"
+					style="height:50px; border-right:solid 1px;">
+					<span class="fdNm_wa FL">
+						<h:outputText escape="false" value="Today's Date&lt;em&gt;(mm/dd/yyyy)&lt;/em&gt;" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s3_employerSignDate-19"
+						styleClass="FL i9InfoIcon pad2tp" tabindex="-1"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Today's Date - Click for more information">
+					</h:commandButton>
+					<h:outputText value="#{formI9Bean.contactDoc.finalSignature.date}" styleClass="rowCont pad5lt">
+						<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+				<!-- Section-3 Signature Date End -->
+			</div>
+			<!-- Second block End-->
+
+			<!-- Third block-->
+			<div class="FL" style="width:39%">
+				<!--Name of Employer or Authorized Representative field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_wa pad4lt">
+						<h:outputText value="Name of Employer or Authorized Representative" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="s3_empName-19" tabindex="-1"
+						styleClass="FL i9InfoIcon pad2tp pad2lt"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="Name of Employer or Authorized Representative - Click for more information">
+					</h:commandButton>
+					<h:panelGroup>
+						<span class="fd_sm2 pad4lt">
+							<ace:textEntry style="width:96%;"
+								id="SEC3_EMP_NAME_17" maxlength="60"
+								value="#{formI9Bean.form.sec3EmpName}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.appEdit or formI9Bean.contactDoc.employerSignature eq null}"/>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- Print Name of Employer or Authorized Representative field End -->
+			</div>
+			<!-- Third block End-->
+			<!-- First Row End -->
+
+			<!-- Help Text's Row 19 -->
+			<h:panelGroup styleClass="FL rowCont BKgrey" rendered="#{formI9Bean.helpRow eq '19'}">
+				<div class="i9HelpTextBoxTop">
+					<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+					<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+				</div>
+			</h:panelGroup>
+		</div>
+		<!-- Signature End -->
+
+		<div class="rowCont FL">
+			<h:outputText styleClass="LH10" value="&#160;" />
+		</div>
+	</div>
+
+</ui:composition>

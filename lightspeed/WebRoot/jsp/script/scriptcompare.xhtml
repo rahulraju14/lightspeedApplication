@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Script Comparison</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	element = document.getElementById('impCompCont');
+	resizeElement(element, 178, 398);
+
+	resizeScrollable('comparison:impCompSceneList', 350, 225);
+
+//	element = document.getElementById('impCompSceneList');
+//	resizeElement(element, 303, 273);
+	</c:if>
+}
+
+var formname = "comparison";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script type="text/javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="comparison">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="newrevision" />
+	</h:outputText>
+
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin fullpnlLt -->
+				<div id="pnlFull" class="MA">
+					<div class="errMsgCont pad-2tp">
+						<ui:include src="../common/errorsMain.xhtml" />
+					</div>
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="#{headerViewBean.project.title}"/>
+								<h:panelGroup rendered="#{scriptComparisonBean.importStep}">
+									<!-- call to scriptComparisonBean.load (= getLoad()) initiates comparison -->
+									<h:outputText value="  " rendered="#{scriptComparisonBean.load}" />
+								</h:panelGroup>
+							</span>
+							<h:panelGroup rendered="#{scriptComparisonBean.importStep}">
+							<!-- remove this temporarily until they are dynamically generated
+							<span class="pnlHdrTxt FR pad10rt">
+								<h:outputText
+									value="Step 3 of 4"/>
+							</span>
+							-->
+							<div class="FR pad5rt pad5tp">
+								<span class="FL pad5lt pad-5tp LT LH12">
+									<span class="mandatory B">*</span> Transfer scene script elements from
+									<br />
+									<h:outputText
+											value="Rev. #{scriptComparisonBean.rightScript.revisionNumber}"/>
+									<h:outputText
+											value=" to Rev. #{scriptComparisonBean.leftScript.revisionNumber} for Accepted entries."/>
+								</span>
+							</div>
+							<div class="FR pad5rt pad10lt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										action="#{scriptComparisonBean.transferAccepted}"
+										value="&lt;== Transfer&#160;*"
+										styleClass="btnPriHotCt btnTxt W90">
+									</ace:linkButton>
+								</span>
+								<span>
+								</span>
+								<span class="btnPriHotRt" />
+							</div>
+							<div class="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										action="#{scriptComparisonBean.acceptSimilar}"
+										value="Accept All Match&amp;Similar"
+										styleClass="btnPriHotCt btnLbl2lines btnTxt W90">
+									</ace:linkButton>
+								</span>
+								<span>
+								</span>
+								<span class="btnPriHotRt" />
+							</div>
+							<div class="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										action="#{scriptComparisonBean.acceptMatching}"
+										value="Accept All Match"
+										styleClass="btnPriHotCt btnLbl2lines btnTxt W80">
+									</ace:linkButton>
+								</span>
+								<span>
+								</span>
+								<span class="btnPriHotRt" />
+							</div>
+							<div class="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										action="#{scriptComparisonBean.acceptNone}"
+										value="Accept None (reset)"
+										styleClass="btnPriHotCt btnLbl2lines btnTxt W80">
+									</ace:linkButton>
+								</span>
+								<span>
+								</span>
+								<span class="btnPriHotRt" />
+							</div>
+							<div class="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<span>
+									<ace:linkButton
+										action="#{scriptComparisonBean.actionRescan}"
+										value="Match Again"
+										styleClass="btnPriHotCt btnLbl2lines btnTxt W60">
+									</ace:linkButton>
+								</span>
+								<span class="btnPriHotRt" />
+							</div>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="centerFullTb MA">
+
+							<div id="miniView">
+
+								<div id="impCompCont" class="FL rowCont">
+									<!-- Tab for script compare -->
+									<ace:tabSet id="tabs" selectedIndex="0">
+
+										<!--  Script Compare Tab   -->
+										<ace:tabPane label="Script Comparison">
+											<div class="FL rowCont rowGradient LH32">
+												<span class="FL pad9tp pad20lt LH16">
+													<h:selectBooleanCheckbox
+															value="#{scriptComparisonBean.excludeMatches}">
+														<ace:ajax />
+													</h:selectBooleanCheckbox>
+												</span>
+												<h:outputText styleClass="FL checkbox_label B pad10tp LH16" value="Exclude matching scenes"/>
+											</div>
+
+
+<div class="rowCont">
+	<h:panelGroup
+			rendered="#{not empty scriptComparisonBean.scenePairs}">
+		<table class="B MA" style="width:945px;">
+			<tr class="CT">
+				<td class="W40percnt CT">
+					<h:outputText
+						value=" #{scriptComparisonBean.leftScript.description}"/>
+					<br />
+					<h:outputText
+						value="(Rev. #{scriptComparisonBean.leftScript.revisionNumber} -&#160;"/>
+					<h:outputText
+						value="#{scriptComparisonBean.leftScript.date}">
+						<f:convertDateTime type="both"
+							timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy h:mm a)" />
+					</h:outputText>
+				</td>
+				<td class="W20percnt">
+					<div class="pad40lt">
+					<h:panelGroup rendered="#{! scriptComparisonBean.importStep}" >
+						<span class="btnPriHotLt" />
+						<span>
+							<ace:linkButton action="#{scriptComparisonBean.swapSides}"
+						 		styleClass="btnPriHotCt btnLbl2lines btnTxt W65"
+						 		value="Swap Left &amp; Right">
+							</ace:linkButton>
+						</span>
+						<span>
+						</span>
+						<span class="btnPriHotRt" />
+					</h:panelGroup>
+					</div>
+		 		</td>
+				<td class="W40percnt CT">
+					<h:panelGroup styleClass="B"
+						rendered="#{not empty scriptComparisonBean.scenePairs}">
+						<h:outputText
+							value=" #{scriptComparisonBean.rightScript.description}"/>
+						<br />
+						<h:outputText
+							value="(Rev. #{scriptComparisonBean.rightScript.revisionNumber} -&#160;"/>
+						<h:outputText
+							value="#{scriptComparisonBean.rightScript.date}">
+							<f:convertDateTime type="both"
+								timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy h:mm a)" />
+						</h:outputText>
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>
+	</h:panelGroup>
+
+	<h:panelGroup
+			rendered="#{empty scriptComparisonBean.scenePairs}">
+		<h:outputText styleClass="infoTxtnopad" value="There is no script comparison to perform; click Next to continue." />
+	</h:panelGroup>
+
+	<div class="MA" style="width:945px;">
+		<ace:dataTable style="width:939px;" id="impCompSceneList"
+				value="#{scriptComparisonBean.scenePairs}"
+				var="pair"
+				scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+				scrollHeight="#{headerViewBean.mobile ? '' : '300'}"
+				rowStyleClass="CT rowCollapse"
+				styleClass="gradTbl3">
+			<ace:columnGroup type="header">
+				<ace:row>
+					<ace:column styleClass="columnExpand">
+						<h:outputText value="Expand" />
+					</ace:column>
+					<ace:column styleClass="columnPages">
+						<h:outputText value="Pages" />
+					</ace:column>
+					<ace:column styleClass="columnLocationComp">
+						<h:outputText value="Heading" />
+					</ace:column>
+					<ace:column styleClass="columnScene">
+						<h:outputText value="Scene#" />
+					</ace:column>
+					<ace:column styleClass="columnAdd">
+						<h:outputText value="Add" />
+					</ace:column>
+					<ace:column styleClass="columnCompare">
+						<h:outputText value="Comparison" />
+					</ace:column>
+					<ace:column styleClass="columnAdd">
+						<h:outputText value="Add" />
+					</ace:column>
+					<ace:column styleClass="columnScene2">
+						<h:outputText value="Scene#" />
+					</ace:column>
+					<ace:column styleClass="columnLocationComp">
+						<h:outputText value="Heading" />
+					</ace:column>
+						<ace:column styleClass="columnPages2">
+						<h:outputText value="Pages" />
+					</ace:column>
+				</ace:row>
+			</ace:columnGroup>
+			<ace:column id="Expand" styleClass="columnExpand"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:commandButton value="" style="height:15px;"
+						image="#{pair.showData ? '../../i/minus.gif' : '../../i/plus.gif'}"
+						action="#{scriptComparisonBean.expandTableListener}">
+					<f:setPropertyActionListener target="#{scriptComparisonBean.showRowNumber}"
+							value="#{pair.rowNumber}" />
+				</h:commandButton>
+			</ace:column>
+
+			<ace:column id="pageLength" styleClass="columnPages"
+				rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:panelGroup>
+					<h:outputText value="#{pair.left.pageLength}"
+						rendered="#{pair.left.pageLength eq pair.right.pageLength}"/>
+					<h:outputText value="#{pair.left.pageLength}"
+						rendered="#{pair.left.pageLength ne pair.right.pageLength}"
+						styleClass="scene_different" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column id="heading" styleClass="columnLocationComp"
+				rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:outputText value="#{pair.left.heading}"
+					rendered="#{pair.left.heading ne null and pair.left.heading eq pair.right.heading}"/>
+				<h:outputText value="#{pair.left.heading}"
+					rendered="#{pair.left.heading ne null and pair.left.heading ne pair.right.heading}"
+					styleClass="scene_different"/>
+				<h:outputText value="Scene does not exist" styleClass="scene_missing"
+					rendered="#{pair.left.heading eq null}"/>
+			</ace:column>
+
+			<ace:column id="sceneNumber" styleClass="columnScene"
+				rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:panelGroup styleClass="FL"
+					rendered="#{pair.left.number eq pair.right.number}">
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+					</div>
+					<h:panelGroup
+						style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+						styleClass="scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<a href="#" class="non_link" title="#{pair.left.number}">
+							<h:outputText styleClass="DB" value="#{pair.left.number}" />
+						</a>
+					</h:panelGroup>
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="FL"
+						rendered="#{pair.left.number ne pair.right.number}">
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+					</div>
+					<h:panelGroup
+						style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+						styleClass="scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<a href="#" class="non_link" title="#{pair.left.number}">
+							<h:outputText styleClass="DB" value="#{pair.left.number}" />
+						</a>
+					</h:panelGroup>
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.left.colorKey]} scc_del_#{pair.left.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+					</div>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column id="add" styleClass="columnAdd"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:commandButton value="V" title="Insert empty scene above this line"
+						disabled="#{empty authBean.pgFields['4.4,delete']}"
+						action="#{scriptComparisonBean.actionInsertRowLeft}">
+					<f:setPropertyActionListener
+						target="#{scriptComparisonBean.acceptRowNumber}"
+						value="#{pair.rowNumber}" />
+				</h:commandButton>
+			</ace:column>
+
+			<ace:column id="compare" styleClass="columnCompare"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:panelGroup styleClass="COMPARE_#{pair.displayStyle}" layout="block">
+					<h:commandButton
+							value="#{pair.displayStatus}"
+							rendered="#{scriptComparisonBean.importStep}"
+							action="#{scriptComparisonBean.toggleAcceptListener}">
+						<f:setPropertyActionListener
+								target="#{scriptComparisonBean.acceptRowNumber}"
+								value="#{pair.rowNumber}" />
+					</h:commandButton>
+					<h:panelGroup rendered="#{! scriptComparisonBean.importStep}">
+						<h:outputText value="#{pair.displayStatus}"/>
+					</h:panelGroup>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column id="add2" styleClass="columnAdd"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:commandButton value="V" title="Insert empty scene above this line"
+						disabled="#{empty authBean.pgFields['4.4,delete']}"
+						action="#{scriptComparisonBean.actionInsertRowRight}">
+					<f:setPropertyActionListener
+						target="#{scriptComparisonBean.acceptRowNumber}"
+						value="#{pair.rowNumber}" />
+				</h:commandButton>
+			</ace:column>
+
+			<ace:column id="sceneNumber2" styleClass="columnScene2"
+				rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:panelGroup styleClass="FL"
+					rendered="#{pair.left.number eq pair.right.number}">
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+					</div>
+					<h:panelGroup
+						style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+						styleClass="scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<a href="#" class="non_link" title="#{pair.right.number}">
+							<h:outputText styleClass="DB" value="#{pair.right.number}" />
+						</a>
+					</h:panelGroup>
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="FL"
+					rendered="#{pair.left.number ne pair.right.number}">
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endLt.png" width="13" height="26"/>
+					</div>
+					<h:panelGroup
+						style="background-image:url('../../i/wrap_mid.png');width:33px;overflow:hidden;float:left;display:inline-block;height:26px;line-height:26px;background-repeat:repeat-x;"
+						styleClass="scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<a href="#" class="non_link" title="#{pair.right.number}">
+							<h:outputText styleClass="DB" value="#{pair.right.number}" />
+						</a>
+					</h:panelGroup>
+					<div class="FL scc #{scriptComparisonBean.colorClassMap[pair.right.colorKey]} scc_del_#{pair.right.omitted}">
+						<h:graphicImage alt="" value="" url="../../i/wrap_endRt.png" width="13" height="26"/>
+					</div>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column id="heading2" styleClass="columnLocationComp"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:outputText value="#{pair.right.heading}"
+					rendered="#{pair.right.heading ne null and pair.left.heading eq pair.right.heading}"/>
+				<h:outputText value="#{pair.right.heading}"
+					rendered="#{pair.right.heading ne null and pair.left.heading ne pair.right.heading}"
+					styleClass="scene_different"/>
+				<h:outputText value="Scene does not exist" styleClass="scene_missing"
+					rendered="#{pair.right.heading eq null}"/>
+			</ace:column>
+
+			<ace:column id="pageLength2" styleClass="columnPages2"
+					rendered="#{pair.compareStatus ne 'MATCH' or ! scriptComparisonBean.excludeMatches}">
+				<h:outputText value="#{pair.right.pageLength}"
+					rendered="#{pair.left.pageLength eq pair.right.pageLength}"/>
+				<h:outputText value="#{pair.right.pageLength}"
+					rendered="#{pair.left.pageLength ne pair.right.pageLength}"
+					styleClass="scene_different" />
+			</ace:column>
+<!-- 
+						<!- - include jsp to display expansion of script elements - ->
+						<ui:include src="comparisonexpand.xhtml" />
+ -->
+		</ace:dataTable>
+	</div>
+
+</div>
+
+
+											</ace:tabPane><!--  End Script Compare Tab -->
+										</ace:tabSet>
+
+									</div><!-- end impCompCont -->
+
+							</div><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+								<h:panelGroup styleClass="FL pad5lt" rendered="#{scriptComparisonBean.importStep}">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton
+												action="#{scriptComparisonBean.actionCancelImport}"
+												value="Cancel Import"
+												styleClass="btnPriEnbCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnPriEnbRt" />
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="pad5lt"
+									rendered="#{scriptComparisonBean.importStep}">
+									<span class="FR pad15rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton action="next" value="Next"
+												styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+									<span class="FR pad5rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton
+												action="#{scriptComparisonBean.actionBack}"
+												value="Back"
+												styleClass="btnPriEnbCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+
+								</h:panelGroup>
+
+								<h:panelGroup
+									rendered="#{! scriptComparisonBean.importStep}">
+									<span class="FR pad10rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton
+												action="return"
+												value="Return"
+												styleClass="btnSecHotCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+
+<ui:include src="../common/confirmpopup.xhtml" /><!-- 'New Location' popup dialog -->
+
+</h:body>
+</ui:composition>

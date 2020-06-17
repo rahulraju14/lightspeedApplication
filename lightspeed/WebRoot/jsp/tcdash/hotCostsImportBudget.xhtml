@@ -1,0 +1,891 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<c:set var="dataBean" value="#{hotCostsDataEntryBean}" />
+	<c:set var="editable" value="#{hotCostsDataEntryBean.editMode}" />
+	<!-- Allows user to set up budgeted amounts for employees for Prep, Shoot and Wrap -->
+	<div class="W100percnt">
+		<ui:repeat value="#{dataBean.deptWeeklyHotCostsList}" var="deptEntry">
+			<div class="blueLegendContWrap MA">
+				<h:panelGroup rendered="#{deptEntry.weeklyHotCosts eq null}">
+					<div class="blueLegendCont pad12tp FL">
+						<span class="legendHdg">
+							<h:outputText styleClass="legendHdg pad10tp pad5rt" style="height:10px;" value="#{deptEntry.dept.name}#{msg.HotCosts_NoEmployeesInDepartment}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="${deptEntry.weeklyHotCosts[0] ne null}">
+					<h:panelGroup rendered="#{!deptEntry.expand}" >
+						<div class="blueLegendCont pad12tp FL">
+							<h:commandLink value="" styleClass="legendHdg" title="Show Department Members"
+								actionListener="#{deptEntry.listenToggleDept}">
+								<h:graphicImage value="" url="../../i/plus.gif" style="height:14px;" />
+							</h:commandLink>
+							<span class="legendHdg pad5tp">
+								<h:outputText styleClass="legendHdg" value="#{deptEntry.dept.name}" />
+							</span>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{deptEntry.expand}" >
+						<div class="blueLegendCont pad12tp FL">
+							<h:commandLink value="" styleClass="legendHdg" title="Hide Department Members"
+								actionListener="#{deptEntry.listenToggleDept}">
+								<h:graphicImage value="" url="../../i/minus.gif" style="height:14px;" />
+							</h:commandLink>
+							<div class="legendHdg pad5tp">
+								<h:outputText styleClass="legendHdg" value="#{deptEntry.dept.name}" />
+							</div>
+						</div>
+						<h:panelGroup styleClass="FL" style="width:86%;">
+							<!-- Actual Amounts -->
+							<ace:dataTable rendered="true" id="dailyHotCosts"
+								selectionMode="single" singleSort="true"
+								columnWidths="12%, 12%, 3%, 6%, 5%, 5%, 6%, 3%, 3%, 3%, 3%, 3%, 3%, 3%, 6%, 2%, 3%,
+									 2%, 2%, 2%, 2%, 5%"
+								value="#{deptEntry.weeklyHotCostsWrappers}" var="whc"
+								cellpadding="0" cellspacing="0" style="width:100%;max-width:100%;overflow-x:hidden;"
+								styleClass="gradTbl2 txt11" width="100%">
+								
+								<ace:columnGroup type="header">
+									<ace:row styleClass="CT">
+										<!-- Name -->
+										<ace:column></ace:column>
+										<!-- Occupation -->
+										<ace:column></ace:column>
+										<!-- Re-Rate -->
+										<ace:column>Re</ace:column>
+										<!-- Account Code -->
+										<ace:column colspan="3">Account</ace:column>
+										<!-- Day Type -->
+										<ace:column>Day</ace:column>
+										<!-- Call -->
+										<ace:column></ace:column>
+										<!-- Meal 1 -->
+										<ace:column colspan="2">Meal 1</ace:column>
+										<!-- Meal 2 -->
+										<ace:column colspan="2">Meal 2</ace:column>
+										<!-- Wrap -->
+										<ace:column></ace:column>
+										<!-- Hours -->
+										<ace:column></ace:column>
+										<!-- Work Zone -->
+										<ace:column>Work</ace:column>
+										<!-- Off Production -->
+										<ace:column>Off</ace:column>
+										<!-- NDB/NDM -->
+										<ace:column>NDB/</ace:column>
+										<!-- Grace 1 -->
+<!--
+										<ace:column>Grc</ace:column>
+-->
+										<!-- MPV 1 -->
+										<ace:column>MPV</ace:column>
+										<!-- Last Man In -->
+<!--
+										<ace:column>Lst</ace:column>
+-->
+										<!-- Grace 2 -->
+<!--
+										<ace:column>Grc</ace:column>
+-->
+										<!-- MPV 2 -->
+										<ace:column>MPV</ace:column>
+										<!-- Camera Wrap -->
+										<ace:column>Cam</ace:column>
+										<!-- Frn Hours -->
+<!--
+										<ace:column>Frn</ace:column>
+-->
+										<!-- Forced Call -->
+										<ace:column></ace:column>
+										<!-- Actual Cost -->
+										<ace:column>Act.</ace:column>
+
+									</ace:row>
+									<ace:row styleClass="CT">
+										<!-- Name -->
+										<ace:column>Name</ace:column>
+										<!-- Occupation -->
+										<ace:column>Occupation</ace:column>
+										<!-- Re-Rate -->
+										<ace:column>Rate</ace:column>
+										<!-- Account Code Prod/Epi-->
+										<ace:column>Prd/Epi</ace:column>
+										<!-- Account Code Set-->
+										<ace:column>Set</ace:column>
+										<!-- Account Code Detail -->
+										<ace:column>Detail</ace:column>
+										<!-- Day Type -->
+										<ace:column>Type</ace:column>
+										<!-- Call -->
+										<ace:column>Call</ace:column>
+										<!-- M1 Out -->
+										<ace:column>Out</ace:column>
+										<!-- M1 In -->
+										<ace:column>In</ace:column>
+										<!-- M2 Out -->
+										<ace:column>Out</ace:column>
+										<!-- M2 In -->
+										<ace:column>In</ace:column>
+										<!-- Wrap -->
+										<ace:column>Wrap</ace:column>
+										<!-- Hours -->
+										<ace:column>Hrs</ace:column>
+										<!-- Work Zone -->
+										<ace:column>Zone</ace:column>
+										<!-- Off Production -->
+										<ace:column>Prod</ace:column>
+										<!-- NDM Start -->
+										<ace:column>NDM</ace:column>
+										<!-- Grace 1 -->
+<!--
+										<ace:column>1</ace:column>
+-->
+										<!-- MPV 1 -->
+										<ace:column>1</ace:column>
+										<!-- Last Man In -->
+<!--
+										<ace:column>Man</ace:column>
+-->
+										<!-- Grace 2 -->
+<!--
+										<ace:column>2</ace:column>
+-->
+										<!-- MPV 2 -->
+										<ace:column>2</ace:column>
+										<!-- Camera Wrap -->
+										<ace:column>Wrp</ace:column>
+										<!-- French Hours -->
+<!--
+										<ace:column>Hrs</ace:column>
+-->
+										<!-- Forced Call -->
+										<ace:column>FC</ace:column>
+										<!-- Actual Cost -->
+										<ace:column>Cost</ace:column>
+									</ace:row>
+
+									<!-- Add columns to allow updates just for this department -->
+									<ace:row rendered="#{dataBean.editMode}" styleClass="CT">
+										<!-- Name -->
+										<ace:column></ace:column>
+										<!-- Occupation -->
+										<ace:column></ace:column>
+										<!-- Re-Rate -->
+										<ace:column></ace:column>
+										<!-- Prod/Epi -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt">
+												<ace:textEntry styleClass="txt10 W80percnt" id="deptProdEpi"
+													value="#{dataBean.deptProdEpiValues[deptEntry.dept.id]}"
+													valueChangeListener="#{dataBean.listenDeptProdEpiChange}" >
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Account Set -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt" id="deptAcctSet"
+													value="#{dataBean.deptAcctSetValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptAcctSetChange}" >
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Account Detail -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt" id="deptAcctDetail"
+													value="#{dataBean.deptAcctDetailValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptAcctDetailChange}" >
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Day Type -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+												<h:selectOneMenu id="deptDayType"
+													styleClass="pad2lt pad2rt txt10" valueChangeListener="#{dataBean.listenDeptDayTypeChange}"
+													 style="max-width:95%;height:95%;"
+													disabled="false" rendered="#{editable}" value="#{dataBean.deptDayTypeValues[deptEntry.dept.id]}">
+													<f:selectItems value="#{hotCostsBean.dayTypeDL}" />
+													<f:converter converterId="lightspeed.DayTypeConverter" />
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Call -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt" id="deptCall"
+													value="#{dataBean.deptCallValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptCallChange}" >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- M1 Out -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt CT" id="deptM1Out"
+													value="#{dataBean.deptM1OutValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptM1OutChange}"  >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- M1 In -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt CT" id="deptM1In"
+													value="#{dataBean.deptM1InValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptM1InChange}"  >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- M2 Out -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt CT" id="deptM2Out"
+													value="#{dataBean.deptM2OutValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptM2OutChange}"  >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- M2 In -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt CT" id="deptM2In"
+													value="#{dataBean.deptM2InValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptM2InChange}"  >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Wrap -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W80percnt CT" id="deptWrap"
+													value="#{dataBean.deptWrapValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptWrapChange}"  >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Hr -->
+										<ace:column></ace:column>
+										<!-- Work Zone -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+												<h:selectOneMenu id="deptWorkZone"
+													styleClass="pad2lt pad2rt txt10" valueChangeListener="#{dataBean.listenDeptWorkZoneChange}"
+													 style="max-width:95%; height:95%;"
+													disabled="false" rendered="#{editable}" value="#{dataBean.deptWorkZoneValues[deptEntry.dept.id]}">
+													<f:selectItems value="#{hotCostsBean.workZoneDL}" />
+													<f:converter converterId="lightspeed.WorkZoneConverter" />
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Off Production -->
+										<ace:column styleClass="CT">
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<h:selectBooleanCheckbox styleClass="ckbx pad5lt"  id="deptOffProd"
+													valueChangeListener="#{dataBean.listenDeptOffProdChange}"
+													value="#{dataBean.deptOffProdCheckBoxValues[deptEntry.dept.id]}">
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectBooleanCheckbox>
+											</h:panelGroup>
+										</ace:column>
+										<!-- NDB/NDM -->
+										<ace:column>
+											<h:panelGroup>
+												<div class="ndmDiv">
+													<h:selectBooleanCheckbox id="deptNdb" value="#{dataBean.deptNdbCheckBoxValues[deptEntry.dept.id]}" styleClass="ndm1"
+														valueChangeListener="#{dataBean.listenDeptNdbChange}"  >
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectBooleanCheckbox>
+														
+													<div class="ndmSlash" />
+													<div class="ndmSlash" />
+													<h:selectBooleanCheckbox id="deptNdm" value="#{dataBean.deptNdmCheckBoxValues[deptEntry.dept.id]}" styleClass="ndm2"
+														valueChangeListener="#{dataBean.listenDeptNdmChange}"  >
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectBooleanCheckbox>
+														
+												</div>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Grace 1 -->
+<!--
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry style="font-size:9px; width:80%; height:70%;" id="deptGrace1"
+													value="#{dataBean.deptGrace1Values[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptGrace1Change}" >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+-->
+										<!-- MPV 1 -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry  styleClass="txt10 W80percnt CT" id="deptMpv1"
+													value="#{dataBean.deptMpv1Values[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptMpv1Change}" >
+													<f:converter converterId="javax.faces.Integer"/>
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Last Man In -->
+<!--
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry style="font-size:9px; width:80%; height:70%;" id="deptLastManIn"
+													value="#{dataBean.deptLastManInValues[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptLastManInChange}" >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+-->
+										<!-- Grace 2 -->
+<!--
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry style="font-size:9px; width:80%; height:70%;"
+													value="#{dataBean.deptGrace2Values[deptEntry.dept.id]}" rendered="#{editable}" id="deptGrace2"
+													valueChangeListener="#{dataBean.listenDeptGrace1Change}" >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+-->
+										<!-- MPV 2 -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="txt10 W95percnt CT" id="deptMpv2"
+													value="#{dataBean.deptMpv2Values[deptEntry.dept.id]}" rendered="#{editable}"
+													valueChangeListener="#{dataBean.listenDeptMpv2Change}" >
+													<f:converter converterId="javax.faces.Integer"/>
+													<ace:ajax execute="@this" render="@all"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Camera Wrap -->
+										<ace:column styleClass="CT">
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<h:selectBooleanCheckbox styleClass="ckbx pad5lt"  id="deptCamWrap"
+													valueChangeListener="#{dataBean.listenDeptCamWrapChange}"
+													value="#{dataBean.deptCamWrapCheckBoxValues[deptEntry.dept.id]}" >
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectBooleanCheckbox>
+											</h:panelGroup>
+										</ace:column>
+										<!-- French Hours -->
+<!--
+										<ace:column styleClass="CT">
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<h:selectBooleanCheckbox styleClass="ckbx pad5lt"  id="deptFrenchHours"
+													valueChangeListener="#{dataBean.listenDeptFrenchHoursChange}"
+													value="#{dataBean.deptFrenchHoursCheckBoxValues[deptEntry.dept.id]}">
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectBooleanCheckbox>
+											</h:panelGroup>
+										</ace:column>
+-->
+										<!-- Forced Call -->
+										<ace:column styleClass="CT">
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<h:selectBooleanCheckbox styleClass="ckbx CT"  id="deptForcedCall"
+													valueChangeListener="#{dataBean.listenDeptForcedCallChange}"
+													value="#{dataBean.deptForcedCallCheckBoxValues[deptEntry.dept.id]}" >
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectBooleanCheckbox>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Actual Amount -->
+										<ace:column></ace:column>
+									</ace:row>
+								</ace:columnGroup>
+	
+								<!-- Name -->
+								<ace:column>
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+<!--
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:commandButton style="visibility: true" 
+												value="#{whc.weeklyHotCost.employment.id}" title="Delete this Daily Hot Cost"
+												image="../../i/icon_deleteX.gif" actionListener="#{dataBean.actionDeleteDailyHotCost}"
+												rendered="#{editable}"/>
+										</icecore:setEventPhase>
+-->
+										<h:outputText value="#{whc.employment.contact.displayName}" styleClass="txt10" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Occupation -->
+								<ace:column>
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+										<h:outputText value="#{whc.employment.occupation}" styleClass="txt10" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Re-Rate -->
+								<ace:column styleClass="CT">
+									<!-- Do not allow re-rates for weekly or daily exempt employees -->
+									<h:panelGroup rendered="#{!whc.weeklyHotCosts.exemptEmployee}" >
+										<h:panelGroup rendered="#{editable}" styleClass="W95percnt pad2lt padt2tp" >
+											<h:panelGroup rendered="#{whc.dailyHotCosts[dayOfWeekNum].reRate}">
+												<h:commandLink
+													actionListener="#{dataBean.actionReRate}"
+													title="Re-Rate" >
+													<h:graphicImage value="" styleClass="pad2rt" height="23"  url="../../i/btn_mini_checked_green.png" />
+												</h:commandLink>
+											</h:panelGroup>
+											<h:panelGroup rendered="#{!whc.dailyHotCosts[dayOfWeekNum].reRate}" styleClass="pad2tp" >
+												<h:commandLink value=" " actionListener="#{dataBean.actionReRate}"
+													title="Re-Rate" >
+													<h:graphicImage value="" styleClass="pad2rt" height="23"  url="../../i/btn_mini_blank.png" />
+												</h:commandLink>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{!editable}" styleClass="W95percnt pad2lt pad2tp" >
+											<h:panelGroup rendered="#{whc.dailyHotCosts[dayOfWeekNum].reRate}">
+												<h:commandLink value=""												
+													onClick="return false;"
+													title="Re-Rate" >
+													<h:graphicImage value="" styleClass="pad2rt" height="23" url="../../i/btn_mini_checked_green.png" />
+												</h:commandLink>
+											</h:panelGroup>
+											<h:panelGroup rendered="#{!whc.dailyHotCosts[dayOfWeekNum].reRate}" styleClass="pad2tp" >
+												<h:commandLink value=" "
+													onClick="return false;"
+													title="Re-Rate" >
+													<h:graphicImage value="" styleClass="pad2rt" height="23" url="../../i/btn_mini_blank.png" />
+												</h:commandLink>
+											</h:panelGroup>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{whc.weeklyHotCosts.exemptEmployee}" styleClass="CT">
+										<h:outputText value="Exempt" styleClass="CT txt10"/>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Account Code Prod/Epi -->
+								<ace:column>
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].accountMajor}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].accountMajor}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Account Code Set -->
+								<ace:column>
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].accountSet}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].accountSet}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Account Code Detail -->
+								<ace:column>
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].accountDetail}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].accountDetail}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Day Type -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt LT pad2rt pad2lt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].dayType.shortLabel}" rendered="#{!editable}" styleClass="txt10"/>
+										<h:selectOneMenu
+											value="#{whc.dailyHotCosts[dayOfWeekNum].dayType}"
+											styleClass="txt10 pad2lt pad5tp pad2rt pad5bm"
+											 style="max-width:95%"
+											disabled="false" rendered="#{editable}">
+											<f:selectItems value="#{hotCostsBean.dayTypeDL}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Call -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].callTime}" rendered="#{!editable}" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="txt10 W80percnt CT"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].callTime}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- M1 Out -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt">
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].m1Out}" rendered="#{!editable}"  styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].m1Out}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- M1 In -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].m1In}" rendered="#{!editable}" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].m1In}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- M2 Out -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].m2Out}" rendered="#{!editable}" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].m2Out}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- M2 In -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText styleClass="txt10" value="#{whc.dailyHotCosts[dayOfWeekNum].m2In}" rendered="#{!editable}">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].m2In}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Wrap -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].wrap}" rendered="#{!editable}" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].wrap}" rendered="#{editable}" 
+											valueChangeListener="#{dataBean.listenDailyHotCostChange}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Hrs -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].hours}" rendered="true" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+<!--
+										<ace:textEntry styleClass="CT txt10"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].hours}" rendered="#{editable}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+-->
+									</h:panelGroup>
+								</ace:column>
+								<!-- Work Zone -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText styleClass="pad5lt txt10" value="#{whc.dailyHotCosts[dayOfWeekNum].workZone.shortLabel}" rendered="#{!editable}" />
+										<h:selectOneMenu
+											value="#{whc.dailyHotCosts[dayOfWeekNum].workZone}"
+											styleClass="pad2lt pad5tp pad2rt pad5bm txt10"
+											 style="max-width:95%;height:60%;"
+											disabled="false" rendered="#{editable}">
+											<f:selectItems value="#{hotCostsBean.workZoneDL}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Off Prod -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:selectBooleanCheckbox styleClass="ckbx CT" 
+											disabled="#{!editable}" value="#{whc.dailyHotCosts[dayOfWeekNum].offProduction}"
+											style="height:40%;"
+										/>
+									</h:panelGroup>
+								</ace:column>
+								<!-- NDB/NDM -->
+								<ace:column>
+									<h:panelGroup>
+										<div class="ndmDiv">
+											<h:selectBooleanCheckbox id="DT_NDB" value="#{whc.dailyHotCosts[dayOfWeekNum].nonDeductMeal}" styleClass="ndm1"
+													 disabled="#{!editable}" />
+											<div class="ndmSlash" />
+											<div class="ndmSlash" />
+											<h:selectBooleanCheckbox id="DT_NDM" value="#{whc.dailyHotCosts[dayOfWeekNum].nonDeductMeal2}" styleClass="ndm2"
+													 disabled="#{!editable}" />
+										</div>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Grc 1 -->
+<!--
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].grace1}" rendered="#{!editable}">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry style="font-size:9px; width:80%; height:40%;" styleClass="CT"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].grace1}" rendered="#{editable}" >
+											<f:convertNumber maxFractionDigits="2"
+															 groupingUsed="false"
+															 maxIntegerDigits="7"
+															 type="number"/>
+										 </ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+-->
+								<!-- MPV 1 -->
+								<ace:column styleClass="txt9 CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].mpv1Payroll}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].mpv1Payroll}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Last Man In -->
+<!--
+								<ace:column styleClass="txt9">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].lastManIn}" rendered="#{!editable}">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry style="font-size:9px; width:80%; height:40%;" styleClass="CT"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].lastManIn}" rendered="#{editable}" >
+											<f:convertNumber maxFractionDigits="2"
+															 groupingUsed="false"
+															 maxIntegerDigits="7"
+															 type="number"/>
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+-->
+								<!-- Grc 2 -->
+<!--
+								<ace:column styleClass="txt9 CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].grace2}" rendered="#{!editable}">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry style="font-size:9px; width:80%; height:40%;" styleClass="CT"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].grace2}" rendered="#{editable}" >
+											<f:convertNumber maxFractionDigits="2"
+															 groupingUsed="false"
+															 maxIntegerDigits="7"
+															 type="number"/>
+										 </ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+-->
+								<!-- MPV 2 -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].mpv2Payroll}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].mpv2Payroll}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Cam Wrp -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:selectBooleanCheckbox styleClass="ckbx pad5lt" 
+											disabled="#{!editable}" value="#{whc.dailyHotCosts[dayOfWeekNum].cameraWrap}" style="height:40%;"
+										/>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Frn Hrs -->
+<!--
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:selectBooleanCheckbox styleClass="ckbx pad5lt" 
+											disabled="#{!editable}" value="#{whc.dailyHotCosts[dayOfWeekNum].frenchHours}" style="height:40%;"
+										/>
+									</h:panelGroup>
+								</ace:column>
+-->
+								<!-- Frcd Call -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt">
+										<h:selectBooleanCheckbox styleClass="ckbx pad5lt" 
+											disabled="#{!editable}" value="#{whc.dailyHotCosts[dayOfWeekNum].forcedCall}" style="height:40%;"
+										/>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Act. Cost -->
+								<ace:column styleClass="RT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].actualCost}" rendered="#{!editable}" styleClass="txt10">
+											<f:convertNumber maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="false"
+												maxIntegerDigits="7"
+												type="number"/>
+										</h:outputText>
+<!--
+										<ace:textEntry styleClass="RT txt10 W80percnt pad2rt" value="#{whc.dailyHotCosts[dayOfWeekNum].actualCost}" rendered="#{editable}" >
+											<f:convertNumber maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="false"
+												maxIntegerDigits="7"
+												type="number"/>
+										</ace:textEntry>
+-->
+									</h:panelGroup>
+								</ace:column>
+							</ace:dataTable>
+						</h:panelGroup>
+						<h:panelGroup rendered="true" styleClass="FR" style="width:13%;">
+							<!-- Budgeted Amounts table -->
+							<ace:dataTable  rendered="true" id="bgtdValues"
+								selectionMode="single" singleSort="true"
+								columnWidths="24%, 34%, 8%, 34%"
+								value="#{deptEntry.weeklyHotCostsWrappers}" var="whc"
+								cellpadding="0" cellspacing="0" style="width:100%;max-width:100%;overflow-x:hidden;"
+								styleClass="gradTbl2 txt11" width="100%">
+								
+								<ace:columnGroup type="header">
+									<ace:row styleClass="CT">
+										<ace:column  colspan="4">Budgeted</ace:column>
+									</ace:row>
+									<ace:row styleClass="CT">
+										<ace:column>Hrs</ace:column>
+										<ace:column>Hrs $</ace:column>
+										<ace:column>MPV</ace:column>
+										<ace:column>MPV $</ace:column>
+									</ace:row>
+									<ace:row rendered="#{editable}" styleClass="CT">
+										<!-- Budgeted Hours -->
+										<ace:column style="height:26px">
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt">
+												<ace:textEntry styleClass="CT txt10 W80percnt"
+													value="#{dataBean.deptBgtdHoursValues[deptEntry.dept.id]}" rendered="true"
+													valueChangeListener="#{dataBean.listenBgtdHoursChange}" id="deptBgtdHours"
+													 >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+
+											</h:panelGroup>
+										</ace:column>
+										<!-- Budgeted Cost -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<h:outputText styleClass="LT txt10 W80percnt"
+													value="#{dataBean.deptBgtdCostValues[deptEntry.dept.id]}" >
+													<f:convertNumber maxFractionDigits="2"
+														minFractionDigits="2"
+														groupingUsed="false"
+														maxIntegerDigits="7"
+														type="number"/>
+												</h:outputText>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Budgeted MPV -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="CT txt10 W80percnt"
+													value="#{dataBean.deptBgtdMpvValues[deptEntry.dept.id]}" rendered="true"
+													valueChangeListener="#{dataBean.listenBgtdMpvChange}" id="deptBgtdMpv"
+													 >
+													<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+										<!-- Budgeted MPV Cost -->
+										<ace:column>
+											<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+												<ace:textEntry styleClass="LT txt10 W80percnt"
+													value="#{dataBean.deptBgtdMpvCostValues[deptEntry.dept.id]}" rendered="true"
+													valueChangeListener="#{dataBean.listenBgtdMpvCostChange}" id="deptBgtdMpvCost"
+													 >
+													<f:convertNumber maxFractionDigits="2"
+																	 groupingUsed="false"
+																	 maxIntegerDigits="7"
+																	 type="number"/>
+												</ace:textEntry>
+											</h:panelGroup>
+										</ace:column>
+									</ace:row>
+								</ace:columnGroup>
+	
+								<!-- Budgeted Hours -->
+								<ace:column styleClass="CT" style="#{editable ? 'height:30px;' : ''}">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedHours}" rendered="#{!editable}" styleClass="txt10">
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</h:outputText>
+										<ace:textEntry styleClass="CT txt10 W80percnt"
+											value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedHours}" rendered="#{editable}" >
+											<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Budgeted Hours Dollar Ammount -->
+								<ace:column styleClass="RT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedCost}" styleClass="txt10">
+											<f:convertNumber maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="false"
+												maxIntegerDigits="7"
+												type="number"/>
+										</h:outputText>
+									</h:panelGroup>
+								</ace:column>
+								<!-- Budgeted MPV -->
+								<ace:column styleClass="CT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedMpv}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="CT txt10 W80percnt" value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedMpv}" rendered="#{editable}" />
+									</h:panelGroup>
+								</ace:column>
+								<!-- Budgeted MPV Dollar Ammount-->
+								<ace:column styleClass="RT">
+									<h:panelGroup styleClass="W95percnt pad2lt pad2rt" >
+										<h:outputText value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedMpvCost}" rendered="#{!editable}" styleClass="txt10"/>
+										<ace:textEntry styleClass="RT txt10 W80percnt"  value="#{whc.dailyHotCosts[dayOfWeekNum].budgetedMpvCost}" rendered="#{editable}" >
+											<f:convertNumber maxFractionDigits="2"
+												minFractionDigits="2"
+												groupingUsed="false"
+												maxIntegerDigits="7"
+												type="number"/>
+										</ace:textEntry>
+									</h:panelGroup>
+								</ace:column>
+							</ace:dataTable>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+		</ui:repeat>
+	</div> <!-- End of div for the actual amounts -->
+
+
+</ui:composition>

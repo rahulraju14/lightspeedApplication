@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Pop-up: Add selected child ScriptElements to Scenes where parent exists -->
+
+<!-- TODO: if the pop is resized maybe we can make it draggable again -->
+<h:form>
+<ace:dialog visible="#{scriptElementBean.showRetro}"
+		header="Add Linked Elements to Scenes"
+		closable="true"
+		draggable="true"
+		modal="true"
+		hideEffect="fade"
+		showEffect="fade"
+		resizable="false">
+		<ace:ajax event="close" execute="@this" listener="#{scriptElementBean.actionCancelRetro}"/>
+
+		<div id="popAddElemBdy">
+
+			<div id="popErrMsgCont" class="CT rowCont FL" style="margin-top:19px;margin-left:10px">
+				<!-- <ui:include src="../common/errorsPopup.xhtml" /> -->
+				<!-- there are no error messages in this popup -->
+			</div>
+
+			<div id="addElemCont">
+
+				<div class="popup_main">
+					<div class="infoTxtnopad padPop15tp">
+						<span class="FL">To add one or more of these elements
+							to all the scenes that already include
+							<h:outputText value=" #{scriptElementBean.element.name}," />
+							select the appropriate check boxes, then click Make Retroactive.
+						</span>
+					</div>
+
+					<div class="poprowCont padPop5tp BKwhite">
+						<c:if test="#{headerViewBean.mobile}">
+							<!-- <ice:dataPaginator id="data"
+								for="elemTblr"
+								paginator="true" fastStep="1"
+								paginatorMaxPages="5" renderFacetsIfSinglePage="false"
+								rendered="#{not empty scriptElementBean.childItems}" styleClass="MA">
+								<f:facet name="previous">
+									<h:graphicImage value="" url="../../i/previous.gif" width="16" height="16"
+										title="Previous Page" />
+								</f:facet>
+								<f:facet name="next">
+									<h:graphicImage value="" url="../../i/next.gif" width="16" height="16"
+										title="Next Page" />
+								</f:facet>
+							</zce:dataPaginator> -->
+							<!--
+							paginator="#{bean.paginate}"
+							paginatorAlwaysVisible="false"
+							paginatorPosition="top" pagesToSkip="5" pageCount="5"
+							paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"
+-->
+						</c:if>
+						<div id="elemTblScr">
+							<ace:dataTable
+								selectionMode="single"
+								style="width:100%;max-width:100%;"
+								id="elemTblr"
+								rows="#{headerViewBean.mobile ? '7' : ''}"
+								styleClass="bk_sl_grid"
+								value="#{scriptElementBean.childItems}"
+								var="element">
+								<ace:column headerText="" styleClass="bk_sl_scene" style="width:25px;padding-left:9px;">
+									<h:selectBooleanCheckbox styleClass="ckbx"
+										value="#{element.selected}">
+									</h:selectBooleanCheckbox>
+								</ace:column>
+								<ace:column headerText="" styleClass="stdTxt txt12 bk_sl_scene" style="width:355px;">
+									<h:outputText value="#{element.name}" />
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="popBtnCont">
+
+				<span class="FR pad5rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel"
+							action="#{scriptElementBean.actionCancelRetro}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Make Retroactive"
+							title="Add the selected items"
+							action="#{scriptElementBean.actionApplyRetro}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+</ace:dialog>
+</h:form>
+
+</ui:composition>

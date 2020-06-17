@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- for "Images" tabs, the area that actually displays the images: used for Cast & Crew, Script Elements, ... -->
+<!-- Parameters:
+		list : the list of images to display
+		imageTitle : the title of the image (passed to image handler); used if the user opens up an image in a pop-up.
+		showName : boolean, true if file name and creation time should be displayed. Default=true.
+ -->
+
+	<div class="rowCont FL">
+		<h:panelGroup rendered="#{empty list}"
+				styleClass="imageBox MA CT pad20tp">
+			<div id="logoDefaultMed"><br /><br /><br /><br />
+				No Images<br />Stored
+			</div>
+		</h:panelGroup>
+	</div>
+
+	<ace:dataTable rows="1" styleClass="MA" binding="#{dataTableRequestBean.dataTable}"
+			value="#{list}"
+			var="imageResource"
+			paginator="true"
+			paginatorAlwaysVisible="false"
+			paginatorPosition="top" pageCount="5"
+			paginatorTemplate="{FastRewind} {PageLinks} {FastForward}"
+			rendered="#{not empty list}">
+
+		<ace:column styleClass="CT">
+			<div class="imgCont2">
+				<h:commandLink 
+						value="" title="click to view larger image"
+						action="#{imageViewerBean.actionShowImage}">
+					
+					<ace:graphicImage value="#{imageResource}" alt="" />
+				
+					<f:setPropertyActionListener value="#{imageResource.id}" target="#{imageViewerBean.imageId}"/>
+					<f:setPropertyActionListener value="#{imageTitle}" target="#{imageViewerBean.title}"/>
+
+				</h:commandLink>
+			</div>
+			<h:panelGroup layout="block" rendered="#{(empty showName) or showName}">
+				<div class="rowCont FL NW">
+					<h:outputText styleClass="W100percnt" value="#{imageResource.image.title}" />
+				</div>
+				<h:outputText styleClass="rowCont FL NW W100percnt" value="#{imageResource.image.date}">
+					<f:convertDateTime pattern=" M/d/yy h:mm a" timeZone="#{headerViewBean.production.timeZoneStr}" />
+				</h:outputText>
+			</h:panelGroup>
+		</ace:column>
+
+	</ace:dataTable>
+
+</ui:composition>

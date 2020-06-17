@@ -1,0 +1,609 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"	
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: Loan-out corporation section -->
+
+	<!-- <div class="rowCont FL" style="height:30px;">
+		<hr style="height:2px;background:black;border:0;margin-right:15px;margin-top:10px;" />
+	</div> -->
+	<c:set var="isW9AddrUnification" value="#{fFApplicationScopeBean.useFeature('TTCO_W9_ADDR_UNIF_USER_PROFILE')}" scope="request"/>
+	<div class="rowCont pad15tp pad15lt">
+		<h:outputText styleClass="FL B txt13 W80percnt" value="LOAN-OUT CORPORATION INFORMATION:" />
+	</div>
+
+	<h:outputText rendered="#{fFApplicationScopeBean.useFeature('TTCO_ENHANCED_LOAN_OUT')}">
+		<div class="W95percnt pad25lt">
+			<div class="pad5lt FL B pad4tp rowCont">
+				<h:outputText  value="Tax Classification:"/>
+			</div>
+			<div class="pad15lt FL pad4tp rowCont">
+				<h:outputText styleClass="" value="Select one of the following tax classifications:"/>
+			</div>
+			<div class="pad7lt FL pad4tp rowCont">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectOneRadio id="taxClass" styleClass="h_radio FL pad1tp"
+						disabled="#{not userViewBean.editMode}"	value="#{userViewBean.user.taxClassification}"
+						valueChangeListener="#{userViewBean.listenTaxClassificationChange}" layout="lineDirection">
+						<f:selectItem itemLabel="C Corporation" itemValue="C" />
+						<f:selectItem itemLabel="S Corporation"  itemValue="S" />
+						<f:selectItem itemLabel="Limited liability company. Enter the tax classification (C=C corporation, S=S corporation)" itemValue="L" />
+						<f:converter converterId="lightspeed.TaxClassificationConverter" />
+						<ace:ajax />
+					</h:selectOneRadio>
+				</icecore:setEventPhase>
+				<h:graphicImage styleClass="FL pad6tp" url="../../i/right_blackArrow.png" value="" alt=""  width="12px" height="12px"/>
+				<!-- Disable LLC type field if Limited liability company not selected. LS-2719 -->
+				<ace:textEntry maxlength="1" styleClass="FL pad5lt" style="width:10px;"
+					id="llcType" value="#{userViewBean.user.llcType}" disabled="#{userViewBean.user.taxClassification eq null or not userViewBean.user.taxClassification.LLC}" rendered="#{userViewBean.editMode}"/>
+				<div class="pad2lt pad6tp FL">
+					<h:outputText value="#{userViewBean.user.llcType}" rendered="#{not userViewBean.editMode}" />
+				</div>
+			</div>
+			<div class="pad15lt FL pad4tp B rowCont">
+				<h:outputText value="Note that TTC can only process payroll for S or C Corps. If the corp tax is not listed above, please contact your hiring manager."/>
+			</div>
+		</div>
+	</h:outputText>
+
+	<div class="rowCont"></div>
+
+	<!-- LEFT: name & numbers -->
+	<div class="W35percnt FL pad30lt pad15tp">
+
+		<div class="rowCont FL">
+			<span class="fdNm_w"><h:outputText value="Loan-Out Corp:" />
+			</span>
+			<h:panelGroup styleClass="FL" rendered="#{not userViewBean.editMode}">
+				<div class="pad4tp">
+					<span class="fd_sm">
+						<h:outputText styleClass="pad15lt" value="#{userViewBean.user.loanOutCorpName}" />
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="FL" rendered="#{userViewBean.editMode}">
+				<span class="fd_sm pad15lt">
+					<ace:textEntry maxlength="35" style="width:200px;" id="corpName"
+						value="#{userViewBean.user.loanOutCorpName}" />
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- FEDERAL ID # -->
+		<div class="rowCont FL">
+			<span class="fdNm_w pad15lt">Federal ID #:
+			</span>
+			<h:panelGroup styleClass="FL" rendered="#{not userViewBean.editMode}">
+				<div class="pad4tp">
+					<span class="fd_sm">
+						<h:outputText value="#{userViewBean.user.federalTaxId}" >
+							<f:converter converterId="lightspeed.FedIdConverter" />
+						</h:outputText>
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="FL" rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry maxlength="11" style="width:120px;" id="fein"
+						value="#{userViewBean.user.federalTaxId}" >
+						<f:converter converterId="lightspeed.FedIdConverter" />
+						<ace:ajax />
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- STATE ID # -->
+		<div class="rowCont FL">
+			<span class="fdNm_w pad15lt">State ID #:
+			</span>
+			<h:panelGroup styleClass="FL" rendered="#{not userViewBean.editMode}">
+				<div class="pad4tp">
+					<span class="fd_sm">
+						<h:outputText value="#{userViewBean.user.stateTaxId}" >
+						</h:outputText>
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup styleClass="FL" rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry maxlength="12" style="width:120px;" id="stateTaxId"
+							value="#{userViewBean.user.stateTaxId}" >
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- STATE OF INCORPORATION -->
+		<div class="rowCont FL">
+			<span class="fdNm_w pad15lt">State of Incorp.:
+			</span>
+			<h:selectOneMenu style="margin:0px;" disabled="#{not userViewBean.editMode}"
+					value="#{userViewBean.user.incorporationState}" id="corpState">
+				<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+			</h:selectOneMenu>
+		</div>
+
+		<!-- INCORPORATION DATE -->
+		<div class="rowCont FL LH22">
+			<span class="fdNm_w pad15lt"><h:outputText value="Date of Incorp:" />
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<div class="pad4tp">
+					<h:outputText styleClass="fd_xsm" value="#{userViewBean.user.incorporationDate}">
+						<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</div>
+			</h:panelGroup>
+			<ace:dateTimeEntry rendered="#{userViewBean.editMode}" styleClass="fd_sm" id="corpDate"
+				value="#{userViewBean.user.incorporationDate}" title="Incorporation date"
+				renderAsPopup="true">
+				<f:converter converterId="lightspeed.MultiDateConverter"/>
+			</ace:dateTimeEntry>
+		</div>
+
+	</div><!-- end top left -->
+
+	<!-- MIDDLE: address -->
+	<div class="#{not (isW9AddrUnification) ? 'W30percnt' : 'W15percnt'} FL pad6tp">
+		<h:panelGroup rendered="#{not (isW9AddrUnification)}">
+			<!-- ADDRESS LINE 1 -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="Address:"/>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.loanOutAddress.addrLine1}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" value="#{userViewBean.user.loanOutAddress.addrLine1}"
+							id="corpAddrLine1" >
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ADDRESS LINE 2 -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value=" "/>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.loanOutAddress.addrLine2}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" value="#{userViewBean.user.loanOutAddress.addrLine2}" 
+							id="corpAddrLine2">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- CITY -->
+			<div class="rowCont FL">
+				<span class="fdNm"><h:outputText value="City:"/>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.loanOutAddress.city}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="35" value="#{userViewBean.user.loanOutAddress.city}" disabled="true"
+							id="corpAddrCity" />
+							<h:panelGroup
+									rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutAddress.zip or empty userViewBean.user.loanOutAddress.city)}">
+									<span
+										style="font-weight:bold;position: absolute; left: 77px; width: 61%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+										Enter Zip Code
+									</span>
+							</h:panelGroup>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- STATE + ZIP -->
+			<div class="rowCont FL">
+				<span class="fdNm">State:
+				</span>
+				<h:selectOneMenu styleClass="FL" disabled="true"
+						value="#{userViewBean.user.loanOutAddress.state}" id="corpAddrState">
+					<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+				</h:selectOneMenu>
+				<h:panelGroup
+					rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutAddress.zip or empty userViewBean.user.loanOutAddress.state)}">
+					<span
+						style="position: absolute; left: 78px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+				</h:panelGroup>
+				<span class="fdNm_sm" style="width:40px;">
+					<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm" style="width:20px;min-width:20px;">
+							<h:outputText value="#{userViewBean.user.loanOutAddress.zip}" />
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:outputText rendered="#{userViewBean.editMode}">
+					<span class="fd_sm">
+						<ace:textEntry maxlength="5" size="7" id="corpAddrZip"
+							value="#{userViewBean.user.loanOutAddress.zip}" 
+							valueChangeListener="#{userViewBean.listenLoanOutAddressZipChange}">
+								<ace:ajax/>
+							</ace:textEntry>
+					</span>
+				</h:outputText>
+			</div>
+			
+			<!-- PHONE -->
+			<div class="rowCont FL">
+				<span class="fdNm">
+					<h:outputText value="Phone:"></h:outputText>
+				</span>
+				<h:panelGroup rendered="#{not userViewBean.editMode}">
+					<div class="pad4tp">
+						<span class="fd_sm">
+							<h:outputText value="#{userViewBean.user.loanOutPhone}">
+								<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							</h:outputText>
+						</span>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userViewBean.editMode}">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="25" value="#{userViewBean.user.loanOutPhone}"  id="corpPhone">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
+	</div>
+	<!-- RIGHT: misc -->
+	<div class="W32percnt FL">
+
+		<div class="rowCont FL B">
+			<h:outputText value="Loan-Out is Qualified to do Business in:"/>
+		</div>
+		<div class="rowCont FL B">
+			<h:selectBooleanCheckbox styleClass="pad15lt ckbx"  id="corpQualifiedCA"
+				value="#{userViewBean.user.loanOutQualifiedCa}"
+				disabled="#{! userViewBean.editMode}" />
+			<span class="pad5lt ckbxTxtLbl_B">
+				<h:outputText value="CA"/>
+			</span>
+			<h:selectBooleanCheckbox styleClass="pad20lt ckbx" id="corpQualifiedNY"
+				value="#{userViewBean.user.loanOutQualifiedNy}"
+				disabled="#{! userViewBean.editMode}" />
+			<span class="pad5lt ckbxTxtLbl_B">
+				<h:outputText value="NY"/>
+			</span>
+		</div>
+		<div class="rowCont FL">&#160;
+		</div>
+		<!-- OTHER QUALIFIED STATES -->
+		<div class="rowCont FL">
+			<span class="B">
+				<h:outputText value="List ALL OTHER States in which Loan-Out is Qualified"></h:outputText>
+			</span>
+		</div>
+		<div class="rowCont FL">
+			<span class="fdNm_w">
+				<h:outputText value="to do Business:"></h:outputText>
+			</span>
+		</div>
+		<div class="rowCont FL LH22">
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<span class="fd_sm">
+					<h:outputText value="#{userViewBean.user.loanOutQualifiedStates}" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<span class="fd_sm">
+					<ace:textEntry maxlength="200" size="60" id="corpOtherQualifiedStates"
+							value="#{userViewBean.user.loanOutQualifiedStates}" />
+				</span>
+			</h:panelGroup>
+		</div>
+
+	</div><!-- end top right -->
+	<h:panelGroup rendered="#{isW9AddrUnification}">	
+		<!-- PHONE -->
+		<div class="rowCont FL pad45lt">
+			<span class="fdNm">
+				<h:outputText value="Phone:"></h:outputText>
+			</span>
+			<h:panelGroup rendered="#{not userViewBean.editMode}">
+				<div class="FL pad45lt pad4tp">
+					<span class="fd_sm">
+						<h:outputText value="#{userViewBean.user.loanOutPhone}">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+						</h:outputText>
+					</span>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<div class="pad40lt FL W100">
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="25" value="#{userViewBean.user.loanOutPhone}"  id="corpPhone2">
+							<f:converter converterId="lightspeed.PhoneNumberConverter" />
+							<ace:ajax />
+						</ace:textEntry>
+					</span>
+				</div>
+			</h:panelGroup>
+		</div>
+		<div class="rowCont FL pad45lt pad10tp">
+			<div class="FL W45percnt">
+				<div class="FL">
+					<div class="rowCont">
+						<span class="B FL"><h:outputText value="Corporation Address (W-9):"/></span>
+					</div>
+				</div>
+					<!-- ADDRESS LINE 1 -->
+					<div class="rowCont FL">
+						<span class="B FL pad4tp"><h:outputText value="Street Address:"/>
+						</span>
+						<div class="FL" style="margin-left:43px;">
+							<h:panelGroup rendered="#{not userViewBean.editMode}">
+								<div class="FL pad4tp">
+									<span class="fd_sm">
+										<h:outputText value="#{userViewBean.user.loanOutAddress.addrLine1}" />
+									</span>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{userViewBean.editMode}">
+								<div class="FL W120">
+									<span class="fd_sm2">
+										<ace:textEntry maxlength="30" value="#{userViewBean.user.loanOutAddress.addrLine1}"
+											valueChangeListener="#{userViewBean.listenLoanOutAddressChange}" id="corpAddrLine1-2">
+											<ace:ajax render="@form"/>
+										</ace:textEntry>
+									</span>
+								</div>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- ADDRESS LINE 2 -->
+					<div class="rowCont FL pad4tp">
+						<span class="B FL pad4tp"><h:outputText value="Apt/Unit # (Optional):"/>
+						</span>
+						<div class="FL pad11lt">
+							<h:panelGroup rendered="#{not userViewBean.editMode}">
+								<div class="FL pad4tp">
+									<span class="fd_sm">
+										<h:outputText value="#{userViewBean.user.loanOutAddress.addrLine2}" />
+									</span>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{userViewBean.editMode}">
+								<div class="FL pad1tp">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="30" value="#{userViewBean.user.loanOutAddress.addrLine2}" 
+										valueChangeListener="#{userViewBean.listenLoanOutAddressChange}" id="corpAddrLine2-2">
+										<ace:ajax/>
+									</ace:textEntry>
+								</span>
+								</div>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- CITY -->
+					<div class="rowCont FL pad4tp">
+						<span class="fdNm"><h:outputText value="City:"/>
+						</span>
+						<div class="pad4tp W120" style="margin-left:130px;">
+							<h:panelGroup rendered="#{not userViewBean.editMode}">
+								<span class="fd_sm">
+									<h:outputText value="#{userViewBean.user.loanOutAddress.city}" />
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{userViewBean.editMode}">
+								<span class="fd_sm2">
+									<ace:textEntry maxlength="35" value="#{userViewBean.user.loanOutAddress.city}" disabled="true"
+										 id="corpAddrCity-2" >
+										<ace:ajax/>
+									</ace:textEntry>
+									<h:panelGroup
+										rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutAddress.zip or empty userViewBean.user.loanOutAddress.city)}">
+										<span
+											style="font-weight: bold; position: absolute; left: 2px; width:134%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+											Enter Zip Code </span>
+									</h:panelGroup>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- STATE + ZIP -->
+					<div class="rowCont FL">
+						<span class="fdNm pad2tp">State:</span>
+						<div style="margin-left:130px;">
+							<div class="pad3tp">
+								<h:selectOneMenu styleClass="FL" disabled="true"
+										value="#{userViewBean.user.loanOutAddress.state}" id="corpAddrState-2">
+									<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+									<ace:ajax/>
+								</h:selectOneMenu>
+								<h:panelGroup
+									rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutAddress.zip or empty userViewBean.user.loanOutAddress.state)}">
+									<span
+										style="position: absolute; left: 2px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+								</h:panelGroup>
+							</div>
+							<span class="fdNm_sm" style="width:40px;">
+								<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+							</span>
+							<h:panelGroup rendered="#{not userViewBean.editMode}">
+								<div class="FL" style="margin-top:5px;">
+									<span class="fd_sm" style="width:20px;min-width:20px;">
+										<h:outputText value="#{userViewBean.user.loanOutAddress.zip}" />
+									</span>
+								</div>
+							</h:panelGroup>
+							<h:outputText rendered="#{userViewBean.editMode}">
+								<span class="fd_sm">
+									<ace:textEntry maxlength="5" size="7" id="corpAddrZip-2"
+										valueChangeListener="#{userViewBean.listenLoanOutAddressZipChange}"
+										value="#{userViewBean.user.loanOutAddress.zip}" >
+										<ace:ajax/>
+									</ace:textEntry>
+								</span>
+							</h:outputText>
+						</div>
+					</div>
+			</div>
+
+			<!-- MAILING ADDRESS -->
+			<div class="W45percnt FL pad45lt pad5tp">
+				<div class="rowCont">
+					<span class="B FL"> <h:outputText value="Corporation Mailing Address:" /> </span>
+					<h:panelGroup rendered="#{isW9AddrUnification}">
+						<span class="B FL pad15lt"> <h:outputText value="Same as Corporation Address" /> </span>
+						<span class="FL pad5lt">
+							<h:selectBooleanCheckbox id="sameAsCorpAddressCheckBox"
+								value="#{userViewBean.user.sameAsCorpAddr}"
+								valueChangeListener="#{userViewBean.listenSameAsCorpAddrChange}"
+								disabled="#{! userViewBean.editMode or (userViewBean.user.loanOutAddress.isEmpty())}" >
+								<ace:ajax/>
+							</h:selectBooleanCheckbox>
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- MAILING ADDRESS LINE 1 -->
+				<div class="rowCont FL">
+					<span class="FL B">
+						<h:outputText value="Street Address:" />
+						<span class="mandatory"> </span>
+					 </span>
+					 <div class="FL" style="margin-left:41px;">
+						<h:panelGroup rendered="#{not userViewBean.editMode}">
+								<span class="fd_sm">
+									<h:outputText value="#{userViewBean.user.loanOutMailingAddress.addrLine1}" />
+								</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userViewBean.editMode}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="30" id="corpMailingAddressAddr1" disabled="#{userViewBean.user.sameAsCorpAddr}"
+									value="#{userViewBean.user.loanOutMailingAddress.addrLine1}">
+									<ace:ajax render="@form"/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<!-- MAILING ADDRESS LINE 2 -->
+				<div class="rowCont FL pad4tp">
+					<span class="pad4tp FL B"><h:outputText value="Apt/Unit # (Optional):" /> </span>
+					<div class="FL pad12lt">					
+						<h:panelGroup rendered="#{not userViewBean.editMode}">
+							<div class="pad4tp">
+								<span class="fd_sm">
+									<h:outputText value="#{userViewBean.user.loanOutMailingAddress.addrLine2}" />
+								</span>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userViewBean.editMode}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="30" id="corpMailingAddressAddr2" disabled="#{userViewBean.user.sameAsCorpAddr}"
+									value="#{userViewBean.user.loanOutMailingAddress.addrLine2}">
+								<ace:ajax render="@form"/>
+							</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<!-- MAILING CITY -->
+				<div class="rowCont FL pad4tp">
+					<span class="fdNm"><h:outputText value="City:" />
+						<span class="mandatory"></span>
+					</span>
+					<div class="FL" style="margin-left:56px;">					
+						<h:panelGroup rendered="#{not userViewBean.editMode}">
+							<div class="pad4tp">
+								<span class="fd_sm">
+									<h:outputText value="#{userViewBean.user.loanOutMailingAddress.city}" />
+								</span>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userViewBean.editMode}">
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="35"  id="corpMailingAddressCity" disabled="true"
+									value="#{userViewBean.user.loanOutMailingAddress.city}" />
+									<h:panelGroup
+									rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutMailingAddress.zip or empty userViewBean.user.loanOutMailingAddress.city)}">
+									<span
+										style="font-weight:bold;position: absolute; left: 2px; width: 97%; background: #ddd; top: 4px; border-radius: 3px; padding: 1px 0px;">
+										Enter Zip Code
+									</span>
+							</h:panelGroup>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<!-- MAILING STATE + ZIP -->
+				<div class="rowCont FL">
+					<span class="fdNm"> State:
+						<span class="mandatory"> </span>
+					</span>						
+					<div class="FL" style="margin-left:57px;">					
+						<h:selectOneMenu styleClass="FL" id="corpMailingAddressState"
+							value="#{userViewBean.user.loanOutMailingAddress.state}"
+							disabled="true">
+							<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+						</h:selectOneMenu>
+						<h:panelGroup
+									rendered="#{(userViewBean.editMode) and (empty userViewBean.user.loanOutMailingAddress.zip or empty userViewBean.user.loanOutMailingAddress.state)}">
+									<span
+										style="position: absolute; left: 2px; width: 40px; background: #ddd; top: 3px; padding: 1px 0px; clear: both; height: 12px;"></span>
+								</h:panelGroup>
+						<span class="fdNm_sm" style="width:40px;">
+							<h:outputText styleClass="pad20lt pad1rt" value="Zip:" />
+						</span>
+						<h:panelGroup rendered="#{not userViewBean.editMode}">
+							<div class="FL pad4tp">
+							<span class="fd_sm" style="width:20px;min-width:20px;">
+								<h:outputText styleClass="pad1tp" value="#{userViewBean.user.loanOutMailingAddress.zip}" />
+							</span>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userViewBean.editMode}">
+							<span class="fd_xsm" >
+								<ace:textEntry maxlength="5" style="width: 55px;"  id="corpMailingAddressZip"
+									disabled="#{userViewBean.user.sameAsCorpAddr}" value="#{userViewBean.user.loanOutMailingAddress.zip}"
+									valueChangeListener="#{userViewBean.listenLoanOutMailingAddrZipChange}">
+										<ace:ajax execute="@this" render="@all"/>
+									</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>

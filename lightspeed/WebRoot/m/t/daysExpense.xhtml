@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Expenses section of the Weekly Payroll page (days.xhtml) -->
+
+	<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+	<a id="expenses" /><!-- mileage scroll-to-top position -->
+
+	<!-- "Expense" bar (toggle button) -->
+	<div class="toggle">
+		<h:commandLink value="Expenses" styleClass="btnPriHotCt"
+				action="#{mobileTimecardBean.actionToggleExpenses}" />
+	</div>
+
+	<!-- Expense DATA FIELDS (hidden or displayed) -->
+	<h:panelGroup rendered="#{mobileTimecardBean.showExpenses}">
+
+		<div class="MA B" style="max-width:350px;">
+
+			<h:panelGroup rendered="#{not empty mobileTimecardBean.weeklyTimecard.expenseLines}">
+				<div class="CB"></div>
+
+				<!-- List of existing Expense entries -->
+				<ui:repeat value="#{mobileTimecardBean.weeklyTimecard.expenseLines}" var="line">
+
+					<div class="MA pad4tp" style="width:98%;">
+						<span class="inBlock FL ltMar W70percnt">
+							<span class="FL btnPriHotSmLt"/>
+							<span>
+								<h:commandLink action="expensem" styleClass="btnPriHotSmCt mBtnMed">
+									<h:outputText value="#{line.category}" />
+									<f:setPropertyActionListener value="com.lightspeedeps.mtcExpenseId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{line.id}" target="#{jumpBean.value}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="pickdaym" target="#{jumpBean.value}"/>
+								</h:commandLink>
+							</span>
+							<span class="FL btnPriHotSmRt"/>
+						</span>
+						<span class="inBlock FL W25percnt">
+					 	<h:outputText value="#{line.total}" styleClass="unBoxExp">
+							<f:convertNumber type="number" pattern="#,##0.00" />
+					 	</h:outputText>
+					 	</span>
+					</div>
+					<div class="CB" />
+
+				</ui:repeat>
+
+				<div class="CB" />
+
+				<!-- Expense totals -->
+				<div class="MA pad10tp" style="width:98%;">
+						<h:panelGroup styleClass="inBlock ltMar W70percnt FL">
+							<h:outputText styleClass="FR" value="Total:" />
+						</h:panelGroup>
+						<span class="inBlock FL W25percnt">
+							<h:outputText styleClass="unBoxExp B"
+									value="#{mobileTimecardBean.weeklyTimecard.totalExpenses}">
+								<f:convertNumber type="number" pattern="#,##0.00" />
+							</h:outputText>
+						</span>
+				</div>
+
+				<div class="CB"/>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{mobileTimecardBean.editRaw}" >
+				<div class="CT MA pad15tp" style="width:98%;">
+					<h:panelGroup styleClass="inBlock FL ltMar">
+						<span class="FL btnPriHotLt"/>
+						<span>
+							<h:commandLink value="Add New Entry"
+									action="#{mobileTimecardBean.actionAddExpense}" styleClass="btnPriHotCt mBtnLeft" />
+						</span>
+						<span class="FL btnPriHotRt"/>
+					</h:panelGroup>
+				</div>
+				<div class="CB"/>
+			</h:panelGroup>
+
+			<h:panelGroup styleClass="txt16 inCtlRow"
+					rendered="#{(empty mobileTimecardBean.weeklyTimecard.expenseLines) and ! mobileTimecardBean.editRaw}" >
+				No expense items entered.
+			</h:panelGroup>
+		</div>
+
+	</h:panelGroup>
+
+</ui:composition>

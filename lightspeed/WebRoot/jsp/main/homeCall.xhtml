@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div class="rowHdgBk rowCont pad5tp">
+		<div class="pad5tp pad5lt B">Call Time</div>
+	</div>
+
+	<ace:dataTable
+			styleClass="bk_sl_grid #{messageCenterBean.project.hasUnits ? 'rowGradient pad10bm' : ''}"
+			id="homeCallTimeTbl"
+			style="width:100%;max-width:100%;overflow-x:hidden;"
+			scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+			scrollHeight="#{headerViewBean.mobile ? '' : '148'}"
+			value="#{messageCenterBean.project.units}" var="unit">
+
+		<ace:column id="column0" style="background:white">
+			<h:panelGroup
+					styleClass="FL pad6bm"
+					rendered="#{messageCenterBean.callTimeMsg[unit.number] ne 'N'}">
+				<div class="homeCallTimeContWrap MA pad5bm" style="line-height:15px">
+					<div id="homeCallTimeCont">
+						<span class="rowCont FL">
+							<h:panelGroup
+									styleClass="FL pad-8tp pad5lt BKwhite txtBlue"
+									rendered="#{messageCenterBean.project.hasUnits}">
+								&#160;
+								<h:outputText
+									styleClass="B"
+									value=" Unit:" />
+								<h:outputText
+									value="#{unit.name}" />
+								&#160;
+							</h:panelGroup>
+						</span>
+						<div class="rowCont FL">
+							<div class="FL" style="width:46%;"><!-- left side - times -->
+								<div class="FL B pad30lt pad10tp">
+									Your Call Time:
+								</div>
+								<span class="rowCont FL pad65lt">
+									<h:outputText
+										rendered="#{messageCenterBean.yourCallTime[unit.number] ne null}"
+										value="#{messageCenterBean.yourCallTime[unit.number]}">
+										<f:convertDateTime
+											pattern="h:mm a, MMM d"
+											timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+									<h:outputText
+										rendered="#{messageCenterBean.yourCallTime[unit.number] eq null}"
+										value="#{messageCenterBean.callTimeMsg[unit.number]}" />
+								</span>
+								<div class="rowCont FL pad5tp">
+									<div class="B FL pad30lt">
+										Crew Call Time:
+									</div>
+									<span class="rowCont FL pad65lt">
+										<h:outputText
+											rendered="#{messageCenterBean.crewCallTime[unit.number] ne null}"
+											value="#{messageCenterBean.crewCallTime[unit.number]}">
+											<f:convertDateTime pattern="h:mm a"
+												timeZone="#{applicationScopeBean.timeZone}" />
+										</h:outputText>
+										<h:outputText
+											rendered="#{messageCenterBean.crewCallTime[unit.number] eq null}"
+											value="#{messageCenterBean.callTimeMsg[unit.number]}" />
+									</span>
+								</div>
+							</div>
+							<div class="FL pad10tp" style="width:44%;"><!-- right side - location -->
+								<div class="rowCont FL">
+									<div class="B FL pad5lt">Location:</div>
+									<span class="FL pad5lt">
+										<h:outputText
+											styleClass="rowCont"
+											rendered="#{not empty messageCenterBean.location[unit.number].name}"
+											value="#{messageCenterBean.location[unit.number].name}" />
+										<h:outputText
+											styleClass="rowCont"
+											rendered="#{not empty messageCenterBean.location[unit.number].address.addrLine1}"
+											value="#{messageCenterBean.location[unit.number].address.addrLine1}" />
+										<h:outputText
+											styleClass="rowCont"
+											rendered="#{not empty messageCenterBean.location[unit.number].address.addrLine2}"
+											value="#{messageCenterBean.location[unit.number].address.addrLine2}" />
+										<br />
+										<h:outputText
+											styleClass="rowCont"
+											rendered="#{not empty messageCenterBean.location[unit.number].address.cityStateZip}"
+											value="#{messageCenterBean.location[unit.number].address.cityStateZip}" />
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ace:column>
+	</ace:dataTable>
+
+</ui:composition>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Home Page</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+			function resize() {
+			<c:if test="#{not headerViewBean.mobile}">
+				resizeScrollable('myhome:mymessages', 460, 107);
+				resizeScrollable('myhome:allmessages', 460, 107);
+
+				<c:if test="#{messageCenterBean.project.hasUnits}">// this keeps the production table vertically aligned top when ONLY main unit exists
+					resizeScrollable('myhome:homeCallTimeTbl', 550, 148);
+				</c:if>
+
+				element0 = document.getElementById('myhome:statusScroll');
+				resizeElement(element0, 240, 349);
+
+				element1 = document.getElementById('homeOverview');
+				resizeElement(element1, 182, 392);
+
+				element2 = document.getElementById('myhome:miniView');
+				resizeElement(element2, 181, 350);
+
+			</c:if>
+
+			}
+
+			var formname = "myhome";
+		</script>
+
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+	<style type="text/css">
+
+		/* these override the calculated table column widths; seems as if the presence of a paginator in
+		an ace:dataTable causes percentage column widths to be overridden by explicit pixel widths. */
+		#myhome\:mymessages > div > table > thead > tr > th.ui-widget-header:nth-of-type(1) {
+			width: 70% !important;
+		}
+		#myhome\:mymessages > div > table > thead > tr > th.ui-widget-header:nth-of-type(2) {
+			width: 30% !important;
+		}
+
+		#myhome\:allmessages > div > table > thead > tr > th.ui-widget-header:nth-of-type(1) {
+			width: 20% !important;
+		}
+		#myhome\:allmessages > div > table > thead > tr > th.ui-widget-header:nth-of-type(2) {
+			width: 60% !important;
+		}
+		#myhome\:allmessages > div > table > thead > tr > th.ui-widget-header:nth-of-type(3) {
+			width: 20% !important;
+		}
+
+		#myhome\:mymessages > div > table > tbody > tr > td.ui-col-1 > div {
+			width: auto !important;
+		}
+
+		#myhome\:mymessages.ui-datatable-scrollable .ui-datatable-scrollable-body > table {
+			width: auto !important;
+		}
+		#myhome\:allmessages.ui-datatable-scrollable .ui-datatable-scrollable-body > table {
+			width: auto !important;
+		}
+	</style>
+
+	<c:set var="showScriptTabs" value="#{headerViewBean.production.showScriptTabs}" />
+
+	<h:form id="myhome">
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+			<f:attribute name="tabid" value="myhome" />
+		</h:outputText>
+
+		<div id="main">
+			<ui:include src="../common/header2.xhtml" />
+			<div id="mainCont">
+				<div id="ctrCont">
+					<div id="pnlCont">
+
+						<!-- Begin pnlLt -->
+						<div id="pnlLt">
+
+							<div class="topBdrCont">
+								<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+							</div>
+
+							<div id="contactHdr" class="rowCont ltrtBdr BKwhite FL">
+								<span class="pnlHdrTxt FL">
+									Welcome,
+									<h:outputText
+										value=" #{headerViewBean.user.anyName}" />
+								</span>
+							</div>
+
+							<div class="rowCont FL ltrtBdr BKwhite ckbxRow">
+								<span class="FL pad5lt pad5tp">
+									Today is
+								<h:outputText
+										value="#{headerViewBean.today}">
+										<f:convertDateTime
+											pattern=" EEEE, MMMM d, yyyy."
+											timeZone="#{headerViewBean.production.timeZoneStr}" />
+									</h:outputText>
+								</span>
+							</div>
+
+							<!-- data container for Home overview -->
+
+							<div id="homeOverviewCont" class="rowCont ltrtBdr">
+								<div id="homeOverview">
+
+									<!-- CALL TIMES  -->
+									<h:panelGroup rendered="#{showScriptTabs}">
+										<ui:include src="homeCall.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+											<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+										</ui:include>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{not showScriptTabs}">
+									</h:panelGroup>
+
+									<!-- PRODUCTION DATES  -->
+									<ui:include src="homeDates.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+										<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+									</ui:include>
+
+								</div><!-- end homeOverviewCont -->
+							</div><!-- end homeOverviewCont -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+							</div>
+						</div><!-- End pnlLt -->
+
+						<!--  Begin pnlRt -->
+						<div id="pnlRt">
+
+							<h:panelGroup styleClass="errMsgCont">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:panelGroup>
+
+							<div class="topBdrCont">
+								<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+							</div>
+
+							<div class="rowCont FL ltrtBdr BKwhite">
+								<span class="pnlHdrTxtHome FL">Home</span>
+								<h:panelGroup
+									rendered="#{preferencesBean.editMode and (messageCenterBean.selectedTab eq 3)}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+										<ace:linkButton
+											value="Edit" styleClass="btnPriDisCt"
+											type="text" onclick="return false;" />
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{(not preferencesBean.editMode) and (messageCenterBean.selectedTab eq 3)
+											and (headerViewBean.production.status=='ACTIVE')}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton
+												value="Edit"
+												action="#{preferencesBean.actionEdit}"
+												styleClass="btnPriHotCt" /></span>
+										<span class="btnPriHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+
+							<div id="homeStatusDetailCont" class="ltrtBdr BKwhite">
+
+								<h:panelGrid id="miniView" styleClass="miniPanel" >
+
+									<!-- Tabs for status Details -->
+									<ace:tabSet id="tabs"
+										selectedIndex="#{messageCenterBean.selectedTab}"
+										width="100%">
+
+										<!--  status tab  -->
+										<ui:include src="homeStatus.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+											<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+										</ui:include>
+
+										<!--  My Notifications Tab   -->
+										<ui:include src="homeMyMessages.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+											<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+										</ui:include>
+
+										<!--  All Notifications Tab   -->
+										<ui:include src="homeAllMessages.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+											<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+										</ui:include>
+
+										<!--  My Preferences Tab  -->
+										<ui:include src="homePreferences.xhtml">
+											<ui:param name="aicp" value="#{aicp}" />
+											<ui:param name="showScriptTabs" value="#{showScriptTabs}" />
+										</ui:include>
+
+									</ace:tabSet><!--  END TAB set for MyHome Details  -->
+								</h:panelGrid><!-- end miniView -->
+
+								<!-- secondary buttons -->
+								<div class="rowBtn">
+									<div class="rowBtnBdr"></div>
+									<h:outputText styleClass="FL"
+										value="(v #{applicationScopeBean.version})" />
+									<h:panelGroup
+										rendered="#{preferencesBean.editMode and messageCenterBean.selectedTab eq 3}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt" />
+											<span>
+												<ace:linkButton
+													styleClass="btnPriEnbCt" value="Cancel"
+													action="#{preferencesBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt" />
+										</span>
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{preferencesBean.editMode and messageCenterBean.selectedTab eq 3}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt" />
+											<span>
+												<ace:linkButton
+													value="Save"
+													action="#{preferencesBean.actionSave}"
+													styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt" />
+										</span>
+									</h:panelGroup>
+								</div><!-- end secondary buttons -->
+
+							</div><!-- end homeDetailCont -->
+
+							<div class="btmBdrCont">
+								<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+							</div>
+
+						</div><!-- end pnlRt -->
+					</div><!--  end pnlCont -->
+				</div><!-- end ctrCont -->
+
+				<div class="CB"></div><!-- clears float for liquid layout -->
+
+			</div><!-- end mainCont -->
+		<!--
+			<h:commandButton id="escapekey" value="escape"
+				style="visibility:hidden;" action="#{preferencesBean.actionEscape}" />
+		 -->
+
+			<div class="footerCont FL CT">
+				<ui:include src="../common/footercont.xhtml" />
+			</div>
+
+		</div><!-- end main -->
+	</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+
+	<ui:include src="../common/confirmpopup.xhtml" />
+
+	</h:body>
+</html>

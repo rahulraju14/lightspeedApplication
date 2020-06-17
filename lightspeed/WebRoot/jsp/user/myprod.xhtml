@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} My Productions</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	resizeScrollable('prod:itemlist', 236, 400); /* 206, 430*/
+
+	element = document.getElementById('prod:miniView');
+	resizeElement(element, 179, 427); /* 179,457 */
+	</c:if>
+}
+var formname = "prod";
+var mainListId = "prod:itemlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+
+<script language="javascript">
+
+// Assign our error handling function (for ICEfaces override) to a variable
+var iceErrorCallback = function iceHandleError(statusCode, responseTxt, responseDOM) {
+	console.log("code=" + statusCode);
+	console.log("text=" + responseTxt);
+	// Handle all errors by simply redirecting to an error page
+	window.location.href = ice_error_url;
+};
+
+// Function to run when ICEfaces has finished initializing
+var iceCallback = function() {
+	console.log('iceCallback started');
+	// Turn off the popups as we plan to handle this ourselves
+	ice.configuration.disableDefaultIndicators = true;
+
+	// Register our error handler as a callback
+	ice.onServerError(iceErrorCallback);
+}
+
+ice.onLoad(iceCallback);
+</script>
+
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+
+<!-- the following forces references to fields needed on 'admin' mini-tab; eliminates LIEs -->
+<c:set var="canada" value="#{(productionContactBean.production ne null) and productionContactBean.production.type.canadaTalent}"/>
+<c:set var="isAdminTab" value="#{(productionContactBean.production ne null) and 
+								(productionContactBean.production.payrollPref ne null) and 
+								(productionContactBean.production.payrollPref.payrollService ne null) and 
+								(productionContactBean.production.payrollPref.payrollService.name ne null)}" />
+<h:form id="prod">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="myproductions" />
+	</h:outputText>
+
+<div id="main" style="min-height:607px;">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin POI List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="poiHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">#{productionContactBean.myProductionHeaderTitle}</span>
+						<div class="W8percnt DIB">&#160;</div>
+						<h:panelGroup styleClass="DIB pad3tp W50percnt"
+								rendered="#{productionContactBean.paginate}">
+							Filter:
+							<ace:textEntry maxlength="30" styleClass="W70percnt" id="prodFilter"
+									onkeyup="lSubmit(event,'prod:filterkey');"
+									value="#{productionContactBean.filter}" >
+								<ace:ajax />
+							</ace:textEntry>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FR pad5rt"
+								rendered="#{(not canada) and (not empty authBean.pgFields['0.1,account'])}">
+							<span class="btnPriHotLt" />
+							<span>
+								<ace:linkButton value="Create" id="createProd"
+									action="purchase" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt" />
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont FL ckbxRow ltrtBdr BKwhite">
+
+						<div class="FL">
+							<!-- previously paginator control was here -->
+						</div>
+
+						<div class="FR">
+							<h:selectOneMenu styleClass="txt11 FR pad2tp pad2rt" style="width:110px;"
+									value="#{productionContactBean.category}" id="prodCategory"
+									disabled="#{productionContactBean.editMode}"
+									valueChangeListener="#{productionContactBean.selectedCategory}">
+								<f:selectItems
+										value="#{productionContactBean.productionStatusDL}" />
+								<f:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<!-- data list container -->
+					<div id="myProdListCont" class="rowCont ltrtBdr">
+						<ace:dataTable id="itemlist" rows="200"
+								styleClass="bk_sl_grid"
+								style="width:100%;max-width:100%;"
+								value="#{productionContactBean.sortedItemList}" var="item"
+								rowSelectListener="#{productionContactBean.listenRowClicked}"
+								stateMap="#{productionContactBean.stateMap}"
+								selectionMode="single"
+								paginator="#{productionContactBean.paginate}"
+								paginatorAlwaysVisible="false"
+								paginatorPosition="top" pagesToSkip="5" pageCount="5"
+								paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"
+								singleSort="true"
+								scrollHeight="#{headerViewBean.mobile ? '' : '267'}"
+								scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+							<ace:column headerText="#{productionContactBean.productionHeaderTitle}" styleClass="LT" style="width:40%;"
+									sortBy="#{item.production.titleLowerCase}">
+								<div class="FL leftBtn pad6lt">
+									<ace:linkButton title="Click to enter production" value="#{item.production.title}"
+											rendered="#{item.status eq 'ACCEPTED' and item.production.orderStatus ne 'PENDING'}"
+											action="#{productionContactBean.actionLogon}">
+										<f:setPropertyActionListener value="#{item.id}" target="#{productionContactBean.contactId}"/>
+									</ace:linkButton>
+									<h:outputText
+											rendered="#{item.status eq 'PENDING'}"
+											title="Accept or Decline the invitation"
+											value="#{item.production.title}"/>
+									<h:outputText styleClass="pad6lt hot_text" value="(NEW!)"
+											title="Accept or Decline the invitation"
+											rendered="#{item.status eq 'PENDING'}" />
+									<h:outputText
+											rendered="#{item.status eq 'DECLINED' or item.status eq 'BLOCKED'}"
+											title="Inactive - invitation refused"
+											value="#{item.production.title}"/>
+									<h:outputText
+											rendered="#{item.status eq 'NO_ACCESS'}"
+											title="Active member, no access privileges"
+											value="#{item.production.title}"/>
+									<h:outputText
+											rendered="#{item.status eq 'NO_ROLES'}"
+											title="Active member, no roles currently assigned"
+											value="#{item.production.title}"/>
+									<h:outputText
+											rendered="#{item.production.orderStatus eq 'PENDING'}"
+											title="Payment has not been completed"
+											value="#{item.production.title}"/>
+								</div>
+							</ace:column>
+							<ace:column styleClass="RT" style="width:18%;">
+								<h:outputText rendered="#{item.production.type.episodic and not item.production.type.aicp}"
+									value="#{item.production.defaultProject.episode}"/>
+							</ace:column>
+							<ace:column styleClass="CT" headerText="Start" style="width:24%;" sortBy="#{item.production.scheduleStartDate}">
+								<h:outputText
+									value="#{item.production.scheduleStartDate}">
+									<f:convertDateTime pattern="M/d/yy" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</ace:column>
+							<ace:column styleClass="CT" headerText="Day" style="width:18%;">
+								<h:outputText
+									value="#{item.production.dayStatus}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end poiListCont -->
+
+					<!-- Prompt to create production - absolute positioning! -->
+					<h:panelGroup rendered="#{empty productionContactBean.sortedItemList and
+							productionContactBean.category ne 'Inactive'}">
+						<div class="pad30lt"
+							style="top:150px;height:70px;width:350px;position:absolute; border:1px solid;">
+							<div class="pad10lt">
+							<p>You currently have no productions in your Production List.</p>
+							<p>Select the&#160;<b>Create</b> button, above, to create a new production.</p>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End List - pnlLt -->
+
+					<!--  Begin Details - pnlRt -->
+					<div id="pnlRt">
+
+						<h:panelGroup styleClass="errMsgCont" rendered="#{not imageAddBean.showNewImage}">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+
+						<div class="rowCont FL BKwhite ltrtBdr">
+							<span class="pnlHdrTxt FL">
+								<h:outputText
+									rendered="#{productionContactBean.element.title ne null}"
+									value="#{productionContactBean.element.title}"/>&#160;
+							</span>
+
+							<!-- ARCHIVE BUTTON (disabled) -->
+							<h:panelGroup rendered="#{productionContactBean.editMode and
+									productionContactBean.prodAdmin and
+									(productionContactBean.element.status eq 'ACTIVE') and
+									(productionContactBean.contact.status ne 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Archive"
+										styleClass="btnPriDisCt" type="text" onclick="return false;" />
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<!-- ARCHIVE BUTTON (active) -->
+							<h:panelGroup rendered="#{not productionContactBean.editMode and
+									productionContactBean.prodAdmin and
+									(productionContactBean.element.status eq 'ACTIVE') and
+									(productionContactBean.contact.status ne 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton id="archiveProd"
+										value="Archive" action="#{productionContactBean.actionDeactivate}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<!-- DELETE BUTTON -->
+							<h:panelGroup rendered="#{
+									productionContactBean.prodAdmin and
+									(productionContactBean.element.status ne 'EXPIRED_ARCHIVED') and
+									(productionContactBean.element.status ne 'ACTIVE') and
+									(productionContactBean.contact.status ne 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton id="deleteProd"
+										value="Delete" action="#{productionContactBean.actionDelete}"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+
+							<!-- UNARCHIVE BUTTON -->
+							<h:panelGroup rendered="#{
+									(productionContactBean.element.status eq 'ARCHIVED') and
+									productionContactBean.prodAdmin and
+									(productionContactBean.contact.status ne 'PENDING') and
+									(productionContactBean.contact.id ne null)}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton id="unarchiveProd"
+										value="Unarchive" action="#{productionContactBean.actionReactivate}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+
+							<!-- EDIT BUTTON (active) -->
+							<h:panelGroup rendered="#{(not productionContactBean.editMode) and
+									productionContactBean.prodAdmin and
+									(productionContactBean.element.status eq 'ACTIVE') and
+									(productionContactBean.contact.status ne 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton id="editProd"
+										value="Edit" action="#{productionContactBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+
+							<!-- EDIT BUTTON (disabled) -->
+							<h:panelGroup rendered="#{productionContactBean.editMode and
+									productionContactBean.prodAdmin and
+									(productionContactBean.element.status eq 'ACTIVE') and
+									(productionContactBean.contact.status ne 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt" />
+									<span>
+									<ace:linkButton
+										value="Edit"
+										styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not productionContactBean.editMode) and
+									(productionContactBean.contact ne null) and
+									(productionContactBean.element.status.allowsAccept) and
+									(productionContactBean.contact.status eq 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton id="acceptProd"
+										value="Accept" action="#{productionContactBean.actionAccept}"
+										styleClass="btnPriHotCt">
+										<f:setPropertyActionListener value="#{productionContactBean.contact.id}"
+												target="#{productionContactBean.contactId}"/>
+									</ace:linkButton>
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not productionContactBean.editMode) and
+									(productionContactBean.contact ne null) and
+									(productionContactBean.element.status.allowsAccept) and
+									(productionContactBean.contact.status eq 'PENDING')}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt" />
+									<span>
+									<ace:linkButton id="declineProd"
+										value="Decline" action="#{productionContactBean.actionDecline}"
+										styleClass="btnPriHotCt">
+										<f:setPropertyActionListener value="#{productionContactBean.contact.id}"
+												target="#{productionContactBean.contactId}"/>
+									</ace:linkButton>
+									</span>
+									<span class="btnPriHotRt" />
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div id="myProdDetailCont" class="ltrtBdr BKwhite">
+
+							<h:panelGrid styleClass="miniPanel" id="miniView">
+
+									<!-- miniview Tabs -->
+									<ace:tabSet id="tabs" selectedIndex="#{productionContactBean.selectedTab}">
+
+										<ui:include src="myprodDetails.xhtml"/>
+
+										<ui:include src="myprodAdmin.xhtml">
+											<ui:param name="isAdminTab" value="#{isAdminTab}" />
+										</ui:include>
+
+									</ace:tabSet><!--  END TAB set -->
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+								<!-- Cancel btn -->
+								<h:panelGroup rendered="#{productionContactBean.editMode}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt" id="cancelProd"
+												value="Cancel" action="#{productionContactBean.actionCancel}" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</span>
+								</h:panelGroup><!-- end Cancel btn -->
+								<!-- Save btn -->
+								<h:panelGroup rendered="#{productionContactBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnSecHotLt" />
+										<span>
+										<ace:linkButton value="Save" id="saveProd"
+											action="#{productionContactBean.actionSave}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end myProdDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+
+					</div><!-- end pnlRt -->
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+			<h:commandButton id="filterkey" value="filter" style="visibility:hidden"
+					action="#{productionContactBean.actionFilter}"/>
+
+		</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopupbig.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+</h:body>
+</html>

@@ -1,0 +1,346 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	<c:set var="bean" value="#{formStateKYW4Bean}" />
+	<c:set var="editable"
+		value="#{contactFormBean.editMode and bean.empEdit}" />
+	<c:set var="form" value="#{bean.form}" />
+	<div class="miniTab pad15lt" style="width:875px;">
+		<div class="BKwhite">
+			<div id="" class="scrollPnlTab"
+				onscroll="setScrollPos(this.scrollTop);">
+				<div class="w4_KY_20">
+					<div class="FL">
+						<ace:textEntry value="#{form.socialSecurity}"
+							disabled="#{!editable}" maxlength="11" id="kyW4SocialSecurity"
+							style="height: 9px;width: 418px;margin-left: 39px;margin-top: 142px;">
+							<ace:ajax />
+							<f:converter converterId="lightspeed.SSNConverter" />
+						</ace:textEntry>
+					</div>
+					<div class="FL">
+						<ace:textEntry value="#{form.fullName}" disabled="#{!editable}" maxlength="50"
+							id="kyW4FirstName"
+							style="height: 9px;width: 418px;margin-left: 39px;margin-top: 34px;">
+							<ace:ajax />
+						</ace:textEntry>
+					</div>
+					<div class="FL">
+						<ace:textEntry value="#{form.address.addrLine1}" disabled="#{!editable}" maxlength="60"
+							id="kyW4MalingAddress"
+							style="height: 9px;width: 418px;margin-left: 39px;margin-top: 34px;">
+							<ace:ajax />
+						</ace:textEntry>
+					</div>
+					<div class="FL" style="margin-top: 10px;">
+						<div class="FL">
+							<ace:textEntry value="#{form.address.city}"
+								disabled="#{!editable}" maxlength="30" id="kyW4City"
+								style="height: 9px;width: 241px;margin-left: 39px;margin-top: 25px;">
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+						<div class="FL">
+							<h:selectOneMenu styleClass="FL" id="kyW4AddrState"
+								value="#{form.address.state}"
+								style="height: 16px;width: 50px;margin-left: 34px;margin-top: 26px;"
+								disabled="#{!editable}">
+								<f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+							</h:selectOneMenu>
+						</div>
+						<div class="FL">
+							<ace:textEntry value="#{form.address.zip}"
+								disabled="#{!editable}" maxlength="5" id="kyW4Zip"
+								style="height: 9px;width: 73px;margin-left: 16px;margin-top: 26px;">
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+					</div>
+					<div class="FL"
+						style="margin-top: 92px;margin-left: 35px;width:100%;">
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="kyW41"
+								value="#{form.is8a}" disabled="#{!editable}">
+								<ace:ajax render="@form" />
+							</h:selectBooleanCheckbox>
+						</div>
+					</div>
+					<div class="FL"
+						style="margin-top: 3px;margin-left: 35px;width:100%;">
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="kyW42"
+							    valueChangeListener="#{bean.listen8B}"
+								value="#{form.is8b}" disabled="#{!editable}">
+								<ace:ajax render="@form" />
+							</h:selectBooleanCheckbox>
+						</div>
+						<div class="FL">
+							<ace:textEntry value="#{form.countyOfResidence}"
+								disabled="#{!editable or !form.is8b}" maxlength="30" id="kyW4Char2"
+								style="height: 9px;width: 234px;margin-left: 549px;margin-top: -1px;">
+								<ace:ajax />
+							</ace:textEntry>
+						</div>
+					</div>
+					<div class="FL"
+						style="margin-top: 3px;margin-left: 35px;width:100%;">
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="kyW43"
+								value="#{form.employerYes}" disabled="#{!editable}">
+								<ace:ajax render="@form" />
+							</h:selectBooleanCheckbox>
+						</div>
+					</div>
+					<div class="FL"
+						style="margin-top: 3px;margin-left: 35px;width:100%;">
+						<div class="FL">
+							<h:selectBooleanCheckbox styleClass="ckbx" id="kyW44"
+								value="#{form.employerNo}" disabled="#{!editable}">
+								<ace:ajax render="@form" />
+							</h:selectBooleanCheckbox>
+						</div>
+					</div>
+					<div class="FL">
+						<ace:textEntry value="#{form.addStateWithHold}"
+							disabled="#{!editable}" maxlength="9" id="kyW4Aggred"
+							style="height: 9px;width: 171px;margin-left: 574px;margin-top: 2px;">
+							<f:validateLongRange minimum="0" />
+								<f:convertNumber pattern="#,##0" type="number" />
+							<ace:ajax />
+						</ace:textEntry>
+					</div>
+					<div class="FL"
+						style="margin-top: 62px; margin-left: 300px; height: 29px;">
+						<!-- SIGNATURE DISPLAY -->
+						<div class="FL" style="margin-top: 16px;margin-left: -257px;font-size: 11px;width: 471px;">
+							<span> <h:outputText escape="false"
+									styleClass="txt12 W200"
+									rendered="#{bean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}"
+										styleClass="U B txtBlue" />
+									<h:outputText
+										value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br />
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+								</h:outputText>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup styleClass="FL"
+								rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend"
+									style="margin-top:15px; margin-right:10px;margin-left: 79px;">
+									<h:panelGroup
+										rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt" />
+										<span> <h:commandLink value="Sign &amp; Submit"
+												onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+						<!-- SIGNATURE ROW END -->
+					</div>
+					<div class="FL txt14" style="margin-left: 92px; margin-top: 88px;">
+						<h:outputText value="#{bean.contactDoc.empSignature.date}"
+							rendered="#{bean.contactDoc.empSignature ne null}">
+							<f:convertDateTime pattern="MM/dd/yyyy"
+								timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+					</div>
+				</div>
+				<div class="w4_KY_1_20">
+					<div class="FL"
+					   style="margin-top: 188px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionAYes"
+					         valueChangeListener="#{bean.listenKYSectionAYes}"
+					         value="#{form.checkBox1}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionANo"
+					         valueChangeListener="#{bean.listenKYSectionANo}"
+					         value="#{form.checkBox2}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: -10px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionBYes"
+					         valueChangeListener="#{bean.listenKYSectionBYes}"	
+					         value="#{form.checkBox3}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionBNo"
+					         valueChangeListener="#{bean.listenKYSectionBNo}"
+					         value="#{form.checkBox4}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: 8px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionCYes"
+					         valueChangeListener="#{bean.listenKYSectionCYes}"
+					         value="#{form.checkBox5}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionCNo"
+					         valueChangeListener="#{bean.listenKYSectionCNo}"
+					         value="#{form.checkBox6}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: -8px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionDYes"
+					         valueChangeListener="#{bean.listenKYSectionDYes}"
+					         value="#{form.checkBox7}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionDNo"
+					         valueChangeListener="#{bean.listenKYSectionDNo}"
+					         value="#{form.checkBox8}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: 8px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionEYes"
+					         valueChangeListener="#{bean.listenKYSectionEYes}"
+					         value="#{form.checkBox9}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionENo"
+					         valueChangeListener="#{bean.listenKYSectionENo}"
+					         value="#{form.checkBox10}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: 5px;margin-left: 721px;width:100%;">
+					   <div class="FL">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionFYes"
+					         valueChangeListener="#{bean.listenKYSectionFYes}"
+					         value="#{form.checkBox11}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kySectionFNo"
+					         valueChangeListener="#{bean.listenKYSectionFNo}"
+					         value="#{form.checkBox12}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: 324px;margin-left: 44px;width:100%;">
+					   <div class="FL" style="margin-left: 31px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyiIllinois"
+					         valueChangeListener="#{bean.listenIllinois}"
+					         value="#{form.illinois}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 84px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyIndianan"
+					         valueChangeListener="#{bean.listenIndiana}"
+					         value="#{form.indiana}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 85px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyMichingan"
+					         valueChangeListener="#{bean.listenMichingan}"
+					         value="#{form.michingan}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 85px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kywestVirgina"
+					         valueChangeListener="#{bean.listenWestVirgina}"
+					         value="#{form.westVirgina}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					   <div class="FL" style="margin-left: 87px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyWisconsin"
+					         valueChangeListener="#{bean.listenWisconsin}"
+					         value="#{form.wisconsin}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: -8px;margin-left: 42px;width:100%;">
+					   <div class="FL" style="margin-left: 33px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyVirginia"
+					         valueChangeListener="#{bean.listenVirginia}"
+					         value="#{form.virginia}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+					<div class="FL"
+					   style="margin-top: -8px;margin-left: -12px;width:100%;">
+					   <div class="FL" style="margin-left: 87px;">
+					      <h:selectBooleanCheckbox styleClass="ckbx" id="kyOhio"
+					         valueChangeListener="#{bean.listenOhio}"
+					         value="#{form.ohio}" disabled="#{!editable}">
+					         <ace:ajax render="@form" />
+					      </h:selectBooleanCheckbox>
+					   </div>
+					</div>
+				</div>
+			</div>
+			<!-- end scroll div -->
+			<div class="rowCont pad-15lt" style="width:845px;"/>
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm"
+					style="width: 838px; margin-bottom: 15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="events"
+							value="#{bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+		</div>
+	</div>
+</ui:composition>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tc2JobDaily" pageWidth="225" pageHeight="104" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="225" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="32305ae2-d62d-440b-a4d2-00199133370b">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="jobId" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[Do not set default!]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payJobDailyQuery" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select *, false as fillFlag from pay_job_daily where job_id=" + $P{jobId} +
+" union all (SELECT NULL,NULL,999,NULL,NULL,  NULL,NULL,NULL,NULL,NULL," +
+    " NULL,NULL,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, true FROM pay_job_daily limit 7) " +
+" order by day_num limit 7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="includeBreakdown" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="showDate" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{payJobDailyQuery}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Job_Id" class="java.lang.Integer"/>
+	<field name="Day_Num" class="java.lang.Integer"/>
+	<field name="date" class="java.sql.Date"/>
+	<field name="Hours_10" class="java.math.BigDecimal"/>
+	<field name="Hours_15" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust1" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust2" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust3" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust4" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust5" class="java.math.BigDecimal"/>
+	<field name="Hours_Cust6" class="java.math.BigDecimal"/>
+	<field name="Mpv1" class="java.lang.Integer"/>
+	<field name="Mpv2" class="java.lang.Integer"/>
+	<variable name="total10" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_10}]]></variableExpression>
+	</variable>
+	<variable name="total15" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_15}]]></variableExpression>
+	</variable>
+	<variable name="totalCust1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust1}]]></variableExpression>
+	</variable>
+	<variable name="totalCust2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust2}]]></variableExpression>
+	</variable>
+	<variable name="totalCust3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust3}]]></variableExpression>
+	</variable>
+	<variable name="totalCust4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust4}]]></variableExpression>
+	</variable>
+	<variable name="totalCust5" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust5}]]></variableExpression>
+	</variable>
+	<variable name="totalCust6" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Hours_Cust6}]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="13">
+			<textField pattern="M/d">
+				<reportElement uuid="4068a519-0305-42f2-b7a4-08aee83d8c73" style="tcDefBox" x="0" y="0" width="25" height="13">
+					<printWhenExpression><![CDATA[$P{showDate}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="25" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_10} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="50" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_15} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="75" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust1} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="100" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust2} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="125" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust3} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="150" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust4} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="b4491ae4-6b7d-4dde-a5ec-3c7c0c88953b" style="tcBoxHours" x="175" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust5} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcBoxHours" x="200" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $F{Hours_Cust6} : ""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b187c380-b075-4bf7-85ba-95e8d018693e" x="225" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement uuid="b187c380-b075-4bf7-85ba-95e8d018693e" x="25" y="0" width="1" height="13"/>
+			</line>
+		</band>
+	</detail>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<line>
+				<reportElement uuid="42d51781-5dc4-4f22-af4f-8964b9bba1c7" x="25" y="0" width="200" height="1"/>
+			</line>
+			<textField pattern="0.0#">
+				<reportElement uuid="a7b23d8d-020f-4f2e-a704-5ac77df5810b" style="tcBoxHours" x="25" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{total10} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="fd1f2c8a-65d1-4faf-b1aa-7ad61669a094" style="tcBoxHours" x="50" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{total15} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="75b1df7d-2bac-447c-a025-a379fb18bdb8" style="tcBoxHours" x="75" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust1} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="7f6fee47-d1a5-4b8f-83e8-9225f23f8c7e" style="tcBoxHours" x="100" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust2} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="5c55bbbc-eeea-4448-9ef1-1dbf14bee73b" style="tcBoxHours" x="125" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust3} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.0#">
+				<reportElement uuid="33c7e9eb-17d0-4b3c-8378-8a6979e351be" style="tcBoxHours" x="150" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust4} : ""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b187c380-b075-4bf7-85ba-95e8d018693e" x="225" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement uuid="b187c380-b075-4bf7-85ba-95e8d018693e" x="25" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement uuid="42d51781-5dc4-4f22-af4f-8964b9bba1c7" x="25" y="12" width="200" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="289283b9-edb3-499c-9eb5-b9224051ce8f" style="tcDefBox" x="175" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust5} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2d19ede7-0023-4f87-936b-837cdaae3f04" style="tcDefBox" x="200" y="0" width="25" height="13"/>
+				<textElement>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{includeBreakdown} ? $V{totalCust6} : ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

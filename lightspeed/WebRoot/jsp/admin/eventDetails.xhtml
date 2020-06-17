@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Event Details mini-tab on Admin & Prod Admin / Events pages -->
+
+	<!--  Entry Tab   -->
+	<ace:tabPane label="Event details">
+		<div class="rowCont" id="detail" style="overflow-y:auto;">
+			<div class="MA W98percnt">
+				<table class="W100percnt">
+					<tr>
+						<td class="B W10percnt">
+							Info
+						</td>
+						<td>
+							<h:outputText
+								value="##{eventBean.event.id}" />&#160;
+							<h:outputText styleClass="pad10lt" value="#{eventBean.event.type}" />&#160;
+							<h:outputText styleClass="pad10lt" value="#{eventBean.event.startTime}" >
+								<f:convertDateTime pattern="EEE, MMM d, yyyy - h:mm:ss a" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td class="B">
+							User Name
+						</td>
+						<td>
+							<h:outputText
+								value="#{eventBean.event.username}" />&#160;
+							<h:panelGroup rendered="#{eventBean.user ne null}">
+								<h:outputText styleClass="pad5lt" value="(##{eventBean.user.id})" />&#160;
+								<h:outputText styleClass="pad5lt" value="- #{eventBean.user.accountNumber}" />&#160;
+								<h:outputText styleClass="pad5lt" value="- #{eventBean.user.firstNameLastName}" />
+							</h:panelGroup>
+						</td>
+					</tr>
+					<tr>
+						<td class="B">
+							Production
+						</td>
+						<td>
+							<h:panelGroup rendered="#{eventBean.event.production ne null}">
+								<h:outputText
+									value="#{eventBean.event.production.title}" />&#160;
+								<h:outputText styleClass="pad5lt" value="(##{eventBean.event.production.id})" />&#160;
+								<h:outputText styleClass="pad5lt" value="#{eventBean.event.production.type}" />&#160;
+								<h:outputText styleClass="pad10lt" value="Owner: #{eventBean.event.production.owningAccount}" />
+							</h:panelGroup>
+						</td>
+					</tr>
+					<tr>
+						<td class="B">
+							Project
+						</td>
+						<td>
+							<h:outputText
+								value="#{eventBean.event.project.title}" />&#160;
+							<h:outputText styleClass="pad5lt" rendered="#{eventBean.event.project ne null}"
+								value="(##{eventBean.event.project.id})" />
+						</td>
+					</tr>
+					<tr>
+						<td class="B" style="vertical-align: top;">
+							Description
+						</td>
+						<td>
+							<h:outputText escape="false"
+								value="#{eventBean.event.descriptionHtml}" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</ace:tabPane>
+
+</ui:composition>

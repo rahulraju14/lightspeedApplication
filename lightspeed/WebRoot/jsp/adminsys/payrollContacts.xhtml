@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- CONTACTS minitab of the Admin / Payroll Services page -->
+
+	<ace:tabPane label="Contacts" id="detailtab">
+
+	<div id="contact" class="scrollPnlTab">
+		<div class="rowGradient">
+
+			<h:panelGroup
+				rendered="#{payrollServiceListBean.editMode}"
+				styleClass="FL">
+
+				<div class="rowCont pad10tp">
+					<span class="fdNm_w B">
+						<h:outputText value="Name:" />
+						<span class="mandatory">*</span>
+					</span>
+					<span class="fd1">
+						<ace:textEntry maxlength="100"
+							value="#{payrollServiceListBean.element.name}" />
+					</span>
+				</div>
+			</h:panelGroup>
+
+			<div class="rowCont pad15tp">
+				<ui:include src="payrollContact.xhtml">
+					<ui:param name="title" value="Main Contact:"></ui:param>
+					<ui:param name="name" value="#{payrollServiceListBean.element.contact1Name}"></ui:param>
+					<ui:param name="email" value="#{payrollServiceListBean.element.contact1Email}"></ui:param>
+					<ui:param name="phone" value="#{payrollServiceListBean.element.contact1Phone}"></ui:param>
+					<ui:param name="editMode" value="#{payrollServiceListBean.editMode}"></ui:param>
+				</ui:include>
+			</div>
+
+			<div class="rowCont pad15tp">
+				<ui:include src="payrollContact.xhtml">
+					<ui:param name="title" value="Alt 1 Contact:"></ui:param>
+					<ui:param name="name" value="#{payrollServiceListBean.element.contact2Name}"></ui:param>
+					<ui:param name="email" value="#{payrollServiceListBean.element.contact2Email}"></ui:param>
+					<ui:param name="phone" value="#{payrollServiceListBean.element.contact2Phone}"></ui:param>
+					<ui:param name="editMode" value="#{payrollServiceListBean.editMode}"></ui:param>
+				</ui:include>
+			</div>
+
+			<div class="rowCont pad15tp">
+				<ui:include src="payrollContact.xhtml">
+					<ui:param name="title" value="Alt 2 Contact:"></ui:param>
+					<ui:param name="name" value="#{payrollServiceListBean.element.contact3Name}"></ui:param>
+					<ui:param name="email" value="#{payrollServiceListBean.element.contact3Email}"></ui:param>
+					<ui:param name="phone" value="#{payrollServiceListBean.element.contact3Phone}"></ui:param>
+					<ui:param name="editMode" value="#{payrollServiceListBean.editMode}"></ui:param>
+				</ui:include>
+			</div>
+
+			<div class="rowCont pad20tp">
+				<ui:include src="address.xhtml">
+					<ui:param name="title" value="Address"></ui:param>
+					<ui:param name="address" value="#{payrollServiceListBean.element.address}"></ui:param>
+					<ui:param name="editMode" value="#{payrollServiceListBean.editMode}"></ui:param>
+				</ui:include>
+			</div>
+
+			<div class="rowCont pad15tp">
+				<ui:include src="address.xhtml">
+					<ui:param name="title" value="Mailing Addr"></ui:param>
+					<ui:param name="address" value="#{payrollServiceListBean.element.mailingAddress}"></ui:param>
+					<ui:param name="editMode" value="#{payrollServiceListBean.editMode}"></ui:param>
+				</ui:include>
+			</div>
+
+			<div class="rowCont pad10bm pad20tp">
+				<span class="fdNm" style="width:13%">
+					<h:outputText value="Timezone:" />
+				</span>
+				<span>
+					<h:panelGroup styleClass="pad5tp"
+						rendered="#{not payrollServiceListBean.editMode}">
+						<h:outputText
+							value="#{payrollServiceListBean.element.timeZoneName}" />
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{payrollServiceListBean.editMode}">
+						<h:selectOneMenu value="#{payrollServiceListBean.element.timeZoneStr}"
+								style="font-size:11px;">
+							<f:selectItems value="#{timeZoneUtils.timeZoneDL}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</span>
+			</div>
+
+		</div><!-- end gradient -->
+	</div>
+
+	</ace:tabPane>
+
+</ui:composition>

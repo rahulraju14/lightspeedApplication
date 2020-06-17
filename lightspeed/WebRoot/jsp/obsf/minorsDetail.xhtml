@@ -1,0 +1,269 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- MNOR'S DETAIL SECTON -->
+
+	<div class="BKwhite" style="width:820px;">
+
+		<!-- Main Form Start -->
+		<!-- FIRST ROW START -->
+		<div class="rowCont FL pad20tp">
+			<!-- FIRST NAME START -->
+			<div class="W39percnt FL pad4tp pad10lt">
+				<div class="rowCont pad5lt" style="height:23px; border-right:solid 1px;">
+					<span class="fdNm" style="width:90px;">
+						<h:outputText value="Minor&apos;s Name:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.firstName) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30" style="width:68%;"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.firstName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<span class="fd_sm2 pad10tp B txt10 pad100lt"> First Name </span>
+			</div>
+			<!-- FIRST NAME END -->
+
+			<!-- MIDDLE NAME START -->
+			<div class="W26percnt FL pad4tp">
+				<div class="rowCont pad10lt" style="height:23px; border-right:solid 1px;">
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<ace:textEntry maxlength="2" style="width:94%;"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.middleName}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<span class="fd_sm2 B pad10tp txt10 pad15lt"> Middle Name (or Middle Initial) </span>
+			</div>
+			<!-- MIDDLE NAME END -->
+
+			<!-- LAST NAME START -->
+			<div class="W32percnt FL pad4tp">
+				<div class="rowCont pad10lt" style="height:23px;">
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt #{(empty formMtaBean.form.lastName) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30" style="width:86%;"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.lastName}"/>
+						</span>
+					</h:panelGroup>
+				</div>
+				<span class="fd_sm2 B pad10tp txt10 pad15lt"> Last Name </span>
+			</div>
+			<!-- LAST NAME END -->
+		</div> <!-- FIRST ROW END -->
+
+		<!-- Horizontal rule -->
+		<hr class="FL pad5bm" style="height:1px;width:84%;background:black;border:0;margin-right:-3px;margin-left:104px;margin-top:-11px" />
+
+		<!-- SECOND ROW START -->
+		<div class="rowCont FL pad2tp">
+			<!-- DATE OF BIRTH START -->
+			<div class="FL pad4tp pad10lt" style="width:46%">
+				<div class="rowCont pad5lt" style="height:26px;">
+					<span class="fdNm_w" style="width:130px">
+						<h:outputText value="Minor&apos;s Date of Birth:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.dateOfBirth) ? 'requiredField' : ''}">
+							<ace:dateTimeEntry
+								tabindex="0" value="#{formMtaBean.form.dateOfBirth}"
+								renderAsPopup="true" disabled="#{not formMtaBean.empEdit}"
+								styleClass="fd_sm2"
+								style="min-width:62%; border-bottom:solid 1px;">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+				<span class="fd_sm2 pad10tp B txt10" style="margin-left:180px"> Month </span>
+				<span class="fd_sm2 pad10tp B txt10 pad20lt"> Day </span>
+				<span class="fd_sm2 pad10tp B txt10 pad20lt"> Year </span>
+			</div>
+			<!-- DATE OF BIRTH END -->
+
+			<!-- SOCIAL SECURITY NUMBER START -->
+			<div class="W52percnt FL pad4tp">
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm_w2" style="width: 145px;">
+						<h:outputText value="Social Security Number:" />
+					</span>
+
+					<h:panelGroup rendered="#{not formMtaBean.empEdit}">
+						<span class="fd_sm2 pad3lt">
+							<ace:textEntry disabled="true"
+								value="#{formMtaBean.form.viewSSN}"
+								style="min-width:55%; width:55%; border-bottom:solid 1px;"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{formMtaBean.empEdit}">
+						<span class="fd_sm2 pad3lt #{(empty formMtaBean.form.socialSecurity) or
+									(formMtaBean.form.socialSecurity eq null) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="11"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.socialSecurity}"
+								style="min-width:55%; width:55%; border-bottom:solid 1px;">
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div> <!-- SOCIAL SECURITY NUMBER END -->
+		</div> <!-- SECOND ROW END -->
+
+		<!-- THIRD ROW START -->
+		<div class="rowCont FL pad2tp">
+			<!-- STREET ADDRESS START -->
+			<div class="rowCont pad15lt pad4tp" style="height:26px;">
+				<span class="fdNm" style="width:100px">
+					<h:outputText value="Street Address:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{(empty formMtaBean.form.address.addrLine1) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="30"
+							disabled="#{not formMtaBean.empEdit}"
+							value="#{formMtaBean.form.address.addrLine1}"
+							style="width:82%;border-bottom:solid 1px;" />
+					</span>
+				</h:panelGroup>
+			</div>
+			<!-- STREET ADDRESS END -->
+		</div> <!-- THIRD ROW END -->
+
+		<!-- FOURTH ROW START -->
+		<div class="rowCont FL pad2tp">
+			<!-- CITY START -->
+			<div class="W33percnt FL pad4tp">
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:35px">
+						<h:outputText value="City:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 #{(empty formMtaBean.form.address.city) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.address.city}"
+								style="width:80%;border-bottom:solid 1px;" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- CITY END -->
+
+			<!-- STATE START -->
+			<div class="W30percnt FL pad4tp">
+				<div class="rowCont pad15lt" style="height:26px;">
+					<span class="fdNm" style="width:38px">
+						<h:outputText value="State:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2">
+							<h:selectOneMenu styleClass="FL W75percnt pad10lt pad2tp"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.address.state}"
+								style="border-bottom:solid 1px; #{formMtaBean.form.address.state eq null ? 'background-color: rgb(255,255,170)' : ''};">
+								<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- STATE END -->
+
+			<!-- POSTAL CODE START -->
+			<div class="W35percnt FL pad4tp">
+				<div class="rowCont pad10lt" style="height:26px;">
+					<span class="fdNm" style="width:75px">
+						<h:outputText value="Postal Code:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad5lt #{(empty formMtaBean.form.address.zip) ? 'requiredField' : ''}">
+							<ace:textEntry maxlength="30"
+								disabled="#{not formMtaBean.empEdit}"
+								value="#{formMtaBean.form.address.zip}"
+								style="width:62%;border-bottom:solid 1px;"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- POSTAL CODE END -->
+		</div> <!-- FOURTH ROW END -->
+
+		<div class="FL pad10lt pad8tp W95percnt BKwhite sfFormBorder2" style="height:80px">
+			<!-- NO TRUST ACCOUNT -->
+			<icecore:setEventPhase events="ValueChangeEvent"
+				phase="INVOKE_APPLICATION">
+				<h:selectBooleanCheckbox
+					styleClass="iceSelBoolChkbx FL pad10lt"
+					disabled="#{not formMtaBean.empEdit}"
+					value="#{formMtaBean.form.noTrustAccount}">
+					<ace:ajax execute="@form" />
+				</h:selectBooleanCheckbox>
+			</icecore:setEventPhase>
+			<h:outputText styleClass="FL B pad3tp" escape="false" style="margin-left:5px;"
+				value="By checking here, my signature below acknowledges that a Trust Account has &lt;em&gt; &lt;u&gt;NOT&lt;/u&gt; &lt;/em&gt; been set up for the above-named minor" />
+			<h:outputText styleClass="FL B pad6lt"
+				value="and the applicable Minor Trust Set-Aside amount will be deposited in the minor&apos;s name to the mandated applicable fund." />
+
+			<!-- Horizontal rule -->
+			<hr class="rowCont FL pad2tp" style="height:1px;background:black;border:0;margin-right:-3px;" />
+
+			<h:outputText styleClass="FL B pad10lt pad5tp"  value="My signature below indicates that I would like" />
+			<!-- TRUST PERCENT -->
+			<h:panelGroup>
+				<span class="FL fd_sm pad5lt pad3tp #{(empty formMtaBean.form.trustPercent) ? 'requiredField' : ''}"
+					style="width:80px">
+					<ace:textEntry maxlength="30"
+						disabled="#{(not formMtaBean.empEdit) or (formMtaBean.form.trustInitial ne null)}"
+						value="#{formMtaBean.form.trustPercent}"
+						style="width:90%; height:11px; border-bottom:solid 1px;">
+						<f:convertNumber type="number" pattern="#0.#" />
+						<ace:ajax render="@this trustInitial"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+			<h:outputText styleClass="FL B pad10lt pad5tp" value="% withheld in Trust (must be 15% or more). Initial:" />
+			<!-- TRUST INITIAL -->
+			<h:panelGroup>
+				<span class="FL fd_sm pad2lt pad5tp" style="width:80px;">
+					<!-- Initial Button  -->
+					<h:panelGroup id="trustInitial" styleClass="btn_legend_left" style="float:left; margin-top:9px;margin-bottom:-15px" rendered="#{formMtaBean.form.trustInitial eq null}">
+						<h:panelGroup rendered="#{(not empty formMtaBean.form.trustPercent)}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Initial"
+								styleClass="btnMiniCt"
+								 action="#{formMtaBean.actionInitial}">
+							</ace:linkButton>
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{(empty formMtaBean.form.trustPercent)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<span class="pad5lt">
+						<h:panelGroup escape="false" styleClass="txt12" rendered="#{formMtaBean.form.trustInitial ne null}">
+							<h:outputText value=" #{formMtaBean.form.trustInitial.initials}" styleClass="B txtBlue" />
+						</h:panelGroup>
+					</span>
+					<!-- Initial Button End -->
+				</span>
+			</h:panelGroup>
+			<div class="rowCont FL pad70lt">
+				<h:outputText styleClass="FL B pad3tp" escape="false" style="color:red;"
+					value="&amp;#9654;  &#160; &lt;em&gt;Allow for agent&apos;s percentage and payroll taxes. Contact your TTC representative if you have questions.&lt;/em&gt;" />
+			</div>
+		</div>
+	</div>
+</ui:composition>

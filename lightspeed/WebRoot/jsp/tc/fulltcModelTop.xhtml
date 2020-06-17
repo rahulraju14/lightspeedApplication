@@ -1,0 +1,452 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- The top area (between tab header and timecard table) of the Full Timecard page -->
+	<!-- This uses a < table > structure, with 10 columns (some just for spacing) and 5 rows. -->
+	<!--  model full  timecard-->
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+	<!--   "timezone" : application's default timezone -->
+	<!-- Feature flag setting for enhanced loan-out info. -->
+	<!-- Changed highlighting of required fields for Team vs Non-Team clients LS-2729 -->
+	<!-- Added ids for QA automation LS-2923 -->
+		
+	<c:set var="isEnhancedLoanout" value="#{fFApplicationScopeBean.useFeature('TTCO_ENHANCED_LOAN_OUT')}" scope="request" />
+	<c:set var="isTeamAndEnhancedLoanout" value="#{fullTimecardBean.teamPayroll and isEnhancedLoanout}"  scope="request" />
+
+	<div>
+		<table class="LH22 pad10tp W98percnt defTab">
+
+			<tr><!-- ROW 1 -->
+				<td style="width: 1%">&#160;</td>
+				<td style="width: 13%;"><!-- first section labels -->
+					<h:outputText styleClass="B" value="Status:" />
+				</td>
+				<td style="width: 20%;"><!-- first section data -->
+					<h:outputText styleClass=" " value=" #{fullTimecardBean.weeklyTimecard.status.label}"/>
+				</td>
+				<td style="width: 11%;">&#160;<!-- second section labels -->
+				</td>
+				<td colspan="3" style="width: 22%"><!-- second section data -->
+					<!-- VIEW STARTS button -->
+					<h:panelGroup styleClass=" "
+							rendered="#{(not fullTimecardBean.editMode) and
+								(fullTimecardBean.weeklyTimecard ne null) and
+								(not fullTimecardBean.notInProduction) and
+								(headerViewBean.production.type ne 'OTHER') and
+								(fullTimecardBean.weeklyTimecard.userAccount eq fullTimecardBean.vUser.accountNumber or
+								not empty authBean.pgFields['9.3,view'])}">
+						<span class="btnMiniLtHot"/>
+						<ace:linkButton value="View Release" action="#{fullTimecardBean.actionViewStart}"
+								title="View the Start Form for this timecard" id="#{idPrefix}ViewRelease"
+								styleClass="btnMiniCt" >
+						</ace:linkButton>
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+				</td>
+				<td style="width:1%">&#160;<!-- gap -->
+				</td>
+				<td style="width: 7%;"><!-- third section labels -->
+					<!-- <h:outputText styleClass="B" value="Rate Type:"/> -->
+				</td>
+				<td style="width:25%"><!-- third (last) section data -->
+
+					<!-- UPDATE FROM START button -->
+					<h:panelGroup styleClass="FR" rendered="#{fullTimecardBean.editHtg}">
+						<span class="btnMiniLtHot"/>
+						<ace:linkButton value="Update from Release" action="#{fullTimecardBean.actionUpdateFromStart}"
+								title="Update this timecard's rates, occupation, etc., from the current Release Form"
+								id="#{idPrefix}UpdateFromModelRelease" styleClass="btnMiniCt" >
+						</ace:linkButton>
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+
+				</td>
+			</tr>
+
+			<tr><!-- ROW 2 -->
+				<td>&#160;</td>
+				<td>
+					<h:outputText rendered="#{not aicp}" styleClass="B" value="Production Name:" />
+					<h:outputText rendered="#{aicp}" styleClass="B" value="Job # / Job Name:" />
+				</td>
+				<td>
+					<h:outputText rendered="#{not aicp}" value="#{fullTimecardBean.weeklyTimecard.prodName}" />
+					<h:panelGroup rendered="#{aicp}" >
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.jobNumber}" /> /
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.jobName}" />
+					</h:panelGroup>
+				</td>
+				<td>
+					<span>
+						<h:outputText styleClass="B" value="Loan-Out Corp:" />
+					</span>
+				</td>
+				<td style="#{isTeamAndEnhancedLoanout ? '' : 'display:none;'}">
+					<h:outputText styleClass="FL" value="#{fullTimecardBean.weeklyTimecard.loanOutCorp}" />
+				</td>
+				<td colspan="3" style="#{isTeamAndEnhancedLoanout ? 'display:none' : ''}">
+					<h:outputText styleClass="FL" value="#{fullTimecardBean.weeklyTimecard.loanOutCorp}" />
+				</td>
+				<td style="width:8%; #{isTeamAndEnhancedLoanout? '' : 'display:none;'}" >
+					<!-- Do not highlight this field if paidAs is not a loan out. -->
+					<h:outputText styleClass="B pad15lt #{fullTimecardBean.weeklyTimecard.paidAs.loanOut ? 'mandatory' : ''}"
+						value="#{fullTimecardBean.weeklyTimecard.paidAs.loanOut? 'Federal ID #: *' : 'Federal ID #:'}" />
+				</td>
+
+				<td style="width:8%; #{isTeamAndEnhancedLoanout ? '' : 'display:none;'}">
+					<h:panelGroup rendered="#{not fullTimecardBean.editMode or not empty fullTimecardBean.weeklyTimecard.fedCorpId}">
+						<span class="fd_sm">
+							<h:outputText value="#{fullTimecardBean.weeklyTimecard.fedCorpId}" >
+								<f:converter converterId="lightspeed.FedIdConverter" />
+							</h:outputText>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{fullTimecardBean.editMode and empty fullTimecardBean.weeklyTimecard.fedCorpId}">
+						<span class="fd_sm pad10lt">
+							<ace:textEntry maxlength="11" id="#{idPrefix}FedCorpIdModelRelease"
+								value="#{fullTimecardBean.weeklyTimecard.fedCorpId}"
+								styleClass="#{(fullTimecardBean.editMode and empty fullTimecardBean.weeklyTimecard.fedCorpId
+									and (fullTimecardBean.weeklyTimecard.paidAs ne null and fullTimecardBean.weeklyTimecard.paidAs.loanOut)) ? 'requiredDiv' : ''}"
+								style="width:80px;">
+								<f:converter converterId="lightspeed.FedIdConverter" />
+								<ace:ajax />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</td>
+				<td>&#160;</td>
+				<td style="#{isTeamAndEnhancedLoanout ? 'display:none' : ''}">
+					<h:outputText styleClass="B" value="SSN:"/>
+				</td>
+				<td style="#{(isTeamAndEnhancedLoanout) ? '' : 'display:none'}">
+					<h:outputText styleClass="B mandatory" value="SSN: *"/>
+				</td>
+
+				<td>
+					<!-- SOCIAL SECURITY FIELD (included) -->
+					<h:panelGroup styleClass="FL W50percnt">
+						<ui:include src="socialSec.xhtml">
+							<ui:param name="bean" value="#{fullTimecardBean}" />
+							<ui:param name="idPrefix" value="#{idPrefix}"/>
+						</ui:include>
+					</h:panelGroup>
+
+					<!-- Off-Production label or checkbox -->
+					<h:panelGroup styleClass="FL">
+						<h:panelGroup rendered="#{fullTimecardBean.editHtg}">
+							<h:outputText value="Off Prod."
+								styleClass="B pad10rt
+									#{(fullTimecardBean.weeklyTimecard.offProduction ? 'RED' : '')}" />
+							<h:selectBooleanCheckbox styleClass="pad1tp" id="#{idPrefix}OffProdModelRelease"
+								value="#{fullTimecardBean.weeklyTimecard.offProduction}" >
+								<ace:ajax render="@all"/>
+							</h:selectBooleanCheckbox>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{! fullTimecardBean.editHtg}">
+							<h:outputText value=" "
+									rendered="#{! fullTimecardBean.weeklyTimecard.offProduction}" />
+							<h:outputText styleClass="B RED" value="OFF PRODUCTION"
+									rendered="#{fullTimecardBean.weeklyTimecard.offProduction}" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+				</td>
+			</tr>
+
+			<tr><!-- ROW 3 -->
+				<td>&#160;</td>
+				<td>
+					<h:outputText styleClass="B" value="Production Co.:" />
+				</td>
+				<td>
+					<!--  ace:textEntry styleClass="FL W90percnt" maxlength="100"
+						value="#{fullTimecardBean.weeklyTimecard.prodCo}"
+						rendered="#{fullTimecardBean.editHtg}" / -->
+					<h:outputText styleClass="FL" value="#{fullTimecardBean.weeklyTimecard.prodCo}" />
+				</td>
+				<td style="#{isTeamAndEnhancedLoanout ? 'display:none' : ''}">
+					<span>
+						<h:outputText styleClass="B" value="Federal ID #:"/>
+					</span>
+				</td>
+
+				<td style="width:8%; #{isTeamAndEnhancedLoanout ? 'display:none' : ''}" >
+					<h:panelGroup rendered="#{fullTimecardBean.showPrivate}">
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.fedCorpId}">
+							<f:converter converterId="lightspeed.FedIdConverter" />
+						</h:outputText>
+					</h:panelGroup>
+					<h:outputText rendered="#{! fullTimecardBean.showPrivate}" value=" " />
+				</td>
+				<td colspan="2" style="#{not isTeamAndEnhancedLoanout ? 'display:none' : ''}" >
+					<!-- How employee is going to be paid as individual or loan-out -->
+					<div class="FL B pad2tp" >
+						<h:outputText styleClass="mandatory" value="Employee paid as"/>
+						<span class="mandatory">*</span>
+					</div>
+					<div class="">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="pad2lt FL #{(fullTimecardBean.editMode) and
+											empty fullTimecardBean.weeklyTimecard.paidAs ? 'requiredDiv' : ''}" 
+								rendered="#{fullTimecardBean.editMode and empty fullTimecardBean.weeklyTimecard.paidAs}" 
+									value="#{fullTimecardBean.weeklyTimecard.paidAs}" valueChangeListener="#{fullTimecardBean.listenPaidAsChange}"
+									style="width:90px;" id="#{idPrefix}PaidAsModelRelease">
+								<f:converter converterId="lightspeed.PaidAsConverter" />
+								<f:selectItems value="#{fullTimecardBean.paidAsDL}" />
+								<ace:ajax/>
+							</h:selectOneMenu>
+						</icecore:setEventPhase>
+						<h:outputText styleClass="FL pad20lt pad2tp" value="#{fullTimecardBean.weeklyTimecard.paidAs.label}"
+							rendered="#{! fullTimecardBean.editMode or not empty fullTimecardBean.weeklyTimecard.paidAs}" />
+					</div>					
+				</td>
+				<td style="width:7%">
+					<h:outputText styleClass="B FR pad15rt" value="State ID #:"/>
+				</td>
+				<td style="width:7%">
+					<h:panelGroup rendered="#{fullTimecardBean.showPrivate}">
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.stateCorpId}" />
+					</h:panelGroup>
+					<h:outputText rendered="#{! fullTimecardBean.showPrivate}"
+						value=" " />
+				</td>
+				<td>&#160;
+				</td>
+				<td>
+					<h:outputText styleClass="B" value="Rate:"/>
+				</td>
+				<td>
+					<h:panelGroup styleClass="FL W50percnt">
+						<h:panelGroup rendered="#{fullTimecardBean.showPrivate}">
+							<h:outputText styleClass=" " value="#{fullTimecardBean.ratePair}" />
+						</h:panelGroup>
+						&#160;
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="FL">
+						<h:outputText styleClass="B" value="Re-use fee:" />
+						<h:panelGroup styleClass="W50percnt" rendered="#{! fullTimecardBean.showPrivate}">&#160;
+						</h:panelGroup>
+						<h:panelGroup>
+							<h:outputText styleClass="pad5lt" rendered="#{fullTimecardBean.weeklyTimecard.startForm.empReuse ne null}"
+									value="#{fullTimecardBean.weeklyTimecard.startForm.empReuse}">
+							</h:outputText>
+							<h:panelGroup
+									rendered="#{not (fullTimecardBean.showPrivate and
+										(fullTimecardBean.weeklyTimecard.startForm.empReuse eq null) )}">
+							 	&#160;
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</td>
+			</tr>
+
+			<tr><!-- ROW 4 -->
+				<td>&#160;</td>
+				<td>
+					<h:outputText styleClass="B" value="Occupation:"/>
+				</td>
+				<td>
+					<h:outputText styleClass="" value="#{fullTimecardBean.weeklyTimecard.occupation}" />
+				</td>
+				<td style="#{not isTeamAndEnhancedLoanout ? '' : 'display:none'}">
+					<span>
+						<h:outputText styleClass="B" value="Work City &amp; State:" />
+					</span>
+				</td>
+				<td style="#{(isTeamAndEnhancedLoanout) ? '' : 'display:none'}">
+					<span>
+						<h:outputText styleClass="B mandatory" value="Work City &amp; State: *" />
+					</span>
+				</td>
+				<td>
+					<c:set var="editCity" value="#{fullTimecardBean.editMode and
+							((not isTeamAndEnhancedLoanout) or empty fullTimecardBean.weeklyTimecard.cityWorked)}" />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:textEntry styleClass="FL W95percnt #{(fullTimecardBean.editMode
+								and (fullTimecardBean.weeklyTimecard.cityWorked eq null or empty fullTimecardBean.weeklyTimecard.cityWorked.trim())) ? 'requiredDiv' : ''}" maxlength="50"
+								value="#{fullTimecardBean.weeklyTimecard.cityWorked}" id="#{idPrefix}CityWorked"
+								valueChangeListener="#{fullTimecardBean.listenWorkCityChange}"
+								rendered="#{editCity}" >
+							<ace:ajax render="@all"/>
+						</ace:textEntry>
+					    <h:outputText styleClass="FL" value="#{fullTimecardBean.weeklyTimecard.cityWorked}"
+							rendered="#{! editCity}" />
+					</icecore:setEventPhase>
+				</td>
+				<td>
+					<c:set var="editState" value="#{fullTimecardBean.editMode and
+							((not isTeamAndEnhancedLoanout) or fullTimecardBean.weeklyTimecard.stateWorked eq null or
+							empty fullTimecardBean.weeklyTimecard.stateWorked.trim())}" />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectOneMenu styleClass="W80percnt #{(fullTimecardBean.editMode and (fullTimecardBean.weeklyTimecard.stateWorked eq null or empty fullTimecardBean.weeklyTimecard.stateWorked.trim())) ? 'requiredDiv' : ''}" 
+								value="#{fullTimecardBean.weeklyTimecard.stateWorked}" id="#{idPrefix}StateWorkedModelRelease"
+								valueChangeListener="#{fullTimecardBean.listenWorkStateChange}"
+								rendered="#{editState}">
+							<f:selectItems value="#{fullTimecardBean.countryStateCodeDL}" />
+							<f:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.stateWorked}"
+								rendered="#{! editState}" />
+					</icecore:setEventPhase>
+				</td>
+				<!--LS-2140 Added Agent Name to timecard if the person is in the Cast department  -->
+				<td colspan="3">
+					<h:outputText styleClass="B pad5rt" value="Agent:"
+							 />
+					<h:outputText style="margin-left:5px;"
+							value="#{fullTimecardBean.weeklyTimecard.startForm.agencyName}"
+							 />
+				</td>
+				<td >
+					<h:outputText styleClass="B pad5rt" value="Shoot Day Guar. Hrs:" />
+					<h:outputText styleClass="pad5lt" rendered="#{fullTimecardBean.showPrivate and
+										(fullTimecardBean.weeklyTimecard.guarHours ne null)}"
+									value="#{fullTimecardBean.weeklyTimecard.guarHours}">
+							</h:outputText>
+					
+				</td>
+			</tr>
+
+			<tr><!-- ROW 5 (last) -->
+				<td>&#160;</td>
+				<td>
+					<h:outputText rendered="#{(not empty fullTimecardBean.weeklyTimecard.unionNumber) and fullTimecardBean.weeklyTimecard.unionNumber ne 'NonU'}"
+							styleClass="B" value="Occ. Code/Schedule:" />
+					<!-- <h:outputText rendered="#{(empty fullTimecardBean.weeklyTimecard.unionNumber) or fullTimecardBean.weeklyTimecard.unionNumber eq 'NonU'}"
+							styleClass="B" value="Retirement Plan:"/> -->
+				</td>
+				<td>
+					<h:outputText rendered="#{(not empty fullTimecardBean.weeklyTimecard.unionNumber) and fullTimecardBean.weeklyTimecard.unionNumber ne 'NonU'}"
+							value="#{fullTimecardBean.occCodeSchedule}" />
+					<!-- <h:outputText rendered="#{(empty fullTimecardBean.weeklyTimecard.unionNumber) or fullTimecardBean.weeklyTimecard.unionNumber eq 'NonU'}">
+						<h:selectOneMenu disabled="true" value="#{fullTimecardBean.weeklyTimecard.startForm.retirementPlan}" id="#{idPrefix}RetirePlan">
+							<f:selectItems value="#{fullTimecardBean.retirementPlanDL}" />
+							<ace:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+					</h:outputText> -->
+					<h:panelGroup styleClass="FR W10percnt">&#160;</h:panelGroup>
+					<h:outputText styleClass="FR W25percnt" value="#{fullTimecardBean.weeklyTimecard.unionNumber}"/>
+					<h:panelGroup styleClass="FR W25percnt" rendered="#{empty fullTimecardBean.weeklyTimecard.unionNumber}">&#160;
+					</h:panelGroup>
+					<h:outputText styleClass="B FR pad5rt" value="Union:" />
+				</td>
+				<td>
+					<h:outputText styleClass="B" value="Work Zip &amp; Country:"/>
+				</td>
+				<td>
+					<ace:textEntry styleClass="W70percnt" maxlength="10" id="#{idPrefix}WorkZipModelRelease"
+						value="#{fullTimecardBean.weeklyTimecard.workZip}"
+						rendered="#{fullTimecardBean.editMode}" >
+						<ace:ajax render="@all"/>
+					</ace:textEntry>
+					<h:outputText styleClass="FL" value="#{fullTimecardBean.weeklyTimecard.workZip}"
+						rendered="#{! fullTimecardBean.editMode}" />
+				</td>
+				<td>
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectOneMenu styleClass="W80percnt" id="#{idPrefix}WorkCountryMrl"
+								valueChangeListener="#{fullTimecardBean.listenWorkCountryChange}"
+								value="#{fullTimecardBean.weeklyTimecard.workCountry}"
+								rendered="#{fullTimecardBean.editMode}">
+							<f:selectItems value="#{applicationScopeBean.countryCodeDL}" />
+							<ace:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+						<h:outputText value="#{fullTimecardBean.weeklyTimecard.workCountry}"
+								rendered="#{! fullTimecardBean.editMode}" />
+					</icecore:setEventPhase>
+				</td>
+				<!--LS-2140 added Agent Commission to timecard if the person is in the Cast department  -->
+				<td colspan="3">
+					<h:outputText styleClass="B" value="Agent commission (%):"
+							 />
+					<h:outputText style="margin-left: 5px;"
+							value="#{fullTimecardBean.weeklyTimecard.startForm.empAgentCommisssion}">
+					</h:outputText>
+				</td>
+				<td >
+					<h:outputText styleClass="B" value="Prep Day Guar. Hrs:" />
+					<h:outputText style="margin-left: 5px;" rendered="#{fullTimecardBean.weeklyTimecard.startForm.prep.daily.studioHrs ne null}"
+							value="#{fullTimecardBean.weeklyTimecard.startForm.prep.daily.studioHrs}">
+					</h:outputText>
+				</td>
+				<!-- 2 td's, with account info, included in prior row's entry with rowspan=2 -->
+			</tr>
+		</table>
+
+		<div class="rowCont FL" style="padding-left:1%;">
+			<div class="FL" style="width:12.4%;">
+				<div class="FL LH22 pad5rt B">
+					<h:outputText value="Employment Ended:"/>
+				</div>
+			</div>
+			<div class="FL" style="width:20%;">
+				<h:outputText rendered="#{not fullTimecardBean.editMode}"
+						styleClass="FL LH22 pad5lt" value="#{fullTimecardBean.weeklyTimecard.acaEndWorkDate}">
+					<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{timezone}"/>
+				</h:outputText>
+				<ace:dateTimeEntry styleClass="FL LH22" rendered="#{fullTimecardBean.editMode}" tabindex="0"
+						value="#{fullTimecardBean.weeklyTimecard.acaEndWorkDate}" id="#{idPrefix}AcaEndWorkDateMrl"
+						renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<f:attribute name="pattern" value="MMM d, yyyy"/>
+					<ace:ajax render="@all"/>
+				</ace:dateTimeEntry>
+			</div>
+			<div class="FL" style="width:33%;">
+				<div class="FL LH22 pad5rt B">
+					<h:outputText value="Special Unpaid Leave From:"/>
+				</div>
+				<h:outputText rendered="#{not fullTimecardBean.editMode}"
+						styleClass="FL LH22 pad5lt" value="#{fullTimecardBean.weeklyTimecard.acaLeaveStartDate}">
+					<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{timezone}"/>
+				</h:outputText>
+				<h:outputText rendered="#{empty fullTimecardBean.weeklyTimecard.acaLeaveStartDate and not fullTimecardBean.editMode}"
+						value="&#160;" styleClass="FL" style="width:70px;min-width:70px;"/>
+				<ace:dateTimeEntry styleClass="FL LH22 cal_date" rendered="#{fullTimecardBean.editMode}" tabindex="0"
+						value="#{fullTimecardBean.weeklyTimecard.acaLeaveStartDate}" id="#{idPrefix}acaLeaveStartDateMrl"
+						renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<f:attribute name="pattern" value="MMM d, yyyy"/>
+					<ace:ajax render="@all"/>
+				</ace:dateTimeEntry>
+
+				<div class="FL LH22 pad5rt pad10lt B">
+					<h:outputText value="To:"/>
+				</div>
+				<h:outputText rendered="#{not fullTimecardBean.editMode}"
+						styleClass="FL LH22 pad5lt" value="#{fullTimecardBean.weeklyTimecard.acaLeaveEndDate}">
+					<f:convertDateTime pattern="MMM d, yyyy" timeZone="#{timezone}"/>
+				</h:outputText>
+				<ace:dateTimeEntry styleClass="FL LH22 cal_date" rendered="#{fullTimecardBean.editMode}" tabindex="0"
+						style="width:90px;" id="#{idPrefix}acaLeaveEndDateMrl"
+						value="#{fullTimecardBean.weeklyTimecard.acaLeaveEndDate}"
+						renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<f:attribute name="pattern" value="MMM d, yyyy"/>
+					<ace:ajax render="@all"/>
+				</ace:dateTimeEntry>
+			</div>
+			<h:panelGroup rendered="#{fullTimecardBean.teamPayroll}">
+				<div class="FL" style="width:7%;">
+					<div class="FL LH22 B pad5lt">
+						<h:outputText value="Batch ID:"/>
+					</div>
+				</div>
+				<div class="FL" style="width:20%;">
+					<div class="FL LH22">
+						<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.weeklyBatch ne null}">
+							<h:outputText value="#{fullTimecardBean.weeklyTimecard.weeklyBatch.name}"/>
+						</h:panelGroup>
+					</div>	
+				</div>
+			</h:panelGroup>
+		</div>
+	</div>
+</ui:composition>

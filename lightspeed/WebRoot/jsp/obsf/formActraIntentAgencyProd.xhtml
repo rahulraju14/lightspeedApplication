@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+	<div style="width:700px">
+		<!-- Begin Agency/Production/Sponsor Info Section -->
+		<h:panelGrid columns="2" styleClass="txt11 actraIntentPanel">
+			<!-- ROW 1 -->
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="SPONSOR:" />
+				</h:panelGroup>				
+				<h:panelGroup styleClass="FL pad5lt W260">
+					<ace:textEntry maxlength="150" id="actraIntentAdvertiser" disabled="#{not editable}" styleClass="LT txt10" 
+						style="width:266px" value="#{form.advertiser}"/>
+				</h:panelGroup>			
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="PRODUCT:" />
+				</h:panelGroup>		
+				<h:panelGroup styleClass="FL pad5lt" style="width:265px">
+					<ace:textEntry maxlength="150" id="actraIntentProduct" disabled="#{not editable}" styleClass="LT txt10" style="width:269px;" value="#{form.product}"/>
+				</h:panelGroup>
+			</h:panelGroup>
+			<!-- ROW 2 -->
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="AGENCY:" />
+				</h:panelGroup>				
+				<h:panelGroup styleClass="FL pad5lt W270" style="width:270px;">
+					<ace:textEntry maxlength="150" id="actraIntentAgencyName" disabled="#{not editable}" styleClass="LT txt10 W275" value="#{form.agencyName}"/>
+				</h:panelGroup>			
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="SIGNATORY ENGAGER:" />
+				</h:panelGroup>				
+				<h:panelGroup styleClass="FL pad3lt W195" >
+					<ace:textEntry maxlength="150" id="actraIntentSignatoryEngager" disabled="#{not editable}" styleClass="LT txt10 W200" 
+						value="#{form.signatoryEngager}"/>
+				</h:panelGroup>			
+			</h:panelGroup>
+			<!-- ROW 3 -->
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="PRODUCER:" />
+				</h:panelGroup>		
+				<h:panelGroup styleClass="FL pad3lt W255">
+					<ace:textEntry maxlength="150" id="actraIntentProducerName" disabled="#{not editable}" styleClass="LT txt10 W260 pad1lt" value="#{form.producerName}"/>
+				</h:panelGroup>
+			</h:panelGroup>	
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="PRODUCER EMAIL:" />
+				</h:panelGroup>		
+				<h:panelGroup styleClass="FL pad3lt W215">
+					<ace:textEntry maxlength="150" id="actraIntentProducerEmail" disabled="#{not editable}" styleClass="LT txt10 pad2lt W220" value="#{form.producerEmail}"/>
+				</h:panelGroup>
+			</h:panelGroup>			
+			<!-- ROW 4 -->
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="PRODUCTION CO:" />
+				</h:panelGroup>				
+				<h:panelGroup styleClass="FL pad5lt W225">
+					<ace:textEntry maxlength="150" id="actraIntentProductionHouseName" disabled="#{not editable}" styleClass="LT pad2lt txt10 W225" 
+						value="#{form.productionHouseName}"/>
+				</h:panelGroup>			
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="LINE PRODUCER:" />
+				</h:panelGroup>		
+				<h:panelGroup styleClass="FL pad5lt W225">
+					<ace:textEntry maxlength="150" id="actraIntentLineProducerName" disabled="#{not editable}" styleClass="LT txt10 W230" 
+						style="width:230px" value="#{form.lineProducerName}"/>
+				</h:panelGroup>
+			</h:panelGroup>			
+			<!-- ROW 5 -->
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="DIRECTOR:" />
+				</h:panelGroup>		
+				<h:panelGroup styleClass="FL pad7lt W260">
+					<ace:textEntry maxlength="150" id="actraIntentDirectorName" disabled="#{not editable}"
+						styleClass="LT txt10 pad2lt W260" value="#{form.directorName}" />
+				</h:panelGroup>
+			</h:panelGroup>	
+			<h:panelGroup layout="block" styleClass="W330">
+				<h:panelGroup styleClass="FL B pad5tp">
+					<h:outputText value="CASTING DIRECTOR:" />
+				</h:panelGroup>				
+				<h:panelGroup styleClass="FL pad5lt W200">
+					<ace:textEntry maxlength="150" id="actraIntentCastingDirectorName" disabled="#{not editable}" styleClass="LT txt10 W210" 
+						style="width:210px" value="#{form.castingDirectorName}"/>
+				</h:panelGroup>			
+			</h:panelGroup>
+			<!-- <h:panelGroup layout="block" styleClass="W150">
+			</h:panelGroup>	 -->
+		</h:panelGrid>
+		<!-- End Agency/Production/Sponsor Info Section -->
+		
+		<div class="rowCont">&#160;</div>
+		
+		<!-- Begin Multi-Branch Info Section -->
+		
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<ace:buttonGroup id="multiBranch" mutuallyExclusive="true"
+				layout="lineDirection">
+				<h:panelGrid columns="2" styleClass="txt12 actraIntentPanel" style="width:700px;">
+					<h:panelGroup styleClass="FL B W330" layout="block" >
+						<h:outputText value="Is this a MULTI-BRANCH shoot?" />
+						<h:panelGroup styleClass="FR B">
+							<h:outputText value="Yes:" />
+							<ace:radioButton id="multiBranchYes" group="multiBranch" 
+								disabled="#{not editable}"
+								labelPosition="right" 
+								value="#{bean.multiBranch[0]}">
+								<ace:ajax execute="multiBranch" event="activate" render="multiBranch"/>
+							</ace:radioButton>
+						</h:panelGroup>		
+					</h:panelGroup>	
+					<h:panelGroup styleClass="FL B W330" layout="block" >
+						<h:outputText value="No:" />
+						<ace:radioButton id="multiBranchNo" group="multiBranch" 
+							disabled="#{not editable}" 
+							labelPosition="right" 
+							value="#{bean.multiBranch[1]}">
+							<ace:ajax execute="multiBranch" event="activate" render="multiBranch"/>
+						</ace:radioButton>
+					</h:panelGroup>		
+					<h:panelGroup styleClass="FL B W330" layout="block" >
+						<h:outputText value="If yes, which other Branch location(s)?" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL B W330" layout="block" >
+						<h:panelGroup styleClass="FL pad7lt W260">
+							<ace:textEntry maxlength="250" id="actraIntentMultiBranchLocations" disabled="#{not editable}" styleClass="LT txt10 pad2lt W260" value="#{form.multiBranchLocations}"/>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGrid>	
+			</ace:buttonGroup>
+		</icecore:setEventPhase>
+		<!-- End Multi-Branch Info Section -->
+	</div>
+</ui:composition>

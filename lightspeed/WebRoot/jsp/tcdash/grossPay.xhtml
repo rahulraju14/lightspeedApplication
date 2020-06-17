@@ -1,0 +1,439 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Gross Payroll tab of Dashboard page (screen number 9.5) -->
+	<!--
+		Parameters:
+			aicp : true if Commercial (AICP) production is being displayed
+			projectActive: true if either non-Commercial, or the timecard being viewed belongs to an active project; LS-2849
+	 -->
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+	<c:set var="show" value="#{showTab and not empty authBean.pgFields['9.5,view']}" />
+
+	<ace:tabPane label="#{show ? 'Gross Payroll' : ''}" disabled="#{not show}">
+		<div>
+			<!-- SHOW ALL PROJECTS CHECKBOX -->
+			<div class="FL pad10lt">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox value="#{approverDashboardBean.showAllProjects}"
+							 valueChangeListener="#{approverDashboardBean.listenAllProjects}"
+							rendered="#{aicp and (not empty authBean.pgFields['9.5,all_projects'])}">
+							Show all Projects
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectBooleanCheckbox>
+					<div style="min-width:130px;">
+						<h:panelGroup value="&#160;" rendered="#{(not aicp) or (empty authBean.pgFields['9.4,all_projects'])}" />
+					</div>
+				</icecore:setEventPhase>
+			</div>
+
+			<h:panelGroup rendered="#{(approverDashboardBean.itemListSize gt 200)}">
+				<div class="FL pad120lt"></div>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{(approverDashboardBean.itemListSize le 200)}" styleClass="LH28">&#160;
+			</h:panelGroup>
+			<h:panelGroup rendered="#{(approverDashboardBean.priorUnapprovedTcs gt 0)}">
+				<div class="FR pad150rt pad5tp">
+					Prior Week Endings contain
+					<ace:linkButton value="#{approverDashboardBean.priorUnapprovedTcs} unapproved timecard(s)."
+							action="#{approverDashboardBean.actionFilterUnapproved}"
+							title="Set W/E and Status filters to show pending timecards."
+							styleClass="RED B" />
+				</div>
+			</h:panelGroup>
+			<div class="CB"></div>
+		</div>
+
+		<div id="scrolltop" class="scrollPnlTab"><!-- top half of page; scrollable -->
+			<!-- Legend wrapper -->
+			<div class="blueLegendContWrap pad10tp">
+				<div class="blueLegendCont"> <!-- Blue content -->
+					<span class="legendHdg" ><!-- blue legend header goes here if needed --></span>
+
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite and projectActive}">
+						<h:panelGroup styleClass="btn_legend_left pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Approve"
+									action="#{approverDashboardBean.actionApprove}"
+									title="Approve the timecards that are checked."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend_left pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Reject"
+									action="#{approverDashboardBean.actionReject}"
+									title="Reject the checked timecard."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="btn_legend_left"
+								rendered="#{(not empty authBean.pgFields['9.4,lock'])}">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Lock"
+									action="#{approverDashboardBean.actionLock}"
+									title="Lock the timecards that are checked."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- disabled Lock button: not currently used
+					<h:panelGroup styleClass="btn_legend_left" rendered="false">
+						<span class="btnMiniLt" />
+							<ace:linkButton value="Lock"
+								onclick="return false;" styleClass="btnMiniDisCt dislink"/>
+						<span class="btnMiniRt" />
+					</h:outputText>
+					-->
+
+					<!-- LISTED / DISPLAYED / SELECTED counts -->
+					<span class="legendHdg pad30lt" >
+						<span>Timecards in List: </span>
+						<h:outputText value="#{approverDashboardBean.itemListSize}" />
+						<h:panelGroup rendered="#{approverDashboardBean.itemListSize gt 200}">
+							<span class="pad15lt">Displayed: </span>
+						</h:panelGroup>
+						<span class="pad15lt">Selected: </span>
+						<h:outputText value="#{approverDashboardBean.selectedItemCount}" />
+					</span>
+
+					<!-- REFRESH BUTTON -->
+					<h:panelGroup styleClass="btn_legend">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Refresh"
+								action="#{approverDashboardBean.actionRefresh}"
+								title="Refresh the list of timecards."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<!-- EXPORT BUTTON -->
+					<h:panelGroup styleClass="btn_legend"
+							rendered="#{(approverDashboardBean.weeklyTimecard.id ne null) and
+								((not empty authBean.pgFields['2.0,write_any']) or (not empty authBean.pgFields['9.4,export']))}">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Export"
+								action="#{approverDashboardBean.actionExport}"
+								title="Export (download) #{headerViewBean.domainTabTitle} timecards to your PC" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<!--
+					<h:panelGroup styleClass="btn_legend"
+							rendered="#{(not empty authBean.pgFields['2.0,write_any'])}">
+						<span class="btnMiniLtHot"/>
+							<ace:linkButton value="Import"
+								action="#{approverDashboardBean.actionImport}"
+								title="Import timecards from another program into #{headerViewBean.domainTabTitle}" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot"/>
+					</h:panelGroup>
+					 -->
+
+					<div class="FL rowCont gradTbl3">
+						<ace:dataTable id="gptable" styleClass="gradTbl3 txt11 CT"
+							selectionMode="single" singleSort="true"
+							value="#{approverDashboardBean.itemList}"
+							var="tcEntry"
+							paginator="true"
+							paginatorAlwaysVisible="false"
+							paginatorPosition="top" 
+							rowSelectListener="#{approverDashboardBean.listenRowClicked}"
+							paginatorTemplate="{FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward}"							
+							rows="#{approverDashboardBean.paginateSize}" rowStyleClass="txt12 CT"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '150'}"
+							style="width:100%;max-width:100%;overflow-x:hidden;overflow-y:scroll">
+
+							<!-- CHECK BOX -->
+							<ace:column style="width:#{aicp ? '2' : '2'}%;">
+								<f:facet name="header">
+									<div class="CT pad2lt">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<ace:triStateCheckbox id="master" indeterminateBeforeChecked="true"
+													valueChangeListener="#{approverDashboardBean.listenCheckMasterEntry}"
+													value="#{approverDashboardBean.masterTriState.value}" >
+												<ace:ajax/>
+											</ace:triStateCheckbox>
+										</icecore:setEventPhase>
+									</div>
+								</f:facet>
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<!-- this is the enabled checkbox for Ready-to-approve entries -->
+									<h:selectBooleanCheckbox value="#{tcEntry.weeklyTc.markedForApproval}" 
+											rendered="#{headerViewBean.production.status.allowsWrite and
+												tcEntry.status.ready}"
+											valueChangeListener="#{approverDashboardBean.listenCheckEntry}"
+											disabled="false" >
+										<f:ajax execute="@this" render="@all"/>
+									</h:selectBooleanCheckbox>
+									<!-- this is the enabled checkbox for APPROVED (final) entries -->
+									<h:selectBooleanCheckbox value="#{tcEntry.checked}" 
+											rendered="#{headerViewBean.production.status.allowsWrite and
+												(tcEntry.status eq 'APPROVED' and (not empty authBean.pgFields['9.4,check_box']))}"
+											valueChangeListener="#{approverDashboardBean.listenCheckEntry}"
+											disabled="false" >
+										<f:ajax execute="@this" render="@all"/>
+									</h:selectBooleanCheckbox>
+									<!-- this is the disabled, UNchecked, checkbox (with the rendered tag negated) -->
+									<h:selectBooleanCheckbox value="#{applicationScopeBean.unchecked}" 
+											rendered="#{not (headerViewBean.production.status.allowsWrite and
+												(tcEntry.status.ready or
+												(tcEntry.status eq 'APPROVED' and (not empty authBean.pgFields['9.4,check_box']))))}"
+											disabled="true" />
+								</icecore:setEventPhase>
+							</ace:column>
+
+							<!-- STATUS ICON -->
+							<ace:column headerText="Status" sortBy="#{tcEntry.status}" style="width:#{aicp ? '6' : '5'}%;">
+
+								<ui:include src="tcStatusCol.xhtml">
+									<ui:param name="bean" value="#{approverDashboardBean}"></ui:param>
+									<ui:param name="tcEntry" value="#{tcEntry}"></ui:param>
+								</ui:include>
+
+							</ace:column>
+
+							<!-- BOX RENTAL -->
+							<ace:column style="width:#{aicp ? '3' : '3'}%;" styleClass="CT txt11">
+								<f:facet name="header">
+									<div class="CT">
+										Box
+									</div>
+								</f:facet>
+								<h:panelGroup rendered="#{tcEntry.weeklyTc.boxRental ne null}">
+									<h:graphicImage value="../../i/icon_check.gif" alt="" />
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- MILEAGE FORM -->
+							<ace:column style="width:#{aicp ? '3' : '3'}%;" styleClass="CT txt11">
+								<f:facet name="header">
+									<div class="CT">
+										Mile.
+									</div>
+								</f:facet>
+								<h:panelGroup rendered="#{tcEntry.weeklyTc.mileage ne null}">
+									<h:graphicImage value="../../i/icon_check.gif" alt="" />
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- JOB NUMBER (AICP) -->
+							<ace:column style="width:#{aicp ? '6' : '0'}%;" rendered="#{aicp}" headerText="Job #" sortBy="#{tcEntry.weeklyTc.jobNumber}" styleClass="txt11" >
+								<h:outputText styleClass="CT" value="#{tcEntry.weeklyTc.jobNumber}" />
+							</ace:column>
+
+							<!-- JOB NUMBER (AICP) -->
+							<ace:column style="width:#{aicp ? '10' : '0'}%;" rendered="#{aicp}" headerText="Job Name" sortBy="#{tcEntry.weeklyTc.jobName}"  styleClass="txt11">
+								<h:outputText styleClass="CT" value="#{tcEntry.weeklyTc.jobName}" />
+							</ace:column>
+
+							<!-- W/E DATE -->
+							<ace:column style="width:#{aicp ? '8' : '7'}%;" headerText="W/E" sortBy="#{tcEntry.date}" styleClass="CT txt11">
+								<h:outputText value="#{tcEntry.date}"
+										styleClass="#{tcEntry.weeklyTc.status eq 'VOID' ? 'tcVoid' : ''}">
+									<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+								<h:outputText rendered="#{tcEntry.weeklyTc.adjusted}" value="A" styleClass="tcAdj" />
+							</ace:column>
+
+							<!-- ACCT Prod/Epi. -->
+							<ace:column style="width:#{aicp ? '0' : '5'}%;" rendered="#{! aicp}" headerText="Prd/Ep" sortBy="#{tcEntry.weeklyTc.accountMajor}" styleClass="CT txt11">
+								<h:outputText value="#{tcEntry.weeklyTc.accountMajor}" />
+							</ace:column>
+
+							<!-- ACCT DETAIL -->
+							<ace:column style="width:#{aicp ? '0' : '6'}%;" rendered="#{! aicp}" headerText="Detail" sortBy="#{tcEntry.weeklyTc.accountDtl}" styleClass="CT txt11">
+								<h:outputText value="#{tcEntry.weeklyTc.accountDtl}" />
+							</ace:column>
+
+							<!-- ACCT SUB -->
+							<ace:column style="width:#{aicp ? '0' : '4'}%;" rendered="#{! aicp}" headerText="Sub" sortBy="#{tcEntry.weeklyTc.accountSub}" styleClass="CT txt11">
+								<h:outputText value="#{tcEntry.weeklyTc.accountSub}" />
+							</ace:column>
+
+							<!-- ACCT SET -->
+							<ace:column style="width:#{aicp ? '0' : '4'}%;" rendered="#{! aicp}" headerText="Set" sortBy="#{tcEntry.weeklyTc.accountSet}" styleClass="CT txt11">
+								<h:outputText value="#{tcEntry.weeklyTc.accountSet}" />
+							</ace:column>
+
+							<!-- DEPARTMENT -->
+							<ace:column style="width:#{aicp ? '11' : '11'}%;" headerText="Department" sortBy="#{tcEntry.weeklyTc.deptName}" styleClass="txt11">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.weeklyTc.deptName}" />
+							</ace:column>
+
+							<!-- NAME -->
+							<ace:column style="width:#{aicp ? '12' : '12'}%;" headerText="Name" sortBy="#{tcEntry.name}" styleClass="txt11">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.name}" />
+							</ace:column>
+
+							<!-- POSITION / OCCUPATION -->
+							<ace:column style="width:#{aicp ? '15' : '14'}%;" headerText="Position" sortBy="#{tcEntry.occupation}" styleClass="txt11">
+								<h:outputText styleClass="FL pad5lt" value="#{tcEntry.occupation}" />
+							</ace:column>
+
+							<!-- TOTAL HOURS -->
+							<ace:column style="width:#{aicp ? '6' : '5'}%;" headerText="Hours" sortBy="#{tcEntry.weeklyTc.totalHours}" styleClass="RT txt11">
+								<h:outputText rendered="#{tcEntry.weeklyTc.totalHours ne 0}"
+										title="#{tcEntry.weeklyTc.jobHoursDiffer ? msg.Timecard_JobHoursMismatch : ''}"
+										styleClass="#{tcEntry.weeklyTc.jobHoursDiffer ? 'tcHrDiff' : ''}"
+										value="#{tcEntry.weeklyTc.totalHours}" style="margin-right:30%;">
+									<f:convertNumber type="number" pattern="##0.0#" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- TOTAL GROSS -->
+							<ace:column style="width:#{aicp ? '7' : '7'}%;" headerText="Gross" sortBy="#{tcEntry.weeklyTc.grandTotal}" styleClass="RT txt11">
+								<h:outputText rendered="#{tcEntry.weeklyTc.grandTotal ne 0}"
+										value="#{tcEntry.weeklyTc.grandTotal}" style="margin-right:15%;">
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- WAITING FOR -->
+							<ace:column style="width:#{aicp ? '11' : '12'}%;" headerText="Waiting for" sortBy="#{tcEntry.approverName}" styleClass="LT txt11">
+								<h:outputText styleClass="FL pad5lt" escape="false"
+										value="#{tcEntry.approverName}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end of dataTable wrapper -->
+				</div><!-- end of blue content -->
+			</div><!-- end of blue wrapper -->
+		</div><!-- end scrolltop div -->
+
+		<!-- ********** Horizontal gap between timecards and PR area ********* -->
+		<div class="CB" id="gpTablegap" style="height:0px;"></div>
+
+		<h:panelGroup id="gpDtlCollapsed" rendered="#{(! approverDashboardBean.showDetail)}">
+			<!-- collapsed header for Pay Jobs -->
+			<div class="blueLegendCont pad12tp FL"><!-- Blue content -->
+				<h:commandLink value=" " styleClass="legendHdg" title="Show Timecard Details"
+						action="#{approverDashboardBean.actionToggleDetail}">
+					<h:graphicImage value="../../i/plus.gif" style="height:14px;" alt="" />
+				</h:commandLink>
+				<span class="legendHdg">Timecard Comparison</span>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{(approverDashboardBean.showDetail)}">
+			<div class="blueLegendCont pad12tp FL"><!-- Blue content -->
+				<h:commandLink value=" " styleClass="legendHdg" title="Hide Timecard Details"
+						action="#{approverDashboardBean.actionToggleDetail}">
+					<h:graphicImage value="../../i/minus.gif" style="height:14px;" alt="" />
+				</h:commandLink>
+				<span class="legendHdg">Timecard Summary</span>
+
+				<div class="FL rowCont gradTbl2">
+					<div id="gpScrollbottom" class="scrollPnlTab"><!-- bottom half - scrollable -->
+						<div class="MA" style="width:98%"><!-- left/right margins for bottom half -->
+
+							<!-- bottom Right panel -->
+							<ui:include src="tcSummary.xhtml" />
+
+							<!-- bottom Right panel -->
+							<div class="blueLegendContWrap FR pad10tp" style="width:63%;">
+								<div class="blueLegendCont"> <!-- Blue content -->
+									<div class="FL W100percnt">
+										<div class="FL">
+											<span class="legendHdg" >
+												<h:outputText value="Pay Breakdown: #{approverDashboardBean.weeklyTimecard.firstName}"/>&#160;
+												<h:outputText value="#{approverDashboardBean.weeklyTimecard.lastName}"/>
+											</span>
+											<h:panelGroup styleClass="btn_legend_left"
+													rendered="#{approverDashboardBean.userHasEditHtg and
+														(approverDashboardBean.timecardEntry.status.ready or authBean.pseudoApprover)}">
+												<span class="btnMiniLtHot"/>
+												<ace:linkButton value="Calc HTG" action="#{approverDashboardBean.actionCalculateOneHtg}"
+														title="Calculate this timecard's gross pay" styleClass="btnMiniCt">
+													<f:setPropertyActionListener target="#{approverDashboardBean.selectedTimecardId}" value="#{approverDashboardBean.weeklyTimecard.id}"/>
+												</ace:linkButton>
+												<span class="btnMiniRtHot"/>
+											</h:panelGroup>
+										</div>
+										<h:panelGroup styleClass="btn_legend">
+												<span class="btnMiniLtHot"/>
+													<ace:linkButton value="View Timecard" action="#{approverDashboardBean.actionViewTimecard}"
+															title="View this person's detailed timecard" styleClass="btnMiniCt">
+														<f:setPropertyActionListener target="#{approverDashboardBean.selectedTimecardId}" value="#{approverDashboardBean.weeklyTimecard.id}"/>
+													</ace:linkButton>
+												<span class="btnMiniRtHot"/>
+										</h:panelGroup>
+									</div>
+
+									<!-- PAY BREAKDOWN -->
+									<div class="FL rowCont gradTbl4">
+										<h:panelGroup rendered="#{not empty approverDashboardBean.weeklyTimecard.payLines}">
+											<ace:dataTable id="cpaybrk"
+													styleClass="gradTbl2 txt11 CT"
+													value="#{approverDashboardBean.weeklyTimecard.payLines}"
+													var="entry"
+													scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+													scrollHeight="#{headerViewBean.mobile ? '' : '180'}"
+													rowStyleClass="CT txt12"
+													style="width:100%;max-width:100%;overflow-x:hidden;">
+
+												<ui:include src="grPayBreakdown.xhtml">
+													<ui:param name="timecardBean" value="#{approverDashboardBean}"></ui:param>
+													<ui:param name="entry" value="#{entry}"></ui:param>
+													<ui:param name="editHTG" value="false"></ui:param>
+													<ui:param name="aicp" value="#{aicp}"></ui:param>
+												</ui:include>
+
+											</ace:dataTable>
+										</h:panelGroup>
+										<!-- Checking to see if we can use one table for when the list has content or is empty -->
+										<h:panelGroup rendered="false"> 
+											<h:panelGroup rendered="#{empty approverDashboardBean.weeklyTimecard.payLines}">
+												<!-- for empty table, make it non-scrollable to retain proper column widths -->
+												<ace:dataTable id="cpaybrk2"
+														styleClass="gradTbl2 txt11 CT" width="100%"
+														value="#{approverDashboardBean.weeklyTimecard.payLines}"
+														var="entry" cellpadding="0" cellspacing="0"
+														style="width:100%;max-width:100%;overflow-x:hidden;">
+
+													<ui:include src="grPayBreakdown.xhtml">
+														<ui:param name="timecardBean" value="#{approverDashboardBean}"></ui:param>
+														<ui:param name="entry" value="#{entry}"></ui:param>
+														<ui:param name="aicp" value="#{aicp}"></ui:param>
+													</ui:include>
+
+												</ace:dataTable>
+											</h:panelGroup>
+										</h:panelGroup>
+									</div>
+								</div><!-- end of blue border -->
+
+								<!-- PAY BREAKDOWN GRAND TOTAL -->
+								<h:panelGroup  rendered="#{not empty approverDashboardBean.weeklyTimecard.payLines}"
+										styleClass="DIB W25percnt FR pad15rt" style="border:solid 1px black;">
+									<table class="W100percnt gridPlain FR">
+										<tr style="width:100%;">
+											<td>
+												<h:outputText styleClass="FR B pad2rt txt13" value="#{approverDashboardBean.weeklyTimecard.grandTotal}" >
+													<f:convertNumber type="number" pattern="###,###.00" />
+												</h:outputText>
+												<h:outputText styleClass="FL B pad5lt W45percnt" value="Grand Total" />
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+
+							</div><!-- end of bottom Right panel -->
+						</div><!-- 98% div for left/right margins -->
+					</div><!-- end of scrollbottom (bottom half) -->
+				</div>
+			</div>
+			<div class="rowCont">&#160;</div>
+		</h:panelGroup>
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

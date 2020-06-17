@@ -1,0 +1,283 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- SECOND PAGE -->
+	<h:graphicImage alt="" style="width:815px; margin-top:5px" url="../../i/forms/formILW4_inst4.png"/>
+	<div class="rowCont">
+		<!-- COLUMN 1 START -->
+		<div class="FL W49percnt">
+			<!-- SOCIAL SECURITY -->
+			<div class="rowCont FL pad5tp">
+				<h:panelGroup rendered="#{not formILW4Bean.editMode}">
+					<span class="FL fd_sm3" style="left:0px; min-width:95%">
+						<ace:textEntry maxlength="11" disabled="#{true}"
+							style="width:99%; border-bottom:solid 1px;"
+							value="#{formILW4Bean.form.viewSSN}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{formILW4Bean.editMode}">
+					<span class="FL fd_sm3" style="left:0px; min-width:95%">
+						<ace:textEntry maxlength="11"
+							style="width:99%; border-bottom:solid 1px;"
+							disabled="#{not formILW4Bean.empEdit}"
+							value="#{formILW4Bean.form.socialSecurity}">
+							<f:converter converterId="lightspeed.SSNConverter" />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+				<span class="rowCont FL">
+					<h:outputText escape="false" styleClass="FL pad5lt" value="Social Security number" />
+				</span>
+			</div>
+
+			<!-- NAME -->
+			<div class="rowCont FL pad5tp">
+				<h:panelGroup>
+					<span class="FL fd_sm3" style="left:0px; min-width:95%">
+						<ace:textEntry maxlength="60"
+							disabled="#{not formILW4Bean.empEdit}"
+							value="#{formILW4Bean.form.name}"
+							style="width:99%; border-bottom:solid 1px;"/>
+					</span>
+				</h:panelGroup>
+				<span class="rowCont FL">
+					<h:outputText escape="false" styleClass="FL pad5lt" value="Name" />
+				</span>
+			</div>
+
+			<!-- STREET ADDRESS -->
+			<div class="rowCont FL pad5tp">
+				<h:panelGroup>
+					<span class="FL fd_sm3" style="left:0px; min-width:95%">
+						<ace:textEntry maxlength="100"
+							disabled="#{not formILW4Bean.empEdit}"
+							value="#{formILW4Bean.form.address.addrLine1}"
+							style="width:99%; border-bottom:solid 1px;"/>
+					</span>
+				</h:panelGroup>
+				<span class="rowCont FL">
+					<h:outputText escape="false" styleClass="FL pad5lt" value="Street address" />
+				</span>
+			</div>
+
+			<!-- CITY STATE ZIP -->
+			<div class="rowCont FL pad5tp">
+
+				<!-- CITY OR TOWN START-->
+				<div class="FL" style="width:60%">
+					<div class="rowCont">
+						<h:panelGroup>
+							<span class="fd_sm2">
+								<ace:textEntry maxlength="50"
+									disabled="#{not formILW4Bean.empEdit}"
+									style="width:92%; border-bottom:solid 1px;"
+									value="#{formILW4Bean.form.address.city}" />
+							</span>
+						</h:panelGroup>
+						<span class="rowCont FL">
+							<h:outputText styleClass="FL pad5lt" value="City" />
+						</span>
+					</div>
+				</div>
+				<!-- CITY OR TOWN END-->
+
+				<!-- STATE START -->
+				<div class="W12percnt FL">
+					<div class="rowCont pad1tp">
+						<h:selectOneMenu styleClass="FL W95percnt"
+							value="#{formILW4Bean.form.address.state}"
+							disabled="#{not formILW4Bean.empEdit}"
+							style="width:95%; height:21px; border-bottom:solid 1px;">
+							<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+						<span class="rowCont FL">
+							<h:outputText styleClass="FL pad5lt" value="State" />
+						</span>
+					</div>
+				</div>
+				<!-- STATE END -->
+
+				<!-- ZIP CODE START -->
+				<div class="W22percnt FL">
+					<div class="rowCont">
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry maxlength="10"
+									disabled="#{not formILW4Bean.empEdit}"
+									value="#{formILW4Bean.form.address.zip}"
+									style="width:93%; border-bottom:solid 1px;"/>
+							</span>
+						</h:panelGroup>
+						<span class="rowCont FL">
+							<h:outputText styleClass="FL pad15lt" value="ZIP" />
+						</span>
+					</div>
+				</div>
+				<!-- ZIP CODE END -->
+			</div>
+			<!-- CITY STATE ZIP END -->
+
+			<div class="rowCont FL pad12tp">
+				<h:outputText styleClass="FL rowCont"
+					value="Check the box if you are exempt from federal and Illinois" />
+				<h:outputText styleClass="FL pad3tp" value="Income Tax withholding and sign and date the certificate." />
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+						disabled="#{not formILW4Bean.empEdit}"
+						value="#{formILW4Bean.form.exempt}"
+						styleClass="FL iceSelBoolChkbx pad2tp pad20lt">
+						<ace:ajax />
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+			</div>
+
+			<div class="rowCont FL pad8tp">
+				<div class="W25percnt FL pad10tp">
+				    <h:outputText styleClass="FL  txt9" style="width:160px" escape="false" value="Printed by the authority" />
+					<h:outputText styleClass="FL  txt9" style="width:160px" escape="false" value="of the State of Illinois -" />
+					<h:outputText styleClass="FL  txt9" style="width:160px" escape="false" value="web only, 1 copy" />
+					<h:outputText styleClass="FL  txt10" style="width:160px" escape="false" value="IL-W-4 (R-12/19)" />
+				</div>
+				<div class="W70percnt FL pad10tp sfFormBorder1 pad5lt" style="padding-bottom:5px">
+					<h:outputText styleClass="FL txt9 pad5lt pad5tp" escape="false"
+						value="This form is authorized under the Illinois Income Tax Act. Disclosure &lt;/br&gt;
+						of this information is required. Failure to provide information may &lt;/br&gt;
+						result in this form not being processed and may result in a penalty. &lt;/br&gt;"/>
+				</div>
+			</div>
+		</div>
+		<!-- COLUMN 1 END -->
+
+		<!-- COLUMN 2 START -->
+		<div class="FL W50percnt">
+			<!-- 1 -->
+			<div class="rowCont FL pad4tp">
+				<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt; 1 &lt;/strong&gt;
+					Enter the total number of basic allowances that you" />
+				<h:outputText styleClass="FL pad15lt pad3tp" value="are claiming (Step 1, Line 4, of the worksheet)." />
+				<h:panelGroup>
+					<span class="fd_sm pad2lt">
+						<h:outputText styleClass="FL B pad25lt pad4tp" value="1" />
+						<ace:textEntry id="item1"
+							styleClass="pad3lt" disabled="#{true}"
+							maxlength="35"
+							value="#{formILW4Bean.form.personalAllowances}"
+							style="min-width:8%; width:22%; margin-top:-4px; border-bottom:solid 1px;"/>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- 2 -->
+			<div class="rowCont FL pad4tp">
+				<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt; 2 &lt;/strong&gt;
+					Enter the total number of additional allowances that" />
+				<h:outputText styleClass="FL pad15lt pad3tp" value="you are claiming (Step 2, Line 9, of the worksheet)." />
+				<h:panelGroup>
+					<span class="fd_sm pad2lt">
+						<h:outputText styleClass="FL B pad2lt pad4tp" value="2" />
+						<ace:textEntry id="item2" maxlength="35"
+							styleClass="pad3lt" disabled="#{true}"
+							value="#{formILW4Bean.form.addtlAllowances}"
+							style="min-width:8%; width:22%; margin-top:-4px; border-bottom:solid 1px;"/>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- 3 -->
+			<div class="rowCont FL pad4tp">
+				<h:outputText styleClass="FL rowCont" escape="false" value="&lt;strong&gt; 3 &lt;/strong&gt;
+				 	Enter the additional amount you want withheld" />
+				<h:outputText styleClass="FL pad15lt pad3tp" value="(deducted) from each pay." />
+				<h:panelGroup>
+					<span class="fd_sm pad2lt">
+						<h:outputText styleClass="FL B pad4tp" value="3" style="margin-left:134px;"/>
+						<ace:textEntry styleClass="pad3lt" maxlength="7"
+								disabled="#{not formILW4Bean.empEdit}"
+								value="#{formILW4Bean.form.additionalAmount}"
+								style="min-width:8%; width:22%; margin-top:-4px; border-bottom:solid 1px;">
+							<f:convertNumber type="number" pattern="#,###" />
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<div class="rowCont FL pad10tp">
+				<h:outputText styleClass="FL rowCont"
+					value="I certify that I am entitled to the number of withholding allowances claimed on" />
+				<h:outputText styleClass="FL pad3tp" value="this certificate." />
+			</div>
+
+			<div class="rowCont FL pad15tp">
+				<!-- SIGNATURE VALUE -->
+				<div class="W80percnt pad2lt FL" style="height:27px; border-bottom: solid 1px;" >
+					<div class="rowCont">
+						<!-- Sign Button  -->
+						<h:panelGroup rendered="#{(formILW4Bean.contactDoc.submitable) or (formILW4Bean.contactDoc.status eq 'PENDING')}">
+						<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+							<h:panelGroup rendered="#{(formILW4Bean.contactDoc.status ne 'PENDING') and (formILW4Bean.empEdit or
+													(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+								<span class="btnMiniLtHot" />
+								<ace:linkButton value="Sign &amp; Submit"
+									action="#{contactFormBean.actionSubmit}"
+									title="Signature field" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not (formILW4Bean.empEdit or
+									(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+									or (formILW4Bean.contactDoc.status eq 'PENDING')}">
+								<span class="btnMiniLt"/>
+								<span>
+									<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+								</span>
+								<span class="btnMiniRt"/>
+							</h:panelGroup>
+						</h:panelGroup>
+						</h:panelGroup>
+						<!-- Sign Button End -->
+						<span>
+							<h:outputText escape="false" styleClass="txt12" rendered="#{formILW4Bean.contactDoc.empSignature ne null}">
+								<h:outputText value="E-signed by" styleClass="U" />
+								<h:outputText value=" #{formILW4Bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+								<h:outputText value=" #{formILW4Bean.contactDoc.empSignature.displayTime}" />
+								<br/>
+								<h:outputText value="# #{formILW4Bean.contactDoc.empSignature.uuid}"/>
+							</h:outputText>
+						</span>
+					</div>
+					<div class="pad3tp"><h:outputText styleClass="txt12" value="Your signature "/></div>
+				</div>
+
+				<!-- SIGNATURE DATE -->
+				<div class="W15percnt FL pad10lt" style="height:27px; border-bottom: solid 1px;">
+					<div class="rowCont" style="height:27px;">
+						<span class="FL" style="margin-top:14px;">
+							<h:outputText value="#{formILW4Bean.contactDoc.empSignature.date}">
+								<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+						</span>
+					</div>
+					<div class="pad3tp"><h:outputText styleClass="txt12" value="Date"/></div>
+				</div>
+			</div>
+
+			<div class="rowCont FL pad30tp pad3lt">
+				<h:outputText styleClass="FL pad3lt txt9" escape="false"
+					value="&lt;strong&gt; Employer: &lt;/strong&gt;
+					Keep this certificate with your records. If you have referred the employee&apos;s federal &lt;/br&gt;
+					certificate to the IRS and the IRS has notified you to disregard it, you may also be required to &lt;/br&gt;
+					disregard this certificate. Even if you are not required to refer the employee’s federal certificate to &lt;/br&gt;
+					the IRS, you still may be required to refer this certificate to the ­Illinois Department of Revenue for &lt;/br&gt;
+					inspection. See Illinois Income Tax Regulations 86 Ill. Adm. Code 100.7110."/>
+			</div>
+		</div>
+		<!-- COLUMN 2 END -->
+	</div>
+	<div class="rowCont" style="height:30px; width:800px;"/>
+</ui:composition>

@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- header area of PR - dates, producer, logo, etc. -->
+
+	<div class="FL rowCont">
+		<div class="FL W40percnt pad10lt"><!-- top left headings -->
+			<div class="pad5tp">
+				<h:outputText styleClass="B txt16" value="#{dprViewBean.dpr.date}">
+					<f:convertDateTime pattern="EEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>
+			</div>
+			<div>
+				<div class="pad5tp B txt16">
+				<h:outputText
+					value="#{dprViewBean.dpr.project.production.title}" />
+				<br/>
+				<h:outputText rendered="#{headerViewBean.production.type.episodic}"
+					value="#{dprViewBean.dpr.project.title}" />
+				</div>
+			</div>
+			<div class="B">
+				<h:outputText value="#{dprViewBean.dpr.project.production.studio}" />
+			</div>
+			<div class="pad5tp"><!-- director, etc. -->
+				<h:outputText escape="false" rendered="#{not dprViewBean.editMode}"
+						value="#{dprViewBean.dpr.producer}" />
+				<ace:textAreaEntry rows="5" cols="50" rendered="#{dprViewBean.editMode}"
+						value="#{dprViewBean.dpr.producer}" maxlength="500" styleClass="txt12 stdTxtArea" />
+			</div>
+		</div>
+
+		<div class="FL W30percnt"><!-- production info -->
+			<div class="RED B CT txt16 pad5tp">
+				<h:outputText value="PRELIMINARY"
+					rendered="#{dprViewBean.dpr.status eq 'UPDATED'}" />
+				<h:outputText value="SUBMITTED"
+					rendered="#{dprViewBean.dpr.status eq 'SUBMITTED'}" />
+				<h:outputText value="APPROVED"
+					rendered="#{dprViewBean.dpr.status eq 'APPROVED'}" />
+			</div>
+			<br/>
+			<div id="logoCont" class="FL">
+				<div id="logoContDpr">
+					<h:panelGroup rendered="#{headerViewBean.production.logo eq null}"
+							styleClass="imageBox MA CT">
+						<div id="logoDefaultMed"><br /><br /><br /><br />
+							No Logo<br />Available
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{headerViewBean.production.logo ne null}"
+							styleClass="CT">
+						<ace:graphicImage styleClass="logoContDpr" value="#{headerViewBean.production.logo.content}" alt=""/>
+					</h:panelGroup>
+				</div>
+			</div><!-- end logoCont -->
+		</div>
+
+		<div class="FL"><!-- gap to right of logo -->
+			&#160;
+		</div>
+
+		<div class="FR W5percnt"><!-- right margin -->
+			&#160;
+		</div>
+
+		<div class="FR W20percnt"><!-- various dates -->
+			<div class="pad5tp">
+				<h:outputText styleClass="B txt16" value="#{dprViewBean.dpr.date}">
+					<f:convertDateTime pattern="EEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+				</h:outputText>
+			</div>
+			<div class="FL B I pad10rt pad5tp">
+				<h:outputText styleClass="B" value="Updated: "/>
+				<h:outputText styleClass="B" value="#{dprViewBean.dpr.updated}">
+					<f:convertDateTime pattern="M/d/yyyy h:mm a" timeZone="#{headerViewBean.production.timeZoneStr}" />
+				</h:outputText>
+			</div>
+			<div class="rowCont pad10tp">
+				<div class="DB">
+					<div class="LT">
+						<span class="B">Day &#160;</span>
+						<h:outputText value="#{dprViewBean.dpr.shootDay}" />
+						<span class="B pad5lt">of &#160;</span>
+						<h:outputText value="#{dprViewBean.dpr.shootDays}" />
+					</div>
+				</div>
+				<div class="pad5tp">
+					<div class="FL W60percnt">
+						<h:outputText styleClass="B FR" value="Start Date:"/><br />
+						<h:outputText styleClass="B FR" value="Scheduled Finish:"/><br />
+						<h:outputText styleClass="B FR" value="Revised Finish:"/>
+					</div>
+					<div class="FL W5percnt">&#160;
+					</div>
+					<div class="FL W30percnt">
+						<h:outputText
+							value="#{dprViewBean.dpr.startDate}">
+							<f:convertDateTime pattern="M/d/yyyy"
+								timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<br/>
+						<h:outputText value="#{dprViewBean.dpr.endDate}">
+							<f:convertDateTime pattern="M/d/yyyy"
+								timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<br/>
+						<h:panelGroup rendered="#{not dprViewBean.editMode}">
+							<h:outputText value="#{dprViewBean.dpr.revisedEndDate}">
+								<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</h:panelGroup>
+						<ace:textEntry rendered="#{dprViewBean.editMode}" value="#{dprViewBean.dpr.revisedEndDate}"
+								styleClass="W120" maxlength="20">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</ace:textEntry>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- end producer / studio / dates -->
+
+</ui:composition>

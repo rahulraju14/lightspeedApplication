@@ -1,0 +1,535 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<c:set var="bean" value="#{formStatePRW4Bean}" />
+	<c:set var="employerEdit" value="#{contactFormBean.editMode and bean.appEdit}"/>
+	<c:set var="editable" value="#{contactFormBean.editMode and bean.empEdit}" />
+	<c:set var="form" value="#{bean.form}" />
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	
+	<div class="miniTab pad15lt" style="width:940px;height:2600px">
+		<div class="txt11" >
+			<div id="" class="scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+				<div class="w4_PR_20 BKwhite sfFormBorder1" style="height:1190px;width:900px;">
+					<!-- Employee Personal Info - Step 1 section -->
+					<div class="FL pad12lt" style="margin-top:217px;">
+						<!-- Row 1 -->
+						<div class="FL" style="height:20px;"> 
+							<div class="FL" style="width:455px;">
+								<ace:textEntry value="#{form.fullName}" disabled="#{!editable}" styleClass="W90percnt pad5lt" maxlength="50" id="prW4FullName" style="height:12px;"/>
+							</div>
+							<div class="FL" style="width:400px;">
+								<ace:textEntry value="#{form.socialSecurity}" disabled="#{!editable}" styleClass="W30percnt pad12lt" maxlength="11" id="prW4Ssn" style="height:12;px;">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry >
+							</div>
+						</div>  
+						<!-- Row 2 -->
+						<div class="FL" style="height:20px;margin-top:19px;"> 
+							<div class="FL" style="width:455px;">
+								<ace:textEntry value="#{form.spouseFullName}" disabled="#{!editable}" styleClass="W90percnt pad5lt" maxlength="50" id="prW4SpouseFullName" style="height:12px;"/>
+							</div>
+							<div class="FL" style="width:400px;">
+								<ace:textEntry value="#{form.spouseSocialSecurity}" disabled="#{!editable}" styleClass="W30percnt pad10lt" maxlength="11" id="prW4SpouseSsn" style="height:12;px;">
+									<f:converter converterId="lightspeed.SSNConverter" />
+								</ace:textEntry >
+							</div>
+						</div>  
+						<!-- Row 3 -->
+						<div class="FL" style="height:20px;margin-top:25px;"> 
+							<div class="FL" style="width:455px;">
+								<ace:textEntry value="#{form.completeAddress}" disabled="#{!editable}" styleClass="W95percnt pad5lt" maxlength="150" id="prW4HomeAddr" style="height:12px;"/>
+							</div>
+							<div class="FL" style="width:400px;">
+								<ace:textEntry value="#{form.completeMailingAddress}" disabled="#{!editable}" styleClass="W95percnt pad10lt" maxlength="150" id="prW4MailingAddr" style="height:12;px;">
+								</ace:textEntry >
+							</div>
+						</div>  						
+						<!-- Row 4 -->
+						<div class="FL" style="height:20px;margin-top:5px;width:800px;"> 
+							<div class="FL pad5lt">
+								<h:selectBooleanCheckbox styleClass="ckbx" id="prW4OptionalCompute" value="#{form.optionalTaxComputation}" disabled="#{!editable}" />
+							</div>
+						</div>  		
+						<!-- Row 5 -->
+						<div class="FL" style="height:20px;margin-top:3px;width:800px;"> 
+							<div class="FL pad5lt">
+								<h:selectBooleanCheckbox styleClass="ckbx" id="prW4militarySpouseResidencyRelief" value="#{form.militarySpouseResidencyRelief}" disabled="#{!editable}" />
+							</div>
+						</div>  
+						<!-- Row 6 -->
+						<div class="FL" style="height:20px;margin-top:25px;width:800px;"> 
+							<div class="FL" style="width:30px;margin-left:166px;">
+								<ace:textEntry value="#{form.dateOfBirthDay}" disabled="#{!editable}" styleClass="W85percnt pad5lt" maxlength="2" id="prW4DobDay" style="height:12px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="##"
+										maxIntegerDigits="2"
+										minFractionDigits="0"/>  
+								</ace:textEntry >
+							</div>
+							<div class="FL" style="width:30px;margin-left:35px;">
+								<ace:textEntry value="#{form.dateOfBirthMonth}" disabled="#{!editable}" styleClass="W75percnt pad10lt" maxlength="2" id="prW4DobMonth" style="height:12;px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="##"
+										maxIntegerDigits="2"
+										minFractionDigits="0"/>                            
+								</ace:textEntry >
+							</div>
+							<div class="FL" style="width:45px;margin-left:25px;">
+								<ace:textEntry value="#{form.dateOfBirthYear}" disabled="#{!editable}" styleClass="pad10lt" maxlength="4" id="prW4DobYear" style="height:12;px;width:60%;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="####"
+										maxIntegerDigits="4"
+										minFractionDigits="0"/>                            
+								</ace:textEntry >
+							</div>
+						</div>  				
+						<!-- Row 7 -->
+						<div class="FL" style="height:20px;margin-top:40px;width:800px;"> 
+							<div class="FL pad5lt">
+								<h:selectBooleanCheckbox styleClass="ckbx" id="prW4EmployerNotConsiderExemption" value="#{form.employerNotConsiderExemption}" disabled="#{!editable}" />
+							</div>
+						</div>  						
+						<div class="FL" style="width:880px;margin-top:48px;">
+							<!-- Personal Exemptions -->
+							<ace:buttonGroup id="prW4MaritalStatus" mutuallyExclusive="true"
+								layout="lineDirection">
+								<!-- Row 9 -->
+								<div class="FL" style="width:850px;">	
+									<h:panelGroup layout="block" styleClass="FL W44"
+										style="height:17px;margin-left:515px;">
+										<h:panelGroup styleClass="FL pad5lt" layout="block">
+											<ace:radioButton group="prW4MaritalStatus" labelPosition="right"
+												id="prW4prW4MaritalStatus0" disabled="#{not editable}"
+												value="#{bean.maritalStatus[0]}"> 
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W57"
+										style="height:17px;margin-left:255px;">
+										<h:panelGroup styleClass="FL pad5lt">
+											<ace:radioButton group="prW4MaritalStatus" labelPosition="right"
+												id="prW4MaritalStatus1" disabled="#{not editable}"
+												value="#{bean.maritalStatus[1]}">
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+								</div>
+								<!-- Row 10 -->
+								<div class="FL" style="width:870px;">	
+									<h:panelGroup layout="block" styleClass="FL W70"
+										style="height: 17px;margin-left: 515px;">
+										<h:panelGroup styleClass="FL pad5lt pad3tp">
+											<ace:radioButton group="prW4MaritalStatus" labelPosition="right"
+												id="prW4prW4MaritalStatus2" disabled="#{not editable}"
+												value="#{bean.maritalStatus[2]}">
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W70"
+										style="height: 17px;margin-left: 72px;">
+										<h:panelGroup styleClass="FL pad5lt pad3tp">
+											<ace:radioButton group="prW4MaritalStatus" labelPosition="right"
+												id="prW4prW4MaritalStatus3" disabled="#{not editable}"
+												value="#{bean.maritalStatus[3]}">
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W70"
+										style="height: 17px;margin-left: 63px;">
+										<h:panelGroup styleClass="FL pad5lt pad3tp">
+											<ace:radioButton group="prW4MaritalStatus" labelPosition="right"
+												id="prW4prW4MaritalStatus4" disabled="#{not editable}"
+												value="#{bean.maritalStatus[4]}">
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+								</div>
+							</ace:buttonGroup>
+						</div>	
+						<div class="FL" style="width:880px;margin-top:5px;">
+							<!-- Veteran Exemptions -->
+							<!-- Row 11 -->
+							<ace:buttonGroup id="prW4VeteranExemptions" mutuallyExclusive="true"
+								layout="lineDirection">
+								<div class="FL" style="width:850px;">	
+									<h:panelGroup layout="block" styleClass="FL W44"
+										style="height:17px;margin-left:515px;">
+										<h:panelGroup styleClass="FL pad5lt" layout="block">
+											<ace:radioButton group="prW4VeteranExemptions" labelPosition="right"
+												id="prW4VeteranExemptions0" disabled="#{not editable}"
+												value="#{bean.vetExemptions[0]}"> 
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W57"
+										style="height:17px;margin-left:255px;">
+										<h:panelGroup styleClass="FL pad5lt">
+											<ace:radioButton group="prW4VeteranExemptions" labelPosition="right"
+												id="prW4VeteranExemptions1" disabled="#{not editable}"
+												value="#{bean.vetExemptions[1]}">
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+								</div>	
+							</ace:buttonGroup>
+						</div>	
+					
+						<!-- Dependent Exemptions  -->
+						<div class="FL" style="width:850px;margin-top:5px;">
+							<!-- Number of dependents -->
+							<!-- Row 12 -->
+							<div class="FL" style="margin-left:389px;">
+								<ace:textEntry value="#{form.qualifiedDependents}" disabled="#{!editable}"
+									maxlength="3" id="prW4NumDependents" 
+									valueChangeListener="#{bean.listenCalcTotalAllowances}"
+									style="height:10px;width:25px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="#,##0"
+										maxIntegerDigits="3"
+										minFractionDigits="0"/>                            
+									<ace:ajax/>
+								</ace:textEntry>
+							</div>
+							<!-- Joint Custody -->
+							<!-- Row 13 -->
+							<div class="FL" style="margin-left:197px;">
+								<ace:textEntry value="#{form.jointCustodyDependents}" disabled="#{!editable}"
+									maxlength="3" id="prW4JointCustody"
+									valueChangeListener="#{bean.listenCalcTotalAllowances}"
+									style="height:10px;width: 25px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="#,##0"
+										maxIntegerDigits="3"
+										minFractionDigits="0"/>                            
+									<ace:ajax/>
+								</ace:textEntry>
+							</div>
+						</div>
+					
+						<!-- Allowances -->
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<!-- Home Mortgage Interest Allowance -->
+							<!-- Row 14 -->
+							<div class="FL" style="width:850px;margin-top:46px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.homeMortgageInterestAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4HomeMortgageInterestAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>
+							<!-- Charitable Contributions Allowance -->
+							<!-- Row 15 -->
+							<div class="FL" style="width:850px;margin-top:1px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.charitableContributationAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4CharitableContributationAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Medical Expenses Allowance -->
+							<!-- Row 16 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.medicalExpensesAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4MedicalExpensesAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Student Loan Interest Allowance -->
+							<!-- Row 17 -->
+							<div class="FL" style="width:850px;margin-top:5px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.studentLoanInterestAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4StudentLoanInterestAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Government Pension Contributions Allowance -->
+							<!-- Row 18 -->
+							<div class="FL" style="width:850px;margin-top:3px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.govPensionContributionsAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4GovPensionContributionsAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Indidivual Retirement Contributions Allowance -->
+							<!-- Row 19 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.individRetirementAcctAllowances}" disabled="#{!editable}"
+										maxlength="9" id="prW4IndividRetirementAcctAllowances" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Educational Contributions Allowance -->
+							<!-- Row 20 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.educationContributionAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4EducationContributionAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Health Savings Account Allowance -->
+							<!-- Row 21 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.healthSavingAcctAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4HealthSavingAcctAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Casualty Residential Loss Allowance -->
+							<!-- Row 22 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.casualtyResidenceLossAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4CasualtyResidenceLossAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Personal Loss Allowance -->
+							<!-- Row 23 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.personalPropertyLossAllowance}" disabled="#{!editable}"
+										maxlength="9" id="prW4PersonalPropertyLossAllowance" styleClass="RT"
+										valueChangeListener="#{bean.listenCalcTotalAllowances}"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+										<ace:ajax/>
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Total Deductions -->
+							<!-- Row 24 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.deductionAmount}" disabled="true"
+										id="prW4TotalDeductionsAmt" styleClass="RT"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											minFractionDigits="0"/>                            
+									</ace:textEntry>
+								</div>
+							</div>						
+							<!-- Number of Allowances -->
+							<!-- Row 25 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.totalAllowancesAmt}" disabled="#{!editable}"
+										maxlength="9" id="prW4TotalAllowancesAmt" styleClass="RT"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+									</ace:textEntry>
+								</div>
+							</div>			
+							<!-- Number of Allowances -->
+							<!-- Row 26 -->
+							<div class="FL" style="width:850px;margin-top:2px;">
+								<div style="margin-left:763px;">
+									<ace:textEntry value="#{form.allowances}" disabled="#{!editable}"
+										maxlength="9" id="prW4AllowancesAmt" styleClass="RT"
+										style="height:10px;width:75px;">
+										<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+											pattern="#,##0"
+											maxIntegerDigits="9"
+											minFractionDigits="0"/>                            
+									</ace:textEntry>
+								</div>
+							</div>	
+						</icecore:setEventPhase>
+						
+						<!-- Employee participates in a government pension -->
+						<div class="FL" style="height:20px;margin-top:10px;width:700px;"> 
+							<div class="FL pad25lt">
+								<h:selectBooleanCheckbox styleClass="ckbx pad1tp" id="prW4EmployeeParticipatesGovPension" value="#{form.employeeParticipatesGovPension}" disabled="#{!editable}" />
+							</div>
+						</div>  						
+						<!-- Employer authorized to take witholdings per pay period -->
+						<div class="FL" style="height:20px;margin-top:23px;width:850px;"> 
+							<div class="FL pad7lt pad1tp" style="width:20px;">
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<h:selectBooleanCheckbox styleClass="ckbx" id="prW4AuthEmployerPayPeriodWithholding" value="#{form.authEmployerPayPeriodWithholding}"
+										disabled="#{!editable}" valueChangeListener="${bean.listenEmployerAuthChange}">
+										<ace:ajax/>
+									</h:selectBooleanCheckbox>
+								</icecore:setEventPhase>
+							</div>
+							<div class="FL" style="margin-left:413px;width:56px;">
+								<ace:textEntry value="#{form.employerWithholdPayPeriodAmt}" disabled="#{!editable or !form.authEmployerPayPeriodWithholding}"
+									maxlength="9" id="prW4EmployerWithholdPayPeriodAmt" 
+									style="height:10px;width:45px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="#,##0"
+										maxIntegerDigits="9"
+										minFractionDigits="0"/>                            
+								</ace:textEntry>
+							</div>						
+							<div class="FL" style="width:60px;margin-left:14px;">
+								<ace:textEntry value="#{form.employerWithholdPayPeriodPercent}" disabled="#{!editable or !form.authEmployerPayPeriodWithholding}"
+									maxlength="2" id="prW4EmployerWithholdPayPeriodPercent" 
+									style="height:10px;width:35px;">
+									<f:convertNumber maxFractionDigits="0" groupingUsed="true"
+										pattern="#,##0"
+										maxIntegerDigits="2"
+										minFractionDigits="0"/>                            
+								</ace:textEntry>
+							</div>		
+						</div>  						
+						
+						<!-- Signature Section -->
+						<!-- SIGNATURE VALUE -->
+						<!-- Display the most recent employee signature. LS-2768-->
+						<div class="FL" style="width:840px;height:29px;margin-top:125px;">
+							<div class="FL" style="width:630px;">
+							   <div class="FL">
+								  <div style="margin-left: 35px;width:620px;">
+									 <h:panelGroup escape="false"
+										styleClass="txt7"
+										rendered="#{bean.contactDoc.empSignature ne null}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value="#{bean.contactDoc.empSignature.name}"
+										   styleClass="U B txtBlue" />
+										<h:outputText
+										   value=" #{bean.contactDoc.empSignature.displayTime}" />
+										<br />
+										<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+									 </h:panelGroup>
+								  </div>
+								  <h:panelGroup styleClass="FL"
+									 rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}" style="margin-left: 39px;">
+									 <h:panelGroup styleClass="btn_legend"
+										style="margin-top:15px;margin-left: 5px;">
+										<h:panelGroup
+										   rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+										   (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										   <span class="btnMiniLtHot" />
+										   <ace:linkButton value="Sign &amp; Submit" id="prSignSubmit"
+											  action="#{contactFormBean.actionSubmit}"
+											  title="Signature field" styleClass="btnMiniCt" />
+										   <span class="btnMiniRtHot" />	
+										</h:panelGroup>
+										<h:panelGroup
+										   rendered="#{not (bean.empEdit or
+										   (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+										   or (bean.contactDoc.status eq 'PENDING')}">
+										   <span class="btnMiniLt" />
+										   <span>
+											  <h:commandLink value="Sign &amp; Submit"
+												 onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										   </span>
+										   <span class="btnMiniRt" />
+										</h:panelGroup>
+									 </h:panelGroup>
+								  </h:panelGroup>
+							   </div>
+							</div>
+							<div class="FL txt14" style="height:29px; width:130px;">
+								<div style="margin-top:16px;margin-left:85px;">
+								   <h:outputText value="#{bean.contactDoc.empSignature.date}"
+									  rendered="#{bean.contactDoc.empSignature ne null}">
+									  <f:convertDateTime pattern="MM/dd/yyyy"
+										 timeZone="#{applicationScopeBean.timeZone}" />
+								   </h:outputText>
+								   </div>
+							</div>           
+						</div>
+						<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+					</div>
+				</div>
+				<div class="FL BKwhite sfFormBorder1" style="height:1080px;width:900px;margin-top:15px;">
+					<!-- Page 2 -->
+					<div class="FL pad40lt">
+						<h:graphicImage alt="" style="width:820px;margin-top:15px;" url="../../i/forms/PR_W4_2020_2.png"/>
+					</div>						
+				</div>				
+				<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+					<div class="FL BKwhite sfFormBorder1 pad10tp" style="width:900px;margin-bottom:15px;">
+						<ui:include src="signatureHistory.xhtml">
+							<ui:param name="bean" value="#{bean}" />
+							<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+						</ui:include>
+					</div>
+				</h:panelGroup>
+			</div> <!-- end scroll div -->
+		</div>
+	</div>
+</ui:composition>

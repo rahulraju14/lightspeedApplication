@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<h:form>
+		<ace:dialog visible="#{exportTimecardBean.visible}"
+				header="#{exportTimecardBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+
+			<ace:ajax event="close" execute="@this" listener="#{exportTimecardBean.actionCancel}"/>		
+
+			<div class="popupBdyAW">
+				<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="popup_main">
+					<div class="W80percnt MA">
+						<div class="rowCont">
+
+							<!-- EXPORT TYPE selection -->
+							<h:panelGroup rendered="#{true}">
+								<div class="rowCont pad5tp">
+									<div class="padPop3tp FL">
+										<span class="B txt14">Select the type of export file:</span>
+									</div>
+									<div class="FL">
+										<h:panelGroup styleClass="pad5lt">
+											<h:selectOneMenu 
+													value="#{exportTimecardBean.exportType}">
+												<f:selectItems value="#{exportTimecardBean.exportTypeDL}" itemLabelEscaped="false" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{exportTimecardBean.showAllProjects}">
+								<div class="rowCont B_false pad10tp pad5lt">
+									<b>NOTE:</b> Timecards from <u>all Projects</u> will be included in the report.
+								</div>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{exportTimecardBean.showNotAllProjects}">
+								<div class="rowCont B_false pad10tp pad5lt">
+									<b>NOTE:</b> Only timecards from the <u>current Project</u> will be included in the report.
+								</div>
+							</h:panelGroup>
+
+							<div class="rowCont pad10lt">
+								<div class="rowCont B_false pad10tp">
+									Select from the following criteria:
+								</div>
+
+								<div class="FL W25percnt pad10tp">
+									Timecard(s) for:
+								</div>
+								<div class="FL W75percnt pad10tp">
+									<!-- Employee access Timecard -->
+									<h:panelGroup rendered="#{not exportTimecardBean.showFull}">
+										<h:selectOneRadio style="width:80%;white-space: pre;" styleClass="h_radio B_false" value="#{exportTimecardBean.rangeSelection}"
+											valueChangeListener="#{exportTimecardBean.listenRangeSelection}"	layout="pageDirection">
+											<f:selectItem itemValue="c" itemLabel="Current Employee &amp; Occupation only &#13; #{exportTimecardBean.message}"/>
+											<f:selectItem itemValue="p" itemLabel="All Occupations for this Employee"/>
+										</h:selectOneRadio>
+									</h:panelGroup>
+									<!-- Includes batch timecards -->
+									<h:panelGroup rendered="#{exportTimecardBean.showFull and not empty exportTimecardBean.batchName}">
+										<h:selectOneRadio style="width:80%;white-space: pre;" styleClass="h_radio B_false" value="#{exportTimecardBean.rangeSelection}"
+											valueChangeListener="#{exportTimecardBean.listenRangeSelection}"	layout="pageDirection">
+											<f:selectItem itemValue="c" itemLabel="Current Employee &amp; Occupation only &#13; #{exportTimecardBean.message}"/>
+											<f:selectItem itemValue="p" itemLabel="All Occupations for this Employee"/>
+											<f:selectItem itemValue="d" itemLabel="The entire #{exportTimecardBean.deptName} department"/>
+											<f:selectItem itemValue="b" itemLabel="The entire #{exportTimecardBean.batchName} batch"/>
+											<f:selectItem itemValue="a" itemLabel="The entire Crew"/>
+											<f:ajax/>
+										</h:selectOneRadio>
+									</h:panelGroup>
+									<!-- Includes unbatched timecards -->
+									<h:panelGroup rendered="#{exportTimecardBean.showFull and exportTimecardBean.unbatched}">
+										<h:selectOneRadio style="width:80%;white-space: pre;" styleClass="h_radio B_false" value="#{exportTimecardBean.rangeSelection}"
+											valueChangeListener="#{exportTimecardBean.listenRangeSelection}"	layout="pageDirection">
+											<f:selectItem itemValue="c" itemLabel="Current Employee &amp; Occupation only &#13; #{exportTimecardBean.message}"/>
+											<f:selectItem itemValue="p" itemLabel="All Occupations for this Employee"/>
+											<f:selectItem itemValue="d" itemLabel="The entire #{exportTimecardBean.deptName} department"/>
+											<f:selectItem itemValue="u" itemLabel="All un-batched timecards"/>
+											<f:selectItem itemValue="a" itemLabel="The entire Crew" itemDisabled="#{! exportTimecardBean.showFull}"/>
+										</h:selectOneRadio>
+									</h:panelGroup>														
+								</div>
+
+								<!-- week-ending date selection -->
+								<div class="rowCont pad20tp">
+									<div class="padPop3tp FL W25percnt">
+										<span class="B">Week Ending:</span>
+									</div>
+									<div class="FL W75percnt">
+										<h:panelGroup styleClass="pad4lt">
+											<h:selectOneMenu 
+													disabled="#{exportTimecardBean.rangeSelection eq 'b'}"
+													value="#{exportTimecardBean.weekEndDate}">
+												<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+												<f:selectItems value="#{exportTimecardBean.weekEndDateDL}" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+								</div>
+
+								<!-- sort selection -->
+								<div class="rowCont pad15tp">
+									<div class="padPop3tp FL W25percnt">
+										<span class="B">Sort Order:</span>
+									</div>
+									<div class="FL W80percnt">
+										<h:panelGroup styleClass="pad4lt">
+											<h:selectOneMenu 
+												value="#{exportTimecardBean.sortOrder}">
+												<f:selectItems value="#{exportTimecardBean.sortOrderDL}" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</div>
+								</div>
+
+								<!-- report style selection -->
+								<div class="rowCont pad15tp">
+									<div class="padPop3tp FL W25percnt">
+										<span class="B"> </span>
+									</div>
+									<div class="FL W75percnt">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR padPop25rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="#{exportTimecardBean.buttonCancelLabel}" style="text-decoration:none;"
+								action="#{exportTimecardBean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="#{exportTimecardBean.buttonOkLabel}"
+								action="#{exportTimecardBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

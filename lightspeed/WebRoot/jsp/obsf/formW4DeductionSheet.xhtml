@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<!-- DEDUCTIONS AND ADJUSTMENTS WORKSHEET
+			2018: bottom of page 3
+			2017: top of page 2 -->
+
+<!-- parameters:
+		formVersion - string - form version, 2 digits, e.g., '18'
+		pre2018style - boolean - true if W4 version PRIOR to 2018
+		is2018style - boolean - true if W4 version FOR 2018 or LATER
+		formDir - string - directory for images -->
+
+	<div class="BKwhite FL #{is2019style ? 'pad-5tp' : ''}">
+		<!-- Main div -->
+		<div class="#{pre2018style ? '': 'rowCont pad6lt sfFormBorder2'}" style=";width:822px;">
+			<h:outputText styleClass="B txt15" style="margin-left:20%" value="Deductions, Adjustments, and Additional Income Worksheet" /> 
+				
+			<!-- Horizontal rule  -->
+			<hr class="rowCont FL" style="height:3px;background:black;border:0;margin-right:-3px;" />
+				
+			<!-- DEDUCTIONS AND ADJUSTMENTS WORKSHEET START -->	
+			<div class="rowCont">
+				<!-- First block Start-->
+				<div class="W90percnt FL">
+					<h:graphicImage style="width:820px; margin-top:#{is2019style ? '4px' : '-1px'};" url="../../i/forms/#{formDir}/formW4Img_3.png" alt=""/>
+				</div>
+				<!-- First Block End -->
+					
+				<!-- Second Block Start -->
+				<div class="W11percnt FL" style="margin-left:-20px;">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					 <div class="rowCont FL">
+						<h:outputText styleClass="LH32" value="&#160;" />
+					</div>
+					 <div class="rowCont FL">
+						<h:outputText styleClass="LH32" value="&#160;" />
+					</div>
+					
+					<!-- 1/ DEDUCTIONS -->
+					<div class="fd_sm2 pad1tp"> 
+						<ace:textEntry maxlength="11" id="Deductions_#{formVersion}"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.deductions}"
+							style="width:91%; text-align:right; #{is2018style ? 'margin-top:1px;':'margin-top:2px;'}" >
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@this netDeductions_17 netDeductions_18"/>
+						</ace:textEntry>
+					</div>
+					
+					<!-- 2/ AUTOMATIC/ENTER SPECIFIC DOLLARS -->
+					<div class="fd_sm2 pad13tp"> 
+						<ace:textEntry maxlength="10" id="AutoDeductions_#{formVersion}"
+							style="width:91%; text-align:right; #{is2018style ? 'margin-top:1px;':'margin-top:2px;'}"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.automatic}">
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@this netDeductions_17 netDeductions_18"/>
+						</ace:textEntry>
+					</div>
+					
+					<!-- 3/ NET DEDUCTION -->
+					<div class="fd_sm2"> 
+						<h:outputText styleClass="FL rowCont pad22tp" 
+								id="netDeductions_#{formVersion}"
+								value="#{formW4Bean.form.netDeductions}"
+								style="text-align:right;">
+							<f:convertNumber type="number" pattern="#,##0." />
+						</h:outputText>
+					</div>
+					
+					<!-- 4/ ADJUSTMENTS -->
+					<div class="fd_sm2"> 
+						<ace:textEntry maxlength="11"
+								id="W4_ADJUSTMENTS_#{formVersion}"
+								disabled="#{not formW4Bean.empEdit}"
+								value="#{formW4Bean.form.adjustments}"
+								valueChangeListener="#{formW4Bean.listenValueChange}"
+								style="width:91%; text-align:right; #{is2018style ? 'margin-top:18px;height:11px;':'margin-top:2px;height:9px;'}">
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@this sumDeductions_17 sumDeductions_18"/>
+						</ace:textEntry>
+					</div>
+					
+					<!-- 5/ SUM NET AND ADJUSTMENTS/ SUM DEDUCTIONS -->
+					<div class="fd_sm2 #{pre2018style ? 'pad16tp' : ''}"> 
+						<ace:textEntry maxlength="11" 
+								id="SumDeductions_#{formVersion}"
+								style="width:91%; text-align:right;#{is2018style ? 'margin-top:1px; height:9px;':'height:11px;'}"
+								disabled="#{(not formW4Bean.empEdit) or (is2018style)}"
+								value="#{formW4Bean.form.sumDeductions}">
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@this subtractNonwage_17 dividedBy_17 totalDeducts_17 subtractNonwage_18 dividedBy_18 totalDeducts_18"/>
+						</ace:textEntry>	
+					</div>
+					
+					<!-- 6/ ESTIMATED NON WAGE -->
+					<div class="fd_sm2"> 
+						<ace:textEntry maxlength="11" id="EstNonwage_#{formVersion}"
+							disabled="#{not formW4Bean.empEdit}"
+							value="#{formW4Bean.form.estNonwage}"
+							style="width:91%; text-align:right;height:9px; #{is2018style ? 'margin-top:1px;':'margin-top:3px;'}" >
+							<f:convertNumber type="number" pattern="#,##0." />
+							<ace:ajax render="@this subtractNonwage_17 dividedBy_17 totalDeducts_17 subtractNonwage_18 dividedBy_18 totalDeducts_18"/>
+						</ace:textEntry>
+					</div>
+					
+					<!-- 7/ SUBTRACT NON WAGE -->
+					<h:outputText styleClass="FL rowCont pad6tp"
+							id="subtractNonwage_#{formVersion}"
+							value="#{formW4Bean.form.subtractNonwage}"
+							style="text-align:right;">
+						<f:convertNumber type="number" pattern="#,##0.;(#,##0.)" />
+					</h:outputText>
+			
+					<!-- 8/ DIVIDE BY XK -->
+					<h:outputText styleClass="rowCont pad5tp" 
+							id="dividedBy_#{formVersion}"
+							value="#{formW4Bean.form.dividedBy}" 
+							style="text-align:center;#{pre2018style ? '' : 'margin-top:20px;'}">
+						<f:convertNumber type="number" pattern="#0;(#0)" />
+					</h:outputText>
+					
+					<!-- 9/ SHOW LINE H -->
+					<h:outputText styleClass="rowCont pad5tp"
+							id="personalSum2_#{formVersion}"
+							value="#{formW4Bean.form.personalSum}"
+							style="text-align:center;" />
+					
+					<!-- 10/ ADD 8 AND 9/ TOTAL DEDUCTS -->
+					<h:outputText styleClass="rowCont"
+							id="totalDeducts_#{formVersion}"
+							value="#{formW4Bean.form.totalDeducts}"
+							style="text-align:center;margin-top:#{pre2018style ? '20px;' : (is2019style ? '35px' : '40px;')}" />
+					</icecore:setEventPhase>
+				</div>
+				<!-- Second Block End -->
+			</div>		
+			<!-- DEDUCTIONS AND ADJUSTMENTS WORKSHEET END -->	
+		</div>
+	</div>
+</ui:composition>

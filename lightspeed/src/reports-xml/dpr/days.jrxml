@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="days" pageWidth="540" pageHeight="1008" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e552aa70-e87e-4bbe-8b35-cf0f7f539e43">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="dprDaysId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[135]]></defaultValueExpression>
+	</parameter>
+	<parameter name="title" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select dpr_days.*,
+(ifnull(unit1,0)+
+ifnull(unit2,0)+
+ifnull(unit3,0)+
+ifnull(unit4,0)+
+ifnull(unit5,0)+
+ifnull(unit6,0)+
+ifnull(unit7,0)+
+ifnull(unit8,0)+
+ifnull(unit9,0)+
+ifnull(unit10,0)+
+ifnull(rehearse,0)+
+ifnull(test,0)+
+ifnull(reshoot,0)+
+ifnull(holiday,0)+
+ifnull(travel,0)+
+ifnull(insurance,0)) as total
+from dpr_days
+where dpr_days.Id = $P{dprDaysId};]]>
+	</queryString>
+	<field name="Rehearse" class="java.math.BigDecimal"/>
+	<field name="Test" class="java.math.BigDecimal"/>
+	<field name="Reshoot" class="java.math.BigDecimal"/>
+	<field name="Holiday" class="java.math.BigDecimal"/>
+	<field name="Insurance" class="java.math.BigDecimal"/>
+	<field name="Travel" class="java.math.BigDecimal"/>
+	<field name="unit1" class="java.math.BigDecimal"/>
+	<field name="unit2" class="java.math.BigDecimal"/>
+	<field name="unit3" class="java.math.BigDecimal"/>
+	<field name="unit4" class="java.math.BigDecimal"/>
+	<field name="unit5" class="java.math.BigDecimal"/>
+	<field name="unit6" class="java.math.BigDecimal"/>
+	<field name="unit7" class="java.math.BigDecimal"/>
+	<field name="unit8" class="java.math.BigDecimal"/>
+	<field name="unit9" class="java.math.BigDecimal"/>
+	<field name="unit10" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="Status" class="java.lang.String"/>
+	<detail>
+		<band height="10" splitType="Prevent">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="17f8c5e4-2672-4e08-9a05-5448a28da709" key="textField" style="prDefBoxBold" positionType="Float" mode="Opaque" x="0" y="0" width="63" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="17f8c5e4-2672-4e08-9a05-5448a28da709" key="textField" style="prDefBox" positionType="Float" x="63" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{unit1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="4f6b5eb8-8b08-4f6c-8e0e-fd58c5278960" key="textField" style="prDefBox" positionType="Float" x="108" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{unit2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="f3020ef3-4e22-49d8-91b6-0e381002a8e5" key="textField" style="prDefBox" positionType="Float" x="153" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Rehearse}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="5f4c95fc-1e85-4de1-9a5d-1c1f8f57afad" key="textField" style="prDefBox" positionType="Float" x="198" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Test}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="b7af0794-62d4-4e10-88f5-e4daf7b8c186" key="textField" style="prDefBox" positionType="Float" x="243" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Reshoot}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="a9e26e2d-d121-450a-a386-280a1a4a2181" key="textField" style="prDefBox" positionType="Float" x="288" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Holiday}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="2e44b624-8e53-4a0a-9dec-cdccf048af0e" key="textField" style="prDefBox" positionType="Float" x="333" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Insurance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="fdfea4e7-fc05-4105-9aca-c24f24325de9" key="textField" style="prDefBox" positionType="Float" x="378" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Travel}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement uuid="6b64e041-1090-407e-9c21-cdbbd2f93e08" key="textField" style="prDefBox" positionType="Float" x="423" y="0" width="45" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b8b978b4-94bf-486c-8626-0d9e1097eee3" key="textField" style="prDefBox" positionType="Float" x="468" y="0" width="72" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

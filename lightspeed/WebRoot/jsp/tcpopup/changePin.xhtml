@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{changePinBean.visible}"
+				header="#{changePinBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{changePinBean.actionCancelChangePin}"/>		
+				
+			<div class="popupBdyA">
+
+				<div class="pad6tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div id="pwform" class="popCont90 pad15tp">
+
+					<div class="pad10tp">
+						<div class="rowCont pad20lt">
+							<h:panelGroup styleClass="FL W90percnt stdTxt">
+								A personal identification number (PIN) is required to
+								submit, approve, or reject a timecard.&#160;
+								<h:outputText value="Please create a PIN below." rendered="#{changePinBean.create}"/>
+								<h:outputText value="You may set a new PIN below." rendered="#{! changePinBean.create}"/>
+								<p/>
+								Your PIN must be a sequence of 4 digits.
+							</h:panelGroup>
+						</div>
+						<span class="rowCont pad20tp">
+							<h:panelGroup>
+								<span class="fdNm_w3 FL pad3tp">
+									<h:outputText value="#{headerViewBean.domainTabTitle} Password:" />
+								</span>
+								<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+									<ace:textEntry secret="true" tabindex="1" maxlength="20" id="pin_focus"
+											redisplay="true" value="#{changePinBean.password}">
+										<ace:ajax />
+									</ace:textEntry>
+								</span>
+							</h:panelGroup>
+						</span>
+						<span class="rowCont pad10tp">
+							<span class="fdNm_w3 FL pad3tp">
+								<h:outputText value="New Pin:" />
+							</span>
+							<span class="fd FL"><!-- max length is ? -->
+								<ace:textEntry secret="true" tabindex="2" maxlength="4" id="NewPin"
+										redisplay="true" value="#{changePinBean.newPin}">
+									<ace:ajax />
+								</ace:textEntry>
+							</span>
+						</span>
+						<span class="rowCont pad10tp">
+							<span class="fdNm_w3 FL pad3tp">
+								<h:outputText value="Confirm New Pin:" />
+							</span>
+							<span class="fd FL"><!-- max length is ? -->
+								<ace:textEntry secret="true" tabindex="3" maxlength="4" id="VerifyPin"
+										redisplay="true" value="#{changePinBean.confirmPin}">
+									<ace:ajax />
+								</ace:textEntry>
+							</span>
+						</span>
+					</div>
+					<div class="rowCont pad20lt pad10tp">
+						<h:panelGroup rendered="#{changePinBean.create}">
+							<span class="pad10lt ckbxTxtLbl FL">
+								<h:selectBooleanCheckbox  tabindex="4"
+										value="#{changePinBean.confirmation}" styleClass="ckbx">
+									<ace:ajax />
+								</h:selectBooleanCheckbox>
+							</span>
+							<span class="ckbxTxtLbl FL pad5lt">
+								By creating a PIN I agree to use an electronic signature to</span>
+							<span class="ckbxTxtLbl FL pad40lt">
+								sign timecards and other electronic documents.
+							</span>
+						</h:panelGroup>
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel" tabindex="6"
+									action="#{changePinBean.actionCancelChangePin}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<h:panelGroup rendered="#{(! changePinBean.create) or changePinBean.confirmation}">
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt" />
+							<span>
+								<ace:linkButton value="Save" tabindex="5"
+										action="#{changePinBean.actionChangePin}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{changePinBean.create and ! changePinBean.confirmation}">
+						<span class="FR pad10rt">
+							<span class="btnPriDisLt" />
+							<span>
+								<ace:linkButton value="Save"
+									styleClass="btnPriDisCt" type="text" onclick="return false;" />
+							</span>
+							<span class="btnPriDisRt" />
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

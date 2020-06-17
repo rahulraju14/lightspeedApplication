@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tcAttachment" pageWidth="200" pageHeight="875" whenNoDataType="AllSectionsNoDetail" columnWidth="200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.948717100000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="weeklyId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.Number">
+		<defaultValueExpression><![CDATA["select count(*) as total from attachment" +
+" where  Weekly_Timecard_Id = "+ $P{weeklyId}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="total" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="26">
+			<printWhenExpression><![CDATA[$F{total} > 0
+]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="2" width="100" height="1" uuid="3f6aabeb-e647-4a4a-8108-8d142eeb1760"/>
+			</break>
+			<textField>
+				<reportElement x="0" y="4" width="200" height="20" uuid="74b1be8d-34db-4c24-ba8b-07edbf79a7c7"/>
+				<textFieldExpression><![CDATA[("ATTACHMENTS_" + $P{weeklyId} + "_TIMECARD")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

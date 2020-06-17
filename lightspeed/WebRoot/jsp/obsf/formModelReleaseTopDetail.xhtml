@@ -1,0 +1,348 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components"
+   xmlns:icecore="http://www.icefaces.org/icefaces/core">
+   <f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+   <div class="txt9 W800 pad20lt">
+      <div class="FL">
+         <h:outputText styleClass="FL txt14 B pad5tp" value="TTC CLIENT :"/>
+         <div class="FL pad5lt">
+            <ace:textEntry id="clientName" value="#{form.ttcClient}" maxlength="30"  disabled="true" styleClass="W350">
+              <ace:ajax execute="@this" render="@all"/>
+            </ace:textEntry>
+         </div>
+      </div>
+      <div class="rowCont"></div>
+      <div class="sfFormBorder1">
+         <!-- Row 1 -->
+         <div style="height:38px;border-bottom: 1px solid black;">
+            <div class="W300 FL" style="border-right:1px solid black;height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="MODEL"/>
+                  <br/>
+                  <div class="FL pad3tp pad5lt">
+                  </div>
+                  <ace:textEntry id="modelName" value="#{form.modelName}" maxlength="30"  disabled="#{not editable}" styleClass="W150">
+                    <ace:ajax execute="@this" render="@all"/>
+                  </ace:textEntry>
+               </div>
+            </div>
+            <div class="W150 FL" style="border-right:1px solid black;height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B" value="MODEL SSN"/>
+               </div>
+               <br/>
+               <div class="FL pad5lt pad3tp">
+                  <ace:textEntry id="modelSSN" value="#{form.modelSSN}" maxlength="11"  disabled="#{not editable}" styleClass="W100">
+                     <f:converter converterId="lightspeed.SSNConverter" />
+                  </ace:textEntry>
+               </div>
+            </div>
+            <div class="W325 FL" style="height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B" value="MODEL AGENCY"/>
+               </div>
+               <br/>
+               <div class="FL pad2tp W40 pad5lt">
+                  <h:panelGroup styleClass="FL" style="width:50px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="modelAgencyYes" value="#{form.modelAgencyYes}"
+                           valueChangeListener="#{bean.listenModelAgencyYes}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                           <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:20px;">
+                        <h:outputText styleClass="txt9" value="Yes"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+					<div class="FL pad3tp pad3lt W120">
+						<ace:comboBox id="modeltalentAgencyName"
+							value="#{form.modelAgencyText}" rows="10" width="120"
+							filterMatchMode="#{form.modelAgencyText}" maxlength="30"
+							rendered="#{ form.modelAgencyYes and editable}"
+							labelPosition="left">
+							<f:selectItems value="#{bean.agencyList}" />
+							<ace:ajax event="blur" render="@form"/>
+						</ace:comboBox>
+						<ace:textEntry  value="#{form.modelAgencyText}"  disabled="#{true}" styleClass="W100" 	rendered="#{not form.modelAgencyYes or not editable}">
+                  </ace:textEntry>
+               </div>
+               <div class="FL pad2tp W55">
+                  <h:panelGroup styleClass="FL pad5lt" style="width:80px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="modelAgencyNo" value="#{form.modelAgencyNo}"
+                           valueChangeListener="#{bean.listenModelAgencyNo}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                           <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:50px;">
+                        <h:outputText styleClass="txt9" value="No N/A"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+               <div class="FL pad3tp pad3lt W95">
+                  <h:panelGroup styleClass="FL pad8tp" style="width:52px;">
+                     <h:outputText styleClass="txt10" value="Agency %"/>
+                  </h:panelGroup>
+                  <ace:textEntry id="modelAgencyPercentage" value="#{form.agentPercentage}" maxlength="2"  disabled="#{not isAppEdit}" styleClass="W30">
+                   <f:validateLongRange minimum="0" />
+                   <ace:ajax render="@form"/>
+                  </ace:textEntry>
+               </div>
+            </div>
+         </div>
+         <!-- Row 2 -->
+         <div style="height:38px;border-bottom: 1px solid black;">
+            <div class="FL" style="border-right:1px solid black;height:38px;width:451px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B" value="MODEL'S CORPORATION (if any)"/>
+               </div>
+               <br/>
+               <div class="FL pad2tp W40">
+                  <h:panelGroup styleClass="FL" style="width:50px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="modelCopCheckYes" value="#{form.modelCorporationYes}"
+                           valueChangeListener="#{bean.listenModelCorporationYes}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                           <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:20px;">
+                        <h:outputText styleClass="txt9" value="Yes"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+               <div class="FL pad3tp W170">
+                  <ace:textEntry id="modelCorpName" value="#{form.modelCorporationText}" maxlength="30"  disabled="#{not form.modelCorporationYes}" styleClass="W150"/>
+               </div>
+               <div class="FL pad2tp W70">
+                  <h:panelGroup styleClass="FL" style="width:80px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="modelCopCheckNo" value="#{form.modelCorporationNo}"
+                           valueChangeListener="#{bean.listenModelCorporationNo}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                            <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:50px;">
+                        <h:outputText styleClass="txt9" value="No N/A"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+            </div>
+            <div class="W300 FL" style="height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B" value="CORPORATION FEDERAL ID #"/>
+               </div>
+               <br/>
+               <div class="FL pad2tp W40 pad5lt">
+                  <h:panelGroup styleClass="FL" style="width:50px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="coperationFedYes" value="#{form.corporationFederalYes}"
+                           valueChangeListener="#{bean.listenCorporationFederalYes}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                           <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:20px;">
+                        <h:outputText styleClass="txt9" value="Yes"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+               <div class="FL pad3tp W120">
+                  <ace:textEntry id="modelCorpFedId" value="#{form.corporationFederalId}" maxlength="9"  disabled="#{not form.corporationFederalYes}" styleClass="W100">
+                    <f:convertNumber integerOnly="true"/>
+                  </ace:textEntry>
+               </div>
+               <div class="FL pad2tp W50 pad7lt">
+                  <h:panelGroup styleClass="FL" style="width:80px;">
+                     <h:panelGroup styleClass="FL pad2tp">
+                        <h:selectBooleanCheckbox id="coperationFedNo" value="#{form.corporationFederalNo}"
+                           valueChangeListener="#{bean.listenCorporationFederalNo}"
+                           disabled="#{not editable}"
+                           styleClass="iceSelBoolChkbx FL pad3tp">
+                           <ace:ajax render="@form"/>
+                        </h:selectBooleanCheckbox>
+                     </h:panelGroup>
+                     <h:panelGroup styleClass="FL pad10tp" style="width:50px;">
+                        <h:outputText styleClass="txt9" value="No N/A"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+            </div>
+         </div>
+         <!-- Row 3 -->
+         <div style="height:38px;border-bottom: 1px solid black;">
+            <div class="W300 FL" style="border-right:1px solid black;height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="PROJECT NAME"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                  <ace:textEntry id="modelprojectName" value="#{form.projectName}" maxlength="20"  disabled="#{not isAppEdit}" styleClass="W150">
+                   <ace:ajax execute="@this" render="@all"/>
+                  </ace:textEntry>
+               </div>
+            </div>
+            <div class="W150 FL" style="border-right:1px solid black;height:38px;">
+               <div class="FL W70">
+                  <div class="pad2tp">
+                     <h:outputText styleClass="FL pad5lt B " value="JOB"/>
+                  </div>
+                  <br/>
+                  <div class="FL pad3tp pad5lt">
+                     <ace:textEntry id="modeljobNum" value="#{form.job}" maxlength="60" disabled="#{not isAppEdit}" styleClass="W60">
+                       <ace:ajax execute="@this" render="@all"/>
+                     </ace:textEntry>
+                  </div>
+               </div>
+               <div class="FL">
+                  <div class="pad2tp">
+                     <h:outputText styleClass="FL pad5lt B " value="PO #"/>
+                  </div>
+                  <br/>
+                  <div class="FL pad3tp pad5lt">
+                     <ace:textEntry id="modelpoNum" value="#{form.jobPo}" maxlength="60" disabled="#{not isAppEdit}" styleClass="W60">
+                      <ace:ajax execute="@this" render="@all"/>
+                     </ace:textEntry>
+                  </div>
+               </div>
+            </div>
+            <div class="FL" style="width: 326px">
+             <div>
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="SHOOT DATE(S)"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                  <ace:textEntry id="modelshootDates" value="#{form.shootDates}" maxlength="125" disabled="#{not isAppEdit}" styleClass="W150"/>
+               </div>
+             </div>
+            
+             <div>
+               <div class="">
+                  <h:outputText styleClass="FL pad5lt B " value="OCCUPATION" style="margin-top: -9px;margin-left: 24px;"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                   <h:selectOneMenu styleClass="FL" id="mdOccupation" 
+                       value="#{form.occupation}"
+                       style="margin-top: 6px;margin-left:18px;height: 16px;width: 97px;margin-top: -8px"
+                       disabled="#{not isAppEdit}">
+                       <f:selectItem itemValue="" itemLabel="" />
+                       <f:selectItem itemValue="Model" itemLabel="Model" />
+                       <f:selectItem itemValue="Model Extra" itemLabel="Model Extra" />
+                       <f:selectItem itemValue="Stand-in" itemLabel="Stand-in" />
+                       <ace:ajax render="@form" />
+                  </h:selectOneMenu>
+               </div>
+            </div>
+             </div>
+         </div>
+         <!-- Row 4 -->
+         <div style="height:38px;border-bottom: 1px solid black;">
+            <div class="W300 FL" style="border-right:1px solid black;height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="PRODUCT"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                  <ace:textEntry id="modelproductName" value="#{form.product}" maxlength="8" disabled="#{not isAppEdit}" styleClass="W150">
+                   <ace:ajax execute="@this" render="@all"/>  
+                  </ace:textEntry>
+               </div>
+            </div>
+            <div class="W150 FL" style="border-right:1px solid black;height:38px;">
+               <div class="FL W100">
+                  <div class="pad2tp">
+                     <h:outputText styleClass="FL pad5lt B " value="ADVERTISER"/>
+                  </div>
+                  <br/>
+                  <div class="FL pad3tp pad5lt">
+                     <ace:textEntry id="modeladvertiserName" value="#{form.advertiser}" maxlength="30" disabled="#{not isAppEdit}" styleClass="W90">
+                      <ace:ajax execute="@this" render="@all"/> 
+                     </ace:textEntry>
+                  </div>
+               </div>
+            </div>
+            <div class="FL">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="AD AGENCY"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                  <ace:textEntry id="modeladAgencyName" value="#{form.adAgency}" maxlength="30" disabled="#{not isAppEdit}" styleClass="W150">
+                   <ace:ajax execute="@this" render="@all"/> 
+                  </ace:textEntry>
+               </div>
+            </div>
+         </div>
+         <!-- Row 5 -->
+         <div style="height:38px;">
+            <div class="W300 FL" style="border-right:1px solid black;height:38px;">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="PRODUCER"/>
+               </div>
+               <br/>
+               <div class="FL pad3tp pad5lt">
+                  <ace:textEntry id="modelproducerName" value="#{form.producerName}" maxlength="30" disabled="#{not isAppEdit}" styleClass="W150">
+                   <ace:ajax execute="@this" render="@all"/> 
+                  </ace:textEntry>
+               </div>
+            </div>
+            <div class="W150 FL" style="border-right:1px solid black;height:38px;">
+               <div class="FL W100">
+                  <div class="pad2tp">
+                     <h:outputText styleClass="FL pad5lt B " value="PHOTOGRAPHER"/>
+                  </div>
+                  <br/>
+                  <div class="FL pad3tp pad5lt">
+                     <ace:textEntry id="modelphotographerName" value="#{form.photographer}" maxlength="16" disabled="#{not isAppEdit}" styleClass="W100">
+                       <ace:ajax execute="@this" render="@all"/> 
+                     </ace:textEntry>
+                  </div>
+               </div>
+            </div>
+            <div class="FL">
+               <div class="pad2tp">
+                  <h:outputText styleClass="FL pad5lt B " value="JOB LOCATION"/>
+               </div>
+               <br/>
+               <div class="FL">
+                  <h:selectOneMenu styleClass="FL" id="mdstate"
+                       value="#{form.jobState}"
+                       style="margin-top: 6px;margin-left:12px;height: 16px;width: 44px;"
+                       valueChangeListener="#{bean.listenStateChange}"
+                       disabled="#{!editable}">
+                       <f:selectItems value="#{applicationScopeBean.stateCodeDL['US']}" />
+                       <ace:ajax render="@form" />
+                  </h:selectOneMenu>
+               </div>
+               <div class="FL" style="margin-left: 18px;margin-top: 6px;" styleClass="bdCombo">
+                  <ace:comboBox id="mdselectCity" disabled="#{!editable}" value="#{form.jobCity}" maxlength="30" rendered="#{bean.displayCities}" 
+                  		valueChangeListener="#{bean.listenCityChange}"
+                  		filterMatchMode="#{bean.displayCities}" rows="10">
+                       <f:selectItems value="#{bean.cities}" />
+                       <ace:ajax render="@form" />
+                  </ace:comboBox>
+                  <ace:comboBox id="mdselectCityDefault" value="#{form.jobCity}"  disabled="#{!bean.displayCities}" rendered="#{!bean.displayCities}">
+                        <f:selectItem itemValue="" itemLabel="" />
+                  </ace:comboBox>
+                    <!-- Row 6 -->
+               </div>
+		   </div>
+         </div>
+      </div>
+   </div>
+</ui:composition>

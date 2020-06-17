@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+<c:set var="isCanadaProd" value="#{approvalPathsBean.talentProd}" />
+
+	<div class="FL rowCont stepBorder pad15tp">
+		<h:commandButton id="step4" value=""
+			styleClass="FL pad3lt pad2tp #{approvalPathsBean.showStep4 ? 'stepCloseIcon' : 'stepOpenIcon'}" tabindex="-1"
+			actionListener="#{approvalPathsBean.listenShowStep}"
+			title="Click to view the Step.">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" rendered="#{not isCanadaProd}" value="Step 4: "/>
+			<h:outputText styleClass="stepHdr" rendered="#{not isCanadaProd}" value="Assign Production-level Approvers."/>
+			<h:outputText styleClass="stepNum" rendered="#{isCanadaProd}" value="Step 3: "/>
+			<h:outputText styleClass="stepHdr" rendered="#{isCanadaProd}" value=" Assign Approvers."/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep4}">
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<h:panelGroup rendered="#{not isCanadaProd}">
+				<div class="rowCont FL pad18tp">
+					<span class="pad20lt FL">
+						<h:outputText styleClass="apText" escape="false"
+							value="As with Department Approvers, your Production Approvers may be put in a Linear Hierarchy or an Approver Pool."/>
+		
+						<h:outputText styleClass="rowCont apText FL" escape="false" value="If a Linear Hierarchy is used then the document will be marked
+						 &quot;Final&quot; once the last Approver has approved it. If an Approver Pool is selected, &lt;/br&gt; then you need to specify
+						 a person or action that will cause the document to be marked &quot;Final&quot;. For example, you can select a specific person &lt;/br&gt;
+						 as the Final Approver, or you can indicate that the first person who approves the document will make it &quot;Final&quot;."/>
+					</span>
+				</div>
+			</h:panelGroup>
+			
+			<!-- INSTRUCTIONS FOR CANADA TALENT PRODUCTION START -->
+			<h:panelGroup rendered="#{isCanadaProd}">
+				<div class="rowCont FL pad18tp">
+					<span class="FL pad20lt">
+						<h:outputText styleClass="apText" escape="false" value="The approval process can follow a 
+							Linear Hierarchy or use an Approver Pool. A Linear Hierarchy means that each &lt;/br&gt;
+							Approver gets to review and approve the document in order."/>
+					</span>
+				</div>
+				<div class="rowCont pad18tp FL">
+					<span class="FL" style="margin-left:110px"><h:outputText style="margin-left:86px" value="1"/></span>
+					<span class="FL"><h:outputText style="margin-left:40px" value="2"/></span>
+					<span class="FL"><h:outputText style="margin-left:42px" value="3"/></span>
+				</div>
+				<div class="rowCont FL">
+					<span class="FL pad50lt"><h:outputText styleClass="B FL pad3tp" escape="false" value="Linear Hierarchy:"/></span>
+					<span class="FL"><h:graphicImage value="" style="margin-left:10px;" url="../../i/right_pathArrow.png" alt=""/></span>
+					<span class="FL"><h:graphicImage value="" style="margin-top:-1px; margin-left:-2px;" url="../../i/linear_path_icon.png" alt=""/></span>
+					<span class="FL"><h:graphicImage value="" style="margin-left:-1px;" url="../../i/right_pathArrow.png"  alt=""/></span>
+					<span class="FL">
+						<h:outputText styleClass="FL pad8lt pad3tp" escape="false" value="to &quot;Approved&quot; status"/>
+					</span>
+				</div>
+				<div class="rowCont FL pad18tp">
+				<span class="FL pad20lt">
+					<h:outputText styleClass="apText" escape="false" value="An Approver Pool sends the document to a &quot;Pool&quot; of Approvers
+						where any Approver may select and approve any of &lt;/br&gt; the documents. Once the document is approved by 
+						anyone in the &quot;pool&quot; it becomes &quot;Approved&quot;."/>
+				</span>
+				</div>
+				<div class="rowCont FL">
+					<span class="FL pad50lt"><h:outputText styleClass="B FL pad18tp" escape="false" value="Approver Pool:"/></span>
+					<span class="FL"><h:graphicImage value="" style="margin-top:11px; margin-left:25px;" url="../../i/pool_path_icon.png"/></span>
+					<span class="FL"><h:outputText styleClass="FL pad18tp pad8lt" escape="false" value="to &quot;Approved&quot; status"/></span>
+				</div>
+			</h:panelGroup>
+			<!-- INSTRUCTIONS FOR CANADA TALENT PRODUCTION END -->
+			
+		</h:panelGroup>
+
+		<!-- PRODUCTION APPROVAL START -->
+		<div class="blueLegendContWrap">
+			<div class="blueLegendCont pad25tp pad10lt" style="width:50%; #{(not isCanadaProd) ? 'height:315px;' : 'height:230px;'}">
+				<div class="legendHdg">Production Approval</div>
+
+				<!-- APPROVER METHOD START -->
+				<c:if test="#{not isCanadaProd}">
+				  <div class="pad8tp FL rowCont">
+					<span class="FL pad2tp pad20lt"><h:outputText styleClass="pad-1tp B" escape="false" value="Approver Method"/></span>
+					<h:selectOneRadio id="prodPathMethod"
+						styleClass="h_radio pad-3tp pad10lt FL"
+						value="#{approvalPathsBean.approvalMethod}"
+						disabled="#{not approvalPathsBean.editMode}"
+						layout="lineDirection">
+						<f:selectItem itemLabel="Linear Hierarchy" itemValue="l" />
+						<f:selectItem itemLabel="Approver Pool" itemValue="a" />
+						<ace:ajax />
+					</h:selectOneRadio>
+				  </div>
+				</c:if><!-- APPROVER METHOD END -->
+
+				<div class="FL rowCont">
+
+					<!-- SELECTED APPROVERS LIST START -->
+					<div class="blueLegendContWrap">
+						<div id="prodAppLegend" class="blueLegendCont pad20tp pad25lt"  style="width:85%; background: white;">
+							<!-- ADD APPROVER BUTTON -->
+							<h:panelGroup styleClass="btn_legend pad10rt"
+								rendered="#{(not empty approvalPathsBean.selectedApprovalPathId) and (approvalPathsBean.editMode)}">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Edit"
+										disabled="#{not approvalPathsBean.editMode}"
+										action="#{approvalPathsBean.actionAddProductionApprovers}"
+										styleClass="btnMiniCt" title="Add Approvers." />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="btn_legend LH18">
+								<!-- No legend buttons, so do this to align the table below with the one on the left -->
+							</h:panelGroup>
+
+							<div class="FL W100percnt">
+								<ace:dataTable id="prodApprovers"
+									value="#{approvalPathsBean.productionApproverList}"
+									var="item" scrollHeight="130"
+									rowIndexVar="idx" scrollable="true"
+									styleClass="bk_sl_grid"
+									style="min-height: 130px;"
+									selectionMode="single"
+									rowSelectListener="#{approvalPathsBean.listenRowClicked}"
+									stateMap="#{approvalPathsBean.prodStateMap}">
+
+									<!-- THE APPROVERS -->
+									<ace:column styleClass="W90percnt" style="text-align:left;">
+										<h:outputText styleClass="pad10lt FL" value="#{item.label}" />
+									</ace:column>
+								</ace:dataTable>
+							</div>
+						</div>
+					</div> <!-- SELECTED APPROVERS LIST END -->
+				</div>
+
+				<h:panelGroup rendered="#{approvalPathsBean.approvalMethod eq 'a' and (not isCanadaProd)}">
+					<!-- LAST POOL APPROVER START -->
+					<div class="FL rowCont pad20tp">
+						<!-- HEADER TEXT -->
+						<span class="FL pad30lt">
+							<h:outputText styleClass="pad-1tp B" escape="false"
+								value="The document will be marked &quot;Final &quot; when it is approved by:"/>
+						</span>
+					</div>
+					 <div class="pad2tp FL rowCont"  style="width:100%;">
+					 	 <div class="FL"  style="width:10%;">
+							<h:selectOneRadio id="poolApprover"	layout="pageDirection" disabled="#{not approvalPathsBean.editMode}"
+								valueChangeListener="#{approvalPathsBean.listenChangeFinalApprover}" 
+								value="#{approvalPathsBean.finalPoolApprover}" styleClass="pad25lt">
+								<f:selectItem itemLabel="" itemValue="u" />
+								<f:selectItem itemLabel="" itemValue="o" />
+								<ace:ajax />
+							</h:selectOneRadio>	
+						</div>
+						<div class="FL pad5lt pad4tp" style="width:85%;">
+							<h:outputText styleClass="radioTxtLbl LH24" value="A specific Approver:" />
+							<icecore:setEventPhase events="ValueChangeEvent"
+								phase="INVOKE_APPLICATION">
+								<h:selectOneMenu styleClass="pad10lt"
+									immediate="true" value="#{approvalPathsBean.finalApproverId}"
+									style="width:50%; height:18px;"
+									disabled="#{(not approvalPathsBean.editMode) or (approvalPathsBean.finalPoolApprover ne 'u')}">
+									<f:selectItems value="#{approvalPathsBean.productionMembers}" />
+									<ace:ajax />
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+							<h:panelGroup styleClass="FL pad7tp">
+								<h:outputText value="The first Production Approver to approve the document."/>
+							</h:panelGroup>
+						</div>	
+					</div>
+				</h:panelGroup> <!-- LAST POOL APPROVER END -->
+			</div>
+		</div> <!-- PRODUCTION APPROVAL END -->
+
+	</h:panelGroup>
+</ui:composition>

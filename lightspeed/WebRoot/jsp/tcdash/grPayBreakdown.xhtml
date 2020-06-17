@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- one line in the Pay Breakdown table - for Full Timecard and Gross Payroll pages -->
+
+	<!-- parameters:
+					timecardBean: the backing bean
+					entry: the PayBreakdown object being displayed
+					editHTG: true if fields should be in edit mode (false for view/output mode)
+					aicp: true if AICP/Commercial production
+	-->
+
+	<ace:columnGroup type="header">
+		<ace:row styleClass="CT txt11">
+			<ace:column style="width:#{aicp ? '14':'0'}%;" rendered="#{aicp}">&#160;</ace:column><!-- JOB # -->
+			<ace:column style="width:#{aicp ? '9':'46'}%;">
+				<h:outputText rendered="#{not aicp}" value="Account" />&#160;
+			</ace:column>
+			<ace:column style="width:#{aicp ? '6':'0'}%;" rendered="#{aicp}">&#160;</ace:column><!-- FREE -->
+			<ace:column style="width:#{aicp ? '27':'22'}%;">&#160;</ace:column>
+			<ace:column style="width:#{aicp ? '9':'7'}%;">&#160;</ace:column>
+			<ace:column style="width:#{aicp ? '8':'5'}%;">&#160;</ace:column>
+			<ace:column style="width:#{aicp ? '12':'8'}%;">&#160;</ace:column>
+			<ace:column style="width:#{aicp ? 'auto':'auto'};">&#160;</ace:column>
+		</ace:row >
+		<ace:row  styleClass="CT txt11">
+			<ace:column rendered="#{aicp}">
+				<h:outputText value="Job #" />
+			</ace:column>
+			<ace:column>
+				<h:panelGroup rendered="#{not aicp}">
+					<div class="W100percnt">
+						<div class="acLoc acHdr">Loc</div>
+						<div class="acPrd acHdr">Prd/Ep</div>
+						<div class="acDtl acHdr">Detail</div>
+						<div class="acSub acHdr">Sub</div>
+						<div class="acSet acHdr">Set</div>
+						<div class="acFr1 acHdr">F1</div>
+						<div class="acFr acHdr">F2</div>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{aicp}">
+					<h:outputText value="Acct #" />
+				</h:panelGroup>
+			</ace:column>
+			<ace:column rendered="#{aicp}">FREE</ace:column>
+			<ace:column>Category</ace:column>
+			<ace:column>Hrs/Qty</ace:column>
+			<ace:column>X</ace:column>
+			<ace:column>Rate</ace:column>
+			<ace:column>Amount</ace:column>
+		</ace:row >
+	</ace:columnGroup>
+
+	<!-- JOB # (for Commercials) -->
+	<ace:column rendered="#{aicp}">
+		<h:panelGroup>
+			<ace:textEntry value="#{entry.jobNumber}"
+				styleClass="tcEdHr" maxlength="15"
+				rendered="#{editHTG and entry.category ne null}" />
+			<h:outputText value="#{entry.jobNumber}"
+				rendered="#{(not editHTG) or entry.category eq null}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- ACCOUNT CODES -->
+	<ace:column>
+		<h:panelGroup rendered="#{entry.category ne null}">
+			<!-- ACCOUNT COLUMNS -->
+			<ui:include src="../tc/accountCodes.xhtml">
+				<ui:param name="edit" value="#{editHTG}" />
+				<ui:param name="rate" value="#{entry.account}" />
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{entry.category eq null}">
+			&#160;
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- FREE -->
+	<ace:column rendered="#{aicp}">
+		<h:panelGroup>
+			<ace:textEntry value="#{entry.accountFree}"
+				styleClass="tcEdHr" maxlength="4"
+				rendered="#{editHTG and entry.category ne null}" />
+			<h:outputText value="#{entry.accountFree}"
+				rendered="#{(not editHTG) or entry.category eq null}" />
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- CATEGORY -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry id="cat" value="#{entry.category}"
+				styleClass="tcEdHr" maxlength="30"
+				size="25" rendered="#{entry.category ne null and editHTG}" />
+			<h:outputText value="#{entry.category}"
+				rendered="#{! editHTG}" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{entry.category eq null and editHTG}">
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectOneMenu
+						style="width:90%;" 
+						valueChangeListener="#{timecardBean.listenPayBreakdownCategory}"
+						value="#{timecardBean.pbCategory}">
+					<f:selectItems value="#{timecardBean.categoryDL}" />
+					<f:ajax execute="@this" render="@all"/>
+				</h:selectOneMenu>
+			</icecore:setEventPhase>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- HOURS -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry value="#{entry.quantity}" 
+					valueChangeListener="#{timecardBean.listenNonDailyChange}"
+					maxlength="10" styleClass="tcEdHr"
+					rendered="#{editHTG and entry.category ne null}" >
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+				<f:ajax execute="@this" render="@all"/>
+			</ace:textEntry>
+			<h:outputText value="#{entry.quantity}"
+					rendered="#{(not editHTG) or entry.category eq null}">
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- MULTIPLIER -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry value="#{entry.multiplier}" 
+					valueChangeListener="#{timecardBean.listenNonDailyChange}"
+					maxlength="8" styleClass="tcEdHr"
+					rendered="#{editHTG and entry.category ne null}" >
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+				<f:ajax execute="@this" render="@all"/>
+			</ace:textEntry>
+			<h:outputText value="#{entry.multiplier}"
+					rendered="#{(not editHTG) or entry.category eq null}">
+				<f:convertNumber type="number" pattern="#,##0.0#####" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- RATE -->
+	<ace:column>
+		<h:panelGroup>
+			<ace:textEntry value="#{entry.rate}" 
+					valueChangeListener="#{timecardBean.listenNonDailyChange}"
+					maxlength="11" styleClass="tcEdDlr"
+					rendered="#{editHTG and entry.category ne null}" >
+				<f:convertNumber type="number" pattern="#,##0.00##" />
+				<f:ajax execute="@this" render="@all"/>
+			</ace:textEntry>
+			<h:outputText value="#{entry.rate}" styleClass="FR pad5rt"
+					rendered="#{(not editHTG) or entry.category eq null}">
+				<f:convertNumber type="number" pattern="#,##0.00##" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+
+	<!-- TOTAL -->
+	<ace:column>
+		<h:panelGroup>
+			<h:outputText value="#{entry.total2}" styleClass="FR pad5rt">
+				<f:convertNumber type="number" pattern="#,##0.00" />
+			</h:outputText>
+		</h:panelGroup>
+	</ace:column>
+</ui:composition>

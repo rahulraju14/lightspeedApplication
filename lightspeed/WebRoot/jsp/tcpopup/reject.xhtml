@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Reject pop-up for Basic Timecard, Full Timecard, and Approver Dashboard pages -->
+	<h:form>
+		<ace:dialog visible="#{bean.visible}"
+				header="#{bean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+
+			<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>	
+
+			<div class="confPopBdy4">
+				<div class="popup_main stdTxt">
+					<h:outputText rendered="#{bean.pinError}" styleClass="RED" />
+
+					<h:outputText escape="false" value="#{bean.message}" />
+
+					<div>
+						<span class="rowCont">
+							<h:selectOneMenu  styleClass="W70percnt"
+									value="#{bean.approverIx}" >
+								<f:selectItems value="#{bean.approverDL}" />
+								<f:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+						</span>
+
+						<span class="rowCont pad20tp">
+							<b>Comment: </b>(optional)
+						</span>
+
+						<span class="rowCont pad5tp">
+							<ace:textAreaEntry styleClass="FL stdTxtArea" value="#{bean.comment}"
+									id="reject_focus"
+									maxlength="1000" style="height:30px;width:95%;font-size:11px;"/>
+						</span>
+
+						<span class="rowCont pad10tp">
+							<h:outputText escape="false" value="#{bean.commentMsg}" />
+							<!-- The above comment will appear in the Comments section of the
+							timecard and will be visible by the employee.  Once entered,
+							it may not be deleted. -->
+						</span>
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<h:panelGroup rendered="#{not empty rejectPromptBean.buttonCancelLabel}">
+						<span class="FR pad5rt">
+							<span class="btnPriEnbLt" />
+							<span>
+								<ace:linkButton value="#{bean.buttonCancelLabel}"
+									action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+					</h:panelGroup>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="#{bean.buttonOkLabel}"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

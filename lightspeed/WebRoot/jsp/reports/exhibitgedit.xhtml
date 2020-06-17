@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} ExhibitG Edit</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<style>
+			.field_in {
+				border:0;
+			}
+			.field, .field_long {
+				border:1px solid #ccc;
+				width:80px;
+			}
+			.field_long {
+				width:120px;
+			}
+		</style>
+
+		<script language="javascript">
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+					element = document.getElementById('fullScrCont');
+					resizeElement(element,226, 350);
+
+				//	element = document.getElementById('exGCont');
+				//	resizeElement(element, 181, 395);
+				</c:if>
+			}
+
+			var formname = "exhibitGEditForm";
+		</script>
+	</h:head>
+
+	<h:body>
+
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+
+		<h:form id="exhibitGEditForm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="reports" />
+			</h:outputText>
+
+			<div id="main">
+				<ui:include src="../common/header2.xhtml" />
+
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+
+							<div id="pnlFull" class="MA">
+
+								<h:panelGroup id="errMsgContFull" styleClass="top43"
+										rendered="#{!exhibitGViewBean.showAddCast}">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="topBdrCont">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div class="rowCont ltrtBdr BKwhite FL">
+
+									<span class="pnlHdrTxt FL">
+										<h:outputText value="Reports"/>
+									</span>
+									<h:panelGroup>
+										<span class="FR pad5rt">
+											<span class="btnPriDisLt" />
+											<span>
+											<ace:linkButton value="Edit" onclick="return false;" styleClass="btnPriDisCt" />
+											</span>
+											<span class="btnPriDisRt" />
+										</span>
+									</h:panelGroup>
+
+								</div>
+
+								<div class="rowCont ltrtBdr BKwhite FL">
+									<div class="centerFullTb MA pad3tp">
+
+										<div class="FL W100percnt">
+
+											<div id="exGCont">
+												<!-- Tabs for Exbt G -->
+												<ace:tabSet id="tabs" selectedIndex="0"
+													width="100%" cellpadding="0" cellspacing="0" border="0">
+
+													<!--  Exbt G Tab   -->
+													<ace:tabPane label="SAG Exhibit G">
+
+														<div id="fullScrCont" class="FL rowCont exhibitg">
+
+															<div class="rowCont CT txt14 B pad10tp">
+																Screen Actors Guild Performers Production Time Report &#160;
+															</div>
+
+															<table width="99%" border="0" cellspacing="0" cellpadding="0" class="MA">
+																<tr>
+																	<td>
+																		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+																			<tr>
+																				<td>
+																					&#160;
+																				</td>
+																			</tr>
+																			<tr>
+																				<td>
+																					<table width="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+																						<tr>
+																							<td width="15%">
+																								<h:outputText value="Picture Title:" styleClass="B"/>
+																							</td>
+																							<td width="30%" class="field_in">
+																								<ace:textEntry size="40" maxlength="100"
+																									value="#{exhibitGViewBean.exhibitG.title}"/>
+																							</td>
+																							<td width="10%">
+																								&#160;
+																							</td>
+																							<td width="10%">
+																								&#160;
+																							</td>
+																							<td width="4%">
+																							</td>
+																							<td width="6%">
+																								<h:outputText value="Date:" styleClass="B"/>
+																							</td>
+																							<td width="20%">
+																								<div class="field">
+																									<h:outputText	value="#{exhibitGViewBean.exhibitG.date}" styleClass="B LH20">
+																										<f:convertDateTime pattern="MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+																									</h:outputText>
+																								</div>
+																							</td>
+																							<td width="5%">
+																								&#160;
+																							</td>
+																						</tr>
+																						<tr>
+																							<td>
+																								<h:outputText value="Company:" styleClass="B"/>
+																							</td>
+																							<td class="field_in">
+																								<ace:textEntry size="40" maxlength="100"
+																									value="#{exhibitGViewBean.exhibitG.company}"/>
+																							</td>
+																							<td align="right">
+																								<h:outputText value="Prod#:" styleClass="B"/>
+																							</td>
+																							<td class="field_in">
+																								<ace:textEntry size="10" maxlength="25"
+																									value="#{exhibitGViewBean.exhibitG.productionNumber}"/>
+																							</td>
+																							<td>
+																							</td>
+																							<td>
+																								<h:outputText value="Contact:" styleClass="B"/>
+																							</td>
+																							<td class="field_in">
+																								<ace:textEntry maxlength="50" styleClass="W210"
+																									value="#{exhibitGViewBean.exhibitG.contactName}"/>
+																							</td>
+																							<td>
+																							</td>
+																						</tr>
+																						<tr>
+																							<td>
+																								<h:outputText value="Shooting Location:" styleClass="B"/>
+																							</td>
+																							<td class="field_in">
+																								<ace:textEntry size="40" maxlength="100"
+																									value="#{exhibitGViewBean.exhibitG.location}"/>
+																							</td>
+																							<td>
+																								&#160;
+																							</td>
+																							<td>
+																								&#160;
+																							</td>
+																							<td>
+																							</td>
+																							<td>
+																								<h:outputText value="Phone:" styleClass="B"/>
+																							</td>
+																							<td class="field_in">
+																								<ace:textEntry maxlength="25" styleClass="W210"
+																									value="#{exhibitGViewBean.exhibitG.contactPhone}">
+																									<f:validator validatorId="lightspeed.phoneNumberValidator" />
+																								</ace:textEntry>
+																							</td>
+																							<td>
+																							</td>
+																						</tr>
+																					</table>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td height="20">
+																					&#160;
+																				</td>
+																			</tr>
+																			<tr>
+																				<td>
+																			
+																					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+																						<tr>
+																							<td width="24%" align="right" class="B">
+																								Is today a designated day off? &#160;
+																							</td>
+																							<td width="10%">
+																								<h:selectBooleanCheckbox
+																									value="#{exhibitGViewBean.exhibitG.dayOff}">
+																								</h:selectBooleanCheckbox>
+																							</td>
+																							<td colspan="5" style="width:56%;">
+																								<h:selectOneRadio id="productionType"
+																									value="#{exhibitGViewBean.exhibitG.type}" layout="lineDirection"
+																									styleClass="h_radio">
+																									<f:selectItem itemLabel="MP" itemValue="FEATURE_FILM" />
+																									<f:selectItem itemLabel="TV" itemValue="TELEVISION_SERIES" />
+																									<f:selectItem itemLabel="MOW" itemValue="TELEVISION_MOVIE" />
+																									<f:selectItem itemLabel="Industrial" itemValue="INDUSTRIAL" />
+																									<f:selectItem itemLabel="Other" itemValue="OTHER" />
+																								</h:selectOneRadio>																							
+																							</td>
+																							<td width="10%">
+																								<h:panelGroup styleClass="FR pad10rt">
+																									<span class="btnMiniLtHot" />
+																									<span>
+																										<ace:linkButton value="Add Cast" action="#{exhibitGViewBean.actionShowAddCast}"
+																											onmouseup="showErrors();" styleClass="btnMiniCt" />
+																									</span>
+																									<span class="btnMiniRtHot" />
+																								</h:panelGroup>
+																							</td>
+																						</tr>
+																					</table>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td height="10">
+																					&#160;
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<ui:include src="exgtable.xhtml">
+																			<ui:param name="editMode" value="true"></ui:param>
+																		</ui:include>
+																	</td>
+																</tr>
+															</table>
+														</div>
+
+													</ace:tabPane>
+												</ace:tabSet>
+											</div>
+
+										</div><!-- end miniView -->
+									</div><!-- end centerFullTab -->
+
+									<div class="rowBtn">
+										<div class="rowBtnBdr"></div>
+										<div class="FL rowCont">
+											<h:panelGroup>
+												<span class="FR pad10rt">
+													<span class="btnPriEnbLt" />
+													<span>
+														<ace:linkButton immediate="true"
+															value="Cancel"
+															action="#{exhibitGViewBean.actionCancel}"
+															styleClass="btnPriEnbCt">
+														</ace:linkButton>
+													</span>
+													<span class="btnPriEnbRt" />
+												</span>
+											</h:panelGroup>
+											<h:panelGroup>
+												<span class="FR pad5rt">
+													<span class="btnSecHotLt" />
+													<span>
+														<ace:linkButton
+															value="Save" onmouseup="showErrors();"
+															action="#{exhibitGViewBean.actionSave}"
+															styleClass="btnSecHotCt">
+														</ace:linkButton>
+													</span>
+													<span class="btnSecHotRt" />
+												</span>
+											</h:panelGroup>
+										</div>
+									</div><!-- end Btn row -->
+
+								</div><!-- end outer list cont -->
+
+								<div class="btmBdrCont">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+
+							</div><!-- end pnlFull -->
+						</div><!--  end pnlCont -->
+					</div><!-- end ctrCont -->
+
+					<div class="CB"></div><!-- clears float for liquid layout -->
+
+				</div><!-- end mainCont -->
+
+
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+
+			</div><!-- end main -->
+		</h:form>
+		<ui:include src="addcast.xhtml" />
+		<ui:include src="../common/releaseNotes.xhtml" />
+
+	</h:body>
+</html>
+

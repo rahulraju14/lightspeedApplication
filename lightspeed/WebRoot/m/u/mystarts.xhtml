@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} My Starts</title>
+
+<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="homem" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad5tp ">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="rowCont pad5lt pad5rt pad80tp LT" style="font-size: 15px;">
+					<h:outputText value="#{msg.Mobile_Mystarts_FullSite}"/>
+				</div>
+				
+				<div class="rowCont pad5lt pad5rt pad15tp LT" style="font-size: 15px;">
+					<h:outputText styleClass="pad2lt pad2rt pad10tp" value="To continue to the My Starts page, click below:" />
+				</div>
+				
+				<div class="inBlock pad30tp">
+					<span class="FL btnPriHotLt"></span>
+					<span>
+						<h:commandLink value="#{headerViewBean.user.showUS ? 'My Starts' : 'My Contracts'} (Full Site)"
+							tabindex="1" action="myforms" styleClass="btnPriHotCt mBtnWide" >
+						</h:commandLink>
+					</span>
+					<span class="FL btnPriHotRt"></span>
+				</div>
+				
+				<div class="CB pad40tp"></div>
+				
+				<ui:include src="../common/errors.xhtml" />
+
+
+
+			</div><!-- end CT of main body -->
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

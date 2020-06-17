@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="formActraIntentTalent" pageWidth="570" pageHeight="400" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5000000000000002"/>
+	<property name="ireport.x" value="129"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="intentId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["select * from talent where Intent_Id = " + $P{intentId}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ssnDAO" class="com.lightspeedeps.dao.FormI9DAO" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\src\\reports-xml\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Minor" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Category" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Shoot_Date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Intent_Id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="14">
+			<line>
+				<reportElement x="161" y="0" width="1" height="14" uuid="faa2135c-daf7-4364-9cc1-724c46ccbf3e"/>
+			</line>
+			<rectangle>
+				<reportElement style="font12Box" mode="Transparent" x="0" y="0" width="569" height="14" uuid="10f30842-d82d-4ab1-b45f-6b6482daaece"/>
+			</rectangle>
+			<line>
+				<reportElement x="327" y="0" width="1" height="14" uuid="0d9c88b8-c643-42a7-85f5-aeeb01983766"/>
+			</line>
+			<line>
+				<reportElement x="220" y="0" width="1" height="14" uuid="7a355fa3-efbb-4db0-a265-bc212376bbb7"/>
+			</line>
+			<line>
+				<reportElement x="392" y="0" width="1" height="14" uuid="9fe54fba-94cd-4f43-8c5a-3fafd2f75294"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="4" y="1" width="157" height="13" uuid="edcf3967-dfe7-4fd6-8a3a-2ab1591e7673"/>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="227" y="1" width="100" height="13" uuid="029b37ce-c434-4f79-8e81-7f7c25a8fc44"/>
+				<textFieldExpression><![CDATA[$F{Category}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="331" y="1" width="61" height="13" uuid="83b70f2d-5bd3-47a1-aa03-9f354d0e6747"/>
+				<textFieldExpression><![CDATA[$F{Shoot_Date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="396" y="1" width="172" height="13" uuid="70bb9f74-5ee3-4e38-9235-ee07df692399"/>
+				<textFieldExpression><![CDATA[$F{Location}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement key="image-2" x="184" y="2" width="14" height="10" uuid="b6fc3750-2081-4ecb-9798-3f2ee4b961f4"/>
+				<imageExpression><![CDATA[$F{Minor} ? $P{imagesPath}+"/check_box.gif" :  $P{imagesPath}+"/check_box_blank.gif"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Box Rental</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('hours:amt').focus();
+}
+
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form id="box">
+
+		<!-- Set the JSF navigation value for the Back button. -->
+		<!-- The leading ? indicates the value is actually a Session attribute key. -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.hoursBackPage" />
+
+			<ui:include src="../common/header.xhtml" />
+
+			<h:panelGroup rendered="#{mobileTimecardBean.editRaw}">
+				<!-- call 'getLockIt()' to lock the timecard if in edit mode; always returns false -->
+				<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+			</h:panelGroup>
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Weekly Box Rental
+				</div>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id eq mobileTimecardBean.tcUser.id}">
+					<div class="txtL2">
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.occupation}" />
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{headerViewBean.user.id ne mobileTimecardBean.tcUser.id}">
+					<div class="prodTitle pad5tp">
+						<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<a id="default" /><!-- default scroll-to-top position -->
+
+				<div class="txtL2 inCtlRow">
+					<span class="midBtn weekEndText">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<!-- Box amount -->
+				<div class="inHrRow LT">
+					<h:outputText value="Amount" styleClass="pad10lt" />
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<ace:textEntry id="amt" styleClass="FR pad15rt W25percnt"
+								tabindex="1" disabled="#{(! mobileTimecardBean.editRaw)}"
+								valueChangeListener="#{mobileTimecardBean.listenBoxRentalAmount}"
+								value="#{mobileTimecardBean.weeklyTimecard.boxRental.amount}" maxlength="9">
+								<ace:ajax />
+						</ace:textEntry>
+					</icecore:setEventPhase>
+				</div>
+
+				<div class="inCtlRow">
+					<span class="FL inBlock ckbx">
+						<h:selectBooleanCheckbox value="#{mobileTimecardBean.weeklyTimecard.boxRental.inventoryOnFile}"
+								disabled="#{! mobileTimecardBean.editRaw}" />
+						<span class="ckbxTxtLbl_B pad5lt">
+							Inventory is on file
+						</span>
+					</span>
+				</div>
+
+				<!-- inventory -->
+				<div class="inCtlRow LT prodTitle">
+					Inventory Description
+				</div>
+				<div class="MA" style="width:90%;">
+					<h:panelGroup rendered="#{mobileTimecardBean.editRaw}">
+						<ace:textAreaEntry styleClass="FL stdTxtArea"
+								value="#{mobileTimecardBean.weeklyTimecard.boxRental.inventoryEdit}"
+								maxlength="2000" style="height:120px;width:100%;"/>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{! mobileTimecardBean.editRaw}"
+							styleClass="infoText LT"
+							style="height:80px;border:1px solid #ccc;overflow-y:auto;overflow-x:hidden;">
+						<div class="MA">
+							<h:outputText value="#{mobileTimecardBean.weeklyTimecard.boxRental.inventory}" escape="false"/>
+						</div>
+					</h:panelGroup>
+					<div class="CB" />
+				</div>
+
+				<div class="CB"/><!-- forces the following "anchor" to be properly located -->
+				<a id="comments" /><!-- comments scroll-to-top position -->
+
+				<!-- COMMENT bar (toggle) -->
+				<div class="CT pad10tp">
+					<div class="mBtnFull inBlock">
+						<h:commandLink value="Comments" onclick="queueClick(this,event);"
+								styleClass="btnPriHotCt mBtnFull"
+								action="#{mobileTimecardBean.actionToggleShowComment}" />
+					</div>
+				</div>
+
+				<!-- COMMENTS section (optional display) -->
+				<h:panelGroup rendered="#{mobileTimecardBean.showComment}">
+
+					<h:panelGroup styleClass="inCtlRow LT" rendered="#{mobileTimecardBean.editRaw}">
+						<span class="LT inBlock" style="width:75%;">
+							<ace:textEntry value="#{mobileTimecardBean.newBoxComment}"
+									style="width:100%;" maxlength="500">
+							</ace:textEntry>
+						</span>
+						<h:panelGroup styleClass="inBlock FR">
+							<span class="FL btnPriHotSmLt"></span>
+							<h:commandLink value="Add" styleClass="btnPriHotSmCt"
+								action="#{mobileTimecardBean.actionAddBoxComment}" />
+							<span class="FL btnPriHotSmRt"></span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<div class="inCtlRow">
+						<span class="LT">
+							<h:outputText value="#{mobileTimecardBean.weeklyTimecard.boxRental.comments}"
+									styleClass="area1" escape="false"/>
+						</span>
+					</div>
+
+				<hr style="margin-bottom:0px;" />
+
+				</h:panelGroup>
+				<!-- END comments section -->
+
+				<!-- Buttons -->
+				<div class="inCtlRow pad15tp">
+
+					<h:panelGroup styleClass="FR inBlock" rendered="#{mobileTimecardBean.editRaw}">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="Enter" onclick="queueClick(this,event);"
+								action="#{mobileTimecardBean.actionEnterBoxRental}" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR inBlock" rendered="#{(! mobileTimecardBean.editRaw)}">
+						<span class="FL btnPriDisLt"></span>
+						<span>
+							<h:commandLink value="Enter" type="text" styleClass="btnPriDisCt" />
+						</span>
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+				</div>
+
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

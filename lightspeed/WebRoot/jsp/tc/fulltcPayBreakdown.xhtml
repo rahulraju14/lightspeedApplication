@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Pay Breakdown section of the Full Timecard pages -->
+
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+	<!-- disablePayBreakdownLines: if true pay breakdown lines are disabled in edit mode. -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" /> 
+	<div class="CB"></div>
+	<div class="blueLegendContWrap MA">
+		<h:panelGroup styleClass="blueLegendCont pad12tp FL" rendered="#{fullTimecardBean.showPrivate}">
+			<div class="legendHdg">PAY BREAKDOWN</div>
+
+			<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+				<!-- AUTO PAY BUTTON -->
+				<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.editHtg) and
+						(fullTimecardBean.weeklyTimecard.id ne null)}">
+					<span class="btnMiniLtHot"/>
+						<ace:linkButton value="Auto Pay"
+							action="#{fullTimecardBean.actionAutoPay}" styleClass="btnMiniCt"
+							onmouseup="showErrors();" onclick="queueClick(this,event);" />
+					<span class="btnMiniRtHot"/>
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="btn_legend" rendered="#{(fullTimecardBean.editHtg) and
+						(fullTimecardBean.weeklyTimecard.id ne null) and not disablePayBreakdownLines}">
+					<span class="btnMiniLtHot"/>
+						<ace:linkButton value="Insert Row"
+							action="#{fullTimecardBean.actionInsertPayLine}" styleClass="btnMiniCt"
+							onmouseup="showErrors();" onclick="queueClick(this,event);" />
+					<span class="btnMiniRtHot"/>
+				</h:panelGroup>
+			</div>
+
+			<ace:dataTable id="cpaybrk"
+				styleClass="gradTbl2 txt11 CT"
+				rowStyleClass="CT txt12"
+				value="#{fullTimecardBean.weeklyTimecard.payLines}"
+				var="entry" rowIndexVar="rowIndex"
+				style="width:100%;max-width:100%;overflow-x:hidden;">
+
+				<ui:include src="payBreakdown.xhtml">
+					<ui:param name="timecardBean" value="#{fullTimecardBean}"></ui:param>
+					<ui:param name="entry" value="#{entry}"></ui:param>
+					<ui:param name="status" value="#{status}"></ui:param>
+					<ui:param name="editHTG" value="#{fullTimecardBean.editHtg}"></ui:param>
+					<ui:param name="aicp" value="#{aicp}"></ui:param>
+					<ui:param name="rowIndex" value="#{rowIndex}"></ui:param>
+					<ui:param name="disablePayBreakdownLines" value="#{disablePayBreakdownLines}" />
+				</ui:include>
+
+			</ace:dataTable>
+		</h:panelGroup>
+
+		<!-- TOTALS -->
+		<h:panelGroup styleClass="#{aicp ? 'W80percnt' : 'W22percnt FR'}" rendered="#{fullTimecardBean.showPrivate}">
+			<h:panelGroup styleClass="FL pad10tp W80percnt" rendered="#{aicp and fullTimecardBean.isEmpDeptCast or useModelRelease}"><!-- LS-4806 allow Grand Total red text for model timecard -->
+				<h:panelGroup styleClass="FR">
+				<h:outputText value="#{msg.Timecard_Agent_Commission_Disclaimer}" styleClass="RED B"/>
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:panelGroup styleClass="DIB FR #{aicp ? '' : 'W100percnt'}" style="border:solid 1px black;">
+				<h:outputText
+					styleClass="FL pad10lt B" style="width: 20%;" value="Grand Total" />
+				<h:panelGroup rendered="#{fullTimecardBean.showPrivate}">
+					<h:outputText
+							styleClass="FR B pad5rt txt13 pad10tp"
+							value="#{fullTimecardBean.weeklyTimecard.grandTotal}" >
+							<f:convertNumber type="number" pattern="#,##0.00" />
+					</h:outputText>
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:panelGroup>
+	</div><!-- end blueLegendContWrap for pay breakdown -->
+</ui:composition>

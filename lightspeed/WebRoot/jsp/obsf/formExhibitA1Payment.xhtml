@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+
+	<div class="txt12 FL W990">
+		<h:outputText value="#{msg.Talent_US_A1_Payment_Directions}"/>
+		
+		<div class="FL W650 pad5tp">
+			<div class="W650 FL">
+				<h:selectBooleanCheckbox styleClass="ckbx FL" id="performerAddress"
+						value="" disabled="#{!editable}">
+				</h:selectBooleanCheckbox>
+				<div class="pad5tp pad3lt FL">
+					<h:outputText value="To Performer at W-4 address on page 2"/>
+				</div>
+			</div>
+			<br/>
+			<div class="W650 FL pad3tp">
+				<h:selectBooleanCheckbox styleClass="ckbx FL" id="performerCOAddress"
+						value="" disabled="#{!editable}">
+				</h:selectBooleanCheckbox>
+				<span class="FL pad2lt pad5tp">
+					<h:outputText styleClass="FL pad3lt" value="To Performer c/o:"/>
+				</span>
+				<div class="FL" >
+					<h:outputText styleClass="txt10 FL pad5lt pad6tp" value="(name)"/>
+					<span class="FL pad3bm pad3lt">
+						<ace:textEntry value="" styleClass="W450 FL" maxLength="" id="coName" rendered="#{editable}" />
+					</span>
+					<h:outputText value="" rendered="#{not editable}" />
+					<br/>
+					<h:outputText styleClass="txt10 FL pad5lt pad6tp" value="(address)"/>
+					<span class="FL pad3bm pad3lt">
+						<ace:textEntry value="" styleClass="FL W440" maxLength="" id="coAddress" rendered="#{editable}" />
+					</span>
+					<h:outputText value="" rendered="#{not editable}" />					
+				</div>
+			</div>	
+		</div>
+		<div class="FL W335 pad4tp pad5lt">
+			<h:outputText styleClass="I txt10" value="All notices to Performer shall be sent to the address designated at left for payments
+				and, if Performer desires, to one other address as follows:" />
+			<div class="FL pad3tp" >
+				<h:outputText styleClass="txt10 FL pad6tp" value="Name:"/>
+				<span class="FL pad3lt">
+					<ace:textEntry value="" styleClass="W290 FL" maxLength="" id="otherNoticeName" rendered="#{editable}" />
+				</span>
+				<h:outputText value="" rendered="#{not editable}" />
+				<br/>
+				<span class="pad4tp FL pad3lt">
+					<h:outputText styleClass="txt10 FL pad6tp" value="Address:"/>
+					<span class="FL pad3lt">
+						<ace:textEntry value="" styleClass="FL W280" maxLength="" id="otherNoticeAddress" rendered="#{editable}" />
+					</span>
+					<h:outputText value="" rendered="#{not editable}" />		
+				</span>
+			</div>				
+		</div>
+	</div>
+</ui:composition>	

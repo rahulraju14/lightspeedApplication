@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!--  parameters:
+	item      - the EmploymentDocuments entry
+	typeName  - the PayrollFormType enum name
+ -->
+ 	<c:set var="bean" value="#{transferDocBean}" /><!-- the "document name" -->
+ 	
+ 	<c:set var="typeHeading" value="#{bean.getTypeColHeading(typeName)}" /><!-- column heading -->
+ 	<c:set var="typeLabel" value="#{bean.getTypeLabel(typeName)}" /><!-- the "document name" -->
+
+ 	<c:set var="count" value="#{(item.mapOfDocumentItems[typeName]).docCount}" />
+ 	<c:set var="docInfo" value="#{(item.mapOfDocumentItems[typeName]).docInfo}" />
+
+	<!-- ONE COLUMN for PayrollFormType 'formType' -->
+	<ace:column headerText="#{typeHeading}" styleClass="W100 CT" 
+		rendered="#{transferDocBean.formTypeList.contains(typeLabel)}">
+		<div class="rowCont">
+			<span class="FL" style="width:25%">
+				<!-- First render a checkbox if this entry can be transferred. -->
+				<h:panelGroup rendered="#{item.mapOfDocumentItems[typeName].checkType}">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<span class="pad5tp">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<ace:triStateCheckbox id="#{typeName}_form" value="#{item.mapOfDocumentItems[typeName].checkBox.value}"
+									indeterminateBeforeChecked="true" 
+									style="#{(count ne null) and (count ne 0) and (docInfo eq null) ? 'margin-top:3px;' : 'margin-top:5px;'}"
+									valueChangeListener="#{transferDocBean.listenFormTypeCheck}">
+									<f:attribute name="employmentId" value="#{item.employmentId}" /> <!-- Added for LS-2492 -->
+								<ace:ajax execute="@form"/>
+							</ace:triStateCheckbox>
+						</icecore:setEventPhase>
+					</span>
+						<!-- <h:selectBooleanCheckbox value="#{item.selectType[typeName]}"
+								valueChangeListener="#{transferDocBean.listenSingleInnerCheck}"
+								styleClass="iceSelBoolChkbx">
+								<f:attribute name="type" value="#{typeName}" />
+								<f:attribute name="employmentId" value="#{item.employmentId}" />
+							<ace:ajax />
+						</h:selectBooleanCheckbox> -->
+					</icecore:setEventPhase> 
+				</h:panelGroup>
+			</span>
+			<!-- For multiple documents, render the count overlaying a standard icon, and make it a link -->
+			<h:panelGroup rendered="#{(count ne null) and (count ne 0) and (docInfo eq null)}">
+				<div style="margin-left:30%;">
+					<ace:linkButton styleClass="bk_transferdoc FR #{item.mapOfDocumentItems[typeName].checkType ? '' : 'pad-2tp'}"
+							actionListener="#{transferDocBean.actionSelectDocuments}" value="#{count}"
+							title="Multiple documents, click to select">
+							<h:outputText styleClass="#{item.mapOfDocumentItems[typeName].checkType? 'docCountCheck' : 'docCount'}"/>
+						<f:attribute name="type" value="#{typeName}" />
+						<f:attribute name="employmentId" value="#{item.employmentId}" />
+						<ace:ajax />
+					</ace:linkButton>
+				</div>
+			</h:panelGroup>
+			<!-- Render the appropriate document icon for single-document cells -->
+			<h:panelGroup rendered="#{(count eq null or count eq 1) and docInfo ne null}">
+				<div style="width:27px;margin-left:26%;"
+						class="docIcon#{docInfo.status}#{(docInfo.timeSent ne null) and
+							(docInfo.status.finalized or docInfo.status.sealed) ? '_XF' : ''} W50percnt"
+						title="#{docInfo.status.iconTitle}">
+					<h:outputText value="&#160;" />
+				</div>
+			</h:panelGroup>
+			<h:panelGroup class="FL" style="margin-left: 52px;" rendered="#{(count eq null or count eq 1) and docInfo ne null}">
+			<h:graphicImage url="../../i/icon_doc_sent_to_performer.png" alt="" rendered="#{item.mapOfDocumentItems[typeName].sentPerformer}" />
+			<h:graphicImage url="../../i/icon_doc_sent_to_union.png" alt=""  style="margin-left: 3px;" rendered="#{item.mapOfDocumentItems[typeName].sentUnion}"/>
+			<h:graphicImage url="../../i/icon_doc_sent_to_tps.png" alt="" style="margin-left: 3px;" rendered="#{item.mapOfDocumentItems[typeName].sentTPS}"/>
+			</h:panelGroup>
+		</div>
+	</ace:column>
+
+</ui:composition>

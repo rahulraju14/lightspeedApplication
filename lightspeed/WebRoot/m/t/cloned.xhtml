@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<!-- Clone operation is done - report results. -->
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Timecards Cloned</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="clonem" />
+
+		<ui:include src="../common/header.xhtml" />
+			<!-- calls 'getLockIt()' to lock the timecard; always returns false -->
+			<h:outputText style="visibility:hidden;" value="#{mobileTimecardBean.lockIt}" />
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Timecard(s) Cloned
+				</div>
+
+				<h:panelGroup>
+					<div class="prodTitle pad5tp">
+						<h:outputText value="#{ mobileTimecardBean.tcUser.lastNameFirstName}" />
+					</div>
+					<div class="infoText">
+						<h:outputText value="#{mobileTimecardBean.position}" />
+					</div>
+				</h:panelGroup>
+
+				<!-- WEEK ENDING DATE -->
+				<div class="pad10tp">
+					<span class="weekEndTextMed">
+						W/E
+						<h:outputText value="#{mobileTimecardBean.weeklyTimecard.endDate}" styleClass="pad5lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileTimecardBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<!-- optional wrapper for hiding most of page -->
+				<h:panelGroup rendered="true">
+
+					<a id="default" /><!-- default scroll-to-top position -->
+
+					<!-- SELECT DAYS BANNER -->
+					<div class="statusBannerP">
+						<div class="CT inBlock">
+							<h:outputText styleClass="pad10rt" value="Results" />
+						</div>
+					</div>
+
+
+					<!-- ALL SUCCESSFUL -->
+					<h:panelGroup rendered="#{cloneResultsBean.clonedOk}">
+						<div class="infoText pad10tp">
+							<h:panelGroup>
+								Cloning completed.
+							</h:panelGroup>
+						</div>
+						<div class="infoText pad10tp">
+							<h:outputText value="All selected timecards (#{cloneResultsBean.cloned}) were cloned successfully.">
+								<br/>
+							</h:outputText>
+						</div>
+					</h:panelGroup>
+
+					<!-- ERRORS -->
+					<h:panelGroup rendered="#{! cloneResultsBean.clonedOk}">
+						<div class="infoText pad10tp errorMsgTxt">
+							<h:panelGroup>
+								Cloning completed with errors.
+							</h:panelGroup>
+				 			<h:outputText styleClass="errors"
+								value="Only #{cloneResultsBean.cloned} timecards were cloned." />
+						</div>
+						<div class="infoText pad10tp">
+							<h:panelGroup>
+								The following recipient timecards were locked<br/>
+								and could not be cloned:
+							</h:panelGroup>
+						</div>
+						<div class="LT pad20lt pad10tp">
+							<ui:repeat value="#{cloneResultsBean.failedList}" var="entry">
+								<div class=" ">
+									<!-- Name -->
+								 	<h:outputText styleClass="LT" value="#{entry.name}" />
+								</div>
+							</ui:repeat>
+						</div>
+					</h:panelGroup>
+
+					<ui:include src="../common/errors.xhtml" />
+
+					<div class="twoBtnRow">
+						<span class="inBlock FR">
+							<span class="FL btnPriHotLt"/>
+							<span>
+								<h:commandLink value="Continue"
+									tabindex="4" action="pickdaym"
+									styleClass="btnPriHotCt" style="font-size:24px;" />
+							</span>
+							<span class="FL btnPriHotRt"/>
+						</span>
+					</div>
+
+				</h:panelGroup>
+				<!-- END of optional wrapper -->
+
+			</div>
+
+			<div class="pad20tp CB"/>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

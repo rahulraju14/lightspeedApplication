@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Job Splits section of the Full Timecard pages -->
+
+	<!-- Job Splits wrapper -->
+	<div class="blueLegendContWrap MA">
+		<h:panelGroup rendered="#{(! fullTimecardBean.expandSplit) and (not empty authBean.pgFields['9.1,view_htg'])}">
+			<!-- collapsed header for Pay Jobs -->
+			<div class="blueLegendCont pad12tp FL"><!-- Blue content -->
+				<h:commandLink value=" " styleClass="legendHdg" title="Show Job Split table"
+						action="#{fullTimecardBean.actionToggleSplit}">
+					<h:graphicImage value="" url="../../i/plus.gif" style="height:14px;" alt=""/>
+				</h:commandLink>
+				<span class="legendHdg">Job Splits</span>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{(fullTimecardBean.expandSplit) and (not empty authBean.pgFields['9.1,view_htg'])}">
+			<div class="blueLegendCont pad12tp FL">
+				<h:commandLink value=" " styleClass="legendHdg" title="Hide Job Split table"
+						action="#{fullTimecardBean.actionToggleSplit}">
+					<h:graphicImage value="" url="../../i/minus.gif" style="height:14px;" alt="" />
+				</h:commandLink>
+				<div class="legendHdg">Job Splits</div>
+				<div class="FL rowCont gradTbl2">
+					<!-- Daily timecard section -->
+					<ace:dataTable styleClass="gradTbl2 txt11 CT" id="jsplit"
+						value="#{fullTimecardBean.weeklyTimecard.dailyTimes}"
+						var="dailyTime" rowStyleClass="CT txt11"
+						style="width:100%;max-width:100%;overflow-x:hidden;">
+
+						<ui:include src="fulltcSplitLine.xhtml" /><!-- ** Include all daily columns ** -->
+
+					</ace:dataTable>
+
+					<div class="pad5tp pad5bm">
+						<h:outputText styleClass="pad10lt pad3bm txt11" rendered="#{not empty fullTimecardBean.submitMsg}"
+								value="#{fullTimecardBean.submitMsg}"/>
+					</div>
+				</div><!-- End gradient table wrapper -->
+			</div>
+		</h:panelGroup>
+	</div><!-- end container wrapper for Job Splits table -->
+</ui:composition>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pw1HrsByRate" pageWidth="120" pageHeight="842" columnWidth="120" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d85c1c4b-95d7-4aef-a1ee-e8bd92e7c373">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="weeklyId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ifnull(sum(hours_10),0) hr10,
+	ifnull(sum(hours_15),0) hr15,
+	ifnull(sum(hours_cust1),0) hrCust1,
+	ifnull(sum(hours_cust2),0) hrCust2,
+	ifnull(sum(hours_cust3),0) hrCust3,
+	ifnull(sum(hours_cust4),0) hrCust4,
+	(pj.custom_mult1 >= 2.0) m1hi,
+	(pj.custom_mult2 >= 2.0) m2hi,
+	(pj.custom_mult3 >= 2.0) m3hi,
+	(pj.custom_mult4 >= 2.0) m4hi,
+	w.allow_worked
+	from weekly_time_card w, pay_job pj, pay_job_daily pjd
+	where w.id = $P{weeklyId} and pj.weekly_id = w.id and pjd.job_id = pj.id;]]>
+	</queryString>
+	<field name="hr10" class="java.math.BigDecimal"/>
+	<field name="hr15" class="java.math.BigDecimal"/>
+	<field name="hrCust1" class="java.math.BigDecimal"/>
+	<field name="hrCust2" class="java.math.BigDecimal"/>
+	<field name="hrCust3" class="java.math.BigDecimal"/>
+	<field name="hrCust4" class="java.math.BigDecimal"/>
+	<field name="m1hi" class="java.lang.Boolean"/>
+	<field name="m2hi" class="java.lang.Boolean"/>
+	<field name="m3hi" class="java.lang.Boolean"/>
+	<field name="m4hi" class="java.lang.Boolean"/>
+	<field name="allow_worked" class="java.lang.Boolean"/>
+	<variable name="total2x" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[($F{m1hi} ? $F{hrCust1} : BigDecimal.ZERO).add($F{m2hi} ? $F{hrCust2} : BigDecimal.ZERO).add($F{m3hi} ? $F{hrCust3} : BigDecimal.ZERO).add($F{m4hi} ? $F{hrCust4} : BigDecimal.ZERO)]]></variableExpression>
+	</variable>
+	<variable name="total1plus" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{hr15}.add($F{m1hi} ? BigDecimal.ZERO : $F{hrCust1}).add($F{m2hi} ? BigDecimal.ZERO : $F{hrCust2}).add($F{m3hi} ? BigDecimal.ZERO : $F{hrCust3}).add($F{m4hi} ? BigDecimal.ZERO : $F{hrCust4})]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement uuid="3034035e-506e-49b7-965c-f2e099770319" style="tcDefault" stretchType="RelativeToBandHeight" x="0" y="0" width="40" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{allow_worked} ? null :
+  ($F{hr10}.signum()==0 ? null : $F{hr10})
+)]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement uuid="62d13502-4b81-4d55-a061-2b9d90c2aa8e" style="tcDefault" stretchType="RelativeToBandHeight" x="40" y="0" width="40" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{allow_worked} ? null :
+  ($V{total1plus}.signum()==0 ? null : $V{total1plus})
+)]]></textFieldExpression>
+			</textField>
+			<textField pattern="##.##" isBlankWhenNull="true">
+				<reportElement uuid="97b2024f-2987-428c-bde7-f1e8e75775ff" style="tcDefault" stretchType="RelativeToBandHeight" x="80" y="0" width="40" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{allow_worked} ? null :
+  ($V{total2x}.signum()==0 ? null : $V{total2x})
+)]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

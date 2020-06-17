@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{callSheetViewBean.showMakeFinal}"
+				header="Make Call Sheet Final?"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{callSheetViewBean.actionMakeFinalCancel}"/>		
+
+			<div id="popAddElemBdy">
+				<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div id="printScriptCont">
+
+					<div class="popup_main">
+						<div class="rowCont pad20tp">&#160;
+						</div>
+						<div class="W80percnt MA stdTxt">
+
+							<div class="rowCont">
+								Finalizing the Call Sheet will move it from
+								Preliminary status to Final status and
+								will publish it to members of the production.
+							</div>
+
+							<div class="W90percnt MA pad40lt pad26tp">
+								Place a checkmark next to the notifications you want
+								automatically distributed:
+
+								<div class="rowCont pad10tp pad10lt">
+									<h:selectBooleanCheckbox styleClass="ckbx"
+										value="#{callSheetViewBean.sendCallTimes}" />
+									Deliver individual Call Times via email&#160;
+									<h:outputText value="and mobile texts"
+										rendered="#{headerViewBean.production.smsEnabled}"/>
+									<br/>
+									<h:outputText styleClass="pad30lt"
+										value="(elapsed Call Times will not be delivered)" />
+								</div>
+
+								<div class="rowCont pad10tp pad10lt" >
+									<h:selectBooleanCheckbox styleClass="ckbx"
+										value="#{callSheetViewBean.sendCallSheets}">
+										<ace:ajax/>
+									</h:selectBooleanCheckbox>
+										Email Call Sheets
+									<div class="rowCont pad20lt" >
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											rendered="#{callSheetViewBean.sendCallSheets}"
+											value="#{callSheetViewBean.sendLocationReports}" />
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											rendered="#{not callSheetViewBean.sendCallSheets}"
+											disabled="true"
+											value="#{applicationScopeBean.unchecked}" />
+											Include #{headerViewBean.domainTabTitle}-generated Location Report(s)
+									</div>
+								</div>
+							</div>
+
+							<div class="rowCont pad20tp B">
+							Select OK to continue.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR padPop25rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{callSheetViewBean.actionMakeFinalCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="OK"
+								action="#{callSheetViewBean.actionMakeFinalOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+
+</ui:composition>

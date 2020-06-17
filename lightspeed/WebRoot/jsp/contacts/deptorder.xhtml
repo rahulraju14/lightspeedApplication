@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Change Department Order pop-up dialog from the Department page -->
+
+<h:form id="deptorder">
+	<ace:dialog visible="#{departmentOrderBean.visible}"
+			header="Manage Departments"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{departmentOrderBean.actionClose}"/>
+
+		<h:panelGroup>
+		<div class="popupBdyA">
+
+			<div class="popCont90">
+				<div class="popup_main stdTxt">
+
+					<div class="rowCont pad10tp">
+						<h:panelGroup styleClass="FL">
+							Select a department and use the arrows to change its
+							order in the Department List. Use the check boxes to
+							mark a department as "In Use" or not.
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont pad10tp">
+						<!-- column for up/down arrow controls -->
+						<h:panelGroup styleClass="FL W10percnt">
+							<div style="margin-top:100px;height:30px;text-align:right;">
+								<h:commandButton value="" action="#{departmentOrderBean.actionMoveDeptUp}"
+										title="Move the selected department up in the list"
+										styleClass="Btn btnArrowUpCircle">
+									<ace:ajax />
+								</h:commandButton>
+							</div>
+							<div style="height:30px;text-align:right;">
+								<h:commandButton value="" action="#{departmentOrderBean.actionMoveDeptDown}"
+										title="Move the selected department down in the list"
+										styleClass="Btn btnArrowDownCircle">
+									<ace:ajax></ace:ajax>
+								</h:commandButton>
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="FL W5percnt">
+							&#160;
+						</h:panelGroup>
+
+						<h:panelGroup styleClass="FL W80percnt">
+
+							<h:panelGroup styleClass="FR pad10bm">
+								<span class="FL pad10lt">
+									<span class="btnSecHotLt"/>
+									<ace:linkButton value="Check All" tabindex="2"
+										action="#{departmentOrderBean.actionCheckAll}" styleClass="btnSecHotCt" />
+									<span class="btnSecHotRt"/>
+								</span>
+								<span class="FL pad10lt">
+									<span class="btnSecHotLt"/>
+									<ace:linkButton value="Un-check All" tabindex="3"
+										action="#{departmentOrderBean.actionUncheckAll}" styleClass="btnSecHotCt" />
+									<span class="btnSecHotRt"/>
+								</span>
+							</h:panelGroup>
+
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:dataTable styleClass="bk_sl_grid"
+										selectionMode="single"
+										stateMap="#{departmentOrderBean.selectDeptList.stateMap}"
+										rowSelectListener="#{departmentOrderBean.selectDeptList.rowSelected}"
+										style="width:100%;max-width:100%;"
+										scrollable="true" scrollHeight="280"
+										value="#{departmentOrderBean.selectDeptList.list}" var="dept">
+
+									<!-- CHECKBOX -->
+									<ace:column headerText="" styleClass="CT" style="border:0;width:10%">
+										<h:selectBooleanCheckbox
+												disabled="#{dept.unique}"
+												valueChangeListener="#{departmentOrderBean.listenCheckActive}"
+												value="#{dept.active}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</ace:column>
+
+									<!-- NAME-->
+									<ace:column headerText="Department Name" styleClass="B_false" style="width:90%;">
+							 			<h:outputText value="#{dept.name}" />
+									</ace:column>
+								</ace:dataTable>
+							</icecore:setEventPhase>
+
+						</h:panelGroup>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="popBtnCont4">
+				<h:panelGroup>
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{departmentOrderBean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup styleClass="FR pad10rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Save"
+							action="#{departmentOrderBean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</h:panelGroup>
+			</div>
+		</div>
+		</h:panelGroup>
+
+</ace:dialog>
+</h:form>
+
+</ui:composition>

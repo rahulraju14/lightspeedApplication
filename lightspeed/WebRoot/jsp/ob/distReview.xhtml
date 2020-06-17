@@ -1,0 +1,341 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<c:set var="show" value="#{not empty authBean.pgFields['10.2,view']}" />
+
+<ace:tabPane label="#{show ? 'Distribution &amp; Review' : ''}" disabled="#{not show}">
+
+<div id="scrolltop" class="scrollPnlTab" style="margin-top:-1px;">
+	<div style="width:98%;margin-left:2%;margin-top:15px;">
+
+		<div class="rowCont LH26">
+			<div class="W35percnt FL pad4tp">
+				<h:outputText styleClass="txt12 B" value="Filter:" />
+				<h:outputText styleClass="txt12 B pad20lt" value="Document:" />
+				<icecore:setEventPhase events="ValueChangeEvent"
+								phase="INVOKE_APPLICATION">
+					<h:selectOneMenu id="dept" immediate="true" styleClass="pad8lt"
+							value="#{statusListBean.selectedDocumentId}" style="width:200px;"
+							valueChangeListener="#{statusListBean.listenDocumentChange}">
+						<f:selectItems value="#{statusListBean.documentListDL}"/>
+						<ace:ajax />
+					</h:selectOneMenu>
+				</icecore:setEventPhase>
+			</div>
+
+			<h:panelGroup>
+				<!-- SHOW ALL PROJECTS CHECKBOX -->
+				<div style="margin-left:35%;">
+					<h:panelGroup rendered="#{aicp and (not empty authBean.pgFields['10.5,all_projects'])}">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectBooleanCheckbox value="#{statusListBean.showAllProjects}"
+								valueChangeListener="#{statusListBean.listenAllProjects}"
+								styleClass="iceSelBoolChkbx">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						Show all #{statusListBean.projectLbl}
+					</icecore:setEventPhase>
+					</h:panelGroup>
+					&#160;
+				</div>
+			</h:panelGroup>
+
+			<!-- Me CHECKBOX -->
+			<div style="margin-left:53%;margin-top :-27px;">
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox value="#{statusListBean.docsRequireAttn}"
+							valueChangeListener="#{statusListBean.listenRequireAttention}"
+							styleClass="iceSelBoolChkbx">
+						<ace:ajax />
+					</h:selectBooleanCheckbox>
+					Display only those documents requiring my attention
+				</icecore:setEventPhase>
+			</div>
+
+			<!-- color check boxes start -->
+			<div style="margin-left : 62%; margin-top : -55px;">
+				<h:panelGroup rendered="#{statusListBean.statusType eq 'EMPLOYEE_DETAIL'}">
+					<h:outputText styleClass="txt12 B" value="Status Color Display:" />
+					<h:selectBooleanCheckbox  style="margin-left:5px" value="#{statusListBean.redChecked}"
+						styleClass="iceSelBoolChkbx">
+						<ace:ajax />
+					</h:selectBooleanCheckbox>
+					<h:outputText value="Red"/>
+					<div style="margin-left: 26%; margin-top: -5px;">
+						<h:selectBooleanCheckbox value="#{statusListBean.yellowChecked}" styleClass="iceSelBoolChkbx">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						<h:outputText value="Yellow"/>
+					</div>
+					<div style="margin-left: 26%; margin-top: -5px;">
+						<h:selectBooleanCheckbox value="#{statusListBean.greenChecked}" styleClass="iceSelBoolChkbx">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						<h:outputText value="Green"/>
+					</div>
+				</h:panelGroup>
+			</div>
+			<!-- color check boxes end -->
+		</div>
+
+		<!--Start Contact List-->
+		<h:panelGroup rendered="#{statusListBean.statusType eq 'EMPLOYEE_STATUS'}">   <!-- Employee status view rendered -->
+			<!-- legend for contact list start -->
+			<div class="blueLegendContWrap">
+				<div class="blueLegendCont"
+						style="width:54%;margin-left:-2%;margin-top:15px;">
+					<span class="legendHdg">Employees</span>
+					<h:panelGroup rendered="#{(headerViewBean.miniTab eq 1) and (statusListBean.statusType eq 'EMPLOYEE_STATUS')
+										and not empty authBean.pgFields['10.2,distribute']}">
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Send Pending Docs"
+									action="#{statusListBean.actionSendPendingDocuments}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="btn_legend pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Issue Starts"
+									action="#{statusListBean.actionDeliverStarts}"
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<div class="FL W100percnt">
+						<ace:dataTable id="statusTable"
+							value="#{statusListBean.employmentList}" var="item"
+							rowIndexVar="idx"
+							scrollable="true"
+							selectionMode="single"
+							scrollHeight="310"
+							rowSelectListener="#{statusListBean.listenRowClicked}"
+							styleClass="bk_sl_grid" singleSort="true"
+							stateMap="#{statusListBean.stateMap}"
+							filterListener="#{statusListBean.onFilterChange}">
+
+							<ace:column styleClass="W5percnt CT">
+								<f:facet name="header">
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox
+											value="#{statusListBean.checkedForAll}"
+											styleClass="iceSelBoolChkbx"
+											valueChangeListener="#{statusListBean.listenCheckedForAll}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</f:facet>
+								<div>
+									<icecore:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox value="#{item.checked}"
+											valueChangeListener="#{statusListBean.listenSingleCheck}"
+											styleClass="iceSelBoolChkbx">
+											<ace:ajax />
+											<f:attribute name="selectedRow" value="#{item}"></f:attribute>
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+								</div>
+							</ace:column>
+
+							<!-- the Name -->
+							<ace:column id="Name" headerText="Name" styleClass="W20percnt CT"
+								filterBy="#{item.contact.user.lastNameFirstName}" style="text-align:left;"
+								filterMatchMode="contains" sortBy="#{item.contact.user.lastNameFirstName}">
+									<h:outputText value="#{item.contact.user.lastNameFirstName}" />
+							</ace:column>
+
+							<!-- the Status -->
+							<ace:column id="Status" headerText="Status" styleClass="W10percnt CT">
+								<div style="width:100%" class="FL BKgrey">
+									<div style="width:#{item.percentageArray[0]}%" class="FL bkDocGreen">
+										<h:outputText >&#160;</h:outputText>
+									</div>
+									<div style="width:#{item.percentageArray[2]}%" class="FL bkDocYellow">
+										<h:outputText >&#160;</h:outputText>
+									</div>
+									<div style="width:#{item.percentageArray[1]}%" class="FL bkDocRed">
+										<h:outputText >&#160;</h:outputText>
+									</div>
+									<div style="width:#{item.percentageArray[3]}%" class="FL bkDocBlack">
+										<h:outputText >&#160;</h:outputText>
+									</div>
+								</div>
+							</ace:column>
+
+							<!-- the Count -->
+							<ace:column id="Count" headerText="Count" styleClass="W10percnt CT"
+								sortBy="#{item.docSortCount}" style="text-align:left;">
+								<h:outputText style="margin-left:14px" value="#{item.docCountByStatus}/#{item.docCount}"/>
+							</ace:column>
+
+						    <!-- the Department -->
+							<ace:column id="Department" headerText="Department" styleClass="W20percnt CT"
+								filterBy="#{item.department.name}" sortBy="#{item.department.name}"
+								filterMatchMode="contains" style="text-align:left;">
+									<h:outputText value="#{item.department.name}" />
+							</ace:column>
+
+							 <!-- the Occupation -->
+							<ace:column id="Occupation" headerText="Occupation"
+								styleClass="W25percnt CT" style="text-align:left;"
+								sortBy="#{item.occupation}">
+									<h:outputText value="#{item.occupation}"/>
+							</ace:column>
+
+						</ace:dataTable>
+					</div>
+				</div>
+
+			</div>
+			<!--End Contact List-->
+
+			<!--Start Document List-->
+
+			<!-- legend for contact list start -->
+			<div class="blueLegendContWrap" style="width:100%;">
+				<div class="blueLegendCont"
+						style="width:46%;margin-left:1%;margin-top:15px;">
+					<span class="legendHdg">
+						<h:outputText rendered="#{not empty statusListBean.employment.contact}"
+								value="Documents Sent: #{statusListBean.employment.contact.user.firstName} #{statusListBean.employment.contact.user.lastName}" />
+						<h:outputText rendered="#{empty statusListBean.employment.contact}" value="Documents Sent" />
+					</span>
+					<h:panelGroup styleClass="btn_legend pad10rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="View Starts"
+								styleClass="btnMiniCt"
+								action="payrollStart">
+								<f:setPropertyActionListener value="com.lightspeedeps.employmentId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{statusListBean.employment.id}" target="#{jumpBean.value}"/>
+								<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+								<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{statusListBean.employment.contact.id}" target="#{jumpBean.value}"/>
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<div class="FL W100percnt">
+						<ace:dataTable id="contactDocTable"
+							value="#{statusListBean.contactDocumentList}" var="item"
+							rowIndexVar="idx"
+							scrollable="true"
+							scrollHeight="335"
+							styleClass="bk_sl_grid">
+
+							<!-- delete [cross] button -->
+							<ace:column styleClass="W5percnt CT">
+								<h:commandButton rendered="#{((not item.disableJump) or (not empty authBean.pgFields['10.2,distribute'])) and
+									((item.status eq 'OPEN') or (item.status eq 'PENDING'))}"
+									value="" styleClass="deleteXbtn"
+									action="#{statusListBean.actionDeleteContactDoc}" title="Delete employee's copy">
+										<f:setPropertyActionListener value="#{item}" target="#{statusListBean.contactDocToDelete}"/>
+								</h:commandButton>
+							</ace:column>
+
+							<!-- PACKET Name -->
+							<ace:column id="packetName" headerText="Packet Name" styleClass="W25percnt CT">
+								<!-- <div class="FL pad10lt"> -->
+									<h:outputText rendered="#{item.packetName ne null}" value="#{item.packetName}"
+										styleClass="#{item.disableJump ? 'unavailable' : ''}" />
+										<!-- LS-2073 Packet Name verbiage change  -->
+									<h:outputText rendered="#{item.packetName eq null}" value="#{headerViewBean.production.type.canadaTalent ? 'Without Packet':'Sent Without Packet'}"
+										styleClass="#{item.disableJump ? 'unavailable' : ''}"/>
+								<!-- </div> -->
+							</ace:column>
+
+							<!-- Status Icon -->
+							<ace:column id="Status" headerText="Status" style="width:3%" styleClass="CT">
+								<h:panelGroup rendered="#{not item.disableJump}">
+									<div class="docIconBtn#{item.viewStatus}">
+										<ace:pushButton title="#{item.viewStatus.iconTitle}" action="payrollStart">
+											<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="#{item.id}" target="#{jumpBean.value}"/>
+										</ace:pushButton>
+									</div>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{item.disableJump}">
+									<div class="docIcon#{item.viewStatus}" title="#{item.viewStatus.iconTitle}"
+										style="width:27px;min-width:27px;margin-left:28%;">
+										<h:outputText value="&#160;" />
+									</div>
+								</h:panelGroup>
+							</ace:column>
+
+							<!-- the Document chain name -->
+							<ace:column id="Document" headerText="Document" styleClass="W22percnt CT" style="text-align:left;">
+								<!-- <div class="pad10lt" style="text-align: left;"> -->
+									<h:outputText value="#{item.documentChain.normalizedName}" title="#{item.document.normalizedName}"
+										styleClass="#{item.disableJump ? 'unavailable' : ''}"  rendered="#{item.documentChain ne null}"/>
+									<h:outputText value="*#{item.document.type}*" title="#{item.document.normalizedName}"
+									 rendered="#{item.documentChain eq null}" styleClass="#{item.disableJump ? 'unavailable' : ''}"/>
+								<!-- </div> -->
+							</ace:column>
+
+							<!-- the Revision (unused) -->
+							<!-- <ace:column id="Revision" headerText="Rev" style="width:10%;">
+								<h:outputText value="#{item.document.revision}"/>
+							</ace:column> -->
+
+						    <!-- Sent Date -->
+							<ace:column id="Sent" headerText="Sent" styleClass="W25percnt CT">
+								<h:outputText value="#{item.delivered}" styleClass="#{item.disableJump ? 'unavailable' : ''}">
+									<f:convertDateTime pattern="M/d/yyyy h:mm a" timeZone="#{applicationScopeBean.timeZone}"/>
+								</h:outputText>
+							</ace:column>
+
+							<!-- Waiting For (Approver) -->
+							<ace:column id="WaitingFor" headerText="WaitingFor" styleClass="W20percnt CT">
+								<h:outputText value="#{item.waitingFor}" escape="false"
+									styleClass="#{item.disableJump ? 'unavailable' : ''}"/>
+							</ace:column>
+
+						</ace:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:panelGroup><!-- Employee status view ends -->
+
+		<!-- Document Status View Start - ->
+		<h:outputText rendered="#{statusListBean.statusType eq 'DOCUMENT_STATUS'}">
+			<ui:include src="docStatus.xhtml">
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:outputText> <!- - Document Status View Ends -->
+
+		<!-- Employee Detail View Start - ->
+		<h:outputText rendered="#{statusListBean.statusType eq 'EMPLOYEE_DETAIL'}">
+			<ui:include src="empDetail.xhtml">
+				<ui:param name="aicp" value="#{aicp}" />
+			</ui:include>
+		</h:outputText> <!- - Document Status View Ends -->
+
+		<!--End Document List -->
+	</div>
+
+	<div class="rowBtnLgd">
+		<div class="rowBtnBdr"></div>
+		<h:panelGroup styleClass="rowCont FL CT" rendered="#{statusListBean.statusType eq 'EMPLOYEE_STATUS'}">
+			<div class="FL pad2tp pad17lt">
+				<h:graphicImage styleClass="FL pad5lt"  url="../../i/blackBox.png" alt="" />
+				<h:outputText styleClass="FL pad5lt pad2tp" value="Pending/Held" />
+				<h:graphicImage styleClass="FL pad15lt"  url="../../i/redBox.png" alt="" />
+				<h:outputText styleClass="FL pad5lt pad2tp" value="Not Submitted" />
+				<h:graphicImage styleClass="FL pad15lt"  url="../../i/yellowBox.png" alt="" />
+				<h:outputText styleClass="FL pad5lt pad2tp" value="Awaiting Approval" />
+				<h:graphicImage styleClass="FL pad15lt" url="../../i/greenBox.png" alt="" />
+				<h:outputText styleClass="FL pad5lt pad2tp" value="Completed" />
+			</div>
+		</h:panelGroup>
+	</div><!-- end Lt Legend -->
+</div><!--End Blue legend  -->
+
+</ace:tabPane>
+</ui:composition>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+
+<!--
+	Compress js and css files.
+  -->
+<!-- this XML won't validate, as our Ant XSD doesn't include the <macrodef> target.
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:noNamespaceSchemaLocation="file:///E:/Programs/ant/ant-schema.xsd"
+		default="build" name="lightspeedCompression">
+  -->
+
+<project
+		default="build" name="lightspeedCompression">
+
+	<import file="macrodefs.xml" />
+
+	<property name="src.dir" location="${basedir}/WebRoot"/>
+	<property name="src.dir.css" location="${basedir}/src/c-uncompressed"/>
+	<property name="src.dir.js"  location="${basedir}/src/js-uncompressed"/>
+	<property name="build.dir"   location="${basedir}/WebRoot"/>
+	<property name="build.dir.css" location="${build.dir}/resources"/>
+	<property name="build.dir.js"  location="${build.dir}/resources"/>
+	<property name="build.desktop.js"  location="${build.dir.js}/script.js"/>
+	<property name="build.mobile.js"  location="${build.dir.js}/script_m.js"/>
+	<property name="build.jar" location="${basedir}/external/compressor.jar"/>
+
+	<target name="clean">
+		<delete file="${build.desktop.js}"/>
+		<delete file="${build.mobile.js}"/>
+		<delete file="${build.dir.js}/script.js"/>
+		<delete file="${build.dir.js}/script_m.js"/>
+		<delete file="${build.dir.js}/stripboard.js"/>
+		<delete file="${build.dir.css}/global.css"/>
+		<delete file="${build.dir.css}/global_m.css"/> <!-- "_m" for mobile prod only -->
+		<delete file="${build.dir.css}/global_mdev.css"/> <!-- "_devm" for mobile dev only -->
+		<delete file="${build.dir.css}/stripboard.css"/>
+		<delete file="${build.dir.css}/stripboard_m.css"/>
+		<delete file="${build.dir.css}/stripboard_devm.css"/>
+	</target>
+
+	<target name="prepare">
+		<!--
+		<tstamp/>
+		<echo message="js source = ${src.dir.js}"/>
+		<echo message="css source = ${src.dir.css}"/>
+		-->
+	</target>
+
+	<fileset id="no-munge.js.files" dir="${src.dir.js}">
+		<include name="*.uc.js"/>
+	</fileset>
+	<fileset id="css.files" dir="${src.dir.css}">
+		<include name="*.uc.css"/>
+	</fileset>
+
+	<target name="compress" depends="prepare" description="Minify js and css files">
+		<echoTS message="Compressing ..."/>
+		<yui-compress todir="${build.dir.js}" yui-switches="--nomunge">
+			<fileset refid="no-munge.js.files"/>
+		</yui-compress>
+		<yui-compress todir="${build.dir.css}" yui-switches="--type css">
+			<fileset refid="css.files"/>
+		</yui-compress>
+	</target>
+
+	<target name="combine" depends="compress" description="Concatenate js files">
+		<concat destfile="${build.desktop.js}" append="no" fixlastline="yes" overwrite="no">
+			<filelist dir="${build.dir.js}">
+				<file name="script_desktop.js"/>
+				<file name="script_common.js"/>
+			</filelist>
+		</concat>
+		<concat destfile="${build.mobile.js}" append="no" fixlastline="yes" overwrite="no">
+			<filelist dir="${build.dir.js}">
+				<file name="script_mobile.js"/>
+				<file name="script_common.js"/>
+			</filelist>
+		</concat>
+	</target>
+
+	<target name="build" depends="combine">
+		<echoTS message="compress done."/>
+	</target>
+
+</project>

@@ -1,0 +1,477 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Section B of the ACTRA Contract - TIMECARD SECTION plus INITIALS
+
+		Params:
+			bean: the backing bean for the current form (e.g., FormActraContractBean)
+			form: the FormActraContract instance currently displayed
+			isEmployee: the current user is the employee/performer (document owner)
+			isApprover: the current user is a possible approver
+			empEdit: the employee is editing the form
+			appEdit: an approver is editing the form
+	-->
+	<div class="FL" style="width:1150px;">
+
+		<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+		
+		<div class="FR pad10rt">
+			<h:outputText rendered="#{bean.addMoreInfo}" style="font-size:10px" value="Page 2 of 2" />
+		</div>
+		
+		<div class="FL rowCont pad10tp">
+			<h:panelGroup styleClass="FL" rendered="#{not isEmployee}">
+				<icecore:setEventPhase events="ValueChangeEvent"
+					phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox id="addMoreInfo" disabled="#{not isAppEdit}"
+						value="#{bean.addMoreInfo}"
+						valueChangeListener="#{bean.listenAddMoreInfo}"
+						styleClass="iceSelBoolChkbx FL pad-1tp">
+						<ace:ajax render="@form" execute="@form"/>
+					</h:selectBooleanCheckbox>
+				</icecore:setEventPhase>
+				<span class="FL" style="width:221px;">Other contractual obligations</span>
+			</h:panelGroup>
+			<h:outputText value="#{msg.Form_ActraContract_Text5}" styleClass="rowCont" style="font-size:10px;" escape="false"/>
+		</div>
+		
+		<div class="FL rowCont pad10tp">
+		
+			<ace:dataTable styleClass="gradTbl2 txt11 CT" id="actraTimeSheetList"
+				value="#{bean.actraTimesheetList}"
+				var="entry" rowIndexVar="rowix"
+				rowStyleClass="CT txt12"
+				style="width:99%;max-width:100%;overflow-x:hidden; 
+				border-width:1px 0px 1px 1px;border-style:solid;border-color:#ccc;margin-top:-5px;">
+				<ace:columnGroup type="header">
+					<ace:row>
+						<ace:column style="width:90px;">DATE</ace:column>
+						<ace:column style="width:120px;" colspan="2">TRAVEL TIME</ace:column>
+						<ace:column style="width:65px" rowspan="2" headerText="CALL&lt;/br&gt;TIME"></ace:column>
+						<ace:column style="width:120px" colspan="2">MEAL TIME</ace:column>
+						<ace:column style="width:65px" rowspan="2" headerText="FINISH&lt;/br&gt;TIME"></ace:column>
+						<ace:column style="width:160px" colspan="2">TRAVEL TIME</ace:column>
+						<ace:column style="width:90px">DATE</ace:column>
+						<ace:column style="width:90px"></ace:column>
+						<ace:column style="width:115px">CALL TIME</ace:column>
+						<ace:column style="width:135px">FINISH TIME</ace:column>
+					</ace:row>
+					<ace:row>
+						<!-- 1. DATE -->
+						<ace:column style="80px;"></ace:column>
+						
+						<!-- 2.1 TRAVEL TIME -->
+						<ace:column style="width:60px;">HOME</ace:column>
+						<!-- 2.2 TRAVEL TIME -->
+						<ace:column style="width:60px;">TO LOC.</ace:column>
+						
+						<!-- 3. CALL TIME -->
+						<!-- uses rowspan=2 -->
+						
+						<!-- 4.1 MEAL TIME -->
+						<ace:column style="width:60px;">FROM</ace:column>
+						
+						<!-- 4.2 MEAL TIME -->
+						<ace:column style="width:60px;">TO</ace:column>
+						
+						<!-- 5. FINISH TIME -->
+						<!-- uses rowspan=2 -->
+						
+						<!-- 6.1 TRAVEL TIME -->
+						<ace:column style="width:60px;">LOCATION</ace:column>
+						
+						<!-- 6.2 TRAVEL TIME -->
+						<ace:column style="width:90px;">TO HOME</ace:column>
+						
+						<!-- 7. DATE -->
+						<ace:column></ace:column>
+						
+						<!-- 8. CALL TYPE -->
+						<ace:column></ace:column>
+						
+						<!-- 9. CALL TIME -->
+						<!-- uses rowspan=2 -->
+						<ace:column></ace:column>
+						
+						<!-- 10. FINISH TIME -->
+						<!-- uses rowspan=2 -->
+						<ace:column></ace:column>
+					</ace:row>
+				</ace:columnGroup>
+
+				<!-- LINE NUMBER + DELETE ICON -->
+				<!-- <ace:column>
+					<h:panelGroup rendered="#{true}">
+						<h:commandButton value=""  tabindex="-1"
+								style="width:45%;" styleClass="LT deleteXbtn" title="Delete this Line Item">
+						</h:commandButton>
+						<h:outputText value="#{rowix+1}" styleClass="LT" style="width:50%;"/>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{! editExp}">
+						<h:outputText value="#{rowix+1}" styleClass="FL" style="width:99%;"
+								rendered="#{entry.category ne null}" />
+					</h:panelGroup> 
+				</ace:column> -->
+
+				<!-- 1. DATE -->
+				<ace:column>
+					<h:panelGroup>
+						<span class="fd_sm">
+							<ace:dateTimeEntry id="entrydate1"
+								tabindex="0"
+								renderAsPopup="true"
+								styleClass="pad3lt FL"
+								value="#{entry.date1}"
+								disabled="#{not isAppEdit}"
+								style="width:60px; display: grid;">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</span>
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- 2.1 TRAVEL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="travelFrom1" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.travelFrom1}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				<!-- 2.2 TRAVEL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="travelTo1" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.travelTo1}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				
+				<!-- 3. CALL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="callTime1" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.callTime1}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+
+				<!-- 4.1 MEAL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="m1Out" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.m1Out}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				<!-- 4.2 MEAL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="m1In" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.m1In}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				
+				<!-- 5. FINISH TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="finishTime1" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.finishTime1}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+
+				<!-- 6.1 TRAVEL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="travelFrom2" maxlength="8" disabled="#{not isAppEdit}" value="#{entry.travelFrom2}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				<!-- 6.2 TRAVEL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="travelTo2"  maxlength="8" disabled="#{not isAppEdit}" value="#{entry.travelTo2}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column> 
+				
+				<!-- 7. DATE -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<h:panelGroup>
+						<span class="fd_sm">
+							<ace:dateTimeEntry
+							id = "entrydate2"
+								tabindex="0"
+								renderAsPopup="true"
+								styleClass="FL pad4lt"
+								value="#{entry.date2}"
+								disabled="#{not isAppEdit}"
+								style="width:73px; display:grid;">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+						</span>
+					</h:panelGroup>
+				</ace:column>
+
+				<!-- 8. CALL TYPE -->
+				<ace:column styleClass="CT" style="padding-left:0px;padding-right:0px;">
+					<h:panelGroup styleClass="CT">
+						<h:selectOneMenu id="callType" styleClass="W90percnt"
+							style="width:157px;height:18px;"
+							value="#{entry.callType}"
+							disabled="#{not isAppEdit}">
+							<f:selectItems value="#{entry.callTypeList}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</ace:column>
+				
+				<!-- 9. CALL TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="callTime2"  maxlength="8" disabled="#{not isAppEdit}" style="width:60px;" value="#{entry.callTime2}">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+
+				<!-- 10. FINISH TIME -->
+				<ace:column style="padding-left:0px;padding-right:0px;">
+					<ace:textEntry id="finishTime2"  maxlength="8" disabled="#{not isAppEdit}" value="#{entry.finishTime2}" style="width:60px;">
+						<f:converter converterId="lightspeed.DecimalTimeFormatConverter" />
+					</ace:textEntry>
+				</ace:column>
+				
+				<ace:columnGroup type="footer" >
+					<ace:row>
+						<ace:column style="font-weight:normal;border-right: 1px solid #ccc;border-top: 1px solid #ccc" colspan="11">
+								<h:outputText style="float:right" value="SUBSTANTIAL SNACK" />
+						</ace:column>
+						<ace:column style="border-right: 1px solid #ccc;border-top: 1px solid #ccc">
+							<h:panelGroup>
+								<h:outputText styleClass="FL pad5tp" value="YES" style="font-weight:normal;" />
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<ace:radioButton value="#{bean.ndm[0]}" id="snackYes"
+											disabled="#{not isAppEdit}"  valueChangeListener="#{bean.listenSnackYes}"
+											styleClass="FL pad5lt">
+										<ace:ajax/>
+									</ace:radioButton >
+								</icecore:setEventPhase>
+							</h:panelGroup>
+						</ace:column>
+						<ace:column style="border-right: 1px solid #ccc;border-top: 1px solid #ccc">
+							<h:panelGroup>
+								<h:outputText styleClass="FL pad5tp" value="NO" style="font-weight:normal;" />
+								<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+									<ace:radioButton  value="#{bean.ndm[1]}" id="snackNo"
+											disabled="#{not isAppEdit}" valueChangeListener="#{bean.listenSnackNo}"
+											styleClass="FL pad5lt">
+										<ace:ajax/>
+									</ace:radioButton >
+								</icecore:setEventPhase>
+							</h:panelGroup>
+						</ace:column>
+					</ace:row>
+					
+					<!-- SECOND FOOTER ROW -->
+					<ace:row>
+						<ace:column style="font-weight:normal;border-right: 1px solid #ccc;border-top: 1px solid #ccc;
+							background-color:white;text-align:justify;" 
+							colspan="8">
+							<h:outputText styleClass="txt8 LT RED pad5rt" escape="false" 
+								style="width:657px;" value="#{msg.Form_ActraContract_Text6}" />
+						</ace:column>
+						
+						<ace:column style="font-weight:normal;border-right:1px solid #ccc;border-top: 1px solid #ccc;
+							background-color:white;text-align:left;" 
+							colspan="2">
+							<h:panelGroup styleClass="FL pad-5tp">
+								<h:outputText styleClass="LT txt9" value="PERFORMER INITIALS"/>
+								<br/>
+								<h:panelGroup>
+									<h:outputText styleClass="FL txt8 B" value="#{msg.Form_ActraContract_Text7}" escape="false" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</ace:column>
+						
+						<ace:column style="font-weight:normal;border-right:1px solid #ccc;border-top:1px solid #ccc;background-color:white;">
+							<h:panelGroup>
+								<div class="FL" style="border-right:1px solid #ccc;height:70px;margin-top:-17px; margin-bottom:-2px;width:51px;"  >
+									<div class="FL" style="border-bottom:1px solid #ccc; width:61px; margin-left:-10px;height:40px;">
+										<h:outputText value="AGREE" escape="false" styleClass="txt9 FL B pad20lt pad25tp" />
+									</div>
+									<div class="FL pad4tp">
+										<h:outputText value="DISAGREE" escape="false" styleClass="txt9 B FL pad4tp"/>
+									</div>
+								</div>
+			
+								<c:set var="showEmpButtons" value="#{(not bean.contactDoc.status.finalized) and
+										bean.contactDoc.empAgrees eq null and bean.contactDoc.empDisagrees eq null}" />
+								<c:set var="enableInit" value="#{isEmployee and (bean.contactDoc.empSignature ne null) and
+										(bean.contactDoc.employerSignature ne null) and not bean.timesheetEmpty}" />
+			
+								<div class="FL" style="height:52px;width:68px;"  >
+									<div class="FL" style="border-bottom:1px solid #ccc; width:95px;height:23px;">
+										
+										<!-- AGREE Initial Button  -->
+										<h:panelGroup styleClass="btn_legend_left pad10tp pad15lt" style="float:left;" rendered="#{showEmpButtons}">
+											<h:panelGroup rendered="#{enableInit}">
+												<span class="btnMiniLtHot" />
+												<ace:linkButton value="Initial" id="actionEmployeeInit"
+														action="#{contactFormBean.actionEmployeeInit}"
+														title="Initial here to agree with contract terms" styleClass="btnMiniCt" />
+												<span class="btnMiniRtHot" />
+											</h:panelGroup>
+											<h:panelGroup rendered="#{not enableInit}">
+												<span class="btnMiniLt"/>
+												<span>
+													<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+												</span>
+												<span class="btnMiniRt"/>
+											</h:panelGroup>
+										</h:panelGroup>
+										<!-- Initial Button End -->
+										<span class="pad5lt">
+											<h:outputText escape="false" styleClass="txt12" rendered="#{bean.contactDoc.empAgrees ne null}">
+												<h:outputText value=" #{bean.contactDoc.empAgrees.initials}" styleClass="B txtBlue" />
+											</h:outputText>
+										</span>
+									</div>
+									
+									<div class="FL" style="width:81px;height:23px;">
+										<!-- DISAGREE Initial Button  -->
+										<h:panelGroup styleClass="btn_legend_left pad13tp pad15lt" style="float:left;" rendered="#{showEmpButtons}">
+											<h:panelGroup rendered="#{enableInit}">
+												<span class="btnMiniLtHot" />
+												<ace:linkButton value="Initial" id="actionEmployeeInitDisagree"
+														action="#{contactFormBean.actionEmployeeInitDisagree}"
+														title="Initial here to DISAGREE with contract terms" styleClass="btnMiniCt" />
+												<span class="btnMiniRtHot" />
+											</h:panelGroup>
+											<h:panelGroup rendered="#{not enableInit}">
+												<span class="btnMiniLt"/>
+												<span>
+													<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+												</span>
+												<span class="btnMiniRt"/>
+											</h:panelGroup>
+										</h:panelGroup>
+										<!-- Initial Button End -->
+										<span class="pad5lt">
+											<h:outputText escape="false" styleClass="txt12" rendered="#{bean.contactDoc.empDisagrees ne null}">
+												<h:outputText value=" #{bean.contactDoc.empDisagrees.initials}" styleClass="B txtBlue" />
+											</h:outputText>
+										</span>
+									</div>
+								</div>
+							</h:panelGroup>
+						</ace:column>
+						
+						<ace:column style="font-weight:normal;border-right:1px solid #ccc;border-top: 1px solid #ccc;
+							background-color:white;text-align:justify;" colspan="2">
+							<div class="FL W140 pad10tp">
+								<h:outputText value="ENGAGER/REPRESENTATIVE INITIALS" escape="false" styleClass="txt9 FL" />
+							</div>
+							<div class="FL" style="width:70px;height:50px;border-left:1px solid #ccc">
+								<!-- ENGAGER INITIAL BUTTON  -->
+								<!-- LS-1963 -->
+							    <c:set var="repCanInit" value="#{isApprover and
+										(bean.contactDoc.employerSignature ne null) and (bean.contactDoc.empSignature ne null) and (bean.timesheetEmpty or (bean.contactDoc.empAgrees ne null or bean.contactDoc.empDisagrees ne null))}" />
+								<h:panelGroup styleClass="btn_legend_left pad20tp pad15lt" style="float:left;"
+										rendered="#{(not bean.contactDoc.status.finalized)}">
+									<h:panelGroup rendered="#{repCanInit}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Initial" id="actionEmployerInitAgree"
+												action="#{contactFormBean.actionEmployerInit}"
+												title="Initial here to complete this contract" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{not repCanInit}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+								<span class="pad5lt">
+								    <h:outputText escape="false" styleClass="txt12" rendered="#{bean.contactDoc.approvalSignature ne null}">
+										<h:outputText value=" #{bean.contactDoc.approvalSignature.initials}" styleClass="B txtBlue" />
+									</h:outputText>
+								</span>
+							</div>
+						</ace:column>
+<!--						
+						<ace:column style="font-weight:normal;border-right:1px solid #ccc;border-top: 1px solid #ccc;background-color:white;">
+							<h:panelGroup>
+								<!- - ENGAGER INITIAL BUTTON  - ->
+								<c:set var="repCanInit" value="#{isApprover and
+										(bean.contactDoc.employerSignature ne null) and (bean.contactDoc.empSignature ne null)}" />
+								<h:panelGroup styleClass="btn_legend_left pad20tp" style="float:left;margin-left:-3px"
+										rendered="#{(not bean.contactDoc.status.finalized)}">
+									<h:panelGroup rendered="#{repCanInit}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Initial" id="actionEmployerInitAgree"
+												action="#{contactFormBean.actionEmployerInit}"
+												title="Initial here to complete this contract" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{not repCanInit}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Initial" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+								<!- - Initial Button End - - >
+								<span class="pad5lt">
+									<h:outputText escape="false" styleClass="txt12" rendered="#{bean.contactDoc.approvalSignature ne null}">
+										<h:outputText value=" #{bean.contactDoc.approvalSignature.initials}" styleClass="B txtBlue" />
+									</h:outputText>
+								</span>
+							</h:panelGroup>
+						</ace:column>
+-->						
+					</ace:row>
+				</ace:columnGroup>
+			</ace:dataTable>
+			
+		</div>
+		
+		<!-- DON'T NEED "ADD LINE" button
+		<div class="FL rowCont">
+			<h:panelGroup rendered="#{bean.addMoreInfo}" styleClass="FL pad10tp">
+				<span class="FR pad5rt">
+					<span class="btnPriHotLt"/>
+					<span>
+					<ace:linkButton value="Add Line" styleClass="btnPriHotCt" action="#{bean.actionAdd}" />
+					</span>
+					<span class="btnPriHotRt"/>
+				</span>
+			</h:panelGroup>
+		</div>
+		 -->
+		
+		<div class="FL rowCont">
+		
+			<h:panelGroup>
+				<!-- <h:selectOneMenu styleClass="FL W90percnt"
+					style="width:157px;height:18px;"
+					disabled="#{not isAppEdit}"  >
+					<f:selectItems value="#{bean.callTypeList}" />
+					<ace:ajax />
+				</h:selectOneMenu> -->
+				<!-- 
+				<ace:comboBox value="#{bean.callType}"
+						valueChangeListener="#{bean.callTypeChange}" style="position: relative; z-index: 950;" showListOnInput="true" >
+					<f:selectItems value="#{bean.callTypeList}" />
+					<ace:ajax execute="@this" render="@all" />
+					<ace:ajax event="blur" execute="@this" render="@all" />
+				 </ace:comboBox>
+				 
+				 <h:panelGroup styleClass="pad20lt">
+					<h:outputText style="margin-left:20px;" value=" #{bean.callType}" />
+				</h:panelGroup> 
+				 -->
+			</h:panelGroup>
+					
+			<h:panelGroup layout="block" styleClass="CT RED pad5lt pad5rt pad30tp">
+				<h:outputText value="#{msg.Form_ActraContract_Text8}" escape="false" />
+			</h:panelGroup>
+			
+			<div style="height=20px;">&#160;</div>
+		</div>
+	</div>
+</ui:composition>

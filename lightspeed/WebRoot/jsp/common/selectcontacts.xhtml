@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Select contacts for some process, e.g., sending reports or scripts -->
+
+<h:form>
+	<c:set var="bean" value="#{selectContactsBean}" />
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+
+		<div class="popAddElemBdy">
+
+			<!-- Current users of this popup don't issue any error messages
+			<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</div>
+			 -->
+
+			<div class="popCont90">
+				<div class="popup_main">
+
+					<div class="rowCont ckbxTxtLbl">
+						<h:panelGroup rendered="#{headerViewBean.production.type.episodic
+								or ((headerViewBean.project.hasUnits) and (bean.unit ne null))}">
+							<div class="pad5tp DIB">
+								<h:selectBooleanCheckbox styleClass="FL"
+										value="#{bean.projectOnly}"
+										valueChangeListener="#{bean.listenChangeProjectOnly}" >
+									<ace:ajax render="@all" />
+								</h:selectBooleanCheckbox>
+								<h:panelGroup styleClass="FL" rendered="#{headerViewBean.production.type.episodic
+										and (headerViewBean.project.hasUnits) and (bean.unit ne null)}">
+									Only show people linked to this
+									<h:selectOneMenu styleClass="pad10lt"
+											valueChangeListener="#{bean.listenChangeOnlyOption}"
+											value="#{bean.onlyOption}">
+										<f:selectItem itemLabel="Project" itemValue="P"/>
+										<f:selectItem itemLabel="Unit" itemValue="U" />
+										<ace:ajax />
+									</h:selectOneMenu>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL" rendered="#{headerViewBean.production.type.episodic
+										and ((not headerViewBean.project.hasUnits) or (bean.unit eq null))}">
+									Only show people linked to this project.
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL" rendered="#{! headerViewBean.production.type.episodic}">
+									Only show people linked to this unit.
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont pad5tp FL" style="width:45%;">
+						Departments &amp; People
+						<ace:dataTable rendered="#{bean.visible}"
+								style="border:1px solid gray;"
+								styleClass="gradTbl2n BKwhite"
+								scrollable="true" scrollHeight="240"
+								value="#{bean.unselectedList}"
+								var="item">
+							<ace:column style="width:40px;padding-left:5px;padding-right:10px;">
+								<h:commandButton value="" action="#{bean.actionAdd}"
+										image="#{(item.selected) ? '../../i/icon_user_add.png' : '../../i/icon_group_add.png'}">
+									<f:setPropertyActionListener value="#{item.id}" target="#{bean.addId}" />
+								</h:commandButton>
+							</ace:column>
+							<ace:column styleClass="B_false">
+								<h:outputText value="#{((!item.selected) ? ' Dept: ' : ' ')}#{item.name}" />
+							</ace:column>
+						</ace:dataTable>
+					</div>
+
+					<div class="rowCont padPop5tp FR" style="width:45%;">
+						Recipients
+						<ace:dataTable rendered="#{bean.visible}"
+								style="border:1px solid gray;"
+								styleClass="gradTbl2n BKwhite"
+								scrollable="true" scrollHeight="240"
+								value="#{bean.selectedList}"
+								var="item">
+							<ace:column style="width:40px;padding-left:5px;padding-right:10px;">
+								<h:commandButton value="" action="#{bean.actionRemove}"
+										image="#{(item.selected) ? '../../i/icon_user_delete.png' : '../../i/icon_group_delete.png'}">
+									<f:setPropertyActionListener value="#{item.id}" target="#{bean.removeId}" />
+								</h:commandButton>
+							</ace:column>
+							<ace:column styleClass="B_false">
+								<h:outputText value="#{((!item.selected) ? ' Dept: ' : ' ')}#{item.name}" />
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</div>
+
+			<div class="popBtnCont4">
+				<span class="FR padPop25rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel"
+								action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad10rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Send"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

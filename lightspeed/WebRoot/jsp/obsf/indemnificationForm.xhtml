@@ -1,0 +1,359 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<h:panelGroup label="Indemnification Form" >
+		<div class="miniTab pad15lt" style="width:820px;">
+
+			<!-- scrolling container -->
+			<div class="BKwhite sfFormBorder1">
+				<div class="pad15lt pad10rt" style="width:815px;">
+
+					<div class="rowCont FL" style="margin-left:205px">
+						<h:outputText styleClass="FL B pad30tp U txt16" value="CORPORATION INDEMNIFICATION AGREEMENT" />
+					</div>
+
+					<div class="FL rowCont">
+						<span class="FL pad3tp" style="margin-left:105px">
+							<h:outputText styleClass="FL pad15tp txt13" value="Please check to indicate company is a" />
+							<h:outputText style="color:red;" styleClass="pad15tp FL" value="*" />
+							<h:outputText styleClass="pad15tp FL" value=":" />
+						</span> 
+						<h:selectOneRadio id="indemCompanyType" 
+							styleClass="h_radio fd_sm"
+							style="margin-top:13px" layout="lineDirection"
+							value="#{formIndemBean.form.companyType}"
+							disabled="#{not formIndemBean.empEdit}">
+							<f:selectItem itemLabel="Corporation (Inc.)" itemValue="false" />
+							<f:selectItem itemLabel="Limited Liability Company (&quot;LLC&quot;)"  itemValue="true" />
+							<ace:ajax />
+						</h:selectOneRadio>
+					</div>
+
+					<div class="rowCont pad10lt FL">
+						<h:outputText styleClass="FL pad10tp txt13" escape="false"
+							value="As an inducement to The TEAM Companies, Inc. (&quot;TTC&quot;),
+							to make payments to the Corporation or LLC &amp;nbsp;(as indicated above) named," />
+					</div>
+					<div class="rowCont pad8lt FL">
+						<h:panelGroup>
+							<h:outputText style="color:red;" styleClass="pad1tp FL" value="*" />
+							<span class="FL fd_sm2 pad1lt pad1tp #{empty (formIndemBean.form.companyName) ? 'requiredField' : ''}"
+								style="width:500px;">
+								<ace:textEntry maxlength="35"
+									value="#{formIndemBean.form.companyName}"
+									disabled="#{not formIndemBean.empEdit}"
+									style="width:98%; height:10px; border-bottom:solid 1px;"/>
+							</span>
+						</h:panelGroup>
+						<h:outputText styleClass="FL pad7tp pad3lt txt13" escape="false"
+							value=",(&quot;Company&quot;), in respect of services rendered" />
+					</div>
+					<div class="rowCont pad8lt FL">
+						<h:outputText styleClass="FL pad5tp txt13" escape="false" value="by" />
+						<h:outputText style="color:red;" styleClass="pad2tp FL" value="*" />
+						<h:panelGroup >
+							<span class="FL fd_sm pad3lt pad2tp #{empty (formIndemBean.form.workerName) ? 'requiredField' : ''}"
+								style="width:356px">
+								<ace:textEntry maxlength="60"
+									value="#{formIndemBean.form.workerName}"
+									disabled="#{not formIndemBean.empEdit}"
+									style="width:96%; height:10px; border-bottom:solid 1px;"/>
+							</span>
+						</h:panelGroup>
+						<h:outputText styleClass="FL pad5tp txt13" escape="false"
+							value="(&quot;Worker&quot;) on its behalf without withholding federal or state payroll or"/>
+					</div>
+					<div class="pad10lt FL" style="width:820px">
+						<h:outputText styleClass="FL pad2tp txt13" escape="false"
+							value="any other applicable employer or &amp;nbsp;employee taxes,&amp;nbsp; Company and Worker,&amp;nbsp; jointly and
+							severally,&amp;nbsp; represent,&amp;nbsp; warrant,&amp;nbsp; and &amp;nbsp; agree &amp;nbsp;as" />
+						<h:outputText styleClass="FL pad2tp txt13 rowCont" escape="false" value="follows:" />
+					</div>
+
+					<div class="pad1tp rowCont">
+						<h:outputText value="&#160;" styleClass="LH8"/>
+					</div>
+
+					<!-- Instructions image -->
+					<h:graphicImage value="" alt="" style="width:790px;" url="../../i/forms/indem_inst1.png"/>
+
+					<!-- Instructions image -->
+					<h:graphicImage value="" alt="" style="width:790px;" url="../../i/forms/indem_inst2.png"/>
+
+					<!-- LAST DETAILS SECTION  -->
+					<div class="FL rowCont">
+						<!-- COLUMN 1 START -->
+						<div class="FL W50percnt">
+							<!-- Signature of Worker as Individual & Corporate Officer -->
+							<div class="rowCont FL">
+
+								<!-- SIGNATURE VALUE -->
+								<!-- Display the most recent employee signature. -->
+								<div class="pad5lt FL pad-5tp" style="height:29px; width:91%; border-bottom:solid 1px;">
+									<div class="rowCont pad5bm">
+										<span>
+											<h:outputText escape="false" styleClass="txt12" rendered="#{formIndemBean.contactDoc.empSignature ne null}">
+												<h:outputText value="E-signed by" styleClass="U pad6lt" />
+												<h:outputText value=" #{formIndemBean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+												<h:outputText value=" #{formIndemBean.contactDoc.empSignature.displayTime}" />
+												<br/>
+												<h:outputText value="# #{formIndemBean.contactDoc.empSignature.uuid}" styleClass="pad6lt" />
+											</h:outputText>
+										</span>
+										<!-- SIGN AND SUBMIT BUTTON START -->
+										<h:panelGroup rendered="#{(formIndemBean.contactDoc.submitable) or (formIndemBean.contactDoc.status eq 'PENDING')}">
+											<h:panelGroup styleClass="btn_legend_left" style="margin-top:15px; margin-right:10px;">
+												<h:panelGroup rendered="#{(formIndemBean.contactDoc.status ne 'PENDING') and (formIndemBean.empEdit or
+														(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+													<span class="btnMiniLtHot" />
+													<ace:linkButton value="Sign &amp; Submit"
+														action="#{contactFormBean.actionSubmit}"
+														title="Signature field" styleClass="btnMiniCt" />
+													<span class="btnMiniRtHot" />
+												</h:panelGroup>
+												<h:panelGroup rendered="#{not (formIndemBean.empEdit or
+														(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+														or (formIndemBean.contactDoc.status eq 'PENDING')}">
+													<span class="btnMiniLt"/>
+													<span>
+														<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+													</span>
+													<span class="btnMiniRt"/>
+												</h:panelGroup>
+											</h:panelGroup>
+										</h:panelGroup>
+										<!-- SIGN AND SUBMIT BUTTON END -->
+									</div>
+								</div>
+
+								<span class="FL rowCont">
+									<h:outputText escape="false" style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL"
+										value="Signature of Worker as Individual &amp; Corporate Officer" />
+									<h:outputText escape="false" styleClass="rowCont FL pad30lt txt10"
+										value="(Parent/Guardian signature if Worker is a Minor)" />
+								</span>
+							</div>
+
+							<!-- Name (Please print or type legibly) of Corporate Officer -->
+							<div class="rowCont FL pad20tp">
+								<h:panelGroup>
+									<span class="FL fd_sm3 #{empty (formIndemBean.form.corpOfficerName) ? 'requiredField' : ''}">
+										<ace:textEntry
+											maxlength="60"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.corpOfficerName}"
+											style="width:99%; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+								<span class="FL rowCont">
+									<h:outputText escape="false" style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL"
+										value="Name (Please print or type legibly) Corporate Officer/Individual" />
+								</span>
+							</div>
+
+							<!-- Date -->
+							<div class="rowCont FL pad5tp">
+								<h:panelGroup>
+									<span class="FL fd_sm2">
+										<ace:textEntry
+											maxlength="35" disabled="#{true}"
+											value="#{formIndemBean.contactDoc.empSignature.date}"
+											style="width:99%; border-bottom:solid 1px;">
+											<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+								<span class="FL rowCont">
+									<h:outputText escape="false" styleClass="FL pad10lt" value="Date" />
+								</span>
+							</div>
+						</div>
+						<!-- COLUMN 1 END -->
+
+						<!-- COLUMN 2 START -->
+						<div class="FL W50percnt">
+							<!-- Full Company Name -->
+							<div class="rowCont FL">
+								<h:panelGroup>
+									<span class="FL fd_sm3 #{empty (formIndemBean.form.fullCompanyName) ? 'requiredField' : ''}"
+										style="left:0px">
+										<ace:textEntry maxlength="100"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.fullCompanyName}"
+											style="width:99%; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+								<span class="rowCont FL">
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="Full Company Name" />
+								</span>
+							</div>
+
+							<!-- Federal ID # and State of Registration or Incorporation -->
+							<div class="rowCont FL pad30tp">
+								<h:panelGroup>
+									<span class="FL rowCont">
+										<span class="#{empty (formIndemBean.form.fedidNumber) ? 'requiredField' : ''}">
+											<ace:textEntry styleClass="FL fd_sm"
+													maxlength="11"
+													value="#{formIndemBean.form.fedidNumber}"
+													disabled="#{not formIndemBean.empEdit}"
+													style="width:35%; border-bottom:solid 1px;">
+												<f:converter converterId="lightspeed.FedIdFormatter" />
+											</ace:textEntry>
+										</span>
+
+										<h:selectOneMenu
+												styleClass="FL W53percnt pad10lt"
+												disabled="#{not formIndemBean.empEdit}"
+												value="#{formIndemBean.form.stateOfReg}"
+												style="#{formIndemBean.form.stateOfReg eq null ? 'background-color: rgb(255,255,170)' : ''};">
+											<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</span>
+								</h:panelGroup>
+								<span>
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL"
+										value="Federal ID #" />
+									<h:outputText style="color:red" styleClass="FL pad80lt" value="*" />
+									<h:outputText escape="false" styleClass="FL"
+										value="State of Inc./ Registration" />
+								</span>
+							</div>
+
+							<!-- Company Street Address -->
+							<div class="rowCont FL pad5tp">
+								<h:panelGroup>
+									<span class="FL fd_sm3 #{empty (formIndemBean.form.address.addrLine1) ? 'requiredField' : ''}"
+										style="left:0px">
+										<ace:textEntry maxlength="35"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.address.addrLine1}"
+											style="width:99%; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+								<span class="FL rowCont">
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="Company Street Address" />
+								</span>
+							</div>
+
+							<!-- City, State & Zip Code -->
+							<div class="rowCont FL pad5tp">
+								<h:panelGroup>
+									<span class="FL rowCont">
+										<span class="#{empty (formIndemBean.form.address.city) ? 'requiredField' : ''}">
+											<ace:textEntry maxlength="30"
+												style="width:47%; border-bottom:solid 1px;"
+												styleClass="fd_sm FL"
+												disabled="#{not formIndemBean.empEdit}"
+												value="#{formIndemBean.form.address.city}" />
+										</span>
+
+										<h:selectOneMenu
+											styleClass="FL W12percnt pad10lt"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.address.state}"
+											style="#{formIndemBean.form.address.state eq null ? 'background-color: rgb(255,255,170)' : ''};">
+											<f:selectItems value="#{applicationScopeBean.stateCodeProdDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+
+										<span class="#{empty (formIndemBean.form.address.zip) ? 'requiredField' : ''}">
+											<ace:textEntry maxlength="30"
+												style="width:25%; border-bottom:solid 1px;"
+												styleClass="fd_sm FL pad9lt"
+												disabled="#{not formIndemBean.empEdit}"
+												value="#{formIndemBean.form.address.zip}" />
+										</span>
+									</span>
+								</h:panelGroup>
+								<span>
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="City" />
+									<h:outputText style="color:red; margin-left:175px" styleClass="FL" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="State" />
+									<h:outputText style="color:red;" styleClass="FL pad30lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="Zip" />
+
+								</span>
+							</div>
+
+							<!-- Email -->
+							<div class="rowCont FL pad5tp">
+								<h:panelGroup>
+									<span class="FL fd_sm3 #{empty (formIndemBean.form.email) ? 'requiredField' : ''}"
+										style="left:0px">
+										<ace:textEntry
+											maxlength="100"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.email}"
+											style="width:99%; border-bottom:solid 1px;"/>
+									</span>
+								</h:panelGroup>
+								<span class="FL rowCont">
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="Email" />
+								</span>
+							</div>
+
+							<!-- Telephone -->
+							<div class="rowCont FL pad5tp">
+								<h:panelGroup>
+									<span class="FL fd_sm3 #{empty (formIndemBean.form.telephone) ? 'requiredField' : ''}"
+										 style="left:0px">
+										<ace:textEntry
+											maxlength="25"
+											disabled="#{not formIndemBean.empEdit}"
+											value="#{formIndemBean.form.telephone}"
+											style="width:99%; border-bottom:solid 1px;">
+											<f:converter converterId="lightspeed.PhoneNumberConverter" />
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+								<span class="FL rowCont">
+									<h:outputText style="color:red;" styleClass="FL pad10lt" value="*" />
+									<h:outputText escape="false" styleClass="FL" value="Telephone" />
+								</span>
+							</div>
+						</div>
+						<!-- COLUMN 2 END -->
+					</div>
+					<!-- LAST DETAILS END  -->
+
+					<div class="rowCont pad5lt pad12tp">
+						<span class="FL rowCont I">
+							<h:outputText escape="false" style="color:red;" styleClass="FL" value="*All fields must be completed." />
+						</span>
+						<span class="FL rowCont I">
+							<h:outputText escape="false" styleClass="FL txt10 pad5lt pad10tp" value="Corp-Indem-Agmt-122316" />
+						</span>
+					</div>
+
+					<h:outputText value="&#160;" styleClass="LH18"/>
+				</div>
+			</div><!-- scrolling container End-->
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:818px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formIndemBean}" />
+						<ui:param name="events" value="#{formIndemBean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

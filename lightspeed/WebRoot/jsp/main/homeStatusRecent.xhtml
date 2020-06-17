@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Section / Recent Notifications -->
+	<h:panelGroup
+		rendered="#{not headerViewBean.offline}">
+
+		<div id="sub_homeRecNotifTab">
+			<div class="sub_homeRecNotif">
+				<div class="homeRecNotifContWrap MA">
+					<div id="homeRecNotifCont">
+						<span class="subSecHdg_homeRecNotif FL">
+							Recent Notifications
+						</span>
+						<ace:dataTable
+							styleClass="bk_sl_grid"
+							style="width:100%;max-width:100%;"
+							value="#{messageCenterBean.notificationList}"
+							var="msg" selectionMode="single">
+							<ace:column id="column1" headerText="Subject">
+								<ace:linkButton
+									styleClass="B_#{not msg.ackFlag}"
+									value="#{msg.message.subject}">
+									<f:setPropertyActionListener
+										value="#{msg.id}"
+											target="#{messageCenterBean.targetMsgId}" />
+									<f:setPropertyActionListener
+										value="1"
+										target="#{messageCenterBean.targetTab}" />
+								</ace:linkButton>
+							</ace:column>
+							<ace:column>
+								<f:facet name="header">
+									<span class="pad10lt">
+										<h:outputText value="Date" />
+									</span>
+								</f:facet>
+								<span class="rowCont LT pad10lt">
+									<h:outputText
+										value="#{msg.sent}">
+										<f:convertDateTime
+											pattern="MM/dd/yy h:mm a"
+											timeZone="#{headerViewBean.production.timeZoneStr}" />
+									</h:outputText>
+								</span>
+							</ace:column>
+						</ace:dataTable>
+						<h:panelGroup
+							rendered="#{empty messageCenterBean.notificationList}">
+							<h:outputText
+								styleClass="B rowCont pad15lt pad5tp"
+								value="You have no notifications." />
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>

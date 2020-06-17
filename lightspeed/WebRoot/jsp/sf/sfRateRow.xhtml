@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- One row from Weekly/Hourly rates portion of Start Payroll form -->
+<!-- Uses params:
+		rate (RateHoursGroup)
+		title (plain text)
+		guar		: true for row with editable guarantee)
+		listen		: true only for the "Hourly" row; it outputs rate fields with a
+				valueChangeListener specified)
+		idle 		: true for "Idle day" row
+		aicp		: true if AICP Start Form / Commercial production)
+		v30" 		: true if this is the 3.0 (Non-On-Boarding) style page
+		done 		: true if this form has been 'finalized'
+-->
+
+			<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" />
+			<c:set var="exemptNU" value="#{(startFormBean.form.rateType ne 'HOURLY') and ! startFormBean.isUnion}" />
+			<c:set var="rateType" value="#{startFormBean.form.rateType}" />
+			
+			<td>
+				<h:outputText styleClass="stwklab" value="#{title}"/>
+			</td>
+
+			<!-- STUDIO RATE / HOURS -->
+			<td>
+				<h:panelGroup rendered="#{not idle}">
+				<h:panelGroup rendered="#{startFormBean.editMode}">
+
+					<h:panelGroup rendered="#{listen}">
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<ace:textEntry styleClass="dollarsin3"
+									value="#{rate.studio}" maxlength="10"
+									style="#{aicp ? '' : 'width:66px;'}"
+									disabled="#{done or not appEdit or (exemptDGA and rateType ne 'HOURLY')}">
+								<f:convertNumber type="number" pattern="#,###.00##" />
+								<ace:ajax />
+							</ace:textEntry>
+						</icecore:setEventPhase>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{! listen}">
+						<ace:textEntry styleClass="dollarsin3"
+								value="#{rate.studio}" maxlength="10"
+								valueChangeListener="#{startFormBean.listenRateStudio}"
+								style="#{aicp ? '' : 'width:66px;'}"
+								disabled="#{done or not appEdit}">
+								<f:attribute name="selectedRow" value="#{rate}" />
+							<f:convertNumber type="number" pattern="#,###.00##" />
+							<ace:ajax/>
+						</ace:textEntry>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{guar or not empty rate.studioHrs}">
+						<ace:textEntry styleClass="hoursin3" maxlength="5"
+								style="#{aicp ? '' : 'width:46px;'}"
+								disabled="#{done or exemptNU or not appEdit or (rateType ne 'HOURLY')}"
+								value="#{rate.studioHrs}">
+							<f:convertNumber type="number" pattern="#.##" />
+							<ace:ajax/>
+						</ace:textEntry>
+					</h:panelGroup>
+					<h:panelGroup styleClass="hoursout2" rendered="#{! (guar or not empty rate.studioHrs)}">
+						<h:outputText value="#{rate.studioHrs}">
+							<f:convertNumber type="number" pattern="#.##" />
+						</h:outputText>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{! startFormBean.editMode}">
+					<div class="dollarsout2">
+						<h:outputText value="#{rate.studio}">
+							<f:convertNumber type="number" pattern="###,###.00##" />
+						</h:outputText>&#160;
+					</div>
+					<div class="hoursout2">
+						<h:outputText value="#{rate.studioHrs}">
+							<f:convertNumber type="number" pattern="#.##" />
+						</h:outputText>
+					</div>
+				</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{idle}">
+					&#160;
+				</h:panelGroup>
+			</td>
+
+			<!-- DISTANT RATE / HOURS -->
+			<h:panelGroup rendered="#{! aicp}">
+				<td>
+					<h:panelGroup rendered="#{startFormBean.editMode}">
+
+						<h:panelGroup rendered="#{listen}">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<ace:textEntry styleClass="dollarsin3"
+										valueChangeListener="#{startFormBean.listenRateLoc}"
+										value="#{rate.loc}" maxlength="10"
+										disabled="#{done or not appEdit}"
+										style="width:67px;">
+									<f:convertNumber type="number" pattern="#,###.00##" />
+									<ace:ajax />
+								</ace:textEntry>
+							</icecore:setEventPhase>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{! listen}">
+							<ace:textEntry styleClass="dollarsin3"
+									value="#{rate.loc}" maxlength="10"
+									disabled="#{done or not appEdit}"
+									style="width:67px;">
+								<f:convertNumber type="number" pattern="#,###.00##" />
+								<ace:ajax/>
+							</ace:textEntry>
+						</h:panelGroup>
+
+					<h:panelGroup rendered="#{guar or not empty rate.locHrs}">
+						<ace:textEntry styleClass="hoursin3" maxlength="5"
+								disabled="#{done or exemptNU or not appEdit or (exemptDGA and rateType ne 'HOURLY') }"
+								value="#{rate.locHrs}"
+								style="width:46px;">
+							<f:convertNumber type="number" pattern="#.##" />
+							<ace:ajax/>
+						</ace:textEntry>
+					</h:panelGroup>
+					<h:panelGroup styleClass="hoursout2" rendered="#{! (guar or not empty rate.locHrs)}">
+						<h:outputText value="#{rate.locHrs}">
+							<f:convertNumber type="number" pattern="#.##" />
+						</h:outputText>
+					</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{! startFormBean.editMode}">
+						<div class="dollarsout2">
+							<h:outputText value="#{rate.loc}">
+								<f:convertNumber type="number" pattern="###,###.00##" />
+							</h:outputText>&#160;
+						</div>
+						<div class="hoursout2">
+							<h:outputText value="#{rate.locHrs}">
+								<f:convertNumber type="number" pattern="#.##" />
+							</h:outputText>
+						</div>
+					</h:panelGroup>
+				</td>
+
+				<!-- ACCOUNT CODES -->
+				<td class="CT" style="width:#{aicp ? '20%' : '40%'};">
+					<ui:include src="../tc/accountCodes.xhtml">
+						<ui:param name="edit" value="#{appEdit}" />
+						<ui:param name="appEdit" value="#{appEdit}" />
+						<ui:param name="rate" value="#{rate}" />
+					</ui:include>
+				</td>
+
+			</h:panelGroup>
+
+</ui:composition>

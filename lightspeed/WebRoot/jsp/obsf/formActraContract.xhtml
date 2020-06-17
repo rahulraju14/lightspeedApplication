@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<!-- This is the full ACTRA Contract form.  It includes the following components:
+		formActraContractPersonalInfo.xhtml
+		formActraContractSessionInfo.xhtml
+		formActraContractTimecard.xhtml
+	 -->
+
+	<c:set var="bean" value="#{formActraContractBean}" />
+	<c:set var="editable" value="#{bean.editMode}"/>
+	<c:set var="form" value="#{bean.form}" />
+	<c:set var="isEmployee" value="#{bean.empEdit or (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)}" />
+	<c:set var="isApprover" value="#{contactFormBean.isApprover}" />
+	<c:set var="isAppEdit" value="#{isApprover and editable}" />
+	<c:set var="isEmpEdit" value="#{isEmployee and editable}" />
+
+	<div class="miniTab pad15lt" style="width:1185px;">
+		<div class="BKwhite sfFormBorder1" >
+			<div class="pad20lt pad10rt pad20tp">	
+				<div id="actraContractDiv" class="scrollPnlTab"
+					onscroll="setScrollPos(this.scrollTop);">
+					<div class="pnlLt">
+						<h:panelGroup styleClass="FL">
+							<!-- include section A - left-hand side -->
+							<ui:include src="formActraContractPersonalInfo.xhtml">
+								<ui:param name="bean" value="#{bean}"/>
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}"/>
+								<ui:param name="isEmployee" value="#{isEmployee}"/>
+								<ui:param name="isApprover" value="#{isApprover}" />
+								<ui:param name="isAppEdit" value="#{isAppEdit}"/>
+								<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+							</ui:include>
+						</h:panelGroup>
+					</div>
+					<div class="pnlRt">
+						<h:panelGroup styleClass="FL pad5lt">
+							<!-- include section A - right-hand side -->
+							<ui:include src="formActraContractSessionInfo.xhtml">
+								<ui:param name="bean" value="#{bean}"/>
+								<ui:param name="editable" value="#{editable}"/>
+								<ui:param name="form" value="#{form}"/>
+								<ui:param name="isEmployee" value="#{isEmployee}"/>
+								<ui:param name="isApprover" value="#{isApprover}" />
+								<ui:param name="isAppEdit" value="#{isAppEdit}"/>
+								<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+							</ui:include>
+						</h:panelGroup>
+					</div>
+					<h:panelGroup rendered="#{! bean.addMoreInfo}" >
+						<ui:include src="formActraContractTimecard.xhtml">
+							<ui:param name="bean" value="#{bean}"/>
+							<ui:param name="editable" value="#{editable}"/>
+							<ui:param name="form" value="#{form}"/>
+							<ui:param name="isEmployee" value="#{isEmployee}"/>
+							<ui:param name="isApprover" value="#{isApprover}" />
+							<ui:param name="isAppEdit" value="#{isAppEdit}"/>
+							<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+						</ui:include>
+					</h:panelGroup>
+				</div> <!-- end scroll div -->
+			</div>
+		</div>
+		
+		<h:panelGroup rendered="#{bean.addMoreInfo}">
+			<f:subview id="moreInfo">
+				<div class="BKwhite sfFormBorder1 pad30tp" >
+					<div class="pad20lt pad10rt pad20tp">	
+						<div id="actraContractDiv" class="scrollPnlTab"
+							onscroll="setScrollPos(this.scrollTop);">
+							<!-- include section B - timecard data -->
+							<div class="rowCont pad5tp">
+								<ui:include src="formActraContractTimecard.xhtml">
+									<ui:param name="bean" value="#{bean}"/>
+									<ui:param name="editable" value="#{editable}"/>
+									<ui:param name="form" value="#{form}"/>
+									<ui:param name="isEmployee" value="#{isEmployee}"/>
+									<ui:param name="isApprover" value="#{isApprover}" />
+									<ui:param name="isAppEdit" value="#{isAppEdit}"/>
+									<ui:param name="isEmpEdit" value="#{isEmpEdit}" />
+								</ui:include>
+							</div>
+						</div>
+					</div>
+				</div>
+			</f:subview>
+		</h:panelGroup>		
+
+		<!-- HISTORY BOX -->
+		<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+			<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:1182px;margin-bottom:15px;">
+				<ui:include src="signatureHistory.xhtml">
+					<ui:param name="bean" value="#{bean}" />
+					<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+				</ui:include>
+			</div>
+		</h:panelGroup>
+
+	</div>
+</ui:composition>

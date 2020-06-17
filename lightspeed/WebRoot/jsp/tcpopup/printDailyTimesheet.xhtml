@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- BATCH REPORT CRITERIA for the Print Timecard dialog box -->
+
+	<!-- WEEK-ENDING DATE -->
+	<div class="rowCont pad20tp">
+		<div class="padPop3tp FL W25percnt">
+			<span class="B">Week Ending:</span>
+		</div>
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<div class="FL W75percnt">
+				<h:panelGroup styleClass="pad4lt">
+					<h:selectOneMenu
+							value="#{printTimecardBean.weekEndDate}"
+							valueChangeListener="#{printTimecardBean.listenWeekEndChange}" >
+						<f:convertDateTime timeZone="#{timezone}" pattern="MM/dd/yyyy" />
+						<f:selectItems value="#{printTimecardBean.weekEndDateDL}" />
+						<f:ajax execute="@this" render="@all"/>
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+		</icecore:setEventPhase>
+	</div>
+
+	<!-- DAY OF WEEK -->
+	<div class="rowCont pad20tp">
+		<div class="padPop3tp FL W25percnt">
+			<span class="B">Day of Week:</span>
+		</div>
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<div class="FL W75percnt">
+				<h:panelGroup styleClass="pad4lt">
+					<h:selectOneMenu 
+							value="#{printTimecardBean.weekDay}">
+						<f:selectItems value="#{printTimecardBean.weekDayNameList}" />
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+		</icecore:setEventPhase>
+	</div>
+
+	<!-- DEPARTMENT -->
+	<div class="rowCont pad20tp">
+		<div class="padPop3tp FL W25percnt">
+			<span class="B">Department:</span>
+		</div>
+		<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+			<div class="FL W75percnt">
+				<h:panelGroup styleClass="pad4lt">
+					<h:selectOneMenu
+							 value="#{printTimecardBean.timesheetDeptText}">
+						<f:selectItems value="#{printTimecardBean.departmentList}" />
+					</h:selectOneMenu>
+				</h:panelGroup>
+			</div>
+		</icecore:setEventPhase>
+	</div>
+</ui:composition>

@@ -1,0 +1,259 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="BKwhite sfFormBorder1 rowCont pad25tp pad5lt" style="width:797px; padding-bottom:5px; padding-left:8px;">
+		<div class="FL rowCont pad2tp">
+			<h:outputText styleClass="txt14 B" style="margin-left:188px;"
+				value="WORKSHEET FOR CALCULATING ADDITIONAL ALLOWANCES" />
+		</div>
+
+		<div class="FL rowCont pad15lt pad5tp">
+			<h:outputText styleClass="txt14 B" style="margin-left:188px;"
+				 value="(Must be completed in order to enter an amount on step 5)" />
+		</div>
+
+		<!-- STEP 1 START -->
+		<div class="FL rowCont pad5lt pad5tp">
+			<h:outputText value="1. COMPLETE THIS LINE ONLY IF USING STANDARD DEDUCTION:" />
+		</div>
+		<div class="FL rowCont pad15lt pad5tp">
+			<!-- YOURSELF OVER 65 -->
+			<h:outputText styleClass="FL" value="Yourself:" />
+			<span>
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.over65}"
+						styleClass="FL iceSelBoolChkbx pad-1tp pad10lt">
+						<ace:ajax render="@this boxes stdDeduction totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</h:selectBooleanCheckbox>
+					<span class="FL">Age 65 or over</span>
+				</icecore:setEventPhase>
+			</span>
+
+			<!-- YOURSELF BLIND -->
+			<span>
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.blind}"
+						styleClass="FL iceSelBoolChkbx pad-1tp pad10lt">
+						<ace:ajax render="@this boxes stdDeduction totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</h:selectBooleanCheckbox>
+					<span class="FL pad3lt">Blind</span>
+				</icecore:setEventPhase>
+			</span>
+		</div>
+		<div class="FL rowCont pad15lt pad2tp">
+
+			<!-- SPOUSE OVER 65 -->
+			<h:outputText styleClass="FL" value="Spouse:" />
+			<span>
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.spouseOver65}"
+						styleClass="FL iceSelBoolChkbx pad-1tp pad10lt">
+						<ace:ajax render="@this boxes stdDeduction totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</h:selectBooleanCheckbox>
+					<span class="FL pad3lt">Age 65 or over</span>
+				</icecore:setEventPhase>
+			</span>
+
+			<!-- SPOUSE BLIND -->
+			<span>
+				<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<h:selectBooleanCheckbox
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.spouseBlind}"
+						styleClass="FL iceSelBoolChkbx pad-1tp pad10lt">
+						<ace:ajax render="@this boxes stdDeduction totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</h:selectBooleanCheckbox>
+					<span class="FL pad3lt">Blind</span>
+				</icecore:setEventPhase>
+			</span>
+
+			<!-- NUMBER OF BOXES CHECKED -->
+			<span class="FL" style="width:146px;margin-left:100px;">
+				<h:outputText value="Number of boxes checked" />
+			</span>
+			<h:panelGroup>
+				<span class="FL fd_sm" style="width:55px;">
+					<ace:textEntry maxlength="35" id="boxes" 
+						disabled="#{true}" value="#{formG4Bean.form.boxesChecked}"
+						style="min-width:30%; width:80%; margin-top:-7px; border-bottom:solid 1px;">
+						<ace:ajax render="@this stdDeduction totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+			<h:outputText styleClass="FL pad2lt" value="x 1300...............$" />
+			<h:panelGroup>
+				<span class="FL pad2lt fd_sm" style="width:140px;">
+					<ace:textEntry maxlength="35" id="stdDeduction"
+						disabled="#{true}" styleClass="fd_sm pad3lt"
+						value="#{formG4Bean.form.stdDeduction}"
+						style="width:80%; margin-top:-8px; border-bottom:solid 1px;">
+						<ace:ajax render="@this totalDeducts2"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP 1 END -->
+
+		<!-- ADDITIONAL ALLOWANCES FOR DEDUCTIONS START -->
+		<div class="FL rowCont pad5lt pad5tp">
+			<h:outputText value="2. ADDITIONAL ALLOWANCES FOR DEDUCTIONS:" />
+		</div>
+
+		<!-- STEP A START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="A. Federal Estimated Itemized Deductions............................................................................ $" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="fd_sm pad5lt"
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.fedEstimated}"
+						style="min-width:20%;width:20%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this subtractDeductions totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP A END -->
+
+		<!-- STEP B START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp rowCont"
+				value="B. Georgia Standard Deduction (enter one): &#160; &#160;  Single/Head of Household &#160; &#160; $4,600" />
+			<span class="FL pad2lt fd_sm2" style="min-width:24%"> <h:outputText styleClass="FL pad60lt pad5tp" value="Each Spouse" /> </span>
+			<span class="FL pad2lt fd_sm2" style="min-width:24%"> <h:outputText styleClass="FL pad60lt pad5tp" value="$3,000" /> </span>
+			<h:panelGroup>
+				<span>
+					<span class="FL" style="margin-left:93px"> <h:outputText value="$" /> </span>
+					<ace:textEntry maxlength="35"
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.gaStdDeduction}"
+						styleClass="fd_sm pad-8tp pad5lt"
+						style="min-width:20%;width:20%;border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this subtractDeductions totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP B END -->
+
+		<!-- STEP C START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="C. Subtract Line B from Line A................................................................................................................$" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="fd_sm pad5lt" id="subtractDeductions"
+						value="#{formG4Bean.form.subtractDeductions}"
+						disabled="#{true}"
+						style="width:27%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP C END -->
+
+		<!-- STEP D START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="D. Allowable Deductions to Federal Adjusted Gross Income .................................................................$" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="FL fd_sm pad5lt"
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.allowableDeductions}"
+						style="width:27%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this totalDeducts2 estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP D END -->
+
+		<!-- STEP E START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="E. Add the Amounts on Lines 1, 2C, and 2D ..........................................................................................$" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="FL fd_sm pad5lt" id="totalDeducts2"
+						value="#{formG4Bean.form.totalDeducts}" disabled="#{true}"
+						style="width:27%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this estDeductions estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP E END -->
+
+		<!-- STEP F START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="F. Estimate of Taxable Income not Subject to Withholding .....................................................................$" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="FL fd_sm pad5lt"
+						disabled="#{viewOrExempt}"
+						value="#{formG4Bean.form.estNonWage}"
+						style="width:27%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this estDeductions estDeductions dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP F END -->
+
+		<!-- STEP G START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="G. Subtract Line F from Line E (if zero or less, stop here)......................................................................$" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="FL fd_sm pad5lt"
+						disabled="#{true}" id="estDeductions"
+						value="#{formG4Bean.form.estDeductions}"
+						style="width:27%; border-bottom:solid 1px;height:13px;">
+						<ace:ajax render="@this dividedDeductions additionalAllowance totalAllowances"/>
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+		<!-- STEP G END -->
+
+		<!-- STEP H START -->
+		<div class="FL rowCont">
+			<h:outputText styleClass="FL pad5lt pad10tp"
+				value="H. Divide the Amount on Line G by $3,000. Enter total here and on Line 5 above ................................" />
+			<h:panelGroup>
+				<span>
+					<ace:textEntry maxlength="35"
+						styleClass="FL fd_sm pad11lt" id="dividedDeductions"
+						value="#{formG4Bean.form.dividedDeductions}" disabled="#{true}"
+						style="width:27%; border-bottom:solid 1px;height:13px;"/>
+				</span>
+			</h:panelGroup>
+		</div>
+
+		<!-- STEP H END -->
+		<h:outputText styleClass="FL pad5lt pad6tp"
+				value="(This is the maximum number of additional allowances you can claim. If the remainder is over $1,500 round up)" />
+		<!-- ADDITIONAL ALLOWANCES FOR DEDUCTIONS END -->
+	</div>
+</ui:composition>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tcA2Jobs" columnCount="2" printOrder="Horizontal" pageWidth="500" pageHeight="169" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="225" columnSpacing="25" leftMargin="25" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="63a600b8-be72-4247-b5af-623188145b94">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tcMajor6" style="tcDefault">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcDetail6" style="tcDefault">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="weeklyId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payJobQuery" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select *, false as fillFlag from pay_job where weekly_id=" + $P{weeklyId} +
+" union all (SELECT NULL,NULL,999,NULL,NULL,  NULL,NULL,NULL,NULL,NULL, " +
+    " NULL,NULL,NULL,NULL,NULL,  NULL,NULL,NULL,NULL,NULL,  NULL,NULL,NULL,NULL,NULL," +
+    " NULL,NULL,NULL,NULL,NULL,  NULL,NULL,NULL,NULL,NULL,  NULL,NULL,NULL,true " +
+" FROM pay_job limit 3) " +
+" order by job_number asc;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\MyEclipseWorkspace\\lightspeed20\\WebRoot\\reportstemplate\\tc\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="includeBreakdown" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numberFmtMult" class="java.text.DecimalFormat" isForPrompting="false">
+		<parameterDescription><![CDATA[format for 'multiplier' column headings]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createNumberFormat("0.0##", $P{REPORT_LOCALE})]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{payJobQuery}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Weekly_Id" class="java.lang.Integer"/>
+	<field name="Job_Number" class="java.lang.Integer"/>
+	<field name="Location_Code" class="java.lang.String"/>
+	<field name="Premium_Rate" class="java.math.BigDecimal"/>
+	<field name="Prod_Episode" class="java.lang.String"/>
+	<field name="Occ_Code" class="java.lang.String"/>
+	<field name="Rate" class="java.math.BigDecimal"/>
+	<field name="Daily_Rate" class="java.math.BigDecimal"/>
+	<field name="Box_Amt" class="java.math.BigDecimal"/>
+	<field name="Account_Major" class="java.lang.String"/>
+	<field name="Account_Dtl" class="java.lang.String"/>
+	<field name="Account_Sub" class="java.lang.String"/>
+	<field name="Account_Set" class="java.lang.String"/>
+	<field name="Free" class="java.lang.String"/>
+	<field name="Free2" class="java.lang.String"/>
+	<field name="Custom_Mult1" class="java.math.BigDecimal"/>
+	<field name="Custom1_Type" class="java.lang.String"/>
+	<field name="Custom_Mult2" class="java.math.BigDecimal"/>
+	<field name="Custom2_Type" class="java.lang.String"/>
+	<field name="Custom_Mult3" class="java.math.BigDecimal"/>
+	<field name="Custom3_Type" class="java.lang.String"/>
+	<field name="Custom_Mult4" class="java.math.BigDecimal"/>
+	<field name="Custom4_Type" class="java.lang.String"/>
+	<field name="Custom5_Type" class="java.lang.String"/>
+	<field name="Custom_Mult5" class="java.math.BigDecimal"/>
+	<field name="Custom6_Type" class="java.lang.String"/>
+	<field name="Custom_Mult6" class="java.math.BigDecimal"/>
+	<field name="fillFlag" class="java.lang.Boolean"/>
+	<field name="job_account_number" class="java.lang.String"/>
+	<field name="job_name" class="java.lang.String"/>
+	<background>
+		<band height="143">
+			<rectangle>
+				<reportElement uuid="518921f0-1f3a-453a-97a3-d013302635d0" mode="Transparent" x="-25" y="39" width="25" height="104"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="130" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[Tot:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="117" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="104" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="91" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="78" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="65" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="52" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="-25" y="39" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="728febb0-4b9a-49e8-a152-c41e0b726da2" x="-25" y="130" width="25" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="728febb0-4b9a-49e8-a152-c41e0b726da2" x="0" y="142" width="25" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="728febb0-4b9a-49e8-a152-c41e0b726da2" x="0" y="130" width="25" height="1"/>
+			</line>
+		</band>
+	</background>
+	<detail>
+		<band height="13">
+			<printWhenExpression><![CDATA[$V{REPORT_COUNT}>4 && (! $F{fillFlag})]]></printWhenExpression>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="0" y="0" width="50" height="13"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+		<band height="143">
+			<printWhenExpression><![CDATA[(! $F{fillFlag}) || $V{REPORT_COUNT} < 3]]></printWhenExpression>
+			<rectangle>
+				<reportElement uuid="98233498-0b1b-42db-8a33-ca087d3068a1" mode="Transparent" x="25" y="26" width="200" height="13"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="7760b7e4-e724-45cf-808b-f1bf2ad467f4" mode="Transparent" x="25" y="0" width="200" height="26"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBold" x="150" y="0" width="25" height="13"/>
+				<textElement/>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9" style="tcDefBox" x="25" y="13" width="75" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{job_account_number} == null ? "" : $F{job_account_number})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00##">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="175" y="0" width="50" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="25" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[1.0]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753" style="tcDefBox" x="50" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[1.5]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="75" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult1}==null ? "2.0" :
+    ($F{Custom_Mult1}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult1})
+    + ($F{Custom1_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="100" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult2}==null ? "2.5" :
+    ($F{Custom_Mult2}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult2})
+    + ($F{Custom2_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="125" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult3}==null ? "3.0" :
+    ($F{Custom_Mult3}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult3})
+    + ($F{Custom3_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="0e7d42d1-de75-4fb6-b641-79c1320a8976" style="tcDefBox" x="150" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult4}==null ? "3.5" :
+    ($F{Custom_Mult4}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult4})
+    + ($F{Custom4_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f9de1d3d-74e5-4b78-85cc-fdea1e2ef54b" style="tcDefBox" x="175" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult5}==null ? "4.0" :
+    ($F{Custom_Mult5}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult5})
+    + ($F{Custom5_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="53033541-b564-44ef-8ead-4c2f3fbe7ef8" style="tcDefBox" x="200" y="26" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{Custom_Mult6}==null ? "4.5" :
+    ($F{Custom_Mult6}.signum() < 0 ? "Dy" :
+    $P{numberFmtMult}.format($F{Custom_Mult6})
+    + ($F{Custom6_Type}.equals("P") ? "p" : "")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f8b706b5-04d6-419f-b836-0d64cad5cf45" style="tcDefBold" x="25" y="0" width="40" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Job #" + ($F{Job_Number}!=999 ? $F{Job_Number} : $V{REPORT_COUNT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ca6b1bde-b6ce-46fe-8a94-8570b00aa70a" style="tcDefBox" x="100" y="13" width="125" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{job_name} == null ? "" : $F{job_name}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="a435465c-ff61-4bd4-8d67-5d316f23178b" x="0" y="39" width="225" height="104"/>
+				<subreportParameter name="jobId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="showDate">
+					<subreportParameterExpression><![CDATA[$V{COLUMN_NUMBER}>0]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="includeBreakdown">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc2JobDaily.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="a435465c-ff61-4bd4-8d67-5d316f23178b" x="-25" y="39" width="25" height="104"/>
+				<subreportParameter name="jobId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc2JobDays.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

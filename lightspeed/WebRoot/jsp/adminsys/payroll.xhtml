@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Payroll Services</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	/* resize parms: Id, Difference, Minimum */
+	resizeScrollable('services:itemlist', 187, 390);
+
+	var element = document.getElementById('services:miniView');
+	resizeElement(element, 181, 347);
+
+	/* resize Info tab production list */
+	resizeScrollable('services:prodlist', 320, 280);
+
+	/* resize Contacts mini-tab div */
+	element = document.getElementById('contact');
+	resizeElement(element, 230, 642);
+
+	/* resize Custom Text mini-tab div */
+	element = document.getElementById('customText');
+	resizeElement(element, 230, 365);
+
+	</c:if>
+}
+var formname = "services";
+var mainListId = "services:itemlist"; // used by main list scrolling functions
+
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(mainListId); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="services">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+		<f:attribute name="tabid" value="adminpayroll" />
+	</h:outputText>
+
+<div id="main" style="min-height:847px;">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin List pnlLt -->
+				<div id="pnlLt">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="poiHdr" class="rowCont ltrtBdr BKwhite FL">
+						<span class="pnlHdrTxt FL">Payroll Services</span>
+						<h:panelGroup styleClass="FR pad5rt">
+							<span class="btnPriHotLt"/>
+							<span>
+								<ace:linkButton value="Add"
+										action="#{payrollServiceListBean.actionNew}" styleClass="btnPriHotCt" />
+							</span>
+							<span class="btnPriHotRt"/>
+						</h:panelGroup>
+					</div>
+
+					<!-- list container -->
+					<div id="poiListCont" class="rowCont ltrtBdr">
+						<ace:dataTable id="itemlist"
+							selectionMode="single" singleSort="true"
+							style="width:100%;max-width:100%;"
+							rendered="#{not empty authBean.pgFields['0.2,admin_tab']}"
+							styleClass="bk_sl_grid"
+							value="#{payrollServiceListBean.sortedItemList}" var="item"
+							rowSelectListener="#{payrollServiceListBean.listenRowClicked}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '367'}"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}">
+
+							<ace:column styleClass="W20Percnt" headerText="Id" sortBy="#{item.id}">
+								<h:outputText value="#{item.id}"/>
+							</ace:column>
+							<ace:column styleClass="W40Percnt" headerText="Name" sortBy="#{item.name}">
+								<h:outputText value="#{item.name}"/>
+							</ace:column>
+							<ace:column styleClass="W40Percnt" headerText="Main Contact" sortBy="#{item.contact1Name}">
+								<h:outputText value="#{item.contact1Name}" />
+							</ace:column>
+						</ace:dataTable>
+					</div><!-- end poiListCont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- End List - pnlLt -->
+
+					<!--  Begin Details - pnlRt -->
+					<div id="pnlRt">
+
+						<h:panelGroup styleClass="errMsgCont">
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="topBdrCont">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+
+						<div class="rowCont FL BKwhite ltrtBdr">
+							<span class="pnlHdrTxt FL">
+								<h:outputText
+									value="#{payrollServiceListBean.element.name}"/>&#160;
+							</span>
+
+							<h:panelGroup rendered="#{payrollServiceListBean.editMode and (payrollServiceListBean.element.id ne null)}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt"/>
+									<span>
+									<ace:linkButton value="Delete" action="#{payrollServiceListBean.actionDelete}"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt"/>
+								</span>
+
+								<span class="FR pad5rt">
+									<span class="btnPriDisLt"/>
+									<span>
+									<ace:linkButton value="Edit"
+											styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+									</span>
+									<span class="btnPriDisRt"/>
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not payrollServiceListBean.editMode) and (payrollServiceListBean.element ne null)}">
+								<span class="FR pad5rt">
+									<span class="btnPriEnbLt"/>
+									<span>
+									<ace:linkButton value="Delete" action="#{payrollServiceListBean.actionDelete}"
+											styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt"/>
+								</span>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{(not payrollServiceListBean.editMode) and (payrollServiceListBean.element ne null)}">
+								<span class="FR pad5rt">
+									<span class="btnPriHotLt"/>
+									<span>
+									<ace:linkButton
+										value="Edit" action="#{payrollServiceListBean.actionEdit}"
+										styleClass="btnPriHotCt" />
+									</span>
+									<span class="btnPriHotRt"/>
+								</span>
+							</h:panelGroup>
+						</div>
+
+						<div id="detailCont" class="ltrtBdr BKwhite">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+									<!-- miniview Tabs for Users -->
+									<ace:tabSet id="tabs" selectedIndex="#{payrollServiceListBean.selectedTab}">
+
+										<!--  CONTACTS Tab   -->
+										<ui:include src="payrollContacts.xhtml" />
+
+										<!--  BILLING Tab   -->
+										<ui:include src="payrollBilling.xhtml" />
+
+										<!-- CONNECTION tab -->
+										<ui:include src="payrollConnection.xhtml" />
+
+										<!--  LOGOS Tab   -->
+										<ui:include src="payrollLogos.xhtml" />
+
+										<!-- CUSTOM TEXT tab -->
+										<ui:include src="payrollText.xhtml" />
+
+										<!--  Info Tab  -->
+										<ui:include src="payrollInfo.xhtml" />
+
+									</ace:tabSet>
+
+							</h:panelGrid><!-- end miniView -->
+
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+								<!-- CANCEL btn -->
+								<h:outputText rendered="#{payrollServiceListBean.editMode}">
+									<span class="FR pad10rt">
+										<span class="btnPriEnbLt"/>
+										<span>
+											<ace:linkButton styleClass="btnPriEnbCt"
+												value="Cancel" action="#{payrollServiceListBean.actionCancel}" />
+										</span>
+										<span class="btnPriEnbRt"/>
+									</span>
+								</h:outputText><!-- end Cancel btn -->
+								<!-- SAVE btn -->
+								<h:outputText rendered="#{payrollServiceListBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnSecHotLt"/>
+										<span>
+										<ace:linkButton value="Save"  onmouseup="showErrors();"
+											action="#{payrollServiceListBean.actionSave}" styleClass="btnSecHotCt" />
+										</span>
+										<span class="btnSecHotRt"/>
+									</span>
+								</h:outputText>
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end poiDetailCont -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+
+					</div><!-- end pnlRt -->
+				</div><!--  end pnlCont -->
+			</div><!-- end ctrCont -->
+
+			<div class="CB"></div><!-- clears float for liquid layout -->
+
+		</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+<ui:include src="../common/addimage.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/viewimage.xhtml" />
+
+</h:body>
+</html>

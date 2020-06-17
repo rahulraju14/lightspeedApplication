@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Back page (page 2) of DPR -->
+	<div class=" pad20tp txt14 B">
+
+		<div class="FL W20percnt">
+			<div class="pad10lt">
+			Production Report
+			</div>
+		</div>
+
+		<div class="FL W20percnt">
+					<h:outputText value="#{dprViewBean.dpr.date}" >
+						<f:convertDateTime pattern="EEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+		</div>
+
+		<div class="FL W20percnt">
+					Day &#160;
+					<h:outputText
+						value="#{dprViewBean.dpr.shootDay}"/>
+					of &#160;
+					<h:outputText
+						value="#{dprViewBean.dpr.shootDays}"/>
+		</div>
+
+		<div class="FL W25percnt">
+			<h:panelGroup rendered="#{dprViewBean.editMode}">
+				<div class="FR W50percnt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Import Times"
+								action="#{dprViewBean.actionImportCrewTimes}" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+				</div>
+				<div class="FR W45percnt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Clear Times"
+								action="#{dprViewBean.actionClearCrewTimes}" styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+				</div>
+			</h:panelGroup>
+			&#160;
+		</div>
+
+		<div class="FL W15percnt">
+			<div class="FR pad10rt">
+					Crew Call:
+					<h:outputText styleClass="" value="#{dprViewBean.dpr.crewCall}">
+						<f:convertDateTime pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+					</h:outputText>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- CREW LISTING - MAIN PART OF BACK PAGE -->
+	<div class="FL rowCont rowGradient pad10tp pad40bm">
+		<ui:include src="crewTable.xhtml" />
+	</div>
+
+</ui:composition>

@@ -1,0 +1,574 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+	<!-- This is the left-hand area of "Section A" of the ACTRA Contract form,
+		which includes all of the demographic information about the production
+		company, agency, and talent.
+		
+		Params:
+			bean: the backing bean for the current form (e.g., FormActraContractBean)
+			form: the FormActraContract instance currently displayed
+			editable: the form is currently in Edit (not View) mode
+			isEmployee: the current user is the employee/performer (document owner)
+			isApprover: the current user is a possible approver
+			empEdit: the employee is editing the form
+			appEdit: an approver is editing the form
+	-->
+
+	<div style="width:435px; padding-top:50px" class="FL">
+	
+		<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+		
+		<div class="pad40tp">
+			<h:outputText style="font-size:11px" value="COMMERCIAL ENGAGEMENT CONTRACT" />
+		</div>
+		<div class="pad20tp" >
+			<h:panelGrid columns="5" styleClass="txt9">
+				<h:panelGroup styleClass="W140 txt9 pad-5lt pad5bm" style="background-color:#e4e4e4; padding-top: 5px;" layout="block">
+					<h:outputText styleClass="pad5lt B" value="#{msg.Form_ActraContract_Text1}" escape="false" />
+				</h:panelGroup>
+				<h:panelGroup styleClass="FL W70 pad5tp txt10">
+					<h:outputText value="CONTRACT #" />
+				</h:panelGroup>
+				<h:panelGroup styleClass="W115 FL txt10 #{editable ? '' : 'pad5tp'}"
+					style="border:1px solid #000;min-height:15px;padding-top:4px;">
+					<h:panelGroup rendered="#{isAppEdit}">
+						<ace:textEntry id="contactNum" value="#{form.contractNum}"
+							style="padding:1px;max-width:113px;height:18px;margin-top:-4px;"
+							maxlength="25" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not isAppEdit}" style="padding-top:4px;">
+						<h:outputText value="#{form.contractNum}" style="padding:1px"/>
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="W25 pad5tp">
+					<h:panelGroup styleClass="pad5lt" layout="block">
+						<h:outputText value="BRANCH"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="pad5lt">
+						<h:outputText value="CODE" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup styleClass="W30 pad5tp" layout="block"
+					style="border:1px solid #000; min-height:17px;padding-top:3px;width: 44px;">
+					<h:panelGroup rendered="#{isAppEdit}">
+						<!-- No longer used 
+						 <ace:textEntry id="branchCode" disabled="#{not isAppEdit}"
+							value="#{form.branchCode}"
+							style="padding:1px;max-width:28px;height:18px;margin-top:-3px;"
+							maxlength="15" /> -->
+						<!-- LS-2194 Branch code droptown for project details and Actra contract -->
+						<span class="FL"> <icecore:setEventPhase
+								events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu id="officeList" rendered="#{editable}"
+									styleClass="W86 pad10lt" value="#{form.office}"
+									style="padding:1px;max-width: 44px;height: 20px;margin-top:-3px;margin-left: 0px;"
+									valueChangeListener="#{bean.listenOfficeListChange}">
+									<f:selectItems value="#{bean.officeListDL}" />
+									<f:converter converterId="lightspeed.OfficeConverter" />
+									<f:ajax execute="@this" render="@all"/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{not isAppEdit}">
+						<h:outputText rendered="#{not isAppEdit}" value="#{form.office.branchCode}" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:panelGrid>
+			<!-- End of Header Section -->
+			
+			<!-- Begin Agency/Employee Info Section -->
+			<h:panelGrid columns="1" styleClass="txt9 actraPanel">
+				<!-- ROW 1 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad13tp" layout="block">
+						<h:outputText value="AGENCY" />
+					</h:panelGroup>				
+					<h:panelGroup styleClass="FL CT pad5lt pad2bm W200" layout="block">
+						<h:outputText value="(NAME OF ENGAGER)" styleClass="txt8" />
+						<ace:textEntry id="agencyName" disabled="#{not isAppEdit}"
+							styleClass="LT txt10" style="width:190px;"
+							value="#{form.agencyName}" maxlength="150" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL CT pad2bm W150" layout="block">
+						<h:outputText value="(AGENCY PRODUCER)" styleClass="txt8"/>
+						<h:panelGroup styleClass="pad5lt">
+							<ace:textEntry id="agencyProducer" disabled="#{not isAppEdit}"
+								styleClass="LT txt10" style="width:168px;"
+								value="#{form.agencyProducer}" maxlength="150" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 2 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad13tp" layout="block">
+						<h:outputText value="ADDRESS"/>
+					</h:panelGroup>	
+					<h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W140" layout="block">
+							<h:outputText value="(STREET)" styleClass="txt8" />
+							<ace:textEntry id="agencyAddrLine1" styleClass="LT txt10 W125"
+								value="#{form.agencyAddress.addrLine1}"
+								disabled="#{not isAppEdit}" maxlength="100" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W100" layout="block">
+							<h:outputText value="(CITY)" styleClass="txt8" />
+							<ace:textEntry id="agencyAddrCity" styleClass="LT txt10 W90"
+								value="#{form.agencyAddress.city}" disabled="#{not isAppEdit}"
+								maxlength="50" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W60" layout="block">
+							<h:outputText value="(PROVINCE)" styleClass="txt8"/>
+							<h:selectOneMenu styleClass="FL" id="agencyAddrState"
+								style="width:59px;height:18px;"
+								value="#{form.agencyAddress.state}" disabled="#{not isAppEdit}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateCodeDL[form.agencyAddress.country]}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad2lt CT W70" layout="block">
+							<h:outputText value="(POSTAL CODE)" styleClass="txt8" />
+							<ace:textEntry id="agencyAddrZip" styleClass="LT txt10 W65"
+								disabled="#{not isAppEdit}" value="#{form.agencyAddress.zip}"
+								maxlength="10" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 3 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup  styleClass="FL W50 pad5tp" layout="block">
+						<h:outputText value="SPONSOR/" />
+						<br/>
+						<h:outputText value="PRODUCT" />
+					</h:panelGroup>			
+					<h:panelGroup styleClass="FL W180 pad5lt pad2bm " layout="block">
+						<ace:textEntry id="advertiserName" disabled="#{not isAppEdit}"
+							styleClass="LT txt10" style="width:170px;"
+							value="#{form.advertiserName}" maxlength="150" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="W180 FL pad5lt pad2bm pad5tp"
+						layout="block">
+						<ace:textEntry id="productName" disabled="#{not isAppEdit}"
+							styleClass="LT txt10" style="width:170px;"
+							value="#{form.productName}" maxlength="150" />
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 4
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad13tp">
+						<h:outputText value="PRODUCT"/>
+					</h:panelGroup>		
+					<h:panelGroup styleClass="FL pad5lt pad2bm pad5tp" layout="block">
+						<ace:textEntry disabled="#{not isAppEdit}" styleClass="LT txt10" style="width:366px;" value="#{form.productName}"/>
+					</h:panelGroup>						
+				</h:panelGroup>
+ -->				
+				<!-- ROW 4 -->
+				<h:panelGroup styleClass="pad5tp" layout="block">
+					<h:panelGroup styleClass="FL pad2bm W330" layout="block">
+						<h:outputText value="PRODUCTION HOUSE"/>
+						<h:panelGroup styleClass="pad5lt">
+							<ace:textEntry id="prodHouseName" disabled="#{not isAppEdit}"
+								styleClass="LT txt10 pad2lt" style="width:200px;"
+								value="#{form.prodHouseName}" maxlength="150" />
+						</h:panelGroup>
+					</h:panelGroup>	
+					<h:panelGroup styleClass="FL pad5lt" layout="block">
+						<h:outputText styleClass="txt8" value="CHECK IF PAYING"/>
+						<br/>
+						<h:outputText styleClass="txt8" value="SESSION FEE"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL" layout="block">
+						<h:selectBooleanCheckbox id="paySessionFee"
+							value="#{form.paySessionFee}"
+							disabled="#{not isAppEdit}"
+							styleClass="iceSelBoolChkbx FL pad3tp">
+						</h:selectBooleanCheckbox>
+					</h:panelGroup>	
+				</h:panelGroup>	
+				
+				
+				<!-- ROW 5 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad13tp">
+						<h:outputText value="DIRECTOR"/>
+					</h:panelGroup>		
+					<h:panelGroup styleClass="FL pad5lt pad2bm pad5tp" layout="block">
+						<ace:textEntry id="directorName" disabled="#{not isAppEdit}"
+							styleClass="LT txt10" style="width:364px;"
+							value="#{form.directorName}" maxlength="150" />
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 6 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad13tp" layout="block">
+						<h:outputText value="ADDRESS"/>
+					</h:panelGroup>	
+					<h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W140" layout="block">
+							<h:outputText value="(STREET)" styleClass="txt8" />
+							<ace:textEntry id="prodHouseAddrLine1" styleClass="LT txt10 W125"
+								value="#{form.prodHouseAddress.addrLine1}"
+								disabled="#{not isAppEdit}" maxlength="100" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W100" layout="block">
+							<h:outputText value="(CITY)" styleClass="txt8" />
+							<ace:textEntry id="prodHouseAddrCity" styleClass="LT txt10 W90"
+								value="#{form.prodHouseAddress.city}"
+								disabled="#{not isAppEdit}" maxlength="50" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W60" layout="block">
+							<h:outputText value="(PROVINCE)" styleClass="txt8"/>
+							<h:selectOneMenu styleClass="FL" id="prodHouseAddrState"
+								style="width:59px;height:18px;"
+								value="#{form.prodHouseAddress.state}"
+								disabled="#{not isAppEdit}">
+								<f:selectItems value="#{applicationScopeBean.stateCodeDL[form.prodHouseAddress.country]}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad2lt CT W70" layout="block">
+							<h:outputText value="(POSTAL CODE)" styleClass="txt8" />
+							<ace:textEntry id="prodHouseAddrZip" styleClass="LT txt10 W65"
+								disabled="#{not isAppEdit}" value="#{form.prodHouseAddress.zip}"
+								maxlength="10" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 7 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad15tp" layout="block">
+						<h:outputText value="CONTRACTS WITH" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt pad5bm" layout="block">
+						<h:panelGroup styleClass="CT" layout="block">
+							<h:outputText value="(CORPORATE NAME WHERE APPLICABLE)"
+								styleClass="txt8" />
+							<br />
+							<ace:textEntry id="loanOutName"
+								disabled="#{not (isAppEdit or isEmpEdit)}"
+								styleClass="LT txt10 W320" value="#{form.loanOutName}"
+								maxlength="100" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 8 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL pad5tp" layout="block">
+						<h:outputText value="TO SUPPLY THE"/>
+						<br/>
+						<h:outputText value="SERVICES OF"/>
+					</h:panelGroup>	
+					<h:panelGroup styleClass="FL pad15lt pad5bm" layout="block">
+						<h:panelGroup styleClass="CT" layout="block">
+							<h:outputText styleClass="txt8" value="(PERFORMER NAME)" />
+							<br />
+							<ace:textEntry id="talentName"
+								disabled="#{not (isAppEdit or isEmpEdit)}"
+								styleClass="LT txt10 W320" value="#{form.talentName}"
+								maxlength="100" />
+						</h:panelGroup>
+					</h:panelGroup>					
+				</h:panelGroup>
+				
+				<!-- ROW 9 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="W110 FL pad15tp" layout="block">
+						<h:outputText value="PERFORMER ADDRESS"/>
+					</h:panelGroup>			
+					<h:panelGroup styleClass="FL CT pad5lt pad5bm" layout="block">
+						<h:outputText value="(STREET)" styleClass="txt8" />
+						<br />
+						<ace:textEntry id="talentAddrLine1"
+							disabled="#{not (isAppEdit or isEmpEdit)}" styleClass="LT txt10"
+							style="width:295px;" value="#{form.talentAddress.addrLine1}"
+							maxlength="100" />
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 10 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup>
+						<h:panelGroup styleClass="FL CT W180" layout="block">
+							<h:outputText value="(CITY)" styleClass="txt8" />
+							<ace:textEntry id="talentAddrCity" styleClass="LT txt10 W170"
+								disabled="#{not (isAppEdit or isEmpEdit)}"
+								value="#{form.talentAddress.city}" maxlength="50" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2lt CT W130" layout="block">
+							<h:outputText value="(PROVINCE)" styleClass="txt8"/>
+							<h:selectOneMenu styleClass="FL" id="talentAddrState"
+								style="width:129px;height:18px;"
+								value="#{form.talentAddress.state}"
+								disabled="#{not (isAppEdit or isEmpEdit)}">
+								<f:selectItems value="#{applicationScopeBean.stateCodeDL[form.talentAddress.country]}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad2lt CT W110" layout="block">
+							<h:outputText value="(POSTAL CODE)" styleClass="txt8" />
+							<ace:textEntry id="talentAddrZip" styleClass="LT txt10 W105"
+								disabled="#{not (isAppEdit or isEmpEdit)}"
+								value="#{form.talentAddress.zip}" maxlength="10" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 11 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL CT pad5bm W125" layout="block">
+						<h:outputText value="(TELEPHONE)" styleClass="txt8" />
+						<br />
+						<ace:textEntry id="talentPhoneNum"
+							disabled="#{not (isAppEdit or isEmpEdit)}"
+							styleClass="LT txt10 W115" value="#{form.talentPhoneNum}"
+							maxlength="15" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL CT pad5lt pad5bm" layout="block"
+						style="width:288px;">
+						<h:outputText value="(EMAIL ADDRESS)" styleClass="txt8" />
+						<br />
+						<ace:textEntry id="talentEmailAddr"
+							disabled="#{not (isAppEdit or isEmpEdit)}" styleClass="LT txt10"
+							style="width:288px;" value="#{form.talentEmailAddress}"
+							maxlength="100" />
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 12 -->
+				<h:panelGroup layout="block">
+					<div class="FL" style="height:42px; border-right: solid 1px;margin-top:-2px;padding-right:3px;">
+						<h:panelGroup styleClass="FL W200 pad10tp" layout="block">
+							<h:outputText value="SOCIAL INSURANCE NUMBER" styleClass="txt9" />
+							<br />
+							<ace:textEntry id="socialInsuranceNum"
+								disabled="#{not (isAppEdit or isEmpEdit)}" style="width:191px;"
+								styleClass="LT txt10" value="#{form.socialInsuranceNum}"
+								maxlength="1000" />
+						</h:panelGroup>
+					</div>
+					<h:panelGroup layout="block">
+						<h:panelGroup styleClass="FL txt8" layout="block" style="width:222px;height:17px;">
+							<h:outputText value="GST/HST #" styleClass="pad5lt txt8"/>
+							<h:panelGroup styleClass="pad5lt">
+								<ace:textEntry id="gstHst"
+									disabled="#{not (isAppEdit or isEmpEdit)}"
+									styleClass="LT txt8 W160" value="#{form.gstHst}" maxlength="20" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+					
+					<!-- HORIZONTAL RULE -->
+					<hr class="FL" style="height:1px;background:black;border:0;margin-top:2px;margin-right:-5px;width:224px" />
+					
+					<h:panelGroup styleClass="FL pad-3tp txt8" layout="block" style="width:222px;">
+						<h:outputText value="QST #" styleClass="pad5lt txt8"/>
+						<h:panelGroup styleClass="pad5lt">
+							<ace:textEntry id="qst"
+								disabled="#{not (isAppEdit or isEmpEdit)}" styleClass="LT txt8"
+								style="width:178px;" value="#{form.qst}" maxlength="20" />
+						</h:panelGroup>
+					</h:panelGroup>						
+				</h:panelGroup>
+				
+				<!-- ROW 13 -->
+				<h:panelGroup layout="block">
+					<div class="FL" style="border-right: solid 1px;margin-top:-2px;padding-right:3px;height:38px">
+						<h:panelGroup styleClass="FL pad1lt W170 pad7tp" layout="block">
+							<h:outputText value="DATE OF BIRTH IF MINOR UNDER 18"/>
+							<br/>
+							<h:panelGroup>
+								<span class="fd_sm2 pad-5lt pad2tp">
+									<ace:dateTimeEntry id="dob"
+										tabindex="0"
+										renderAsPopup="true"
+										styleClass="fd_sm2 FL"
+										disabled="#{not (isAppEdit or isEmpEdit)}"
+										value="#{form.dob}"
+										style="min-width:99%; display: grid; ">
+										<f:converter converterId="lightspeed.MultiDateConverter" />
+									</ace:dateTimeEntry>
+								</span>
+							</h:panelGroup>
+						</h:panelGroup>	
+					</div>
+					<h:panelGroup styleClass="FL pad5lt pad6tp">
+						<h:outputText value="PERFORMANCE CATEGORY" />
+						<br/>
+						<h:panelGroup>
+							<ace:textEntry id="performanceCategory"
+								disabled="#{not isAppEdit}" style="width:235px"
+								styleClass="LT txt10" value="#{form.performanceCategory}"
+								maxlength="50" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 15 -->
+				<h:panelGroup layout="block">
+					<div class="FL W130 pad-2tp" style="border-right: solid 1px;padding-right:3px;height:71px;margin-bottom:-3px;">
+						<h:panelGroup styleClass="FL pad5rt W110 pad6tp" layout="block" style="height: 24px;">
+							<h:outputText value="TALENT AGENCY" styleClass="txt8"/>
+							<h:panelGroup styleClass="W120" layout="block">
+								<ace:textEntry id="talentAgencyName"
+									disabled="#{not (isAppEdit or isEmpEdit)}"
+									styleClass="LT txt10 W120" value="#{form.talentAgencyName}"
+									maxlength="150" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						
+						<!-- HORIZONTAL RULE -->
+						<div class="rowCont FL">
+							<hr style="height:1px;background:black;border:0;margin-left:-3px;margin-right:-3px;width:136px" />
+						</div>
+						
+						<h:panelGroup styleClass="FL pad5rt W110" layout="block" style="height:24px;">
+							<h:outputText value="AGENCY CONTACT" styleClass="txt8"/>
+							<h:panelGroup styleClass="" layout="block">
+								<ace:textEntry id="agencyContact"
+									disabled="#{not (isAppEdit or isEmpEdit)}"
+									styleClass="LT txt10 W120" value="#{form.agencyContact}"
+									maxlength="15" />
+							</h:panelGroup>
+						</h:panelGroup>	
+					</div>
+					
+					
+					<div class="FL W130 pad-2tp" style="border-right:solid 1px;padding-right:3px;height:71px;margin-bottom:-2px;">
+						<h:panelGroup styleClass="FL txt8 pad1lt" layout="block">
+							<h:panelGroup styleClass="FL txt8 pad7tp pad5lt" layout="block" style="height:24px;">
+								<h:outputText value="FULL MEMBER #" styleClass="txt8"/>
+								<h:panelGroup>
+									<ace:textEntry id="fullMemberNum"
+										disabled="#{not (isAppEdit or isEmpEdit)}"
+										styleClass="LT txt10 W115" value="#{form.fullMemberNum}"
+										maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+						
+							<div class="rowCont FL">
+								<!-- HORIZONTAL RULE -->
+								<hr class="FL" style="height:1px;background:black;border:0;margin-left:-1px;margin-right:-3px;width:134px" />
+							</div>
+							
+							<h:panelGroup styleClass="FL pad5lt txt8" layout="block" style="height:24px;">
+								<h:outputText value="APPRENTICE #" styleClass="FL txt8"/>
+								<h:panelGroup>
+									<ace:textEntry id="apprenticeNum"
+										disabled="#{not (isAppEdit or isEmpEdit)}"
+										styleClass="LT txt10 W115" value="#{form.apprenticeNum}"
+										maxlength="45" />
+								</h:panelGroup>
+							</h:panelGroup>	
+						</h:panelGroup>
+					</div>
+					<h:panelGroup styleClass="FL txt8 W65" layout="block">
+						<h:outputText value="PERMIT #" styleClass="pad5lt txt8"/>
+						<h:panelGroup styleClass="" layout="block">
+							<ace:textEntry id="workPermitNum"
+								disabled="#{not (isAppEdit or isEmpEdit)}"
+								styleClass="pad5lt LT txt10 W145" value="#{form.workPermitNum}"
+								maxlength="25" />
+						</h:panelGroup>
+					</h:panelGroup>						
+				</h:panelGroup>
+			</h:panelGrid>
+		</div>
+
+		<h:panelGroup rendered="#{bean.addMoreInfo}">
+			<!-- SPECIAL PROVISIONS area - only shown for "long form" -->
+		<div class="FL sfFormBorder1 pad18tp" style="width:1140px;padding-left:10px;margin-bottom: 10px;">
+
+				<div class="pad5tp">
+					<h:outputText styleClass="FL B" style="font-size:11px"
+						value="SPECIAL PROVISIONS" />
+				</div>
+
+				<!-- Text editor -->
+				<h:panelGroup styleClass="rowCont FL pad15bm pad5tp">
+					<h:panelGroup styleClass="xfdfTxtCont"
+						style="height: 115px;width:98%;">
+						<ace:textAreaEntry id="specialProvisions"
+							value="#{form.specialProvisions}" styleClass="stdTxt W100percnt"
+							style="height:93%;" language="en" saveOnSubmit="true"
+							height="93%" disabled="#{not isAppEdit}" resizable="false"
+							maxlength="1000" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<div class="FL rowCont" style="width: 1120px">
+					<div class="FL" style="width: 410px">
+						<h:outputText styleClass="FL B" style="font-size:11px"
+							value="#{msg.Form_ActraContract_Text9}" />
+					</div>
+					<div class="FR pad10lt" style="width: 440px">
+						<!-- SIGNATURE VALUE -->
+						<div class="FL rowCont"
+							style="height: 27px; border-bottom: solid 1px;">
+							<div class="rowCont">
+								<!-- Sign Button  -->
+								<c:set var="optSigned"
+									value="#{bean.contactDoc.optSignature ne null}" />
+								<h:panelGroup rendered="#{(!optSigned)}" styleClass="FL"
+									style="margin-left:37%">
+
+									<h:panelGroup styleClass="btn_legend_left pad12tp"
+										style="float:left;">
+										<c:set var="renderHot"
+											value="#{isEmployee and (bean.contactDoc.empSignature ne null)}" />
+										<h:panelGroup rendered="#{renderHot}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Sign" id="actionSignOptional"
+												action="#{contactFormBean.actionSignOptional}"
+												title="Signature field" styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<h:panelGroup rendered="#{not renderHot}">
+											<span class="btnMiniLt" />
+											<span> <h:commandLink value="Sign"
+													onclick="return false;" styleClass="btnMiniDisCt dislink" />
+											</span>
+											<span class="btnMiniRt" />
+										</h:panelGroup>
+									</h:panelGroup>
+
+								</h:panelGroup>
+								<!-- Sign Button End -->
+								<span> <h:outputText escape="false" styleClass="txt12"
+										rendered="#{optSigned}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{bean.contactDoc.optSignature.name}"
+											styleClass="U B txtBlue" />
+										<h:outputText
+											value=" #{bean.contactDoc.optSignature.displayTime}" />
+										<br />
+										<h:outputText value="# #{bean.contactDoc.optSignature.uuid}" />
+									</h:outputText>
+								</span>
+							</div>
+						</div>
+						<!-- SIGNATURE LABEL -->
+						<div class="FL CT" style="height: 27px; width: 440px">
+							<h:outputText value="(Signature of Performer)" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:panelGroup>
+
+	</div>
+
+</ui:composition>

@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Standard input plus confirmation dialog (message + ok/cancel buttons) -->
+<!-- This is the similar to confirmpopup with the addition of an input field. -->
+
+<h:form>
+	<c:set var="bean" value="#{popupInputBean}"></c:set>
+
+	<ace:dialog visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="confpopup">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+
+		<div class="confPopBdy">
+
+			<div class="confPopCont">
+				<div class="popup_main stdTxt pad10tp">
+					<h:outputText escape="false" value="#{bean.message}" />
+					<div class="CT pad10tp txt12">
+						<ace:textEntry tabindex="1" value="#{bean.input}" id="popInput_focus"
+								style="width:80%;" maxlength="#{bean.maxLength}" />
+						<br/><br/>
+					</div>
+
+					<div>
+						<h:outputText rendered="#{bean.inputError}" styleClass="RED"
+								value="#{bean.errorMessage}" />
+						<h:panelGroup rendered="#{! bean.inputError}">
+							<br/>
+						</h:panelGroup>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="confpopBtnCont">
+				<h:panelGroup rendered="#{not empty bean.buttonCancelLabel}">
+					<span class="FR pad5rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton tabindex="3" value="#{bean.buttonCancelLabel}"
+									action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+				</h:panelGroup>
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton tabindex="2" value="#{bean.buttonOkLabel}"
+								onclick="override();"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

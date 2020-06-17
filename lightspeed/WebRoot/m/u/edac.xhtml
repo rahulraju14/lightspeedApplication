@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Edit Account</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="myaccountm" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad5tp myacct">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="pageTitle">
+					Edit Account
+				</div>
+
+				<div class="LT" style="margin-left:7%;">
+
+					<div class="pad8tp">
+						<div>
+							<h:outputText value="Name:" styleClass="inputLbl" />
+						</div>
+						<h:inputText styleClass="fdFname"
+							value="#{userViewBean.user.firstName}"
+							tabindex="1" maxlength="30">
+						</h:inputText>
+						<h:inputText styleClass="fdLname" style="width:3%;"
+							value="#{userViewBean.user.middleName}"
+							tabindex="2" maxlength="1">
+						</h:inputText>
+						<h:inputText styleClass="fdLname"
+							value="#{userViewBean.user.lastName}"
+							tabindex="3" maxlength="30">
+						</h:inputText>
+					</div>
+
+					<div class="pad10tp">
+						<div>
+							<h:outputText value="E-mail:" styleClass="inputLbl" />
+						</div>
+						<h:inputText styleClass="fdEmail"
+							value="#{userViewBean.user.emailAddress}"
+							tabindex="4" maxlength="100">
+						</h:inputText>
+					</div>
+
+					<div class="pad10tp">
+						<div>
+							<h:outputText value="Address:" styleClass="inputLbl" />
+						</div>
+						<h:inputText styleClass="fdEmail"
+							value="#{userViewBean.user.homeAddress.addrLine1}"
+							tabindex="5" maxlength="100">
+						</h:inputText>
+					</div>
+					<div class="pad4tp">
+						<h:inputText styleClass="fdEmail"
+							value="#{userViewBean.user.homeAddress.addrLine2}"
+							tabindex="6" maxlength="100">
+						</h:inputText>
+					</div>
+
+					<div class="pad10tp">
+						<div>
+							<h:outputText value="City:" styleClass="inputLbl" />
+						</div>
+						<h:inputText styleClass="fdEmail"
+							value="#{userViewBean.user.homeAddress.city}"
+							tabindex="7" maxlength="35">
+						</h:inputText>
+					</div>
+
+					<div class="pad10tp">
+						<div class="fdStateDiv">
+							<div class="fdState">
+								<h:outputText value="State:" styleClass="inputLbl" />
+							</div>
+							<div class="fdState">
+								<h:selectOneMenu styleClass="state" tabindex="8"
+										value="#{userViewBean.user.homeAddress.state}">
+									<f:selectItems
+											value="#{applicationScopeBean.stateDL[userViewBean.user.homeAddress.country]}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="fdZipDiv">
+							<div class="fdZip">
+								<h:outputText value="Zip:" styleClass="inputLbl" />
+							</div>
+							<div class="fdZip">
+								<h:inputText value="#{userViewBean.user.homeAddress.zip}"
+									tabindex="9" maxlength="10">
+								</h:inputText>
+							</div>
+						</div>
+					</div>
+
+					<div class="pad12tp">
+						<div>
+							<h:outputText value="Phone:" styleClass="inputLbl" />
+						</div>
+					</div>
+
+					<div class="pad4tp">
+						<span class="inputLblLeft" ><h:outputText value="Cell:"/>
+						</span>
+						<h:inputText styleClass="fdPhone"
+							value="#{userViewBean.user.cellPhone}" tabindex="10" maxlength="25">
+						</h:inputText>
+					</div>
+					<div class="pad4tp">
+						<span class="inputLblLeft" ><h:outputText value="Office:"/>
+						</span>
+						<h:inputText styleClass="fdPhone"
+							value="#{userViewBean.user.businessPhone}" tabindex="11" maxlength="25">
+						</h:inputText>
+					</div>
+					<div class="pad4tp">
+						<span class="inputLblLeft" ><h:outputText value="Home:"/>
+						</span>
+						<h:inputText styleClass="fdPhone"
+							value="#{userViewBean.user.homePhone}" tabindex="12" maxlength="25">
+						</h:inputText>
+					</div>
+
+				</div><!-- end LT of all input areas -->
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="twoBtnRow">
+					<span class="inBlock FL">
+						<span class="FL btnSecHotLt"></span>
+						<span>
+							<h:commandLink tabindex="13" action="#{userViewBean.actionSaveMobile}"
+								styleClass="btnSecHotCt" style="font-size:24px;" >&#160;Save&#160;</h:commandLink>
+						</span>
+						<span class="FL btnSecHotRt"></span>
+					</span>
+
+					<span class="inBlock FR">
+						<span class="FL btnPriEnbLt"></span>
+						<span>
+							<h:commandLink value="Cancel" tabindex="14" action="myaccountm"
+								styleClass="btnPriEnbCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnPriEnbRt"></span>
+					</span>
+				</div>
+
+				<div class="CB pad15tp"></div>
+
+			</div><!-- end CT of main body -->
+
+					<h:inputHidden value="#{userViewBean.user.loanOutAddress.addrLine1}" />
+					<h:inputHidden value="#{userViewBean.user.agencyAddress.addrLine1}" />
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

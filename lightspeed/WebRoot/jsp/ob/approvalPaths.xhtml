@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<c:set var="show" value="#{not empty authBean.pgFields['10.3,view']}" />
+	<c:set var="isCanadaProd" value="#{approvalPathsBean.talentProd}" />
+
+	<ace:tabPane label="#{show ? 'Approval Paths' : ''}" disabled="#{not show}">
+
+		<h:outputText style="visibility:hidden;" value="#{approvalPathsBean.setUp}"/>
+
+		<div id="approvalPathScrollTop" class="scrollPnlTab pad-10tp" onscroll="setPathScrollPos(this.scrollTop);">
+			<div class="pad10lt pad15tp">
+				<div class="rowCont FL">
+					<h:outputText styleClass="apText" escape="false" value="Use this &lt;strong&gt; Approval Paths &lt;/strong&gt; screen to
+						 specify who is responsible for signing, reviewing and approving Onboarding forms. Follow the steps below:"/>
+				</div>
+				 <div class="rowCont FL pad5tp">
+					<span class="FL"><h:outputText escape="false" value="Show the steps with:"/></span>
+					
+					<h:selectOneRadio id="viewType"
+							value="#{approvalPathsBean.viewType}"
+							valueChangeListener="#{approvalPathsBean.listenChangeInstructionView}"
+							layout="lineDirection" styleClass="h_radio">
+						<f:selectItem itemLabel="Full Instructions" itemValue="f" />
+						<f:selectItem itemLabel="Short Instructions" itemValue="s" />
+						<ace:ajax />
+					</h:selectOneRadio>
+				</div>
+				<!-- STEP 1 -->
+				<ui:include src="approvalPathStep1.xhtml" />
+
+				<!-- STEP 2 -->
+				<ui:include src="approvalPathStep2.xhtml" />
+
+				<!-- STEP 3 -->
+				<c:if test="#{not isCanadaProd}">
+					<ui:include src="approvalPathStep3.xhtml" />
+				</c:if>
+				
+				<!-- STEP 4 -->
+				<ui:include src="approvalPathStep4.xhtml">
+					<ui:param name="isCanadaProd" value="#{isCanadaProd}" />
+				</ui:include>
+
+				<!-- STEP 5 -->
+				<c:if test="#{not isCanadaProd}">
+					<ui:include src="approvalPathStep5.xhtml" />
+				</c:if>
+				
+				<!-- STEP 6 -->
+				<ui:include src="approvalPathStep6.xhtml">
+					<ui:param name="isCanadaProd" value="#{isCanadaProd}" />
+				</ui:include>
+
+				<div class="rowCont FL pad30tp"></div>
+
+			</div>
+		</div><!-- scrolltop  -->
+
+	</ace:tabPane>
+
+</ui:composition>

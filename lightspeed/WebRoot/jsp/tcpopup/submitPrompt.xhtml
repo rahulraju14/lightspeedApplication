@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Submit on Behalf confirmation.  This is an extension of the -->
+	<!-- password/PIN confirmation dialog (message + pw entry + PIN entry + ok/cancel buttons) -->
+	<!-- This is based on the confirmpopupbig class (size). -->
+	<h:form>
+		<ace:dialog visible="#{submitPromptBean.askPin}"
+				header="#{submitPromptBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+
+			<ace:ajax event="close" execute="@this" listener="#{submitPromptBean.actionCancel}"/>	
+
+			<h:panelGroup>
+				<div class="popupBdyAW">
+					<div class="pad10tp">
+						<ui:include src="../common/errorsPopup.xhtml" />
+					</div>
+
+					<div class="popCont80">
+						<div class="popup_main stdTxt">
+
+							<h:outputText rendered="#{submitPromptBean.pinError}" styleClass="RED B" escape="false"
+									value="#{submitPromptBean.errorMsg}"/>
+							<br/>
+
+							<h:outputText escape="false" value="#{submitPromptBean.message}" />
+
+							<div>
+								<h:panelGroup styleClass="rowCont pad10tp">
+									<span class="fd FL">
+										<h:selectOneMenu  tabindex="1"
+												style="min-width:130px;" value="#{submitPromptBean.submitType}" >
+											<f:selectItems value="#{submitPromptBean.submitTypeDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{submitPromptBean.submitType eq 'OTHER'}">
+									<div class="rowCont pad10tp">
+										<ace:textAreaEntry styleClass="FL pad3lt stdTxtArea" value="#{submitPromptBean.comment}"
+												tabindex="2"
+												maxlength="1000" style="height:30px;width:80%;font-size:11px;"/>
+									</div>
+									<div class="rowCont pad5tp">
+										The above comment will appear in the comments section of the
+										<span><h:outputText value="#{submitPromptBean.documentType}"/></span>
+										and will be visible to the employee. Once saved, it may not be deleted.
+									</div>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{submitPromptBean.submitType ne 'OTHER'}">
+									<div class="rowCont pad10tp">&#160;
+									</div>
+								</h:panelGroup>
+
+								<span class="rowCont pad5tp">
+									<h:panelGroup>
+										<span class="fdNm FL pad3tp">
+											<h:outputText value="Password:" />
+										</span>
+										<span class="fd FL"><!-- max length is Constants.MAX_PASSWORD_LENGTH -->
+											<ace:textEntry secret="true" tabindex="3" maxlength="20" id="submitOther_focus"
+													action="#{submitPromptBean.actionOk}"
+													redisplay="true" value="#{submitPromptBean.password}" />
+										</span>
+									</h:panelGroup>
+								</span>
+								<span class="rowCont pad10tp">
+									<span class="fdNm FL pad3tp">
+										<h:outputText value="PIN:" />
+									</span>
+									<span class="fd FL">
+										<ace:textEntry secret="true" tabindex="4" maxlength="4" id="SubmitPin" action="#{submitPromptBean.actionOk}"
+												redisplay="true" value="#{submitPromptBean.pin}" />
+									</span>
+								</span>
+
+								<h:panelGroup styleClass="rowCont pad10tp stdTxt">
+									By providing my electronic signature I certify that the<br/>
+									submitted information is accurate and complete.
+								</h:panelGroup>
+
+							</div>
+						</div>
+
+					</div>
+
+					<div class="popBtnCont4 pad20rt">
+						<h:panelGroup rendered="#{not empty submitPromptBean.buttonCancelLabel}">
+							<span class="FR">
+								<span class="btnPriEnbLt"/>
+								<span>
+									<ace:linkButton value="#{submitPromptBean.buttonCancelLabel}" tabindex="6"
+										action="#{submitPromptBean.actionCancel}" styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt"/>
+							</span>
+						</h:panelGroup>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="#{submitPromptBean.buttonOkLabel}" tabindex="5"
+									action="#{submitPromptBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

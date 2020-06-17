@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<c:set var="canada" value="#{headerViewBean.production.type.canadaTalent}" />
+
+	<!-- Pop-up on Project page for "Add new Episode/Job" -->
+	<!-- Param: -->
+	<!--   aicp: true iff Commercial production -->
+	<h:form>
+		<ace:dialog visible="#{projectViewBean.showAddProject}"
+				header="#{aicp ? 'Add Job' : 'Add Episode'}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{projectViewBean.actionCancel}"/>			
+	
+		<c:set var="isTeamProd" value="#{(headerViewBean.production.payrollPref.payrollService ne null) and 
+							(headerViewBean.production.payrollPref.payrollService.teamPayroll)}" />
+		<c:set var="includeTour" value="#{isTeamProd and headerViewBean.production.payrollPref.includeTouring}" />
+
+		<div class="popupBdyAW">
+			<h:panelGroup>
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</h:panelGroup>
+
+			<div class="popCont90">
+
+				<div class="popup_main">
+					<div class="rowCont pad15lt">
+						<div class="#{aicp ? 'fdNm_w' : 'fdNm_w'} FL">
+							<h:outputText value="#{aicp ? 'Job Name:' : 'Episode Name:'}"/>
+						</div>
+						<div class="fd FL">
+							<ace:textEntry id="addProject_focus"
+									
+									maxlength="35" style="width:200px;"
+									value="#{projectViewBean.apName}"
+									required="false" />
+						</div>
+					</div>
+
+					<!-- JOB/EPISODE NUMBER -->
+					<div class="rowCont pad15lt pad10tp">
+						<div class="#{aicp ? 'fdNm_w' : 'fdNm_w'} FL">
+							<h:outputText value="#{aicp ? 'Job Number:' : 'Episode Number:'}"/>
+						</div>
+						<div class="fd FL">
+							<ace:textEntry 
+									maxlength="20" style="width:100px;"
+									value="#{projectViewBean.apNumber}"
+									required="false" />
+						</div>
+					</div>
+
+					<!-- START DATE -->
+					<h:panelGroup styleClass="rowCont pad10tp" rendered="#{aicp}">
+						<div class="padPop3tp pad15lt fdNm_w">
+							<span>Work Start Date:</span>
+						</div>
+						<div class="FL">
+							<ace:dateTimeEntry tabindex="0"
+									value="#{projectViewBean.apStartDate}"
+									renderAsPopup="true">
+								<f:converter converterId="lightspeed.MultiDateConverter"/>
+							</ace:dateTimeEntry>
+						</div>
+					</h:panelGroup>
+
+					<!-- WORKERS COMP - TEAM ONLY -->
+					<h:panelGroup styleClass="rowCont pad15lt pad8tp stdTxt"
+							rendered="#{aicp and includeTour}">
+						<h:selectBooleanCheckbox styleClass="ckbx"
+								value="#{projectViewBean.addWorkersComp}">
+						</h:selectBooleanCheckbox>
+						<h:outputText>Includes Workers Comp</h:outputText>
+					</h:panelGroup>
+					<c:if test="${canada == false}">
+					 <span class="rowCont pad15lt pad15tp stdTxt">
+						<h:selectBooleanCheckbox styleClass="ckbx"
+								value="#{projectViewBean.copyMembers}">
+						</h:selectBooleanCheckbox>
+						<h:outputText rendered="${canada}">Copy staff and talent from the current</h:outputText>
+						<h:outputText rendered="${!canada}">Copy cast and crew from the current</h:outputText>
+						<h:outputText value="#{aicp ? ' job ' : ' episode '}"/>
+						<h:outputText styleClass="stdTxt" value=" (#{headerViewBean.project.title})." />
+					</span>
+					<span class="rowCont pad15lt pad10tp stdTxt">
+						<h:selectBooleanCheckbox  styleClass="ckbx"
+								value="#{projectViewBean.copyPreferences}">
+						</h:selectBooleanCheckbox>
+						<h:outputText>Copy all preferences from the current</h:outputText>
+						<h:outputText value="#{aicp ? ' job' : ' episode'}"/>
+						<h:outputText styleClass="stdTxt" value=" (#{headerViewBean.project.title})." />
+					</span>
+					</c:if>
+					<c:if test="${canada == false}">
+					<span class="rowCont pad15lt pad10tp stdTxt">
+						<h:selectBooleanCheckbox  styleClass="ckbx"
+								value="#{projectViewBean.copyTcApprovers}">
+						</h:selectBooleanCheckbox>
+						<h:outputText>Copy timecard approvers from the current</h:outputText>
+						<h:outputText value="#{aicp ? ' job' : ' episode'}"/>
+						<h:outputText styleClass="stdTxt" value=" (#{headerViewBean.project.title})." />
+					</span>
+					</c:if>
+					<c:if test="${canada == false}">
+					<h:panelGroup rendered="#{headerViewBean.production.allowOnboarding}">
+						<span class="rowCont pad15lt pad10tp stdTxt">
+							<h:selectBooleanCheckbox  styleClass="ckbx"
+									value="#{projectViewBean.copyOnbApproversPaths}">
+							</h:selectBooleanCheckbox>
+							<h:outputText>Copy onboarding approvers and paths from the current</h:outputText>
+							<h:outputText value="#{aicp ? ' job' : ' episode'}"/>
+							<h:outputText styleClass="stdTxt" value=" (#{headerViewBean.project.title})." />
+						</span>
+						<span class="rowCont pad15lt pad10tp stdTxt">
+							<h:selectBooleanCheckbox  styleClass="ckbx"
+									value="#{projectViewBean.copyOnbPackets}">
+							</h:selectBooleanCheckbox>
+							<h:outputText>Copy onboarding Packets from the current</h:outputText>
+							<h:outputText value="#{aicp ? ' job' : ' episode'}"/>
+							<h:outputText styleClass="stdTxt" value=" (#{headerViewBean.project.title})." />
+						</span>
+					</h:panelGroup>
+					</c:if>
+				</div>
+
+			</div>
+
+			<div class="popBtnCont4 pad10tp">
+				<span class="FR pad15rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel"
+								action="#{projectViewBean.cancelAddProject}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad20rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Add"
+								action="#{projectViewBean.actionAddProject}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</div>
+		</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Permissions</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+					resizeScrollable('perm:pr',325,250);
+
+					// force header and data left-hand columns to matching widths
+					tab = document.getElementById('perm:pr'); // first data row
+					w = tab.clientWidth;
+					console.log('clientwidth=' + w);
+					w = Math.floor(0.36 * w);  // width=36% works nicely at minimum window size
+					if (380 > w) { w = 380; }; // min-width:380px;
+					wx = w + "px";
+					console.log('width=' + wx);
+					prmcol = document.getElementById('perm:pr_row_0'); // first data row
+					if(prmcol != null) {
+						prmcol = prmcol.firstChild; // 'td' - leftmost column of first data row
+						prmcol.style.width=wx;
+						prmcol.style.minWidth=wx;
+						prmcol.style.maxWidth=wx;
+					}
+					cola = document.getElementById('permHdr'); // "Permission" header div
+					cola = cola.parentElement; 			// get the 'th' above it
+					cola.style.width= wx;						// set all its widths
+					cola.style.minWidth= wx;
+					cola.style.maxWidth= wx;
+
+					cola = document.getElementById('slidePad'); // div to left of slider
+					cola.style.width= (w-2) + "px";						// set its width
+
+				</c:if>
+
+				//clearOnScroll('perm:pr'); // Remove ICEfaces onScroll function
+				scrollToPos(); // scroll to last position, and set our onScroll function
+
+			}
+
+			var formname = "perm";
+			var mainListId = "perm:pr";
+
+			function saveScrollPos() {
+				// Save the permission table's scrolled position after each change.
+				document.getElementById('perm:scrollPos').value = this.scrollTop;
+				//console.log("saved scroll=" + this.scrollTop);
+			}
+
+			function scrollToPos() {
+				// invoked by server side embedding java call after Edit, Save, or Cancel.
+				// Restore the scrolled position of the permission table.
+				// This is a specialized version for the Permissions page, different than the
+				// usual function in the global script.js.
+				var pos = document.getElementById('perm:scrollPos').value;
+				var table = getScrollDiv('perm:pr');
+				if (pos != null) {
+					table.scrollTop = pos;
+					//console.log("scrolled to=" + pos);
+				}
+				// Reset the event, as the div was probably replaced by ICEfaces
+			//	Event.observe(table, 'scroll', saveScrollPos);
+			}
+
+		</script>
+
+		<style type="text/css">
+			.ie9 .rot90 {
+				left: 10px;
+				bottom: 30px;
+			}
+
+		</style>
+
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript" type="text/javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(mainListId); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+		<h:form  id="perm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="permissions" />
+			</h:outputText>
+
+			<div id="main">
+				<ui:include src="../common/header2.xhtml" />
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+							<div id="pnlFull" class="MA">
+								<!-- call "getLoadPage()" to setup page; always returns false. -->
+								<h:outputText  style="display:none" value="#{permissionBean.loadPage}" />
+
+								<div id="errMsgContFull" class="rowCont" style="margin-top:-15px;">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</div>
+
+								<div class="topBdrCont FL">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div class="rowCont ltrtBdr BKwhite FL">
+									<div class="rowCont">
+										<h:panelGroup rendered="#{not permissionBean.editMode and not empty authBean.pgFields['3.4,edit']}">
+											<span class="FR pad5rt">
+												<span class="btnPriHotLt"/>
+													<ace:linkButton value="Edit" action="#{permissionBean.actionEdit}"
+														styleClass="btnPriHotCt" />
+												<span class="btnPriHotRt"/>
+											</span>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{permissionBean.editMode}">
+											<span class="FR pad5rt">
+												<span class="btnPriDisLt" />
+													<ace:linkButton value="Edit"
+														styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+												<span class="btnPriDisRt" />
+											</span>
+										</h:panelGroup>
+									</div>
+
+									<div class="CB pad5tp"></div>
+
+									<div class="centerFullTb MA">
+										<ace:dataTable styleClass="gradTbl2"
+											style="width:100%;max-width:100%;z-index:1;position:relative;overflow-x:auto;"
+											scrollHeight="#{headerViewBean.mobile ? '' : '300'}"
+											scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+											value="#{permissionBean.rows}" id="pr" var="row">
+
+											<!-- TODO add binding="#{permissionRequestBean.permTable}" -->
+
+											<ace:columnGroup type="header">
+												<!-- TYPICAL GRAY TABLE COLUMN HEADER -->
+												<ace:row styleClass="scrlWidth txt11">
+													<ace:column headerText=" " style="width:36%;" id="phdr1">
+														<f:facet name="header">
+														<div id="permHdr" class="MA B pad10lt">
+															<h:outputText value="Permission"/>
+														</div>
+														</f:facet>
+													</ace:column>
+													<c:forEach begin="0" end="0" var="x">
+														<ace:column headerText=" " styleClass="pcol" style="min-width:55px;" id="depthdr1"
+																rendered="#{permissionBean.viewStyle eq 1}"><!-- dept members -->
+															&#160;
+														</ace:column>
+													</c:forEach>
+													<c:forEach begin="#{permissionBean.sliderValue}" end="#{permissionBean.lastColNum}" var="x">
+														<ace:column headerText=" " styleClass="pcol" style="min-width:55px;">
+															&#160;
+														</ace:column>
+													</c:forEach>
+													<ace:column headerText=" " style="width: 100%;">&#160;
+													</ace:column>
+												</ace:row>
+
+												<!-- HEADER (TOP) ROW WITH CONTROLS FOLLOWED BY ROLES OR DEPT NAMES OR PEOPLE -->
+												<ace:row style="background:none;height:100px;" styleClass="clearHdr txt11"> 
+													<ace:column styleClass="LT" style="background: none;padding-left:10px;" id="phdr2">
+														<div class="LT txt12">
+														View Permissions for:
+
+														</div>
+														<div class="LT txt12">
+															<h:selectOneRadio id="viewStyle" styleClass="pad10rt"
+																	 disabled="#{permissionBean.editMode}"
+																	valueChangeListener="#{permissionBean.listenViewStyle}"
+																	value="#{permissionBean.viewStyle}" layout="lineDirection">
+																<f:selectItem itemLabel="One Person" itemValue="0" />
+																<f:selectItem itemLabel="Members of a Dept" itemValue="1"
+																		itemDisabled="#{empty permissionBean.department}" />
+																<f:selectItem itemLabel="All Departments" itemValue="2"
+																		itemDisabled="#{empty permissionBean.department}" />
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneRadio> 
+														</div>
+														<div class="LT txt12 pad10tp">
+															<div class="W80" style="display:inline-block">
+															</div>
+															<h:selectOneMenu style="width:200px;border-style:solid;border-width:1px;border-color:#cccccc;" styleClass="select"
+																rendered="#{permissionBean.viewStyle eq 0}"
+																disabled="#{permissionBean.editMode}"
+																valueChangeListener="#{permissionBean.listenContactDL}"
+																value="#{permissionBean.contactId}">
+																<f:selectItems value="#{permissionBean.contactDL}" />
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneMenu>
+														</div>
+														<div class="LT txt12">
+															<div class="W80" style="display:inline-block">
+															</div>
+															<h:selectOneMenu style="width:200px;border-style:solid;border-width:1px;border-color:#cccccc;" styleClass="select"
+																rendered="#{permissionBean.viewStyle eq 1}"
+																disabled="#{permissionBean.editMode}"
+																valueChangeListener="#{permissionBean.listenDeptDL}"
+																value="#{permissionBean.departmentId}">
+																<f:selectItems value="#{permissionBean.deptDL}" />
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneMenu>
+														</div>
+														<div>
+															<h:panelGroup rendered="#{permissionBean.viewStyle eq 2}">
+																<div style="display:inline-block;height:20px;">&#160;
+																</div>
+															</h:panelGroup>
+														</div>
+													</ace:column>
+
+													<!-- HEADER FOR OPTIONAL FIRST DATA COLUMN (if "all members of a department") -->
+													<c:forEach begin="0" end="0" var="x"><!-- optional "Dept" column header -->
+														<ace:column style="background:none;height:100px;" styleClass="pcol txt11" id="depthdr#{x}"
+																rendered="#{permissionBean.viewStyle eq 1}"><!-- dept members -->
+															<div>
+																<div class="rot90 B_false">
+																	<h:outputText styleClass="B_false" escape="false" value="#{permissionBean.columns[x].heading1}" />
+																	<h:panelGroup styleClass="B_false" rendered="#{not empty permissionBean.columns[x].heading2}">
+																		<br/>
+																		<h:outputText styleClass="B_false" value="#{permissionBean.columns[x].heading2}" />
+																	</h:panelGroup>
+																</div>
+															</div>
+														</ace:column>
+													</c:forEach>
+
+													<!-- HEADER FOR ALL OTHER COLUMNS (ROLES, PEOPLE, or DEPARTMENTS -->
+													<c:forEach begin="#{permissionBean.sliderValue}" end="#{permissionBean.lastColNum}" var="x">
+														<ace:column styleClass="pcol txt11" style="background:none;height:100px;">
+															<div>
+																<div class="rot90 B_false">
+																	<h:outputText escape="false" value="#{permissionBean.columns[x].heading1}" />
+																	<h:panelGroup rendered="#{not empty permissionBean.columns[x].heading2}">
+																		<br/>
+																		<h:outputText value="#{permissionBean.columns[x].heading2}" />
+																	</h:panelGroup>
+																</div>
+															</div>
+														</ace:column>
+													</c:forEach>
+													<ace:column  style="width: 100%;background: none;">&#160;
+													</ace:column>
+												</ace:row> 
+											</ace:columnGroup>
+
+											<!-- FIRST COLUMN: CLUSTER LABELS and View/Edit CONTROLS -->
+											<ace:column styleClass="LH20" style="width:36%;min-width:380px;vertical-align:top;" id="lblcol">
+												<div class="FL LH20" style="width:37%;height:100%;">
+													<div class="pad5tp pad5lt">
+														<h:outputText styleClass="B" value="#{row.cluster.name}" />
+													</div>
+													<div class="pad5lt">
+														<h:outputText style="padding:0;margin:0;" value="#{row.cluster.description}" />
+													</div>
+												</div>
+												<div class="FL pad10lt" style="width:60%;">
+													<div class="pad8tp">
+														<h:panelGroup styleClass="LH20" rendered="#{not row.parts[0].hide}">
+															<h:commandButton
+																value="" image="#{row.parts[0].expand ? '../../i/minus.gif' : '../../i/plus.gif'}"
+																action="#{permissionBean.actionExpandView}" title="Show or hide list of individual View permissions">
+																<f:setPropertyActionListener value="#{row.cluster.id}" target="#{permissionBean.expandId}"/>
+															</h:commandButton>
+															VIEW
+														</h:panelGroup>
+														<br/>
+														<ui:repeat rendered="#{row.parts[0].expand}" value="#{row.parts[0].names}" var="name">
+																<h:outputText styleClass=" LH20" value="#{name}" />
+																<br/>
+														</ui:repeat>
+													</div>
+													<div class="pad8tp">
+														<h:panelGroup styleClass="LH20" rendered="#{not row.parts[1].hide}">
+															<h:commandButton
+																value="" image="#{row.parts[1].expand ? '../../i/minus.gif' : '../../i/plus.gif'}"
+																action="#{permissionBean.actionExpandEdit}" title="Show or hide list of individual Edit permissions">
+																<f:setPropertyActionListener value="#{row.cluster.id}" target="#{permissionBean.expandId}"/>
+															</h:commandButton>
+															EDIT
+														</h:panelGroup>
+														<h:panelGroup styleClass="LH20" rendered="#{row.parts[1].hide}">
+															&#160;
+														</h:panelGroup>
+														<br/>
+														<ui:repeat rendered="#{row.parts[1].expand}" value="#{row.parts[1].names}" var="name">
+															<h:outputText styleClass="prmName LH20" value="#{name}"/>
+															<br/>
+														</ui:repeat>
+														<h:panelGroup styleClass="LH20" rendered="#{row.parts[0].hide}">
+															&#160;
+														</h:panelGroup>
+													</div>
+												</div>
+											</ace:column>
+
+											<!-- OPTIONAL FIRST DATA COLUMN (if "all members of a department") -->
+											<c:forEach begin="0" end="0" var="x"><!-- optional dept summary column -->
+												<c:set var="xid" value="d" /><!-- to keep generated checkbox id's unique -->
+
+												<ace:column headerText="" styleClass="pcol LH10 CT" style="width:55px;" id="deptdata#{x}"
+														rendered="#{permissionBean.viewStyle eq 1}"><!-- dept members -->
+													<ui:include src="permcolumn.xhtml" >
+														<ui:param name="xid" value="#{xid}"></ui:param>
+														<ui:param name="x" value="#{x}"></ui:param>
+													</ui:include>
+												</ace:column>
+											</c:forEach>
+
+											<!-- LOOP GENERATING REMAINING DATA COLUMNS -->
+											<c:forEach begin="#{permissionBean.sliderValue}"
+													end="#{permissionBean.lastColNum}" var="x"><!-- loop across columns -->
+												<c:set var="xid" value="p" /><!-- to keep generated checkbox id's unique -->
+
+												<ace:column styleClass="pcol LH10 CT" style="width:55px;" id="permdata#{x}">
+
+													<ui:include src="permcolumn.xhtml" >
+														<ui:param name="xid" value="#{xid}"></ui:param>
+														<ui:param name="x" value="#{x}"></ui:param>
+													</ui:include>
+
+												</ace:column>
+
+											</c:forEach>
+
+											<ace:column headerText=" " style="width: 100%;">&#160;</ace:column>
+										</ace:dataTable>
+
+										<div><!-- SLIDER -->
+											<div class="FL" id="slidePad" style="width:36%;min-width:365px;">&#160;
+											</div>
+											<div class="FL" style="width:570px;z-index:2;position:relative;">
+												<h:panelGroup style="visibility:#{permissionBean.colCount gt 5 ? 'visible' : 'hidden'}">
+													<ace:sliderEntry id="ss" length="562px" 
+														min="#{permissionBean.sliderMin}" max="#{permissionBean.colCount-1}"
+														clickableRail="true" valueChangeListener="#{permissionBean.listenSlideEvent}"
+														value="#{permissionBean.sliderValue}">
+														<ace:ajax  event="slideEnd" execute="@this" render="@form"/>
+													</ace:sliderEntry>
+													<!-- TODO v4 changes ? ace:sliderEntry ?
+													 <ice-cc:slider id="ss" value="#{permissionBean.sliderValue}"
+															min="#{permissionBean.sliderMin}" max="#{permissionBean.colCount-1}"
+															railSize="562px" /> -->
+													<h:outputText styleClass="B"
+															style="top:15px;position:relative;"
+															value="Drag the slider, above, to view additional columns to the right." />
+												</h:panelGroup>
+											</div>
+										</div>
+
+									</div><!-- end centerFullTb -->
+
+									<div class="rowBtnFullPg">
+										<div class="rowBtnBdr"></div>
+										<div class="FL MA rowCont">
+											<h:panelGroup rendered="#{permissionBean.editMode}">
+												<h:panelGroup>
+													<span class="FR pad10rt">
+														<span class="btnPriEnbLt" />
+															<span>
+															<ace:linkButton value="Cancel" immediate="true"
+																action="#{permissionBean.actionCancel}" styleClass="btnPriEnbCt" />
+														</span>
+														<span class="btnPriEnbRt" />
+													</span>
+												</h:panelGroup>
+												<h:panelGroup>
+													<span class="FR pad5rt">
+														<span class="btnSecHotLt" />
+														<span>
+															<ace:linkButton value="Save"
+																action="#{permissionBean.actionSave}"
+																styleClass="btnSecHotCt" />
+														</span>
+														<span class="btnSecHotRt" />
+													</span>
+												</h:panelGroup>
+											</h:panelGroup>
+										</div>
+									</div>
+
+								</div><!-- end outer content cont -->
+
+								<div class="btmBdrCont FL">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+
+							</div><!-- end pnlFull -->
+						</div><!--  end pnlCont -->
+					</div><!-- end ctrCont -->
+					<div class="CB"></div><!-- clears float for liquid layout -->
+				</div><!-- end mainCont -->
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>			
+			</div><!-- end main -->
+
+			<ace:textEntry id="scrollPos" value="#{permissionBean.scrollPos}" style="display:none"/>
+		</h:form>
+		
+		<ui:include src="../common/confirmpopup.xhtml" />
+		<ui:include src="../common/releaseNotes.xhtml" />
+
+	</h:body>
+</html>

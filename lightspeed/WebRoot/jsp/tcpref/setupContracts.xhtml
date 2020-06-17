@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Contract lists for the Payroll Preference page -->
+
+	<h:panelGroup rendered="#{headerViewBean.production.payrollPref.use30Htg}">
+		<div class="rowCont B">
+			Contract Status
+		</div>
+		<!-- left-hand list: scrollable list of Production's contracts -->
+		<div id="scrollleft" class="FL pad50lt W40percnt scrollShortPnlTab pad10bm">
+			<!-- Legend wrapper -->
+			<div class="blueLegendContWrap pad20tp">
+				<div class="blueLegendCont"> <!-- Blue content -->
+					<span class="legendHdg" >
+						<h:outputText value="Active Contracts"/>
+					</span>
+
+					<div class="FL rowCont gradTbl3">
+						<ace:dataTable id="prodtable" styleClass="gradTbl3"
+							value="#{payrollSetupBean.activeContractList}"
+							var="contract"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '125'}"
+							style="width:100%;max-width:100%;overflow-x:hidden;">
+
+							<!-- NAME -->
+							<ace:column styleClass="txt11" headerText="Contract Name">
+								<!-- <x:facet name="header">
+								<div class="LT">
+								<h:outputText styleClass="pad20lt" value=" headerText: Contract Name  " />
+								</div>
+	</f:facet> -->
+								<h:outputText styleClass="pad5lt LT" value="#{contract.name}" />
+							</ace:column>
+
+						</ace:dataTable>
+					</div><!-- end of dataTable wrapper -->
+				</div><!-- end of blue content -->
+			</div><!-- end of blue wrapper -->
+		</div><!-- end scrollleft div -->
+
+		<!-- right-hand list; scrollable Contracts list -->
+		<div id="scrollright" class="FL pad100lt W35percnt scrollShortPnlTab" >
+		<!--  NOT USED
+			<!- - Legend wrapper - ->
+			<div class="blueLegendContWrap pad20tp">
+				<div class="blueLegendCont"> <!- - Blue content - ->
+
+					<h:outputText>
+						<span class="legendHdg" >
+							<h:outputText value="Inactive Contracts"/>
+						</span>
+					</h:outputText>
+
+					<div class="FL rowCont gradTbl3">
+						<ace:dataTable id="availtable" styleClass="gradTbl3" width="100%"
+							selectionMode="single" singleSort="true"
+							columnClasses="LT"
+							value="#{payrollSetupBean.inactiveContractList}"
+							var="contract" cellpadding="0" cellspacing="0"
+							headerClass="txt11"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '125'}"
+							style="width:100%;max-width:100%;overflow-x:hidden;">
+
+							<!- - NAME - ->
+							<ace:column headerText="zzz">
+								<x:facet name="header">
+								<div class="LT">
+								<h:outputText styleClass="pad20lt" value=" headerText: Contract Name  " />
+								</div>
+								</f:facet>
+								<h:outputText styleClass="pad5lt" value="#{contract.name}" />
+							</ace:column>
+
+						</ace:dataTable>
+					</div><!- - end of dataTable wrapper - ->
+				</div><!- - end of blue content - ->
+			</div><!- - end of blue wrapper - ->
+		-->
+		</div><!-- end scrollright div -->
+	</h:panelGroup>
+
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- CLONE HOTCOSTS dialog box -->
+
+	<!-- Uses params:  -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<c:set var="bean" value="#{cloneHotCostsBudgetBean}" />
+	<h:form>
+		<ace:dialog visible="#{bean.visible}"
+				header="#{bean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false"
+				styleClass="popupAddNewContact">
+				
+			<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>		
+			<div class="popNewContactBdy">
+				<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="addcontactCont">
+					<div class="popup_main pad15tp">
+						<div id="qcform">
+							<div class="FL rowCont W100percnt">
+								<!-- CLONE NOT DONE YET - display controls for performing clone -->
+								<h:panelGroup>
+									<div class="W90percnt MA txt12 B_false pad5tp">
+										<span class="">
+											<ace:dateTimeEntry  tabindex="0"
+													styleClass="cal_date" title="Copy Budget From Date"
+													value="#{bean.copyBudgetFromDate}"
+													renderAsPopup="true">
+												<f:converter converterId="lightspeed.MultiDateConverter"/>
+											</ace:dateTimeEntry>
+											<h:outputText value="" />
+		<!--
+												Clone times (including Day Types, NDMs and MPVs) from the current timecard
+												<h:outputText value="(#{timecardBean.tcUser.lastNameFirstName}," />
+												w/e
+												<h:outputText value="#{timecardBean.weeklyTimecard.endDate}" >
+													<f:convertDateTime pattern="M/d/yyyy)" timeZone="#{applicationScopeBean.timeZone}" />
+												</h:outputText>
+												to other people's timecards for the same week ending.
+
+											</h:outputText>
+		-->
+										</span>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 padPop50rt pad10tp">
+					<h:panelGroup rendered="true">
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{bean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="true">
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Ok"
+								action="#{bean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

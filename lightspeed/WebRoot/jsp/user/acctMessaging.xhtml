@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- My Account page: IM & IMDB section -->
+
+	<!-- PERSONAL IM -->
+	<div class="rowCont FL pad20tp">
+
+		<!-- VIEW MODE -->
+		<h:panelGroup rendered="#{not userViewBean.editMode}">
+			<div class="FL">
+				<span class="fdNm">
+					<h:outputText value="IM:"></h:outputText>
+				</span>
+				<h:panelGroup styleClass="LH22"
+						rendered="#{not (empty authBean.pgFields['3.1.1,im_address'] and userViewBean.hidden)}">
+					<h:outputText value="#{userViewBean.user.imService}" />
+					<span class="B pad20lt">ID:</span>
+					<h:outputText styleClass="pad10lt NW"
+							value="#{userViewBean.user.imAddress}" />
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
+
+		<!-- EDIT MODE -->
+		<h:panelGroup rendered="#{userViewBean.editMode}">
+			<span class="fdNm">
+				<h:outputText value="IM:"></h:outputText>
+			</span>
+			<h:selectOneMenu id="imService" styleClass="fd_sm2"
+					rendered="#{not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden)}"
+					value="#{userViewBean.user.imService}"
+					style="width:100px;min-width:100px;">
+				<f:selectItems value="#{userViewBean.imServiceTypeDL}" />
+			</h:selectOneMenu>
+			<span style="width:90px;">
+				<h:outputText styleClass="B pad10lt pad1rt" value="ID:" />
+			</span>
+			<ace:textEntry id="imAddress" rendered="#{not (empty authBean.pgFields['0.1,account'] and userViewBean.hidden)}"
+					maxlength="20" style="min-width:100px;"
+					value="#{userViewBean.user.imAddress}" styleClass="fd_sm2" />
+		</h:panelGroup>
+	</div><!-- end personal IM -->
+
+	<!-- IMDB -->
+	<div class="rowCont FL">
+		<span class="fdNm">
+			<h:outputText value="IMDB:"></h:outputText>
+		</span>
+		<span class="LH22">
+			<h:panelGroup style="width:250px;overflow-x:hidden;"
+					rendered="#{not userViewBean.editMode}">
+				<h:outputLink target="_blank"
+						value="http://#{userViewBean.user.imdbLink}">
+					<h:outputText value="#{userViewBean.user.imdbLink}" />
+				</h:outputLink>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userViewBean.editMode}">
+				<ace:textEntry id="imdbLink" maxlength="60" styleClass="address"
+						value="#{userViewBean.user.imdbLink}" />
+			</h:panelGroup>
+		</span>
+	</div><!-- end personal IMDB -->
+
+</ui:composition>

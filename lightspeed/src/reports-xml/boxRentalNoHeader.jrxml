@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boxRentalNoHeader" pageWidth="520" pageHeight="450" columnWidth="520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="405"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="weeklyId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select * from box_rental b " +
+($P{weeklyId}==0 ? "" : " where b.weekly_id = $P!{weeklyId} ") +
+";"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="newPage" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="teamPayroll" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="customBoxRental" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Comments" class="java.lang.String"/>
+	<field name="Inventory" class="java.lang.String"/>
+	<field name="Inventory_On_File" class="java.lang.Boolean"/>
+	<field name="Amount" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="450" splitType="Stretch">
+			<break>
+				<reportElement x="0" y="0" width="100" height="1" uuid="6aaeeef1-6aca-490d-aca5-e8b54436c852">
+					<printWhenExpression><![CDATA[$P{newPage}]]></printWhenExpression>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement style="tcDefBold" x="0" y="1" width="108" height="20" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[BOX RENTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="27" y="21" width="54" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Amount:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="27" y="42" width="81" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[INVENTORY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" positionType="Float" x="27" y="208" width="81" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMMENTS]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="81" y="21" width="54" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="27" y="55" width="486" height="143" uuid="38ed0f6f-9fb5-4651-9451-54546c26454e"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Inventory}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefBox" positionType="Float" x="27" y="221" width="486" height="130" uuid="38ed0f6f-9fb5-4651-9451-54546c26454e"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Comments}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center">
+				<reportElement style="tcDefault" x="350" y="21" width="27" height="13" uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad">
+					<printWhenExpression><![CDATA[!$P{teamPayroll}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagesPath} + ($F{Inventory_On_File} ? "/check_box.gif" : "/check_box_blank.gif")]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="tcDefBold" x="377" y="21" width="135" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753">
+					<printWhenExpression><![CDATA[!$P{teamPayroll}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Inventory is on file.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefault" positionType="Float" x="27" y="360" width="486" height="80" uuid="71c22443-3fcf-4bf7-8be3-ff5b008adc9b"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<paragraph leftIndent="1" rightIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customBoxRental}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Create Timecard pop-up dialog -->
+
+	<h:form>
+	
+		<ace:dialog visible="#{indivTimecardBean.showCreate}"
+				header="Create Timecard"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{indivTimecardBean.actionCancel}"/>		
+			<h:panelGroup rendered="#{indivTimecardBean.showCreate}">
+				<div class="confPopBdy4">
+
+					<div id="errMsgCont" class="CT rowCont W98percnt pad8tp">
+						<ui:include src="../common/errorsPopup.xhtml" />
+					</div>
+
+					<div class="popCont90">
+						<div class="popup_main stdTxt">
+							<div class="FL pad12tp">
+								<h:outputText styleClass="FL B" value="Create a new timecard for:" />
+							</div>
+
+							<div class="FL pad10lt">
+								<span class="rowCont pad12tp">
+									<h:panelGroup>
+										<span class="fdNm_med FL">
+											Name:
+										</span>
+										<span class="fd FL pad4tp">
+											<h:outputText value="#{indivTimecardBean.tcUser.firstNameLastName}" />
+										</span>
+									</h:panelGroup>
+								</span>
+								<h:panelGroup rendered="#{aicp}">
+									<span class="fdNm_med FL pad4tp" style="margin-bottom:-6px;">
+										Production
+									</span>
+									<span class="rowCont">
+										<span class="fdNm_med FL">
+											Company:
+										</span>
+										<span class="fd FL pad4tp">
+											<h:outputText value="#{indivTimecardBean.viewProduction.title}" />
+										</span>
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{! aicp}">
+									<span class="rowCont pad12tp">
+										<span class="fdNm_med FL">
+											Production:
+										</span>
+										<span class="fd FL pad4tp">
+											<h:outputText value="#{indivTimecardBean.viewProduction.title}" />
+										</span>
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{aicp}">
+									<span class="rowCont pad12tp">
+										<span class="fdNm_med FL">
+											Job Name:
+										</span>
+										<span class="fd FL">
+											<h:selectOneMenu 
+													disabled="#{! indivTimecardBean.enableProjectDL}"
+													valueChangeListener="#{indivTimecardBean.listenProject}"
+													value="#{indivTimecardBean.createProjectId}" styleClass="selRole">
+												<f:selectItems value="#{indivTimecardBean.projectDL}" />
+												<f:ajax execute="@this" render="@all"/>
+											</h:selectOneMenu>
+										</span>
+									</span>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="rowCont pad12tp" rendered="#{indivTimecardBean.approver}">
+									<span class="fdNm_med FL">
+										 Adjustment:
+									</span>
+									<span class="ckbxTxtLbl FL">
+										<h:selectBooleanCheckbox 
+												valueChangeListener="#{indivTimecardBean.listenAdjustedTimecard}"
+												value="#{indivTimecardBean.adjustedTimecard}" styleClass="ckbx" >
+											<ace:ajax/>
+										</h:selectBooleanCheckbox>
+									</span>
+									<span class="ckbxTxtLbl FL pad5lt">This will be an adjusted timecard.</span>
+								</h:panelGroup>
+
+								<span class="rowCont pad12tp">
+									<span class="fdNm_med FL">
+										 Occupation:
+									</span>
+									<span class="fd FL">
+										<h:selectOneMenu 
+												rendered="#{indivTimecardBean.showOccupationDL}"
+												valueChangeListener="#{indivTimecardBean.listenStartForm}"
+												value="#{indivTimecardBean.startFormId}" styleClass="selRole">
+											<f:selectItems value="#{indivTimecardBean.occupationDL}" />
+											<f:ajax execute="@this" render="@all"/>
+										</h:selectOneMenu>
+										<h:outputText styleClass="FL pad4tp" value="#{indivTimecardBean.occupationDL[0].label}"
+											rendered="#{not indivTimecardBean.showOccupationDL}"/>
+									</span>
+								</span>
+
+								<span class="rowCont pad12tp">
+									<span class="fdNm_med FL">
+										 <h:outputText value="Week Ending:" />
+									</span>
+									<span class="fd FL">
+										<h:selectOneMenu 
+												rendered="#{not empty indivTimecardBean.weekEndDateDL}"
+												value="#{indivTimecardBean.weekEndDate}">
+											<f:convertDateTime timeZone="#{timezone}" pattern="MM/dd/yyyy" />
+											<f:selectItems value="#{indivTimecardBean.weekEndDateDL}" />
+										</h:selectOneMenu>
+										<h:outputText styleClass="FL pad4tp" value="All timecards created"
+												rendered="#{empty indivTimecardBean.weekEndDateDL}"/>
+									</span>
+								</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="popBtnCont4 pad30rt">
+						<h:panelGroup>
+							<span class="FR">
+								<span class="btnPriEnbLt" />
+								<span>
+									<ace:linkButton value="Cancel"
+											action="#{indivTimecardBean.actionCloseCreate}" styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FR pad10rt" rendered="#{not empty indivTimecardBean.weekEndDateDL}">
+							<span class="btnSecHotLt" />
+							<span>
+								<ace:linkButton value="Create"
+										action="#{indivTimecardBean.actionCreateOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt" />
+						</h:panelGroup>
+					</div>
+				</div>
+			</h:panelGroup>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

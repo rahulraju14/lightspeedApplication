@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Reports</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+			function resize() {
+				<c:if test="#{not headerViewBean.mobile}">
+					element = document.getElementById('reports:miniView');
+					resizeElement(element, 181, 343); /* 185, 338 rt detail panel */
+
+					// resize the shooting schedule div, so the popup calendar shows if the window is large enough
+					//element = document.getElementById('shtschRptCont');
+					//resizeElement(element, 236, 340);
+
+					resizeScrollable('reports:taskstatus', 493, 103);/* status list */
+					resizeScrollable('reports:taskstatusempty', 397, 180);/* status list */
+
+					resizeScrollable('reports:tabs7:0:dprtable', 300, 255);
+					resizeScrollable('reports:tabs6:0:exgtable', 300, 255);
+					resizeScrollable('reports:tabs5:0:calltable', 322, 237);
+
+					element = document.getElementById('archiveLgdCont');
+					resizeElement(element, 276, 298); /* callsheet archive list panel */
+
+				</c:if>
+
+				//clearOnScroll('reports:taskstatus');
+				//clearOnScroll('reports:tabs5:0:calltable');
+				//clearOnScroll('reports:tabs7:0:dprtable');
+
+			}
+
+			var formname = "reports";
+			var listHtFlag = formname + ":flag_ff"; /* feature film true/false flag */
+
+			function disableGenRptBtn() {
+				var btn = document.getElementById('reports:genRptBtn');
+				if (btn != null) {
+					btn.style.display = 'none';
+				}
+				btn = document.getElementById('genRptBtn-dis');
+				if (btn != null) {
+					btn.style.display = 'inline';
+				}
+			}
+
+			function enableGenRptBtn() {
+				var btn = document.getElementById('reports:genRptBtn');
+				if (btn != null) {
+					btn.style.display = 'inline';
+				}
+				btn = document.getElementById('genRptBtn-dis');
+				if (btn != null) {
+					btn.style.display = 'none';
+				}
+			}
+
+			var isIE = (navigator.appName == "Microsoft Internet Explorer");
+			if (isIE) {
+			document.onfocusout = function() { enableGenRptBtn(); };
+			//document.onfocusin = function() { onWindowFocus(); }
+			} else {
+			window.onblur = function() { enableGenRptBtn(); };
+			//window.onfocus = function() { onWindowFocus() }
+			}
+
+		</script>
+	</h:head>
+	<h:body>
+		<c:if test="#{not headerViewBean.mobile}">
+			<script language="javascript">
+				ice.ace.jq( document ).ready(function() {
+					initDomLoaded(); // do our standard page initialization tasks.
+				});
+			</script>
+		</c:if>
+		<h:form id="reports">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="reports" />
+			</h:outputText>
+
+			<div id="main">
+				<ui:include src="../common/header2.xhtml" />
+
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+
+							<!-- Begin Report Category/Status pnlLt -->
+							<div id="pnlLt">
+
+								<div class="topBdrCont">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div id="reportHdr" class="rowCont ltrtBdr BKwhite FL">
+									<span class="pnlHdrTxt FL">Reports</span>
+								</div>
+
+								<div id="reportListCont" class="rowCont ltrtBdr">
+									<ace:dataTable
+											selectionMode="single" 
+											style="width:100%;max-width:100%;"
+											value="#{reportBean.reportStyleList}" var="item" id="reportlist"
+											rowSelectListener="#{reportBean.listenReportSelection}"
+											styleClass="bk_sl_grid"
+											stateMap="#{reportBean.stateMap}"
+											scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+											scrollHeight="#{headerViewBean.mobile ? '' : '182'}">
+											
+										<ace:column headerText="Category" styleClass="W100percnt">
+											<h:outputText value="#{item.name}" styleClass="pad5lt" />
+										</ace:column>
+									</ace:dataTable>
+								</div><!-- end reportListCont -->
+
+								<div id="taskStatListCont" class="ltrtBdr">
+									<h:panelGroup styleClass="rowCont FL pad10tp"
+										rendered="#{empty authBean.pgFields['7.2,view_production_report']}">
+										<span class="pnlHdrTxt FL">&#160;</span>
+										<ace:dataTable
+											selectionMode="single" singleSort="true"
+											value="#{reportBean.taskStatusList}" var="item" id="taskstatusempty"
+											styleClass="bk_sl_grid" rowStyleClass="txt12"
+											scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+											scrollHeight="#{headerViewBean.mobile ? '' : '180'}"
+											style="width:100%;max-width:100%;overflow:hidden">
+											
+											<ace:column styleClass="W100percnt">
+												&#160;<!-- this empty table should hold the height of the parent Left Panel container when viewing tasks is not permitted -->
+											</ace:column>
+										</ace:dataTable>
+									</h:panelGroup>
+
+									<h:panelGroup styleClass="rowCont FL pad10tp"
+										rendered="#{not empty authBean.pgFields['7.2,view_production_report']}">
+										<span class="pnlHdrTxt FL">Task Status</span>
+										<ace:dataTable
+												style="width:100%;max-width:100%;"
+												rowSelectListener="#{reportBean.listenStatusSelection}"
+												value="#{reportBean.taskStatusList}" var="item" id="taskstatus"
+												styleClass="bk_sl_grid txt10" rowStyleClass="txt12"
+												scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+												scrollHeight="#{headerViewBean.mobile ? '' : '103'}">
+												
+											<ace:column headerText="Date" style="width:40%;">
+												<h:outputText value="#{item.date}" styleClass="pad5lt" >
+													<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+												</h:outputText>
+											</ace:column>
+											<ace:column style="width:20%;">
+												<f:facet name="header">
+													<span class='txt10'>Call<br />Sheet</span>
+												</f:facet>
+												<h:outputText title="No report exists"
+													rendered="#{item.callSheetStatus eq 0}">
+													<h:graphicImage value="" url="../../i/icon_flag_red.png" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report is in progress"
+													rendered="#{item.callSheetStatus eq 1}">
+													<h:graphicImage value="" url="../../i/icon_pencil.gif" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report is complete"
+													rendered="#{item.callSheetStatus eq 2}">
+													<h:graphicImage value="" url="../../i/icon_check.gif" alt=""/>
+												</h:outputText>
+											</ace:column>
+											<ace:column style="width:20%;">
+												<f:facet name="header">
+													<span class="txt10">Exhibit<br />G</span>
+												</f:facet>
+												<h:outputText title="No report exists"
+													rendered="#{item.exhibitGStatus eq 0}">
+													<h:graphicImage value="" url="../../i/icon_flag_red.png" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report has been created"
+													rendered="#{item.exhibitGStatus eq 1}">
+													<h:graphicImage value="" url="../../i/icon_check.gif" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report has been created"
+													rendered="#{item.exhibitGStatus eq 2}">
+													<h:graphicImage value="" url="../../i/icon_check.gif" alt=""/>
+												</h:outputText>
+											</ace:column>
+											<ace:column style="width:20%;">
+												<f:facet name="header">
+													<span class="txt10">Prod.<br />Rpt.</span>
+												</f:facet>
+												<h:outputText title="No report exists"
+													rendered="#{item.dprStatus eq 0}">
+													<h:graphicImage value="" url="../../i/icon_flag_red.png" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report is in progress"
+													rendered="#{item.dprStatus eq 1}">
+													<h:graphicImage value="" url="../../i/icon_pencil.gif" alt=""/>
+												</h:outputText>
+												<h:outputText title="The report is complete"
+													rendered="#{item.dprStatus eq 2}">
+													<h:graphicImage value="" url="../../i/icon_check.gif" alt=""/>
+												</h:outputText>
+											</ace:column>
+										</ace:dataTable>
+									</h:panelGroup>
+								</div><!-- end taskstatusListCont -->
+
+								<div class="btmBdrCont">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+							</div><!-- End Reports Category/Status Lists pnlLt -->
+
+							<!--  Begin Report Details - pnlRt -->
+							<div id="pnlRt">
+
+								<h:panelGroup rendered="#{! reportBean.showCreateReport}">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="topBdrCont">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div class="rowCont FL ltrtBdr BKwhite">
+									<h:panelGroup
+										styleClass="FL pad5lt pnlHdrTxt">
+										<h:outputText value="#{reportBean.selectedItem.name}" />
+									</h:panelGroup>
+								</div><!-- end of top rowCont -->
+
+								<div id="reportDetailCont" class="ltrtBdr BKwhite">
+
+									<h:panelGrid id="miniView" styleClass="miniPanel pad3tp">
+
+										<!-- Tabs for  Report Options/ Details -->
+										<ace:tabSet id="tabs1" selectedIndex="0" styleClass="W100percnt"
+											rendered="#{reportBean.selectedType eq 'people'}" >
+
+											<!-- people/contact - Contact List Tab   -->
+											<ace:tabPane label="Lists" id="contactlist">
+
+												<div id="pcRptCont" class="pad5lt pad5tp">
+													<div class="rowCont">&#160;
+														<span class="infoTxtnopad FL">Please make selections for each step below.</span>
+														<div class="subSecHdgrpt pad10lt">Select a Report Style:</div>
+														<div class="pad25lt">
+															<h:selectOneRadio id="pcStyle" styleClass="h_radio"
+																value="#{reportBean.peopleReportStyle}"
+																layout="pageDirection">
+																<f:selectItem itemLabel="Compact ( 2 lines/ person )" itemValue="contLstComp" />
+																<f:selectItem itemLabel="Detailed ( 5 lines/ person )" itemValue="contLstMed" />
+															</h:selectOneRadio>
+														</div>
+													</div>
+													<div class="rowCont">
+														<div class="subSecHdgrpt pad10lt">Select who to include:</div>
+														<div class="FL pad30lt W98percnt">
+															<h:panelGroup styleClass="FL rowCont">
+																<div class="FL rowCont">
+																	<h:panelGroup styleClass="FL pad15lt pad3bm" rendered="#{headerViewBean.production.type.episodic}">
+																		<h:outputText styleClass="FL pad5lt pad5rt pad3tp" value="Project: " />
+																		<h:selectOneMenu style="height:20px;line-height:13px;"
+																			value="#{reportBean.peopleProjectId}"
+																			valueChangeListener="#{reportBean.actionChangeProject}" >
+																			<f:selectItems value="#{reportBean.projectDL}"/>
+																			<f:ajax execute="@this" render="@all"/>
+																		</h:selectOneMenu>
+																	</h:panelGroup>
+																	<h:panelGroup styleClass="FL pad15lt pad3bm" rendered="#{not empty reportBean.unitAllDL}">
+																		<h:outputText styleClass="FL pad10lt pad5rt pad3tp" value="Unit: " />
+																		<h:selectOneMenu styleClass="unitDd" value="#{reportBean.peopleUnitId}">
+																			<f:selectItems value="#{reportBean.unitAllDL}"/>
+																			<f:ajax execute="@this" render="@all"/>
+																		</h:selectOneMenu>
+																	</h:panelGroup>
+																</div>
+																<div class="FL rowCont">
+																	<h:selectBooleanCheckbox
+																		styleClass="FL ckbx"
+																		disabled="#{empty authBean.pgFields['7.2,view_contacts_crew']}"
+																		value="#{reportBean.includeCrewInPeople}" />
+																	<span class="ckbxTxtLbl">Crew</span>
+																</div>
+																<div class="FL rowCont">
+																	<h:selectBooleanCheckbox
+																		styleClass="FL ckbx"
+																		disabled="#{empty authBean.pgFields['7.2,view_contacts_cast']}"
+																		value="#{reportBean.includeCastInPeople}" />
+																	<span class="ckbxTxtLbl">Cast</span>
+																</div>
+																<div class="FL rowCont">
+																	<h:selectBooleanCheckbox
+																		styleClass="FL ckbx"
+																		value="#{reportBean.includeVendors}" />
+																	<span class="ckbxTxtLbl">Non-Production Members<br/>(Site Reps. Agents. etc.)</span>
+																</div>
+															</h:panelGroup>
+														</div>
+													</div>
+
+													<div class="rowCont pad15tp">
+														<div class="subSecHdgrpt pad10lt">Select a Sort Order:</div>
+														<div class="pad25lt">
+															<h:selectOneRadio id="rptSrtOrd" styleClass="h_radio"
+																layout="pageDirection" 
+																value="#{reportBean.orderByInPeople}" >
+																<f:selectItem itemLabel="Job Title" itemValue="JobTitle" />
+																<f:selectItem itemLabel="Last Name" itemValue="Name" />
+															</h:selectOneRadio>	
+														</div>
+													
+													</div>
+													<div class="rowCont">
+														<span class="FL pad30lt">
+															<h:selectBooleanCheckbox
+																styleClass="FL ckbx"
+																disabled=""
+																value="#{reportBean.groupByDepartmentInPeople}" />
+															<span class="FL ckbxTxtLbl">Group by Dept</span>
+														</span>
+													</div>
+												</div><!-- end pcRptCont -->
+											</ace:tabPane>
+
+											<!-- OMIT FOR NOW: people/contact - Contact Sheet Tab  - ->
+											<ace:tabPane label="Contact Sheet" id="contactlist">
+
+												<div class="rowCont pad5tp">
+													 <span class="infoTxtnopad FL pad5lt">Please make a selection below.
+													 </span>
+												</div>
+
+												<div class="rowCont pad30tp pad15lt">
+													<h:panelGroup
+														styleClass="rowCont FL fd_btmPad">
+														<span class="fdNm_lg">
+															<h:outputText value="Select a Person:" />
+														</span>
+														<span class="fd_lg">
+															<h:panelGroup
+																rendered="#{not (empty authBean.pgFields['3.1,all'])}">
+																<h:selectOneMenu
+																	
+																	value="#{reportBean.contactId}" styleClass="country">
+																	<f:selectItems
+																		value="#{reportBean.contactDL}" />
+																</h:selectOneMenu>
+															</h:panelGroup>
+														</span>
+													</h:panelGroup>
+												</div>
+
+											</ace:tabPane><!- - OMITTED end people/contact - Contact Sheet Tab -->
+										</ace:tabSet><!--  END TAB set for people/contact  -->
+
+										<!-- breakdown tabs -->
+										<ace:tabSet id="tabs2" selectedIndex="#{reportBean.selectedTab}"
+											rendered="#{reportBean.selectedType eq 'breakdown'}" styleClass="W100percnt">
+
+											<!-- scene breakdown/shooting schedule - Breakdown Tab   -->
+											<ace:tabPane label="Breakdown" id="breaktab">
+												<div id="sbkdnRptCont" class="pad5lt pad5tp rowCont">
+
+													<span class="FL infoTxtnopad">Please make selections for each step below.</span>
+
+													<div class="subSecHdgrpt pad10lt pad15tp">Select which Breakdown Pages to include:</div>
+													<div>
+														<div class="FL pad30lt">
+															<h:selectOneRadio id="sbkdnPgInc" styleClass="h_radio"
+																value="#{reportBean.includeInBreakdown}"
+																 layout="pageDirection">
+																<f:selectItem itemLabel="All" itemValue="all" />
+																<f:selectItem itemLabel="Scene # Range:" itemValue="scene" />
+																<f:selectItem itemLabel="Scheduled Date Range:" itemValue="dateRange" />
+																<ace:ajax/>
+															</h:selectOneRadio>
+														</div>
+														<div class="FL pad20tp">
+															<h:panelGroup id="sceneNumbers" styleClass="rep_txtIn">
+																<div>
+																	<h:selectOneMenu styleClass="pad2rt"
+																			disabled="#{reportBean.includeInBreakdown ne 'scene'}"
+																			value="#{reportBean.fromSheetTypeInBreakdown}">
+																		<f:selectItems value="#{reportBean.sceneNumbers}" />
+																		<ace:ajax/>
+																	</h:selectOneMenu>
+																	<h:outputText value="to" />
+																	<h:selectOneMenu styleClass="pad2lt"
+																			disabled="#{reportBean.includeInBreakdown ne 'scene'}"
+																			value="#{reportBean.toSheetTypeInBreakdown}">
+																		<f:selectItems value="#{reportBean.sceneNumbers}" />
+																	</h:selectOneMenu>
+																</div>
+															</h:panelGroup>
+															<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}" >
+																<div class="FL pad5tp">
+																	<h:outputText styleClass="FL pad10lt pad5rt pad2tp" value="Unit:" />
+																	<h:selectOneMenu immediate="true" styleClass="unitDd"
+																			disabled="#{reportBean.includeInBreakdown ne 'dateRange'}"
+																			value="#{reportBean.selectedUnitId}"
+																			valueChangeListener="#{reportBean.actionChangeUnit}" >
+																		<f:selectItems value="#{reportBean.unitDL}"/>
+																		<f:ajax execute="@this" render="@all"/>
+																	</h:selectOneMenu>
+																</div>
+															</h:panelGroup>
+														</div>
+
+														<div class="FL pad70lt pad5tp rowCont">
+															<h:outputText styleClass="FL pad5rt pad4tp" value="From" />
+															<ace:dateTimeEntry
+																	disabled="#{reportBean.includeInBreakdown ne 'dateRange'}"
+																	styleClass="pad2tp" tabindex="0"
+																	id="calendar1" renderAsPopup="true"
+																	value="#{reportBean.fromDateInBrkDown}">
+																<f:converter converterId="lightspeed.MultiDateConverter"/>
+																<f:attribute name="pattern" value="MMM d, yyyy" />
+															</ace:dateTimeEntry>
+															<h:outputText styleClass="pad30lt pad5rt pad4tp" value="to" />
+															<ace:dateTimeEntry
+																	disabled="#{reportBean.includeInBreakdown ne 'dateRange'}"
+																	styleClass="pad2tp" tabindex="0"
+																	id="calendar2" renderAsPopup="true"
+																	value="#{reportBean.toDateInBrkDown}">
+																<f:converter converterId="lightspeed.MultiDateConverter"/>
+																<f:attribute name="pattern" value="MMM d, yyyy" />
+															</ace:dateTimeEntry>
+														</div>
+													</div>
+
+													<div class="FL rowCont">
+														<div class="subSecHdgrpt pad10lt pad15tp">Select a Sort Order:</div>
+														<div class="pad30lt">
+															<h:selectOneRadio id="sbkdnSort" styleClass="h_radio"
+																value="#{reportBean.orderByInBreakDown}"
+																layout="pageDirection">
+																<f:selectItem itemLabel="by Schedule Date" itemValue="schedule"
+																	itemDisabled="#{reportBean.includeInBreakdown ne 'all'}" />
+																<f:selectItem itemLabel="by Scene #" itemValue="scene" 
+																	itemDisabled="#{reportBean.includeInBreakdown ne 'all'}" />
+																<ace:ajax/>
+															</h:selectOneRadio>
+														</div>
+													</div>
+												</div>
+											</ace:tabPane><!-- end scene breakdown/shooting schedule - Breakdown Tab -->
+
+											<!-- scene breakdown/shooting schedule - Shooting Scheduled Tab -->
+											<ace:tabPane label="Shooting Schedule" id="shoottab">
+
+												<div id="shtschRptCont" class="pad5lt pad5tp rowCont">
+
+													<span class="infoTxtnopad FL">Please make selections for each step below.</span>
+
+													<div class="rowCont">
+														<div class="subSecHdgrpt pad10lt pad8tp">Select a Report Style:</div>
+														<div class="pad30lt rowCont pad5tp">
+															<h:selectOneRadio id="pcStyle2" styleClass="h_radio"
+																value="#{reportBean.shootingReportStyle}"
+																layout="pageDirection">
+																<f:selectItem itemLabel="Shooting schedule" itemValue="standard" />
+																<f:selectItem itemLabel="1-Line shooting schedule" itemValue="oneline" />
+															</h:selectOneRadio>
+														</div>
+													</div>
+													
+													<div class="subSecHdgrpt pad10lt pad15tp">Select which Scenes to include in the Shooting Schedule:</div>
+													<div>
+														<div class="FL pad30lt pad5tp">
+															<h:selectOneRadio id="ssPgInc" styleClass="h_radio"
+																value="#{reportBean.includeInScene}" layout="pageDirection">
+																<f:selectItem itemLabel="All" itemValue="all" />
+																<f:selectItem itemLabel="Scene # Range:" itemValue="scene" />
+																<f:selectItem itemLabel="Scheduled Date Range:" itemValue="dateRange" />
+																<ace:ajax/>
+															</h:selectOneRadio>
+														</div>
+														<div class="FL pad25tp">
+															<div styleClass="FL">
+																<h:selectOneMenu id="fromSheetTypeInScene"
+																		disabled="#{reportBean.includeInScene ne 'scene'}"
+																		value="#{reportBean.fromSheetTypeInShootingSch}">
+																	<f:selectItems value="#{reportBean.sceneNumbers}" />
+																</h:selectOneMenu>
+																<h:outputText value=" to " />
+																<h:selectOneMenu id="toSheetTypeInScene"
+																		disabled="#{reportBean.includeInScene ne 'scene'}"
+																		value="#{reportBean.toSheetTypeInShootingSch}">
+																	<f:selectItems value="#{reportBean.sceneNumbers}" />
+																</h:selectOneMenu>
+															</div>
+														
+															<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}">
+																<div class="pad3tp">
+																	<h:outputText styleClass="FL pad10lt pad5rt pad4tp" value="Unit:" />
+																	<h:selectOneMenu immediate="true" styleClass="unitDd"
+																			disabled="#{reportBean.includeInScene ne 'dateRange'}"
+																			value="#{reportBean.selectedUnitId}"
+																			valueChangeListener="#{reportBean.actionChangeUnit}" >
+																		<f:selectItems value="#{reportBean.unitDL}"/>
+																		<f:ajax execute="@this" render="@all"/>
+																	</h:selectOneMenu>
+																</div>
+															</h:panelGroup>
+														</div>
+														<div class="FL pad70lt pad3tp rowCont">
+															<h:outputText styleClass="pad10lt pad5rt pad2tp" value="From" />
+															<ace:dateTimeEntry styleClass="pad-70tp"
+																	id="calendarScene11" tabindex="0"
+																	disabled="#{reportBean.includeInScene ne 'dateRange'}"
+																	renderAsPopup="true"
+																	value="#{reportBean.fromDateInBrkDown}">
+																<f:converter converterId="lightspeed.MultiDateConverter"/>
+																<f:attribute name="pattern" value="MMM d, yyyy" />
+															</ace:dateTimeEntry>
+															<h:panelGroup styleClass="pad30lt">
+																<h:outputText styleClass="pad5rt pad2tp" value="to" />
+																<ace:dateTimeEntry styleClass="pad-70tp"
+																		id="calendarScene1" tabindex="0"
+																		disabled="#{reportBean.includeInScene ne 'dateRange'}"
+																		renderAsPopup="true"
+																		value="#{reportBean.toDateInBrkDown}">
+																	<f:converter converterId="lightspeed.MultiDateConverter"/>
+																	<f:attribute name="pattern" value="MMM d, yyyy" />
+																</ace:dateTimeEntry>
+															</h:panelGroup>
+														</div>
+													</div>
+													<div class="FL rowCont">
+														<div class="subSecHdgrpt pad10lt pad15tp">Select a Sort Order:</div>
+														<div class="pad30lt">
+															<h:selectOneRadio id="ssSort" styleClass="h_radio"
+																value="#{reportBean.orderByInShootingSch}" layout="pageDirection">
+																<f:selectItem itemLabel="by Schedule Date" itemValue="schedule"
+																	itemDisabled="#{reportBean.includeInScene ne 'all'}" />
+																<f:selectItem itemLabel="by Scene #" itemValue="scene"
+																	itemDisabled="#{reportBean.includeInScene ne 'all'}" />
+															</h:selectOneRadio>
+														</div>
+													</div>
+												</div>
+
+											</ace:tabPane><!-- end scene breakdown/shooting schedule - Shooting Scheduled Tab -->
+										</ace:tabSet><!--  END scene breakdown/shooting schedule Tab set -->
+
+										<!-- elements/locations/dood tabs -->
+										<ace:tabSet id="tabs3" selectedIndex="#{reportBean.selectedTab}"
+											rendered="#{reportBean.selectedType eq 'elements'}" styleClass="W100percnt">
+
+											<!-- dood Tab -->
+											<ace:tabPane label="DooD" id="dood"
+													rendered="#{not empty authBean.pgFields['7.2,view_dood']}">
+
+												<div id="doodRptCont" class="pad5tp">
+													<div class="rowCont">
+														<span class="infoTxtnopad pad5lt FL">Please make selections for each step below.</span>
+
+														<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}">
+															<div class="subSecHdgrpt pad10lt pad6tp pad2bm">
+																<span class="FL">
+																	Unit Option:
+																</span>
+																<div class="FL pad20lt">
+																	<h:selectOneMenu immediate="false" styleClass="unitDd"
+																		value="#{reportBean.elemUnitId}">
+																		<f:selectItems value="#{reportBean.unitDL}"/>
+																	</h:selectOneMenu>
+																</div>
+															</div>
+														</h:panelGroup>
+
+														<div class="doodRptContWrap MA">
+															<div id="doodRptLgdCont" class="FL">
+
+																<div class="subSecHdg_doodRptList">Select one or more categories of Elements to include:</div>
+
+																<h:panelGroup styleClass="btn_unckallrpt">
+																	<span class="btnMiniLt" />
+																		<ace:linkButton value="Un-Check All"
+																			action="#{reportBean.actionClearAllDood}"
+																			styleClass="btnMiniCt" />
+																	<span class="btnMiniRt" />
+																</h:panelGroup>
+
+																<h:panelGroup styleClass="btn_ckallrpt">
+																	<span class="btnMiniLt" />
+																		<ace:linkButton value="Check All"
+																			action="#{reportBean.actionSelectAllDood}"
+																			styleClass="btnMiniCt" />
+																	<span class="btnMiniRt" />
+																</h:panelGroup>
+
+																<div class="FL pad30lt W100percnt pad-5tp">
+																	<div class="FL W22percnt">
+																		<c:forEach begin="0" end="17" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInDood[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																		</c:forEach>
+																		<span class="FL rowCont">
+																			<h:selectBooleanCheckbox
+																				styleClass="FL ckbx"
+																				value="#{reportBean.includeInDood[21]}" />
+																			<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[21].dblLabel}" />
+																		</span>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="1" end="18" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInDood[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																		</c:forEach>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="2" end="19" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInDood[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																		</c:forEach>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="3" end="20" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInDood[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																		</c:forEach>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+
+														<div class="FL W90percnt pad5tp">
+															<span class="FL subSecHdgrpt2 pad10lt pad10rt pad2tp">Print Options:</span>
+															<h:panelGroup styleClass="FL">
+																<h:selectBooleanCheckbox
+																	styleClass="FL ckbx" id="doodNewPage"
+																	value="#{reportBean.includeNewPageInDayOut}" />
+																<h:outputText styleClass="ckbxTxtLbl" value="Create a new page for each category" />
+															</h:panelGroup>
+														</div>
+
+													 <div class="subSecHdgrpt pad10lt pad2tp">Order the items in each category by:</div>
+														<div class="pad30lt W90percnt">
+															<h:panelGroup styleClass="FL rowCont">
+																<h:selectOneRadio id="doodCat" styleClass="h_radio"
+																	value="#{reportBean.orderByInDayOut}" layout="pageDirection">
+																	<f:selectItem itemLabel="Number of workdays" itemValue="numberofWorkdays" />
+																	<f:selectItem itemLabel="Start date" itemValue="startdate" />
+																	<f:selectItem itemLabel="Name/ID" itemValue="id" />
+																</h:selectOneRadio>																
+															</h:panelGroup>
+														</div>
+													</div>
+												</div>
+											</ace:tabPane><!-- end dood Tab -->
+
+											<!-- elements Tab   -->
+											<ace:tabPane label="Elements" id="elem">
+
+												<div id="eldRptCont" class="pad5tp">
+													<div class="rowCont">
+														<span class="infoTxtnopad FL pad5lt">Please make selections for each step below.</span>
+														<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}">
+															<div class="subSecHdgrpt pad10lt pad6tp pad2bm">
+																<span class="FL">
+																	Unit Option:
+																</span>
+																<div class="FL pad20lt">
+																	<h:selectOneMenu immediate="false" styleClass="unitDd"
+																		value="#{reportBean.elemUnitId}">
+																		<f:selectItems value="#{reportBean.unitElemAllDL}"/>
+																	</h:selectOneMenu>
+																</div>
+															</div>
+														</h:panelGroup>
+
+														<div class="elemRptContWrap MA">
+															<div id="elemRptLgdCont" class="FL">
+																<div class="subSecHdg_elemRptList">Select one or more categories of Elements to include:</div>
+
+																<h:panelGroup styleClass="btn_unckallrpt">
+																	<span class="btnMiniLt" />
+																		<ace:linkButton value="Un-Check All"
+																			action="#{reportBean.actionClearAllElements}"
+																			styleClass="btnMiniCt" />
+																	<span class="btnMiniRt" />
+																</h:panelGroup>
+
+																<h:panelGroup styleClass="btn_ckallrpt">
+																	<span class="btnMiniLt" />
+																		<ace:linkButton value="Check All"
+																			action="#{reportBean.actionSelectAllElements}"
+																			styleClass="btnMiniCt" />
+																	<span class="btnMiniRt" />
+																</h:panelGroup>
+
+																<div class="FL pad30lt W100percnt pad-5tp">
+																	<div class="FL W22percnt">
+																		<c:forEach begin="0" end="17" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInElement[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																			<br/>
+																		</c:forEach>
+																		<span class="FL rowCont">
+																			<h:selectBooleanCheckbox
+																				styleClass="FL ckbx"
+																				value="#{reportBean.includeInElement[21]}" />
+																			<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[21].dblLabel}" />
+																		</span>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="1" end="18" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInElement[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																			<br/>
+																		</c:forEach>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="2" end="19" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInElement[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																			<br/>
+																		</c:forEach>
+																	</div>
+
+																	<div class="FL W22percnt pad10lt">
+																		<c:forEach begin="3" end="20" step="4" var="num">
+																			<span class="FL rowCont">
+																				<h:selectBooleanCheckbox
+																					styleClass="FL ckbx"
+																					value="#{reportBean.includeInElement[num]}" />
+																				<h:outputText styleClass="ckbxTxtLbl" value="#{reportBean.elemValues[num].dblLabel}" />
+																			</span>
+																			<br/>
+																		</c:forEach>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+
+														<div class="FL W98percnt pad5tp">
+															<span class="FL subSecHdgrpt2 pad10lt pad10rt pad2tp">Print Options:</span>
+															<div class="FL W40percnt">
+																<h:selectBooleanCheckbox
+																	styleClass="FL ckbx" id="elementNewPage"
+																	value="#{reportBean.includeNewPageInElement}" />
+																<h:outputText styleClass="ckbxTxtLbl" value="Create a new page for each category" />
+															</div>
+															<div class="FL pad5lt">
+																<h:selectBooleanCheckbox
+																	styleClass="FL ckbx" id="elementIncludeScene"
+																	value="#{reportBean.includeSceneInElement}" />
+																<h:outputText styleClass="ckbxTxtLbl" value="Include scene numbers" />
+															</div>
+														</div>
+
+														<div class="subSecHdgrpt pad10lt pad2tp">Include Elements with the following status:</div>
+														<div class="pad30lt W90percnt">
+															<h:panelGroup styleClass="FL rowCont">
+																<h:selectOneRadio id="elemStat" styleClass="h_radio"
+																	value="#{reportBean.requirementStatInElement}"
+																	layout="pageDirection">
+																	<f:selectItem itemLabel="Where a Production Element has been selected." itemValue="satisfied" />
+																	<f:selectItem itemLabel="Where a Production Element has not been selected." itemValue="missing" />
+																	<f:selectItem itemLabel="Both of the above.  (Include all Elements)" itemValue="both" />
+																</h:selectOneRadio>															
+															</h:panelGroup>
+														</div>
+
+													 <div class="subSecHdgrpt pad10lt pad2tp">Order the items in each category by:</div>
+														<div class="pad30lt W90percnt">
+															<h:panelGroup styleClass="FL rowCont">
+																<h:selectOneRadio id="elemCat" styleClass="h_radio"
+																	value="#{reportBean.orderByInElement}"
+																	layout="pageDirection">
+																	<f:selectItem itemLabel="Number of occurrences in the script" itemValue="occurs"
+																		itemDisabled="true" />
+																	<f:selectItem itemLabel="Name/ID" itemValue="id" />
+																</h:selectOneRadio>																
+															</h:panelGroup>
+														</div>
+													</div>
+												</div>
+											</ace:tabPane><!-- end elements Tab -->
+
+										</ace:tabSet><!--  END elements/locations/dood Tab set -->
+
+										<!-- stripboard tabs -->
+										<ace:tabSet id="tabs4" selectedIndex="0" styleClass="W100percnt"
+											rendered="#{reportBean.selectedType eq 'stripboard'}">
+
+											<!-- stripboard Tab   -->
+											<ace:tabPane label="Strip board" id="stripboard">
+												<div id="stpbdRptCont" class="pad5lt pad5tp">
+													<span class="infoTxtnopad FL">Please make selections for each step below.</span>
+													
+													<div class="subSecHdgrpt pad10lt pad10tp">Select which Strips to include:</div>
+													<div class="rowCont">
+														<div class="FL pad30lt">
+															<h:selectOneRadio id="sbReportType" styleClass="h_radio"
+																	value="#{reportBean.includeStrips}" layout="pageDirection" >
+																<f:selectItem itemLabel="Scheduled only" itemValue="scheduled" />
+																<f:selectItem itemLabel="Unscheduled only" itemValue="unscheduled" />
+																<f:selectItem itemLabel="All Strips. Sort strips by" itemValue="all" />
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneRadio>
+														</div>
+													
+														<div class="FL">
+															<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}" styleClass="FL rep_txtIn pad5rt">
+																	<h:outputText styleClass="FL pad10lt pad5rt pad2tp" value="Unit:" />
+
+																	<h:selectOneMenu immediate="true" styleClass="unitDd"
+																			disabled="#{reportBean.includeStrips ne 'scheduled'}"
+																			value="#{reportBean.selectedUnitId}"
+																			valueChangeListener="#{reportBean.actionChangeUnit}" >
+																		<f:selectItems value="#{reportBean.unitDL}"/>
+																		<f:ajax execute="@this" render="@all"/>
+																	</h:selectOneMenu>
+															</h:panelGroup>
+															
+															<h:panelGroup styleClass="FL">
+																<h:outputText styleClass="FL pad5rt pad3tp" value="From" />
+																<ace:dateTimeEntry styleClass="FL" id="calendar11"
+																		disabled="#{reportBean.includeStrips ne 'scheduled'}"
+																		renderAsPopup="true" tabindex="0"
+																		value="#{reportBean.fromDateInStripboard}">
+																	<f:converter converterId="lightspeed.MultiDateConverter"/>
+																	<f:attribute name="pattern" value="MMM d, yyyy" />
+																</ace:dateTimeEntry>
+															
+																<h:outputText styleClass="FL pad5lt pad3tp pad5rt" value="to" />
+																<ace:dateTimeEntry id="calendar21" tabindex="0"
+																		disabled="#{reportBean.includeStrips ne 'scheduled'}"
+																		renderAsPopup="true"
+																		value="#{reportBean.toDateInStripboard}">
+																	<f:converter converterId="lightspeed.MultiDateConverter"/>
+																	<f:attribute name="pattern" value="MMM d, yyyy" />
+																</ace:dateTimeEntry>
+															</h:panelGroup>		
+	<!--													
+															<div id="dateRangeInStrip" class="pad30lt"
+																style="z-index:301;">
+																<h:panelGroup styleClass="FL">
+																	<h:outputText styleClass="FL pad5rt" value="From" />
+																	<ace:dateTimeEntry styleClass="FL" id="calendar11"
+																			disabled="#{reportBean.includeStrips ne 'scheduled'}"
+																			renderAsPopup="true" tabindex="0"
+																			value="#{reportBean.fromDateInStripboard}">
+																		<f:converter converterId="lightspeed.MultiDateConverter"/>
+																		<f:attribute name="pattern" value="MMM d, yyyy" />
+																	</ace:dateTimeEntry>
+																</h:panelGroup>
+																<h:panelGroup styleClass="FL">
+																	<h:outputText styleClass="FL pad5rt" value="to" />
+																	<ace:dateTimeEntry id="calendar21" tabindex="0"
+																			disabled="#{reportBean.includeStrips ne 'scheduled'}"
+																			renderAsPopup="true"
+																			value="#{reportBean.toDateInStripboard}">
+																		<f:converter converterId="lightspeed.MultiDateConverter"/>
+																		<f:attribute name="pattern" value="MMM d, yyyy" />
+																	</ace:dateTimeEntry>
+																</h:panelGroup>
+															</div>
+-->															
+														</div>
+													</div>
+													<div class="FL rowCont pad50lt">
+															<h:panelGroup styleClass="FL LT W100percnt">
+																 <h:selectOneRadio id="sbSortBy" styleClass="h_radio"
+																		value="#{reportBean.orderByInStripboard}" layout="pageDirection"
+																		disabled="#{reportBean.includeStrips ne 'all'}" >
+																	<f:selectItem itemLabel="Schedule" itemValue="schedule" />
+																	<f:selectItem itemLabel="Scene #" itemValue="scene" />
+																</h:selectOneRadio>
+															</h:panelGroup>
+													</div>
+													<div class="subSecHdgrpt pad10lt pad10tp">Select the Strip board style:</div>
+													<div class="FL rowCont pad30lt">
+														 <h:selectOneRadio id="sbStyle" styleClass="h_radio"
+															value="#{reportBean.styleByInStripboard}" layout="pageDirection">
+															<f:selectItem itemLabel="Thin strips (1 row)" itemValue="thin" />
+															<f:selectItem itemLabel="Thick strips (2 rows)" itemValue="thick" />
+														</h:selectOneRadio>																	
+													</div>
+												</div>
+											</ace:tabPane><!-- end stripboard Tab -->
+										</ace:tabSet><!--  END stripboard Tab set -->
+
+										<!-- call sheets tabs -->
+										<ace:tabSet id="tabs5" selectedIndex="#{reportBean.selectedTab}"
+											rendered="#{reportBean.selectedType eq 'callsheet'}" styleClass="W100percnt">
+
+											<!-- call sheets Tab -->
+											<ace:tabPane label="Call Sheet List" id="callsheet">
+												<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}">
+												<div class="subSecHdgrpt pad10lt pad2tp FL">
+													<span class="FL">
+														Unit Option:
+													</span>
+													<div class="FL pad20lt">
+														<h:selectOneMenu immediate="true" styleClass="unitDd"
+															value="#{reportBean.selectedUnitId}"
+															valueChangeListener="#{reportBean.actionChangeUnit}" >
+															<f:selectItems value="#{reportBean.unitDL}"/>
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectOneMenu>
+													</div>
+												</div>
+												</h:panelGroup>
+												<div class="callshtContWrap MA">
+													<div id="callshtRptLgdCont" class="FL">
+														<div class="subSecHdg_callshtList"><!-- no title --></div>
+														<h:panelGroup id="btn_addcallshtrpt" style="height:19px;min-width:145px;">
+															<h:panelGroup styleClass="btn_addcallshtrpt" rendered="#{(not empty authBean.pgFields['7.2,create_call_sheet'])}">
+																<span class="btnMiniLt" />
+																	<ace:linkButton value="Create"
+																		title="Create a new call sheet"
+																		action="#{reportBean.actionOpenCreateReport}"
+																		styleClass="btnMiniCt" />
+																<span class="btnMiniRt" />
+															</h:panelGroup>
+														</h:panelGroup>
+
+														<div id="callshtScrlCont">
+															<ace:dataTable id="calltable"
+																style="width:100%;max-width:100%;"
+																value="#{reportBean.callSheetList}"
+																var="report" styleClass="bk_sl_grid"
+																rendered="#{not empty reportBean.callSheetList}"
+																scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+																scrollHeight="#{headerViewBean.mobile ? '' : '255'}">
+
+																<ace:column id="column1" style="text-align:center;width:5%;">
+																	<h:commandButton
+																		rendered="#{not empty authBean.pgFields['7.2,create_call_sheet']}"
+																		value="" styleClass="deleteXbtn"
+																		action="#{reportBean.actionDeleteReport}" title="Delete this call sheet">
+																		<f:setPropertyActionListener value="#{report.id}" target="#{reportBean.removeReportId}"/>
+																	</h:commandButton>
+																</ace:column>
+																<ace:column headerText="Date" id="column2" style="width:20%;">
+																	<h:commandLink id="callsheetdatelink" rendered="#{not empty authBean.pgFields['7.2,view_call_sheet']}"
+																			action="callsheetview">
+																		<h:outputText value="#{report.date}">
+																			<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yy" />
+																		</h:outputText>
+																		<f:setPropertyActionListener value="com.lightspeedeps.callsheetid" target="#{jumpBean.attribute}"/>
+																		<f:setPropertyActionListener value="#{report.id}" target="#{jumpBean.value}"/>
+																		<f:setPropertyActionListener value="com.lightspeedeps.headerTabId" target="#{jumpBean.attribute}"/>
+																		<f:setPropertyActionListener value="reports" target="#{jumpBean.value}"/>
+																		<f:setPropertyActionListener value="com.lightspeedeps.priorTabIx" target="#{jumpBean.attribute}"/>
+																		<f:setPropertyActionListener value="#{headerViewBean.currentTabIx}" target="#{jumpBean.value}"/>
+																	</h:commandLink>
+																</ace:column>
+																<ace:column headerText="Shoot Day" id="column3" style="width:15%;">
+																	<h:outputText value="#{report.shootDay}" />
+																</ace:column>
+																<ace:column headerText="Status" id="column5" style="width:30%;">
+																	<h:outputText value="#{report.status.callLabel}" />
+																</ace:column>
+																<ace:column headerText="Last Modified" id="column6" style="width:30%;">
+																	<h:outputText value="#{report.lastModified}">
+																		<f:convertDateTime timeZone="#{headerViewBean.production.timeZoneStr}" pattern="h:mm a MMM d, yyyy" />
+																	</h:outputText>
+																</ace:column>
+															</ace:dataTable>
+														</div>
+														<div class="rowCont FL pad15lt">
+															<h:outputText value="No Call Sheets have been created yet." styleClass="B"
+															rendered="#{empty reportBean.callSheetList}" />
+														</div>
+													</div><!-- end callshtRptLgdCont -->
+												</div><!-- end callshtContWrap -->
+											</ace:tabPane><!-- end call sheets List mini-tab -->
+
+											<ace:tabPane label="Archive">
+												<div class="subSecHdgrpt pad10lt pad2tp pad5bm FL">
+													<span class="FL">
+														View Call Sheet History for Call Sheet date:
+													</span>
+													<div class="FL pad10lt">
+														<h:selectOneMenu immediate="true"
+															style="height:20px;line-height:13px;width:90px;"
+															value="#{reportBean.archiveDate}"
+															valueChangeListener="#{reportBean.actionChangeArchiveDate}" >
+															<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="M/dd/yyyy" />
+															<f:selectItems value="#{reportBean.archivedCallsheetDateDL}"/>
+															<f:ajax execute="@this" render="@all"/>
+														</h:selectOneMenu>
+													</div>
+													<h:panelGroup rendered="#{reportBean.project.highestUnitNumber gt 1}">
+														<span class="pad40lt FL">
+															Unit Option:
+														</span>
+														<div class="FL pad10lt">
+															<h:selectOneMenu immediate="true" styleClass="unitDd"
+																value="#{reportBean.selectedUnitId}"
+																valueChangeListener="#{reportBean.actionChangeUnit}" >
+																<f:selectItems value="#{reportBean.unitDL}"/>
+																<f:ajax execute="@this" render="@all"/>
+															</h:selectOneMenu>
+														</div>
+													</h:panelGroup>
+												</div>
+												<div class="callshtContWrap MA">
+													<div id="archiveLgdCont" class="FL">
+														<div class="subSecHdg_callshtList"><!-- no title --></div>
+
+														<div id="callshtArchiveCont">
+															<h:panelGroup rendered="#{not (empty reportBean.archivedCallSheets)}">
+															<ui:repeat value="#{reportBean.archivedCallSheets}"
+																	var="document" varStatus="listStatus">
+
+																<div class="FL W100 pad10tp pad10lt">
+																	<div class="CT"><h:outputText value="#{listStatus.index+1}" />
+																</div>
+																<div class="CT">
+																	<h:commandButton value="" styleClass="icon_pdf"
+																			rendered="#{not empty authBean.pgFields['7.2,view_call_sheet']}"
+																			action="#{reportBean.actionOpenArchivedCallsheet}">
+																		<f:setPropertyActionListener value="#{document.name}"
+																				target="#{reportBean.archivedName}"/>
+																	</h:commandButton>
+																</div>
+																<div class="CT">
+																	<h:outputText styleClass="txt11" value="Saved:"/>
+																	<h:outputText styleClass="txt11" value="#{document.updated}">
+																		<f:converter converterId="lightspeed.DateTimeConverter"/>
+																		<f:attribute name="pattern" value=" M/d h:mma"/>
+																		<f:attribute name="timeZone" value="#{headerViewBean.production.timeZoneStr}" />
+																	</h:outputText>
+																</div>
+																</div>
+
+															</ui:repeat>
+															</h:panelGroup>
+														</div>
+														<div class="rowCont FL pad15lt pad10tp">
+															<h:outputText value="No Call Sheets have been archived for this Unit." styleClass="B"
+																rendered="#{empty reportBean.archivedCallsheetDateDL and reportBean.project.hasUnits}" />
+															<h:outputText value="No Call Sheets have been archived." styleClass="B"
+																rendered="#{empty reportBean.archivedCallsheetDateDL and not reportBean.project.hasUnits}" />
+															<h:outputText value="No Call Sheets have been archived for this date." styleClass="B"
+																rendered="#{(not empty reportBean.archivedCallsheetDateDL) and
+																(empty reportBean.archivedCallSheets)}" />
+														</div>
+													</div><!-- end archiveLgdCont -->
+												</div><!-- end callshtContWrap -->
+											</ace:tabPane><!-- end call sheets Archive Tab -->
+
+										</ace:tabSet><!--  END call sheets Tab set -->
+
+										<!-- exhibit G tabset -->
+										<ace:tabSet id="tabs6" selectedIndex="0" styleClass="W100percnt"
+											rendered="#{reportBean.selectedType eq 'exhibitg'}">
+
+											<!-- exhibit G Tab -->
+											<ace:tabPane label="Report List" id="exhibitg">
+												<div class="exgContWrap MA">
+													<div id="exgRptLgdCont" class="FL">
+														<div class="subSecHdg_exgList"><!-- no title --></div>
+														<h:panelGroup id="btn_addexgrpt" style="height:19px;min-width:145px;">
+															<h:panelGroup styleClass="btn_addexgrpt" rendered="#{(not empty authBean.pgFields['7.2,edit_exhibit_g'])}">
+																<span class="btnMiniLt" />
+																	<ace:linkButton value="Create"
+																		title="Create a new Exhibit G"
+																		action="#{reportBean.actionOpenCreateReport}"
+																		styleClass="btnMiniCt" />
+																<span class="btnMiniRt" />
+															</h:panelGroup>
+														</h:panelGroup>
+
+														<div id="exgScrlCont">
+															<ace:dataTable styleClass="bk_sl_grid"
+																style="width:100%;max-width:100%;"
+																id="exgtable"
+																value="#{reportBean.exhibitGList}"
+																rendered="#{not empty reportBean.exhibitGList}"
+																var="report" 
+																scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+																scrollHeight="#{headerViewBean.mobile ? '' : '255'}">
+																
+																<ace:column id="column0" styleClass="CT" style="width:5%;">
+																	<h:commandButton
+																		rendered="#{(not empty authBean.pgFields['7.2,edit_exhibit_g'])}"
+																		value="" styleClass="deleteXbtn"
+																		action="#{reportBean.actionDeleteReport}" title="Delete this Exhibit G">
+																		<f:setPropertyActionListener value="#{report.id}" target="#{reportBean.removeReportId}"/>
+																	</h:commandButton>
+																</ace:column>
+																<ace:column headerText="Date " id="column1" style="width:20%;">
+																	<h:commandLink id="exglink" rendered="#{not empty authBean.pgFields['7.2,view_exhibit_g']}"
+																			action="exhibitGview">
+																		<h:outputText value="#{report.date}">
+																			<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yy" />
+																		</h:outputText>
+																		<f:setPropertyActionListener value="com.lightspeedeps.exhibitgid" target="#{jumpBean.attribute}"/>
+																		<f:setPropertyActionListener value="#{report.id}" target="#{jumpBean.value}"/>
+																	</h:commandLink>
+																</ace:column>
+																<ace:column headerText="Shoot Day" id="column2" style="width:15%;">
+																	<h:outputText value="#{report.shootDay}" />
+																</ace:column>
+																<ace:column headerText=" " id="column3" style="width:30%;">
+																	<h:outputText value=" "></h:outputText>
+																</ace:column>
+																<ace:column headerText="Last Modified" id="column4" style="width:30%;">
+																	<h:outputText value="#{report.lastModified}">
+																		<f:convertDateTime timeZone="#{headerViewBean.production.timeZoneStr}" pattern="h:mm a MMM d, yyyy" />
+																	</h:outputText>
+																</ace:column>
+															</ace:dataTable>
+														</div>
+														<div class="rowCont FL pad15lt">
+															<h:outputText value="No Exhibit G's have been created yet." styleClass="B"
+															rendered="#{empty reportBean.exhibitGList}" />
+														</div>
+													</div><!-- end exgRptLgdCont -->
+
+												</div><!-- end exgContWrap -->
+
+											</ace:tabPane><!-- end exhibitG Tab -->
+										</ace:tabSet><!--  END exhibitG set -->
+
+										<!-- production report (DPR) tabset -->
+										<ace:tabSet id="tabs7" selectedIndex="0" styleClass="W100percnt"
+											rendered="#{reportBean.selectedType eq 'dpr'}">
+
+											<!-- production report (DPR) Tab -->
+											<ace:tabPane label="Report List" id="production">
+												<div id="prodListCont">
+													<div class="prodContWrap MA">
+														<div id="prodRptLgdCont" class="FL">
+															<div class="subSecHdg_prodList"><!-- no title yet--></div>
+															<h:panelGroup id="btn_addprodrpt" style="height:19px;min-width:145px;">
+																<h:panelGroup styleClass="btn_addprodrpt" rendered="#{(not empty authBean.pgFields['7.2,edit_production_report'])}">
+																	<span class="btnMiniLt" />
+																		<ace:linkButton value="Create "
+																			title="Create a new production report"
+																			action="#{reportBean.actionOpenCreateReport}"
+																			styleClass="btnMiniCt" />
+																	<span class="btnMiniRt" />
+																</h:panelGroup>
+															</h:panelGroup>
+															<div id="prodScrlCont">
+																<ace:dataTable styleClass="bk_sl_grid"
+																	style="width:100%;max-width:100%;"
+																	id="dprtable"
+																	value="#{reportBean.dprList}"
+																	rendered="#{not empty reportBean.dprList}"
+																	var="report" 
+																	scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+																	scrollHeight="#{headerViewBean.mobile ? '' : '250'}">
+																	
+																	<ace:column id="column0" styleClass="CT" style="width:5%;">
+																		<h:commandButton
+																			rendered="#{not empty authBean.pgFields['7.2,edit_production_report']}"
+																			value="" styleClass="deleteXbtn"
+																			action="#{reportBean.actionDeleteReport}" title="Delete this production report">
+																			<f:setPropertyActionListener value="#{report.id}" target="#{reportBean.removeReportId}"/>
+																		</h:commandButton>
+																	</ace:column>
+																	<ace:column headerText="Date" id="column1" style="width:20%;">
+																		<h:commandLink id="dprlink" rendered="#{not empty authBean.pgFields['7.2,view_production_report']}"
+																				action="dprview">
+																			<h:outputText value="#{report.date}">
+																				<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yy" />
+																			</h:outputText>
+																			<f:setPropertyActionListener value="com.lightspeedeps.dprid" target="#{jumpBean.attribute}"/>
+																			<f:setPropertyActionListener value="#{report.id}" target="#{jumpBean.value}"/>
+																		</h:commandLink>
+																	</ace:column>
+																	<ace:column headerText="Shoot Day" id="column2" style="width:15%;">
+																		<h:outputText value="#{report.shootDay}" />
+																	</ace:column>
+																	<ace:column headerText="Status" id="column3" style="width:30%;">
+																		<h:outputText value="#{report.status.label}">
+																		</h:outputText>
+																	</ace:column>
+																	<ace:column headerText="Last Modified" id="column4" style="width:30%;">
+																		<h:outputText value="#{report.lastModified}">
+																			<f:convertDateTime timeZone="#{headerViewBean.production.timeZoneStr}" pattern="h:mm a MMM d, yyyy" />
+																		</h:outputText>
+																	</ace:column>
+																</ace:dataTable>
+															</div>
+															<div class="rowCont FL pad15lt">
+																<h:outputText value="No Production Reports have been created yet." styleClass="B"
+																	rendered="#{empty reportBean.dprList}" />
+															</div>
+														</div><!-- end prodRptLgdCont -->
+													</div><!-- end prodContWrap -->
+												</div><!-- end prodListCont -->
+
+											</ace:tabPane><!-- end DPR Tab -->
+
+										</ace:tabSet><!--  END DPR tabset -->
+									</h:panelGrid><!-- end miniView -->
+
+									<!-- secondary buttons -->
+									<div class="rowBtn">
+										<div class="rowBtnBdr"></div>
+										<h:panelGroup id="genRptBtn" onmouseup="disableGenRptBtn();"
+											rendered="#{reportBean.selectedType eq 'people' or
+											reportBean.selectedType eq 'breakdown' or
+											reportBean.selectedType eq 'elements' or
+											reportBean.selectedType eq 'stripboard'}">
+											<span class="FR pad10rt">
+												<span class="btnSecHotLt" />
+												<span>
+													<h:commandLink value=""
+														action="#{reportBean.actionCreate}"
+														styleClass="btnSecHotCt btnTxt">
+														<span class="btnLbl2linesDis">Generate<br />Report</span>
+													</h:commandLink>
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+
+										<span id="genRptBtn-dis">
+											<span class="FR pad10rt">
+												<span class="btnPriDisLt" />
+												<span>
+													<h:commandLink value=""
+														styleClass="btnPriDisCt btnTxt" type="text" onclick="return false;">
+														<span class="btnLbl2linesDis">Generate<br />Report</span>
+													</h:commandLink>
+												</span>
+												<span class="btnPriDisRt" />
+											</span>
+										</span>
+									</div><!-- end secondary buttons -->
+
+								</div><!-- end reportDetailCont -->
+
+								<div class="btmBdrCont">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+
+							</div><!--  End Report Details - pnlRt -->
+						</div><!-- end panelCont -->
+					</div><!-- end ctrCont -->
+
+					<div class="CB"></div><!-- clears float for liquid layout -->
+
+				</div><!-- end mainCont -->
+
+
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+
+			</div><!-- end main -->
+			<ace:textEntry id="flag_ff" value="#{headerViewBean.production.type}" style="visibility:hidden" disabled="true"/>
+
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+
+		<ui:include src="createnew.xhtml" /> 
+		<ui:include src="../common/confirmpopup.xhtml" />
+		<ui:include src="../common/popupcheckbox.xhtml" />
+
+	</h:body>
+</html>

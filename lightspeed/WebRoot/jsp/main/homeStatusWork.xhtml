@@ -1,0 +1,256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Section / Work Status -->
+	<div id="sub_homeWkStatTab" class="pad5tp">
+		<div class="homeWorkStatContWrap MA">
+
+			<!-- added wrapper for the rendered control -->
+			<h:panelGroup styleClass="FL rowCont"
+				rendered="#{not empty authBean.pgFields['1.0,work_status']}">
+				<div id="homeWorkStatCont">
+					<span class="subSecHdg_homeWorkStat FL">
+						Work Status
+					</span><br />
+
+					<!-- Status Section / Top Left Work Status  -->
+					<div id="homeWorkStatLt" class="pad5lt">
+						<span class="FL rowCont">
+							<span class="FL W150">
+								<h:outputText
+									styleClass="B FR pad5rt"
+									value="Most Recent Work Day:" />
+							</span>
+							<h:outputText
+								styleClass="FL"
+								value="#{messageCenterBean.dprCurrentList[0].date}">
+								<f:convertDateTime
+									pattern="EEE, M/d/yyyy"
+									timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</span>
+						<span class="FL rowCont">
+							<span class="FL W150">
+								<h:outputText
+									styleClass="FR B pad5rt"
+									value="Start Time:" />
+							</span>
+							<h:outputText
+								styleClass="FL"
+								value="#{messageCenterBean.dprCurrentList[0].crewCall}">
+								<f:convertDateTime
+									pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</span>
+						<span class="rowCont">
+							<span class="FL W150">
+								<h:outputText
+									styleClass="FR B pad5rt"
+									value="Wrap Time:"/>
+								</span>
+							<h:outputText
+								value="#{messageCenterBean.dprCurrentList[0].cameraWrap}">
+								<f:convertDateTime
+									pattern="h:mm a" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</span>
+
+						<span class="FL rowCont pad15tp">
+							<span class="FL W150">
+								<h:outputText
+									styleClass="FR B pad5rt"
+									value="Production Reports:">
+								</h:outputText>
+							</span>
+
+							<h:panelGroup
+								styleClass="FL"
+								rendered="#{not empty messageCenterBean.dprRecentFour}">
+								<c:forEach
+									var="dprdate"
+									items="#{messageCenterBean.dprRecentFour}">
+									<ace:linkButton
+										action="#{jumpBean.actionViewDpr}">
+										<h:outputText
+											value="#{dprdate}">
+											<f:convertDateTime
+												pattern="M/d" />
+										</h:outputText>
+										<f:setPropertyActionListener
+											value="com.lightspeedeps.reportDate"
+											target="#{jumpBean.attribute}" />
+										<f:setPropertyActionListener
+											value="#{dprdate}"
+											target="#{jumpBean.value}" />
+									</ace:linkButton>
+								</c:forEach>
+							</h:panelGroup>
+						</span>
+
+					</div><!--end Status Section / Top Left Work Status  -->
+
+					<!-- Status Section / Top Right Work Status
+					NOTE: I needed to use the rendered clause to prevent the
+					columns header underline from extending past data when it's not present  -->
+					<!-- temporarily remove Labor O/T section
+					<div id="homeWorkStatRt" class="pad5lt">
+						<div class="rowCont">
+							<span class="FL homeLaborRow">
+								<h:outputText
+									styleClass="homeLaborHdr fd_100 B"
+									value="Labor:" />
+								<h:outputText
+									styleClass="homeLaborHdr fd_40 B RT"
+									rendered="#{messageCenterBean.timeSheetDates[0] ne null}"
+									value="#{messageCenterBean.timeSheetDates[0]}">
+									<f:convertDateTime
+										pattern="M/d" />
+								</h:outputText>
+								<h:outputText
+									styleClass="homeLaborHdr fd_40 B RT"
+									rendered="#{messageCenterBean.timeSheetDates[1] ne null}"
+									value="#{messageCenterBean.timeSheetDates[1]}">
+									<f:convertDateTime
+										pattern="M/d" />
+								</h:outputText>
+								<h:outputText
+									styleClass="homeLaborHdr fd_40 B RT"
+									rendered="#{messageCenterBean.timeSheetDates[2] ne null}"
+									value="#{messageCenterBean.timeSheetDates[2]}">
+									<f:convertDateTime
+										pattern="M/d" />
+								</h:outputText>
+							</span>
+						</div>
+						<div class="rowCont">
+							<span class="FL homeLaborRow">
+								<h:outputText
+									styleClass="fd_100"
+									value="Cast O/T (hrs):" />
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.castOverTimeList[0]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.castOverTimeList[1]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.castOverTimeList[2]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+							</span>
+						</div>
+						<div class="rowCont">
+							<span class="FL homeLaborRow">
+								<h:outputText
+									styleClass="fd_100"
+									value="Crew O/T (hrs):" />
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.crewOverTimeList[0]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.crewOverTimeList[1]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+								<h:outputText
+									styleClass="fd_40 RT"
+									value="#{messageCenterBean.crewOverTimeList[2]}">
+									<f:convertNumber
+										type="number"
+										maxIntegerDigits="4"
+										pattern="#.#" />
+								</h:outputText>
+							</span>
+						</div>
+						no labor O/T for now.
+					</div> -->
+
+					<!-- Incidents is outside the Rt/Lt sections so it can use the full width of container for display-->
+					<c:forEach
+						styleClass="W95percnt incidentTbl"
+						var="work"
+						items="#{messageCenterBean.dprCurrentList}"
+						rendered="#{messageCenterBean.dprCurrentList ne null}">
+						<h:panelGrid columns="2" columnClasses="W150,auto" styleClass="rowCont">
+							<h:column>
+								<span class="B FR">
+									<h:outputText
+										value="#{work.date}">
+										<f:convertDateTime
+											pattern="M/d" />
+									</h:outputText>
+									<h:outputText value=" Incidents:" />
+								</span>
+							</h:column>
+							<h:column>
+								<h:panelGroup
+									styleClass="rowCont FL pad3lt pad5bm"
+									rendered="#{work.equipmentNotes ne null}">
+									<span class="rowCont FL U">
+										Equipment Notes
+									</span>
+									<h:outputLabel
+										styleClass="rowCont pad10lt"
+										value="#{work.equipmentNotes}" />
+								</h:panelGroup>
+								<h:panelGroup
+									styleClass="rowCont FL pad3lt pad5bm"
+									rendered="#{work.productionNotes ne null}">
+									<span class="rowCont FL U">
+										Production Notes
+									</span>
+									<h:outputLabel
+										styleClass="rowCont pad10lt"
+										value="#{work.productionNotes}" />
+								</h:panelGroup>
+								<h:panelGroup
+									styleClass="rowCont FL pad3lt"
+									rendered="#{work.crewNotes ne null}">
+									<span class="rowCont FL U">
+										Crew Notes
+									</span>
+									<h:outputLabel
+										styleClass="rowCont pad10lt"
+										value="#{work.crewNotes}" />
+								</h:panelGroup>
+							</h:column>
+						</h:panelGrid>
+					</c:forEach>
+					<div class="rowCont txt8">
+						&#160;
+						<!-- this div is used as spacer here to pad the
+						bottom of content 4 both Lt & Rt sections
+						above equally layout -->
+					</div>
+				</div>
+			</h:panelGroup>
+		</div>
+	</div>
+
+</ui:composition>

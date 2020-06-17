@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL rowCont stepBorder pad15tp">
+		<h:commandButton id="step2" value=""
+			styleClass="FL pad3lt pad2tp #{approvalPathsBean.showStep2 ? 'stepCloseIcon' : 'stepOpenIcon'}" tabindex="-1"
+			actionListener="#{approvalPathsBean.listenShowStep}"
+			title="Click to view the Step.">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" value="Step 2: "/>
+			<h:outputText styleClass="stepHdr" value="Select the document or documents that will follow this Approval Path."/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep2}">
+		<!-- <h:outputText rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<div class="rowCont FL pad10lt pad30tp">
+				<h:outputText styleClass="stepNum" value="Step 2: "/>
+				<h:outputText styleClass="stepHdr" value="Select the document or documents that will follow this Approval Path."/>
+			</div>
+		</h:outputText> -->
+		<div class="rowCont FL pad18tp">
+			<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+				<div class="W35percnt FL pad10lt">
+					<h:outputText styleClass="apText" escape="false"
+						value="You may assign more than one document to an Approval Path."/>
+
+					<h:outputText styleClass="rowCont apText FL" escape="false" value="For example, if the same people review and approve the W4
+					 	and I9 forms &lt;/br&gt; then you can create a single Approval Path and assign both W4 and I9 to &lt;/br&gt; that path."/>
+
+					<h:outputText styleClass="rowCont apText FL" escape="false" value="Creating one Approval Path and assigning multiple documents to it
+						is &lt;/br&gt; easier than creating a separate Approval Path for every one of your &lt;/br&gt; documents."/>
+
+					<h:outputText styleClass="rowCont apText FL" escape="false"
+							value="Note: Documents that are assigned to the current Approval Path&lt;/br&gt;
+							are bolded in the document list.  Documents already assigned to other&lt;/br&gt;
+							Approval Paths are greyed out."/>
+				</div>
+			</h:panelGroup>
+
+			<div class="W40percnt FL pad10lt">
+				<div class="FL rowCont">
+					<h:panelGroup  rendered="#{approvalPathsBean.viewType eq 's'}">
+					<h:outputText styleClass="apText pad20tp" escape="false" value="You may assign more than one document to an Approval Path."/>
+					<div class="rowCont FL pad10lt" style="margin-top:5px"></div>
+					</h:panelGroup>
+				</div>
+				<!--Start Document chain TABLE -->
+				<div class="blueLegendContWrap">
+					<div class="blueLegendCont pad8tp" id="docChainLegend2"
+						style="width:65%;">
+						<div class="legendHdg">Select Document</div>
+						<div class="FL W100percnt">
+							<ace:dataTable id="approvalDocChainTable2"
+								value="#{approvalPathsBean.documentChainList}"
+								var="item" scrollHeight="320"
+								rowIndexVar="idx" scrollable="true"
+								styleClass="bk_sl_grid">
+
+								<ace:column styleClass="W20percnt CT">
+									<f:facet name="header">
+										<icecore:setEventPhase events="ValueChangeEvent"
+											phase="INVOKE_APPLICATION">
+											<h:selectBooleanCheckbox
+												value="#{approvalPathsBean.checkedForAll}"
+												valueChangeListener="#{approvalPathsBean.listenCheckedForAll}"
+												disabled="#{not approvalPathsBean.editMode}">
+												<ace:ajax />
+											</h:selectBooleanCheckbox>
+										</icecore:setEventPhase>
+									</f:facet>
+									<div>
+										<icecore:setEventPhase events="ValueChangeEvent"
+											phase="INVOKE_APPLICATION">
+											<h:selectBooleanCheckbox value="#{item.checked}"
+												valueChangeListener="#{approvalPathsBean.listenSingleCheck}"
+												disabled="#{(not approvalPathsBean.editMode)
+														or (item.disabled)}">
+												<f:attribute name="selectedRow" value="#{item}"></f:attribute>
+												<ace:ajax />
+											</h:selectBooleanCheckbox>
+										</icecore:setEventPhase>
+									</div>
+								</ace:column>
+
+								<!-- the Document chain name -->
+								<ace:column headerText="Document" styleClass="W80percnt"
+									style="#{(item.checked) ? 'font-weight:bold;' : ''};">
+									<div class="FL" style="text-align:left;">
+										<h:outputText styleClass=" #{item.disabled ? 'unavailable' : ''}"
+											value="#{item.normalizedName}" title="" />
+									</div>
+								</ace:column>
+							</ace:dataTable>
+						</div>
+					</div><!-- blueLegendCont -->
+				</div><!-- blueLegendContWrap -->
+				<!-- End  Document selection column  -->
+			</div>
+		</div>
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<div class="rowCont FL pad30tp">
+				<span class="FL pad10lt">
+					<h:outputText styleClass="stepNum" value="Note: "/>
+					<h:outputText styleClass="stepHdr" value="Employee Action(s) and Approver Selection"/>
+					<h:outputText styleClass="rowCont apText FL" escape="false"
+						value="The employee will read, acknowledge, and/or sign the document as per the layout and requirements of the document."/>
+					<h:outputText styleClass="rowCont apText FL" escape="false"
+						value="If the document requires review and approval, the document will go to the Approvers specified below."/>
+				</span>
+			</div>
+		</h:panelGroup>
+	</h:panelGroup>
+</ui:composition>

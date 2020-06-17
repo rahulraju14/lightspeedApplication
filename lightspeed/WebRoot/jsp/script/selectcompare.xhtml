@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- The "Select Script" pop-up dialog for comparing scripts; used on Scripts page -->
+
+<h:form>
+	<c:set var="bean" value="#{scriptDraftsBean}" />
+
+	<ace:dialog visible="#{bean.showCompare}"
+			header="Compare Scripts"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="xtraSmPopup2">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionCloseCompare}"/>
+
+
+		<div class="xtraSmPopBdy2">
+
+			<div class="xtraSmPopCont2">
+				<div class="xtraSmPopup_main MA pad20lt">
+					<span class="rowCont">
+						<span class="FL stdTxt W90percnt pad30tp">
+							Select a script revision to compare with
+							<h:outputText value=' "#{bean.script.description}" ' />
+							<h:outputText value="(#{bean.script.colorName.name})." />
+						</span>
+						<span class="poprowCont padPop10tp">
+							<span class="fdnm">
+								Compare with:
+							</span>
+							<h:selectOneMenu style="width:225px;"
+								value="#{bean.compareId}" styleClass="selRole">
+								<f:selectItems value="#{bean.compareDL}" />
+							</h:selectOneMenu>
+						</span>
+					</span>
+				</div>
+
+				<div class="xtraSmPopBtnCont padPop20tp FL">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{bean.actionCancelCompare}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Compare"
+								action="#{bean.actionCompareScript}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</div>
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

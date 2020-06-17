@@ -1,0 +1,511 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+<!--  Detail Tab  -->
+<ace:tabPane label="Details" id="poitab">
+
+	<div id="projectTopCont" class="rowGradient">
+
+		<div class="myProdSubCont pad3tp">
+
+			<!-- production Details top Left -->
+			<h:panelGroup styleClass="myProdDetailsTopLt">
+
+				<!-- production title -->
+				<h:panelGroup styleClass="rowCont FL">
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{not productionContactBean.editMode}">
+						<span class="fdNm_lg FL">
+							<h:outputText value="#{productionContactBean.element.type.aicp ?
+									productionContactBean.productionHeaderTitle : 'Production Title'}" />:
+						</span>
+						<span class="FL pad5tp">
+							<h:outputText
+								value="#{productionContactBean.element.title}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="rowCont FL"
+							rendered="#{productionContactBean.editMode}">
+						<span class="fdNm_lg FL">
+							<h:outputText value="#{productionContactBean.element.type.aicp ?
+									'Production Company:' : 'Production Title:'}" />
+							<span class="mandatory" style="margin-top:8px;">&#160;*&#160;</span>
+						</span>
+						<span class="pad5lt fd_sm">
+							<ace:textEntry maxlength="30" styleClass="prodTitle"
+								id="prodTitle" value="#{productionContactBean.element.title}" />
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<!-- PRODUCTION COMPANY/STUDIO -->
+				<h:panelGroup styleClass="rowCont FL pad2tp"
+						rendered="#{not productionContactBean.element.type.aicp}">
+					<h:panelGroup styleClass="rowCont FL pad15tp"
+							rendered="#{not productionContactBean.editMode}">
+						<span class="fdNm_lg FL">
+							<h:outputText value="Production Company:"></h:outputText>
+						</span>
+						<span class="FL pad5tp">
+							<h:outputText
+									value="#{productionContactBean.element.studio}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{productionContactBean.editMode}">
+						<span class="fdNm_lg FL">
+							<h:outputText value="Production Company:"></h:outputText>
+						</span>
+						<span class="pad5lt fd_sm">
+							<ace:textEntry maxlength="60" styleClass="prodTitle"
+								id="studioName" value="#{productionContactBean.element.studio}" />
+						</span>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<!-- PRODUCTION ADDRESS, city, state, zip in View mode -->
+				<h:panelGroup rendered="#{not productionContactBean.editMode}">
+					<h:panelGroup styleClass="LH10">
+							&#160;
+					</h:panelGroup>
+					<h:panelGroup styleClass="rowCont FL pad15tp">
+						<span class="fdNm_lg">
+							<h:outputText value="Address:"></h:outputText>
+						</span>
+						<span class="FL pad5tp">
+							<h:outputText value="#{productionContactBean.element.address.addrLine1}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{(not empty productionContactBean.element.address.addrLine2)}">
+							<span class="fdNm_lg" style="height:16px;"><!-- address 2 label space holder -->
+							</span>
+							<span class="FL">
+								<h:outputText value="#{productionContactBean.element.address.addrLine2}" />
+							</span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{not productionContactBean.editMode}">
+						<span class="fdNm_lg"><!-- keep this place holder -->
+						</span>
+						<span class="FL">
+							<h:outputText value="#{productionContactBean.element.address.cityStateZip}" />
+						</span>
+					</h:panelGroup><!-- end city state zip "VIEW mode" -->
+				</h:panelGroup>
+
+				<!-- production address1 Edit mode-->
+				<h:panelGroup styleClass="rowCont FL pad2tp"
+						rendered="#{productionContactBean.editMode}">
+					<span class="fdNm_ea">
+						<h:outputText
+							value="Address:" />
+					</span>
+					<h:panelGroup styleClass="fd"
+						rendered="#{(not empty authBean.pgFields['0.1,account'])}">
+						<ace:textEntry maxlength="100" styleClass="city" id="prodAddressAddr1"
+							value="#{productionContactBean.element.address.addrLine1}" />
+					</h:panelGroup>
+				</h:panelGroup><!-- end address 1 -->
+
+				<!-- production address 2 Edit mode -->
+				<h:panelGroup
+					rendered="#{productionContactBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+					<div class="rowCont FL pad3tp">
+						<span class="fdNm_ea"><!-- address 2 space holder -->
+						</span>
+						<span class="fd">
+							<ace:textEntry maxlength="100" styleClass="city" id="prodAddressAddr2"
+								value="#{productionContactBean.element.address.addrLine2}" />
+						</span>
+					</div>
+				</h:panelGroup><!-- end address 2 -->
+
+				<!-- city, state zip "EDIT mode" -->
+				<h:panelGroup
+					rendered="#{productionContactBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+					<div class="rowCont FL">
+						<span class="fdNm_ea">
+						<h:outputText value="City:"></h:outputText>
+						</span>
+						<span class="fd pad3tp">
+							<ace:textEntry maxlength="35" styleClass="city" id="prodAddressCity"
+							value="#{productionContactBean.element.address.city}" />
+						</span>
+					</div>
+					<div class="rowCont FL">
+						<span class="fdNm_ea">
+							<h:outputText value="State:"></h:outputText>
+						</span>
+						<span class="fd_state pad3tp">
+							<h:selectOneMenu styleClass="state" id="prodAddressState"
+								value="#{productionContactBean.element.address.state}">
+							<f:selectItems
+								value="#{applicationScopeBean.stateDL[productionContactBean.element.address.country]}" />
+							</h:selectOneMenu>
+						</span>
+						<span class="fdNm_zip pad3tp">
+							<h:outputText value="Zip:"></h:outputText>
+						</span>
+						<h:panelGroup>
+							<span class="fd_zip pad3tp">
+								<ace:textEntry maxlength="10" styleClass="zip" id="prodAddressZip"
+								value="#{productionContactBean.element.address.zip}" />
+							</span>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup><!-- end city, state zip "EDIT mode" -->
+
+				<!-- country -->
+				<h:panelGroup
+					rendered="#{not productionContactBean.editMode and (not empty productionContactBean.element.address.country) and (productionContactBean.element.address.country ne 'US')}">
+					<span class="fdNm_lg">
+						<h:outputText value="Country:" />
+					</span>
+					<span class="FL pad5tp">
+						<h:outputText
+						value="#{productionContactBean.element.address.country}" />
+					</span>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{productionContactBean.editMode and (not empty authBean.pgFields['0.1,account'])}"
+					styleClass="rowCont FL pad1tp">
+					<span class="fdNm_ea">
+						<h:outputText value="Country:" />
+					</span>
+					<span class="fd">
+						<h:selectOneMenu styleClass="country" id="prodAddressCountry"
+							value="#{productionContactBean.element.address.country}">
+							<f:selectItems
+								value="#{applicationScopeBean.countryDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</span>
+				</h:panelGroup><!-- end country -->
+
+				<!-- production office phone & fax - View mode -->
+				<h:panelGroup styleClass="rowCont FL pad10tp"
+						rendered="#{not productionContactBean.editMode}">
+					<span class="fdNm_lg">
+						<h:outputText value="Phone:"></h:outputText>
+					</span>
+					<span class="FL pad4tp">
+						<h:outputText value="#{productionContactBean.element.phone}">
+							<f:converter converterId="lightspeed.PhoneNumberDisplay" />
+						</h:outputText>
+					</span>
+
+					<div class="rowCont FL">
+						<span class="fdNm_lg">
+							<h:outputText value="Fax:"></h:outputText>
+						</span>
+						<span class="FL pad4tp">
+							<h:outputText value="#{productionContactBean.element.fax}">
+								<f:converter converterId="lightspeed.PhoneNumberDisplay" />
+							</h:outputText>
+						</span>
+					</div>
+				</h:panelGroup>
+
+				<!-- production office phone & fax - Edit mode -->
+				<h:outputText styleClass="rowCont FL"
+						rendered="#{productionContactBean.editMode}">
+					<span class="fdNm_ea">
+						<h:outputText value="Phone:"></h:outputText>
+					</span>
+					<span>
+						<h:panelGroup>
+							<ace:textEntry styleClass="fd_phone2"
+								maxlength="25" id="prodPhoneNumber"
+								value="#{productionContactBean.element.phone}">
+								<f:validator validatorId="lightspeed.phoneNumberValidator" />
+							</ace:textEntry>
+						</h:panelGroup>
+					</span>
+
+					<span class="fdNm_fax">
+						<h:outputText value="Fax:"></h:outputText>
+					</span>
+					<span>
+						<h:panelGroup>
+							<ace:textEntry styleClass="fd_fax" id="prodFaxNumber"
+								maxlength="25"
+								value="#{productionContactBean.element.fax}">
+								<f:validator validatorId="lightspeed.phoneNumberValidator" />
+							</ace:textEntry>
+						</h:panelGroup>
+					</span>
+				</h:outputText>
+
+				<!-- production email sender prefix -->
+				<div class="rowCont FL pad3tp">
+					<span class="fdNm_lg FL" style="width:154px;">
+						<h:outputText value="Email Notification Prefix:"/>
+						<span class="mandatory" style="margin-top:8px;">*</span>
+					</span>
+					<span>
+						<h:panelGroup
+							rendered="#{not productionContactBean.editMode}">
+							<h:outputText styleClass="FL pad4tp"
+								value="#{productionContactBean.element.emailSender}"/>
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{productionContactBean.editMode}">
+							<ace:textEntry styleClass="fd_xsm" id="prodEmailAddress"
+								maxlength="30"
+								value="#{productionContactBean.element.emailSender}"/>
+						</h:panelGroup>
+					</span>
+				</div>
+				<div class="rowCont FL">
+					<span class="fdNm_lg FL" style="width:150px;">&#160;
+					</span>
+					<h:outputText styleClass="FL pad-4tp" value="@#{headerViewBean.domain}"/>
+				</div>
+				<!--LS-2100 text to Production Detail tab for I-9 disclosure  -->
+				<div class="rowCont FR" style="width:auto; padding-left: 60%; margin-top: -84px">
+					<span>
+						<h:panelGroup
+								rendered="#{not productionContactBean.editMode and not productionContactBean.production.type.canadaTalent}">
+							<h:outputText styleClass="FL" style="color:red"
+									value="#{productionContactBean.i9DisclosureText}" />
+						</h:panelGroup>
+					</span>
+				</div>
+				</h:panelGroup><!-- end top-right production address -->
+
+			<!-- top Rt Production - - logo -->
+			<h:panelGroup styleClass="myProdDetailsTopRt">
+
+			<div id="logoCont" class="FL">
+
+			<div class="rowCont FL">
+				<div id="logoPreviewCont">
+
+					<h:panelGroup
+						rendered="#{productionContactBean.editMode and (not empty productionContactBean.imageResources)}"
+						styleClass="btn_delImg">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Delete Logo" id="deleteLogo"
+								action="#{imagePaginatorBean.actionDeleteImage}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{productionContactBean.editMode}"
+						styleClass="btn_newImg">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="New Logo" id="newLogo"
+								action="#{productionContactBean.actionOpenNewImage}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<div class="W96percnt thumbNail">
+				
+						<ui:include src="../common/imageTable.xhtml">
+							<ui:param name="list" value="#{productionContactBean.imageResources}" />
+							<ui:param name="imageTitle" value="Image" />
+							<ui:param name="showName" value="false" />
+						</ui:include>
+				
+					</div>
+
+				</div>
+			</div>
+		</div><!-- end logoCont -->
+
+
+			</h:panelGroup>
+
+		</div><!-- end myProdSubCont -->
+	</div><!-- end projectTopCont -->
+
+	<!-- lower section - 'admin' data (not editable here) -->
+	<div class="myProdSubCont">
+			<!-- Left side -->
+			<h:panelGroup styleClass="myProdDetailsBtmLt FL"
+					rendered="#{productionContactBean.prodAdmin}">
+				<div class="rowCont FL">
+					<h:outputText styleClass="fdNm_lg FL" value="#{productionContactBean.productionHeaderTitle} type:"></h:outputText>
+					<h:outputText styleClass="FL pad5tp"
+						value="#{productionContactBean.element.type.label}" />
+				</div>
+
+				<div class="rowCont FL LH18">
+					<span class="fdNm_lg LH18">
+						<h:outputText value="Maximum # of Users:"></h:outputText>
+					</span>
+					<span>
+						<h:panelGroup styleClass="pad2tp">
+							<h:outputText rendered="#{productionContactBean.element.maxUsers le 9999}"
+								value="#{productionContactBean.element.maxUsers}" />
+							<h:outputText rendered="#{productionContactBean.element.maxUsers gt 9999}"
+								value="Unlimited" />
+						</h:panelGroup>
+					</span>
+				</div>
+
+				<div class="rowCont FL LH18">
+					<span class="fdNm_lg LH18">
+						<h:outputText value="Maximum # of Projects:"></h:outputText>
+					</span>
+					<span>
+						<h:panelGroup styleClass="pad2tp LH18">
+							<h:outputText
+								rendered="#{productionContactBean.element.type.episodic
+									and (productionContactBean.element.maxProjects le 999)}"
+								value="#{productionContactBean.element.maxProjects}" />
+							<h:outputText
+								rendered="#{productionContactBean.element.type.episodic
+									and (productionContactBean.element.maxProjects gt 999)}"
+								value="Unlimited" />
+							<h:outputText
+								rendered="#{not productionContactBean.element.type.episodic}"
+								value="N/A" />
+						</h:panelGroup>
+					</span>
+				</div>
+
+				<div class="rowCont FL">
+					<h:outputText styleClass="fdNm_lg FL" value="On-Boarding:"></h:outputText>
+					<h:outputText styleClass="FL pad5tp"
+						value="#{productionContactBean.element.allowOnboarding ? 'Yes' : 'No'}" />
+				</div>
+
+				<div class="rowCont FL pad5tp">
+					<h:outputText styleClass="fdNm_stk2 B" escape="false"
+						value="Includes SMS &lt;br/>Text Messaging:" />
+					<h:outputText
+						rendered="#{productionContactBean.element.smsEnabled}"
+						value="Yes" />
+					<h:outputText
+						rendered="#{not productionContactBean.element.smsEnabled}"
+						value="No" />
+				 </div>
+
+			</h:panelGroup><!-- 'admin' (bottom) area, left side -->
+
+			<!-- admin (bottom) area, right side -->
+			<h:panelGroup styleClass="myProdDetailsBtmLt FL"
+					rendered="#{productionContactBean.prodAdmin}">
+
+				<div class="rowCont FL">
+					<h:outputText styleClass="fdNm_lg" value="#{productionContactBean.productionHeaderTitle} Status:"/>
+					<h:outputText styleClass="FL pad2tp"
+						value="#{productionContactBean.element.status.label}" />
+					<h:panelGroup styleClass="FL pad15lt" rendered="#{not productionContactBean.editMode}">
+						<h:graphicImage styleClass="pad10tp" url="../../i/icon_readOnly.gif"
+							rendered="#{productionContactBean.element.status eq 'READ_ONLY'}"/>
+						<h:graphicImage url="../../i/icon_lockArchive.png"
+							rendered="#{productionContactBean.element.status eq 'OFFLINE'}"/>
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont FL LH18">
+					<h:outputText styleClass="fdNm_lg LH18 U" value="#{headerViewBean.domainTabTitle} Service:"/>
+					<h:panelGroup rendered="#{productionContactBean.element.orderStatus eq 'FREE'
+								and (productionContactBean.isOwner)}" styleClass="FL">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Upgrade" id="upgrade"
+								action="#{productionContactBean.actionUpgrade}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{productionContactBean.element.orderStatus eq 'PAID'
+								and (productionContactBean.element.endDate eq null and
+									productionContactBean.element.nextBillDate ne null)
+								and (productionContactBean.isOwner)}" styleClass="FL">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Unsubscribe" id="unsubscribe"
+								action="#{productionContactBean.actionUnsubscribe}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{productionContactBean.element.orderStatus eq 'PAID'
+								and (productionContactBean.element.endDate ne null)
+								and (productionContactBean.element.nextBillDate ne null)
+								and (productionContactBean.billingAmount ne 0)
+								and (productionContactBean.isOwner)}" styleClass="FL">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Resubscribe" id="resubscribe"
+								action="#{productionContactBean.actionResubscribe}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont pad20lt" style="z-index:100;">
+					<div class="rowCont FL LH18">
+						<h:outputText styleClass="fdNm_lg LH18" value="Service Start Date:"/>
+						<span class="FL LH18 pad2tp">
+							<h:outputText
+								styleClass="W80" value="#{productionContactBean.element.startDate}">
+								<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+						</span>
+					</div>
+
+					<div class="rowCont FL LH18">
+						<h:outputText styleClass="fdNm_lg LH18" value="Next Billing:"/>
+						<span class="FL LH18 pad2tp">
+							<h:outputText rendered="#{productionContactBean.element.nextBillDate ne null}"
+								styleClass="W80" value="#{productionContactBean.element.nextBillDate}">
+								<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+							<h:outputText rendered="#{productionContactBean.element.nextBillDate eq null}"
+								styleClass="W80" value="N/A">
+							</h:outputText>
+						</span>
+					</div>
+
+					<div class="rowCont FL LH18">
+						<h:outputText styleClass="fdNm_lg LH18" value="Bill Amount:"/>
+						<span class="FL LH18 pad2tp">
+							<h:outputText
+									styleClass="W80" value="#{productionContactBean.element.billingAmount}">
+								<f:convertNumber type="currency" currencySymbol="$"/>
+							</h:outputText>
+						</span>
+					</div>
+
+					<div class="rowCont FL LH18">
+						<h:outputText styleClass="fdNm_lg LH18" value="Expiration Date:"/>
+						<span class="FL LH18 pad2tp">
+							<h:outputText rendered="#{productionContactBean.element.endDate ne null}"
+								styleClass="W80" value="#{productionContactBean.element.endDate}">
+								<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+							<h:outputText rendered="#{productionContactBean.element.endDate eq null}"
+								styleClass="W80" value="N/A">
+							</h:outputText>
+						</span>
+					</div>
+
+					<div class="rowCont FL LH18">
+						<span class="fdNm_lg">
+							<h:outputText value="Owning Account:"></h:outputText>
+						</span>
+						<span>
+							<h:panelGroup styleClass="pad2tp">
+								<h:outputText
+									value="#{productionContactBean.owner}" />
+							</h:panelGroup>
+						</span>
+					</div>
+				</div>
+
+			</h:panelGroup><!-- admin (bottom) area, right side -->
+	</div><!--  bottom section (admin data) -->
+
+</ace:tabPane><!--  End Detail Tab   -->
+</ui:composition>

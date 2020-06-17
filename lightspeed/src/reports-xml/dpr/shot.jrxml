@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="shot" columnCount="2" printOrder="Horizontal" pageWidth="540" pageHeight="1008" columnWidth="270" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="138dbc64-3654-4954-83d7-772d2943699e">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="dprId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[91]]></defaultValueExpression>
+	</parameter>
+	<parameter name="title" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["my episode"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+ep.id episodeId,
+(tSc.scenes-0) tScScenes,
+(tSc.pages-0) tScPages,
+(tSc.minutes-0) tScMinutes,
+(tSc.setups-0) tScSetups,
+
+(rvSc.scenes-0) rtScenes,
+(rvSc.pages -0) rtPages,
+(rvSc.minutes -0) rtMinutes,
+(rvSc.setups -0) rtSetups,
+
+(shTd.scenes-0) shTdScenes,
+(shTd.pages-0) shTdPages,
+(shTd.minutes-0) shTdMinutes,
+(shTd.setups-0) shTdSetups,
+(ep.Sound_Used_Today-0) shTdSound,
+
+pr.*,
+(ep.Sound_Used_Prior-0) Sound,
+
+@tdScenes := (pr.scenes + shTd.scenes) tdScenes,
+@tdPages := (pr.pages + shTd.pages) tdPages,
+@tdMinutes := (pr.minutes + shTd.minutes) tdMinutes,
+@tdSetups := (pr.setups + shTd.setups) tdSetups,
+(ep.Sound_Used_Prior + ep.Sound_Used_Today) tdSound,
+
+(rvSc.scenes - @tdScenes) remScenes,
+(rvSc.pages - @tdPages) remPages,
+(rvSc.minutes - @tdMinutes) remMinutes,
+(rvSc.setups - @tdSetups) remSetups,
+null remSound,
+project.code episodeName
+from script_measure tSc, script_measure rvSc, script_measure shTd, script_measure pr, dpr, dpr_episode ep, project
+where dpr.id = $P{dprId}
+	and ep.dpr_id = dpr.id
+	and tSc.Id = ep.Script_Prior_Total_Id
+	and rvSc.Id = ep.Script_Total_Id
+	and shTd.Id = ep.Script_Shot_Id
+	and pr.Id = ep.Script_Shot_Prior_Id
+	and project.id = ep.project_id;]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Scenes" class="java.lang.Integer"/>
+	<field name="Pages" class="java.lang.Integer"/>
+	<field name="Minutes" class="java.lang.Integer"/>
+	<field name="Setups" class="java.lang.Integer"/>
+	<field name="Sound" class="java.lang.Integer"/>
+	<field name="tScScenes" class="java.lang.Integer"/>
+	<field name="tScPages" class="java.lang.Integer"/>
+	<field name="tScMinutes" class="java.lang.Integer"/>
+	<field name="tScSetups" class="java.lang.Integer"/>
+	<field name="rtScenes" class="java.lang.Integer"/>
+	<field name="rtPages" class="java.lang.Integer"/>
+	<field name="rtMinutes" class="java.lang.Integer"/>
+	<field name="rtSetups" class="java.lang.Integer"/>
+	<field name="tdScenes" class="java.lang.Integer"/>
+	<field name="tdPages" class="java.lang.Integer"/>
+	<field name="tdMinutes" class="java.lang.Integer"/>
+	<field name="tdSetups" class="java.lang.Integer"/>
+	<field name="tdSound" class="java.lang.Integer"/>
+	<field name="shTdScenes" class="java.lang.Integer"/>
+	<field name="shTdPages" class="java.lang.Integer"/>
+	<field name="shTdMinutes" class="java.lang.Integer"/>
+	<field name="shTdSetups" class="java.lang.Integer"/>
+	<field name="shTdSound" class="java.lang.Integer"/>
+	<field name="remScenes" class="java.lang.Integer"/>
+	<field name="remPages" class="java.lang.Integer"/>
+	<field name="remMinutes" class="java.lang.Integer"/>
+	<field name="remSetups" class="java.lang.Integer"/>
+	<field name="episodeId" class="java.lang.Integer"/>
+	<field name="episodeName" class="java.lang.String"/>
+	<variable name="Time" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{Minutes}.intValue())]]></variableExpression>
+	</variable>
+	<variable name="tdTime" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{tdMinutes}.intValue())]]></variableExpression>
+	</variable>
+	<variable name="tScTime" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{tScMinutes}.intValue())]]></variableExpression>
+	</variable>
+	<variable name="rtTime" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{rtMinutes}.intValue())]]></variableExpression>
+	</variable>
+	<variable name="remTime" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{remMinutes}.intValue())]]></variableExpression>
+	</variable>
+	<variable name="shTdTime" class="java.util.Date" resetType="None">
+		<variableExpression><![CDATA[new Date(2011,1,1,0,0,$F{shTdMinutes}.intValue())]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="100" splitType="Prevent">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBoxBold" mode="Opaque" x="0" y="0" width="90" height="10" backcolor="#CCCCCC"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Ep: " + $F{episodeName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="90" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Scenes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="126" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Pages]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="162" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Mins]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="198" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Setups]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBoxBold" positionType="Float" mode="Opaque" x="234" y="0" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Sound]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="10" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Total in Script]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="10" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tScScenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="10" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{tScPages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="10" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{tScTime}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="10" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tScSetups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" mode="Opaque" x="234" y="10" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="20" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Revised Total]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="20" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{rtScenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="20" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{rtPages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="20" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{rtTime}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="20" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{rtSetups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" mode="Opaque" x="234" y="20" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="30" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Shot Previously]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="30" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Scenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="30" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{Pages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="30" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{Time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="30" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Setups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="234" y="30" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Sound}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="40" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Shot Today]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="40" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{shTdScenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="40" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{shTdPages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="40" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{shTdTime}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="40" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{shTdSetups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="234" y="40" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{shTdSound}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="50" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Shot to Date]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="50" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tdScenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="50" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{tdPages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="50" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{tdTime}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="50" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tdSetups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="234" y="50" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tdSound}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a5a1c9d2-ba51-42e7-9c6c-3c94ab623f7f" style="prDefBox" positionType="Float" mode="Opaque" x="0" y="60" width="90" height="10" backcolor="#FFFFFF"/>
+				<textElement/>
+				<text><![CDATA[Remaining]]></text>
+			</staticText>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="5df97e26-ac06-4b0a-b721-893fa4105042" key="textField" style="prDefBox" x="90" y="60" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{remScenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="126" y="60" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.formatPages($F{remPages})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="H:mm:ss" isBlankWhenNull="true">
+				<reportElement uuid="7b05422d-175d-42af-871d-aef421ea1dd5" key="textField" style="prDefBox" x="162" y="60" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{remTime}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" x="198" y="60" width="36" height="10" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{remSetups}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="337da741-9ea3-40db-915b-91c8880e8444" key="textField" style="prDefBox" mode="Opaque" x="234" y="60" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement uuid="0d9e0b51-3d3e-493e-ab57-a96adbb14e95" key="completed scenes" positionType="Float" x="0" y="70" width="270" height="30"/>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="episodeId">
+					<subreportParameterExpression><![CDATA[$F{episodeId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate}+"/dpr/scncomplete.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

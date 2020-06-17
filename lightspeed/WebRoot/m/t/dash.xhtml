@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Approver Dashboard</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="timecardlistm" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT">
+
+				<!-- call "getLoadDashboard()" to setup page; always returns false. -->
+				<h:outputText style="visibility:hidden;" value="#{mobileApproverBean.loadDashboard}" />
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle">
+						Approver Dashboard
+				</div>
+
+				<div class="subTitle">
+						Timecards for:
+				</div>
+
+				<a id="default" /><!-- default scroll-to-top position -->
+
+				<div class="inCtlRow">
+					<h:panelGroup styleClass="inBlock FL" rendered="#{mobileApproverBean.hasPrevWeek}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriHotCt"
+							action="#{mobileApproverBean.actionPreviousWeekEndDate}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FL" rendered="#{! mobileApproverBean.hasPrevWeek}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+					<span class="midBtn weekEndText">
+						W/E
+						<h:outputText value="#{mobileApproverBean.weekEndDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+					</span>
+
+					<h:panelGroup styleClass="inBlock FR" rendered="#{mobileApproverBean.hasNextWeek}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriHotCt"
+							action="#{mobileApproverBean.actionNextWeekEndDate}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FR" rendered="#{! mobileApproverBean.hasNextWeek}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+				</div>
+
+				<div class="CB pad10tp"></div>
+
+				<!-- List of timecards -->
+
+				<div class="MA" style="min-width:450px;width:98%">
+				<ace:dataTable value="#{mobileApproverBean.timecardEntryList}" var="tcEntry"
+						style="width:100%;max-width:100%;"
+						styleClass="tblRev">
+<!-- columnWidths="7%,23%,50%,8%,6%,6%" -->
+					<!-- Checkbox -->
+					<ace:column headerText="">
+						<!-- this is the enabled checkbox for Ready-to-approve entries -->
+						<h:selectBooleanCheckbox value="#{tcEntry.weeklyTc.markedForApproval}"
+								rendered="#{headerViewBean.production.writable and tcEntry.status.ready}"
+								valueChangeListener="#{mobileApproverBean.listenSelectionChange}"
+								disabled="false">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						<!-- this is the disabled, UNchecked, checkbox (with the rendered tag negated) -->
+						<h:selectBooleanCheckbox value="#{applicationScopeBean.unchecked}"
+								rendered="#{not (headerViewBean.production.writable and tcEntry.status.ready)}"
+								disabled="true" />
+						<!-- Note: mobile does not enable checkbox for APPROVED (final) entries -->
+					</ace:column>
+
+					<!-- Status -->
+					<ace:column headerText="Status">
+					 	<h:outputText value="#{tcEntry.status.mobileStatus}" />
+					</ace:column>
+
+					<!-- Name/button -->
+					<ace:column headerText="Timecard">
+						<div class="mBtn95">
+							<span class="btnPriHotLt" />
+							<div>
+								<h:commandLink action="tcreviewm" styleClass="btnPriHotCt" value="#{tcEntry.name}"
+										title="#{tcEntry.occupation}" >
+									<f:setPropertyActionListener value="com.lightspeedeps.timecardId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{tcEntry.weeklyTc.id}" target="#{jumpBean.value}"/>
+								</h:commandLink>
+							</div>
+							<span class="FL btnPriHotRt" />
+						</div>
+					</ace:column>
+
+					<!-- Hours -->
+					<ace:column headerText="Hours">
+					 	<h:outputText value="#{tcEntry.weeklyTc.totalHours}" />
+					</ace:column>
+
+					<!-- Box Rental -->
+					<ace:column headerText="Box">
+						<h:panelGroup rendered="#{tcEntry.weeklyTc.boxRental ne null}">
+							<h:graphicImage url="../../i/icon_check.gif"/>
+						</h:panelGroup>
+					</ace:column>
+
+					<!-- Mileage -->
+					<ace:column headerText="Mile">
+						<h:panelGroup rendered="#{tcEntry.weeklyTc.mileage ne null}">
+							<h:graphicImage url="../../i/icon_check.gif"/>
+						</h:panelGroup>
+					</ace:column>
+
+				</ace:dataTable>
+				</div>
+
+				<div class="CB"/>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="twoBtnRow">
+					<h:panelGroup rendered="#{headerViewBean.production.writable}">
+					<div class="mBtn2Line">
+						<span class="btnSecHotLt" />
+						<div>
+							<h:commandLink action="#{mobileApproverBean.actionApproveSelected}"
+									disabled="#{mobileApproverBean.checkedItemCount eq 0}"
+									value="Approve Selected"
+									styleClass="btnSecHotCt" style="width:100px;" />
+						</div>
+						<span class="btnSecHotRt" />
+					</div>
+					<!-- 
+					 -->
+
+					<div class="mBtn2Line FR">
+						<span class="btnPriEnbLt" />
+						<div>
+							<h:commandLink value="Reject Selected" action="#{mobileApproverBean.actionRejectSelected}"
+									disabled="#{mobileApproverBean.checkedItemCount ne 1}"
+									styleClass="btnPriEnbCt " style="width:100px;" />
+						</div>
+						<span class="btnPriEnbRt" />
+					</div>
+					</h:panelGroup>
+
+				</div>
+
+				<div class="CB">&#160;</div>
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

@@ -1,0 +1,384 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+   <c:set var="isUseOnly" value="#{not form.shootUse}" />
+   <div class="W1000" style="width:1000px">
+      <div class="FL sfFormBorder1" style="float: left;width:130px;margin-left: 20px;">
+         <div class="FL W200" style="height:40px;border-bottom:1px solid black;">
+            <div class="CT" style="height:15px;background:black;">
+            </div>
+            <div class="CT" style="height:25px;background:black;">
+               <h:outputText value="COMPENSATION" styleClass="pad5tp txt14 B" style="color:white"/>
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:136px;border-bottom:1px solid black;background:#E4E4E4;">
+            <div class="CT" style="height:30px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:10px;background:#E4E4E4;">
+               <h:outputText value="SERVICES" styleClass="txt18 B" />
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:70px;border-bottom:1px solid black;background:#E4E4E4;">
+            <div class="CT" style="height:15px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:45px;background:#E4E4E4;">
+               <h:outputText value="USAGE" styleClass="txt18 B" />
+               <br/>
+               <h:outputText value="(if not covered by Day Rate)" styleClass="txt11 B"/>
+            </div>
+         </div>
+         <div class="FL W130" style="height:90px;background:#E4E4E4;border-bottom:1px solid black;">
+            <div class="CT" style="height:45px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="background:#E4E4E4;">
+               <h:outputText value="ADD’L" styleClass="txt18 B" />
+               <br/>
+               <h:outputText value="(if required)" styleClass="txt11 B"/>
+            </div>
+         </div>
+      </div>
+      <div class="FL" style="float: left;width:700px">
+         <div class="FL pad1tp" style="height:40px;border-bottom:1px solid black;width: 667px;">
+            <div class="FL  W700 pad70lt" style="border-bottom:1px solid black;">
+               <h:outputText styleClass="FL pad5lt  B" value="Model will receive the following fee for all of the rights and options granted to Client herin (the “Fee”)." />
+            </div>
+            <div class="FL  W400 pad70lt">
+               <h:panelGroup styleClass="FL pad5lt" style="width:60px;">
+                  <h:panelGroup styleClass="FL pad5lt ">
+                     <h:selectBooleanCheckbox id="compensationYes" disabled="#{not isAppEdit}" value="#{form.compensationYes}"
+                        valueChangeListener="#{bean.listenCompensationYes}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad5lt pad5tp">
+                     <h:outputText styleClass="txt12 " value="Yes"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt " style="width:60px;">
+                  <h:panelGroup styleClass="FL pad5lt ">
+                     <h:selectBooleanCheckbox id="compensationNo" disabled="#{not isAppEdit}" value="#{form.compensationNo}"
+                        valueChangeListener="#{bean.listenCompensationNo}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad5lt pad5tp">
+                     <h:outputText styleClass="txt12 " value="No"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+         <!-- Service Section -->
+         <div class="FL" style="height:136px;border-bottom:1px solid black;width: 667px;;border-right:1px solid black;">
+            <div class="rowCont">
+               <div class="FL pad10lt DIB W40percnt H26">
+                  <h:panelGroup styleClass="FL rowCont pad2tp">
+                     <h:panelGroup styleClass="FL txt10 pad3tp">
+                        <h:outputText value="Rate for Services:" />
+                     </h:panelGroup>
+                     <h:panelGroup>
+                        <span class="txt9 FL fd_sm2 pad3lt" style="min-width:30%; width:160px;height28px;">
+                           <ace:textEntry id="rateForService" maxlength="14" disabled="#{form.compensationNo or not isAppEdit or isUseOnly}"
+                              value="#{form.rateForService}"
+                              style="width:100px"/>
+                        </span>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+               <h:outputText styleClass="FL pad5tp txt10 B RED" value="* Important - check below to indicate how many hours rate covers*" />
+            </div>
+            <div class="rowCont">
+               <h:outputText styleClass="FL pad10lt pad7tp txt10" value="Above rate is paid per :" />
+               <h:panelGroup styleClass="FL pad5lt" style="width:90px;">
+                  <h:panelGroup styleClass="FL pad5lt pad2tp">
+                     <h:selectBooleanCheckbox id="modelPerHour1"  disabled="#{form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.perHour}"
+                        valueChangeListener="#{bean.listenPerHour}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Per Hour"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt" style="width:90px;">
+                  <h:panelGroup styleClass="FL pad5lt pad2tp">
+                     <h:selectBooleanCheckbox id="modelPerDay1" disabled="#{form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.perDay}"
+                        valueChangeListener="#{bean.listenPerDay}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Per Day"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL  pad2tp pad5lt">
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2 pad3lt" style="width: 90px;">
+								<ace:textEntry id="modelServiceHour" maxlength="5"
+									disabled="#{not form.perDay or not isAppEdit or isUseOnly or (form.perDay and (form.jobState eq 'CA'))}"
+									value="#{form.serviceHours}" style="width:10px;" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL txt10 pad5tp">
+                     <h:outputText value="hours" />
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+				<div class="rowCont">
+					<h:outputText styleClass="FL pad10lt pad7tp txt10"
+						value="Such fee: (check one)" style="width:53px;" />
+					<h:panelGroup styleClass="FL pad5lt" style="width:320px;">
+						<h:panelGroup styleClass="FL pad5lt" style="width:220px;">
+							<h:panelGroup styleClass="FL pad5lt pad2tp">
+								<h:selectBooleanCheckbox id="modelSuchFee"
+									disabled="#{form.compensationNo or not isAppEdit or isUseOnly}"
+									value="#{form.rightTerm}"
+									valueChangeListener="#{bean.listenRightTerm}"
+									styleClass="iceSelBoolChkbx FL pad3tp">
+									<ace:ajax render="@form" />
+								</h:selectBooleanCheckbox>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad6tp pad5lt">
+								<h:outputText styleClass="txt10"
+									value="includes usage rights for the TERM" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5lt" style="width:300px;">
+							<h:panelGroup styleClass="FL pad5lt pad2tp">
+								<h:selectBooleanCheckbox id="usageRightsTerm"
+									disabled="#{form.compensationNo or not isAppEdit or isUseOnly}"
+									value="#{form.notrightTerm}"
+									valueChangeListener="#{bean.listenNotRightTerm}"
+									styleClass="iceSelBoolChkbx FL pad3tp">
+									<ace:ajax render="@form" />
+								</h:selectBooleanCheckbox>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad6tp pad5lt">
+								<h:outputText styleClass="txt10"
+									value="does NOT include usage rights for the TERM.If no usage" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt" style="width:520px;">
+					<h:panelGroup styleClass="FL pad1lt" style="width:90px;">
+						<h:panelGroup styleClass="FL pad2lt pad2tp">
+							<h:selectBooleanCheckbox id="modelPrepDays"
+								valueChangeListener="#{bean.listenPrepDay}"
+								disabled="#{form.compensationNo or not isAppEdit or isUseOnly}"
+								value="#{form.prepDay}" styleClass="iceSelBoolChkbx FL pad3tp">
+								<ace:ajax execute="@this" render="@all" />
+							</h:selectBooleanCheckbox>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad6tp">
+							<h:outputText styleClass="txt10" value="Prep day(s): $" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad2tp">
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2" style="min-width: 10%; width: 20px">
+								<ace:textEntry id="modelPerDayFor" maxlength="14"
+									disabled="#{form.compensationNo or not form.prepDay or not isAppEdit or isUseOnly}"
+									value="#{form.prepPerDay}" style="width:20px">
+									<f:convertNumber type="number" pattern="#0.00000" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL txt10 pad14lt pad5tp">
+							<h:outputText value="per day for" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL  pad2tp">
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2 pad3lt"
+								style="min-width: 10%; width: 20px"> 
+								<ace:textEntry
+									id="modelPerDayHour" maxlength="2"
+									disabled="#{form.compensationNo or not form.prepDay or not isAppEdit or isUseOnly}"
+									value="#{form.prepPerHours}" style="width:20px" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL txt10 pad14lt pad5tp">
+							<h:outputText value="hours" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="FL pad5lt" style="width:112px;">
+						<h:panelGroup styleClass="FL pad2lt pad2tp">
+							<h:selectBooleanCheckbox id="travelDayRate"
+								valueChangeListener="#{bean.listenTravelDayRate}"
+								disabled="#{form.compensationNo or not isAppEdit or isUseOnly}"
+								value="#{form.travelDayRate}"
+								styleClass="iceSelBoolChkbx FL pad3tp">
+								<ace:ajax execute="@this" render="@all" />
+							</h:selectBooleanCheckbox>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad6tp pad5lt">
+							<h:outputText styleClass="txt10" value="Travel day rate $" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL  pad2tp">
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2 pad3lt"
+								style="min-width: 10%; width: 20px"> <ace:textEntry
+									id="modelPerDayB" maxlength="14"
+									disabled="#{form.compensationNo or not form.travelDayRate or not isAppEdit or isUseOnly}"
+									value="#{form.travelDayPerDay}" style="width:20px">
+									<f:convertNumber type="number" pattern="#0.00000" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL txt10 pad15lt pad5tp">
+							<h:outputText value="per day for" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL  pad2tp">
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2 pad3lt"
+								style="min-width: 10%; width: 20px"> <ace:textEntry
+									id="modelHours1" maxlength="2"
+									disabled="#{form.compensationNo or not form.travelDayRate or not isAppEdit or isUseOnly}"
+									value="#{form.travelDayPerHours}" style="width:20px" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL txt10 pad15lt pad5tp">
+							<h:outputText value="hours" />
+						</h:panelGroup>
+					</h:panelGroup>
+					</h:panelGroup>
+				</div>
+			</div>
+         <!-- Usage Section -->
+         <div class="FL" style="height:70px;border-bottom:1px solid black;width:667px;border-right:1px solid black;">
+            <div class="rowCont" style="margin-top: 10px;">
+               <h:outputText styleClass="FL pad10lt pad20tp txt10" value="Compensation for Usage (if Day Rate above does not include usage): $" />
+                <h:panelGroup styleClass="FL pad5tp">
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt">
+                        <ace:textEntry id="payable30Days" maxlength="12" disabled="#{not isAppEdit or form.compensationNo or form.rightTerm}"
+                           value="#{form.usage}"
+                           style="width:150px;margin-top: 10px;">
+                           <f:convertNumber type="number" pattern="#0.000" />
+                        </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+         <!--  Add'l Section -->
+         <div class="FL" style="height:90px;border-bottom:1px solid black;width:667px;border-right:1px solid black;">
+            <div class="rowCont">
+               <h:panelGroup styleClass="FL pad5lt" style="width:70px;">
+                  <h:panelGroup styleClass="FL pad2lt pad2tp">
+                     <h:selectBooleanCheckbox id="modelAddlYes" disabled="#{form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.addlYes}"
+                        valueChangeListener="#{bean.listenAddlYes}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Yes"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt" style="width:70px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="modelAddlNo" disabled="#{form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.addlNo}"
+                        valueChangeListener="#{bean.listenAddlNo}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="No"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+            <div class="rowCont">
+               <h:panelGroup styleClass="FL pad2lt" style="width:83px;">
+                  <h:panelGroup styleClass="FL pad5lt pad2tp">
+                     <h:selectBooleanCheckbox id="modelOvertime" disabled="#{not form.addlYes or form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.addlOverTime}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp" style="width:56px;">
+                     <h:outputText styleClass="txt10" value="Overtime: $"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL  pad2tp">
+                  <h:panelGroup styleClass="FL">
+                     <span class="txt9 FL fd_sm2 pad2tp" style="min-width:10%; width:20px">
+                        <ace:textEntry id="modelPerHour" maxlength="14" disabled="#{not form.addlYes or not form.addlOverTime or not isAppEdit or isUseOnly}"
+                           value="#{form.addlPerHour}"
+                           style="width:20px">
+                            <f:convertNumber type="number" pattern="#0.00000" />
+                         </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL txt10 pad15lt pad5tp" style="width:39px;">
+                     <h:outputText value="per hour" />
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+            <div class="rowCont">
+               <h:panelGroup styleClass="FL pad5lt" style="width:125px;">
+                  <h:panelGroup styleClass="FL pad2lt pad2tp">
+                     <h:selectBooleanCheckbox id="unlimited" disabled="#{not form.addlYes or form.compensationNo or not isAppEdit or isUseOnly}"  value="#{form.weatherDay}" 
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Weather day fee: $"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL  pad2tp">
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt" style="min-width:10%; width:20px">
+                        <ace:textEntry id="modelWeatherDayFee" maxlength="14" disabled="#{not form.addlYes or not form.weatherDay or not isAppEdit or isUseOnly}"
+                           value="#{form.weatherPerDay}"
+                           style="width:20px">
+                            <f:convertNumber type="number" pattern="#0.00000" />
+                        </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL txt10 pad15lt pad5tp">
+                     <h:outputText value="per day" />
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt" style="width:175px;">
+                  <h:panelGroup styleClass="FL pad2lt pad2tp">
+                     <h:selectBooleanCheckbox id="intimates" disabled="#{not form.addlYes or form.compensationNo or not isAppEdit or isUseOnly}" value="#{form.intimatesDay}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Intimates/Swimwear day fee: $"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL  pad2tp">
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt" style="min-width:10%; width:20px">
+                        <ace:textEntry id="modelPerDayN" maxlength="14" disabled="#{not form.addlYes or not form.intimatesDay or not isAppEdit or isUseOnly}"
+                           value="#{form.intimatesPerDay}"
+                           style="width:20px">
+                            <f:convertNumber type="number" pattern="#0.00000" />
+                        </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL txt10 pad14lt pad5tp">
+                     <h:outputText value="per day" />
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+      </div>
+   </div>
+</ui:composition>

@@ -1,0 +1,342 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Employee Rate Table, for Start Payroll form (true "Tours" production) -->
+	
+	<!--  parameters expected:
+			done :				true if this form has been 'finalized'
+	-->
+
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+	<div class="rowCont">
+		<c:set var="empEdit" value="#{startFormBean.empEdit}" />
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" />
+		<c:set var="edit" value="#{startFormBean.editMode}" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted and not v30}" />
+
+		<!-- Second Block Start -->
+		<div class="#{isTourProd ? 'W95percnt' : 'W100percnt'} FL ">
+
+			<h:panelGroup rendered="#{isTourProd}">
+				<div class="pad5lt pad10tp FL W90percnt">
+					<h:outputText styleClass="B txt14 FL" value="RATE TABLE:" />
+				</div>
+			</h:panelGroup>
+			
+			<!-- Right side, lower half - Contract terms and rate tables -->
+			<div class="FL #{isTourProd ? 'W70percnt' : 'W100percnt'}">
+				<div class="blueLegendContWrap MA" style="#{isTourProd ? '' : 'width:100%'}">
+					<div class="blueLegendCont #{isTourProd ? 'pad20tp pad15lt' : 'pad15tp'} FL">
+						<div class="legendHdg">
+							<h:outputText rendered="#{isTourProd}" value="Rates" />
+							<h:outputText rendered="#{! isTourProd}" value="Touring Rates" />
+						</div>
+
+						<table class="gradTbl2 BKwhite" style="width:100%; #{(! isTourProd) ? 'border-color: transparent;' : ''}"
+								border="" cellpadding="0" cellspacing="0">
+
+							<!-- HEADER LINE 1 -->
+							<thead class="gradTbl2ScrlHdrTbl CT txt11"><tr>
+								<th style="width:18%">
+									<h:outputText value="&#160;" />
+								</th>
+								<th style="width:25%">
+									<h:outputText styleClass="FL W40percnt CT" value="&#160;"/>
+									<h:outputText styleClass="FL W60percnt CT" value="% of"/>
+								</th>
+								<th style="width:0.2%">&#160;</th>
+								<th style="width:22%"> &#160; </th>
+								<th style="width:12%">
+									<h:outputText styleClass="FL W100percnt CT" value="Pay"/>
+								</th>
+								<th style="width:7%">
+									<div class="FL CT">
+										<h:outputText value="&#160;"/>
+									</div>
+								</th>
+							</tr>
+							</thead>
+
+							<!-- HEADER LINE 2 -->
+							<thead class="gradTbl2ScrlHdrTbl CT txt11"><tr>
+								<th style="width:18%;">
+									<h:outputText style="margin-left:-25px" value="DAY TYPE" />
+								</th>
+								<th style="width:25%">
+										<h:outputText styleClass="FL W40percnt CT" value="Rate"/>
+										<h:outputText styleClass="FL W60percnt CT" value="Show Rate"/>
+								</th>
+								<th style="width:0.2%">&#160;</th>
+								<th style="width:22%"> &#160; </th>
+								<th style="width:12%">
+									<h:outputText styleClass="FL W100percnt CT" value="Freq"/>
+								</th>
+								<th style="width:7%">
+									<h:outputText styleClass="FL W100percnt CT" value="Rate"/>
+								</th>
+							</tr>
+							</thead>
+
+							<!-- SHOW -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Show"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursShowRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this showPercent_#{suffix} prepPercent_#{suffix} postPercent_#{suffix} travelPercent_#{suffix} downPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="showPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="#{startFormBean.form.toursShowPercent}">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td style="width:22%">
+									<h:outputText styleClass="stwklab" value="Per Diem (Taxable)"/>
+								</td>
+								<td>
+									<h:panelGroup rendered="#{startFormBean.editMode}">
+										<h:selectOneMenu
+											style="width:90%;" styleClass="pad5lt"
+											value="#{startFormBean.form.perdiemTx.weekly}"
+											disabled="#{true}">
+											<f:selectItems value="#{startFormBean.weeklyChoices}" />
+										</h:selectOneMenu>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{! startFormBean.editMode}"  styleClass="pad30lt">
+										<h:outputText rendered="#{startFormBean.form.perdiemTx.weekly}" value="Weekly"/>
+										<h:outputText rendered="#{! startFormBean.form.perdiemTx.weekly}" value="Daily"/>
+									</h:panelGroup>
+								</td>
+								<td>
+									<ace:textEntry styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.perdiemTx.amt}"
+										disabled="#{done or not appEdit}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<ace:ajax/>
+									</ace:textEntry>
+								</td>
+							</tr>
+
+							<!-- PREP -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Prep"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursPrepRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this prepPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="prepPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="#{startFormBean.form.toursPrepPercent}">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td style="width:22%">
+									<h:outputText styleClass="stwklab" value="Per Diem (Non-Tax)"/>
+								</td>
+								<td>
+									<h:panelGroup rendered="#{startFormBean.editMode}">
+										<h:selectOneMenu
+											style="width:90%;" styleClass="pad5lt"
+											value="#{startFormBean.form.perdiemNtx.weekly}"
+											disabled="#{true}">
+											<f:selectItems value="#{startFormBean.weeklyChoices}" />
+											<ace:ajax/>
+										</h:selectOneMenu>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{! startFormBean.editMode}"  styleClass="pad30lt">
+										<h:outputText rendered="#{startFormBean.form.perdiemNtx.weekly}" value="Weekly"/>
+										<h:outputText rendered="#{! startFormBean.form.perdiemNtx.weekly}" value="Daily"/>
+									</h:panelGroup>
+								</td>
+								<td>
+									<ace:textEntry styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.perdiemNtx.amt}"
+										disabled="#{done or not appEdit}">
+										<ace:ajax/>
+									</ace:textEntry>
+								</td>
+							</tr>
+
+							<!-- POST -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Post"/>
+								</td>
+								<td>
+									<h:inputText styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursPostRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this postPercent_#{suffix}" />
+									</h:inputText>
+									<h:outputText id="postPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="#{startFormBean.form.toursPostPercent}">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td style="width:22%">
+									<h:outputText styleClass="stwklab" value="Cash Advance"/>
+								</td>
+								<td>
+									<h:panelGroup rendered="#{startFormBean.editMode}">
+										<h:selectOneMenu
+											style="width:90%;" styleClass="pad5lt"
+											value="#{startFormBean.form.perdiemAdv.weekly}"
+											disabled="#{true}">
+											<f:selectItems value="#{startFormBean.weeklyChoices}" />
+											<ace:ajax/>
+										</h:selectOneMenu>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{! startFormBean.editMode}"  styleClass="pad30lt">
+										<h:outputText rendered="#{startFormBean.form.perdiemAdv.weekly}" value="Weekly"/>
+										<h:outputText rendered="#{! startFormBean.form.perdiemAdv.weekly}" value="Daily"/>
+									</h:panelGroup>
+								</td>
+								<td>
+									<ace:textEntry styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.perdiemAdv.amt}"
+										disabled="#{done or not appEdit}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+									</ace:textEntry>
+								</td>
+							</tr>
+
+							<!-- TRAVEL -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Travel"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursTravelRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this travelPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="travelPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="#{startFormBean.form.toursTravelPercent}">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+							</tr>
+
+							<!-- DOWN -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Down"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursDownRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this downPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="downPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="#{startFormBean.form.toursDownPercent}">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+							</tr>
+							<!-- HOME - WORK -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Work (Home)"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursHomeWorkRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this homeWorkPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="homeWorkPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+							</tr>
+							<!-- HOME - OFF -->
+							<tr class="iceDatTblRow1">
+								<td>
+									<h:outputText styleClass="stwklab pad17lt" value="Off (Home)"/>
+								</td>
+								<td>
+									<h:inputText  styleClass="dollarsin2 W40percnt"
+										maxlength="10" style="width:66px;"
+										value="#{startFormBean.form.toursHomeOffRate}"
+										disabled="#{done or (not appEdit)}">
+										<f:convertNumber type="number" pattern="#,##0.00" />
+										<f:ajax render="@this homeOffPercent_#{suffix}" />
+									</h:inputText >
+									<h:outputText id="homeOffPercent_#{suffix}" styleClass="W60percnt pad15lt"
+										value="">
+										<f:convertNumber type="number" pattern="#0.#" />
+									</h:outputText>
+								</td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+								<td> &#160; </td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- end rates wrapper -->
+			</div>
+			<!--Removed default workplace drop down from Payroll Start Form page -->
+			<!-- <h:panelGroup rendered="#{isTourProd}">
+				<div class="FR W25percnt pad15tp">
+					<h:panelGroup styleClass="pad5lt">
+						<h:outputText value="#{msg.Timesheet_Default_Workplace}" />
+						<h:selectOneMenu styleClass="pad2lt txt11" disabled="#{done or not appEdit}"
+							style="width:75px;"
+							value="#{startFormBean.form.workZone}">
+							<f:selectItems value="#{startFormBean.toursWorkZoneDL}"  />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup> -->	
+		</div> <!-- Second Block End -->
+
+	</div>
+
+</ui:composition>

@@ -1,0 +1,467 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <c:set var="editable" value="#{true}" />
+   <div class="miniTab" style="width:840px;">
+      <div class="BKwhite" >
+         <div class="pad20tp">
+            <div id="" class="scrollPnlTab"	onscroll="setScrollPos(this.scrollTop);">
+               <div class="rowCont"></div>
+               <div class="txt9 W800 pad20lt">
+                  <div class="FL W800">
+                     <div class="FL W150" style="height:95px;">
+                        <h:graphicImage value="" url="../../i/forms/ca_wtpa_logo_team_color.png" alt="" height="80px" />
+                     </div>
+                     <div class="FL" style="height:95px;width: 424px">
+                     </div>
+                     <div class="FL RT W15percnt  pad70lt">
+                        <h:outputText styleClass="txt12  pad10rt" value="Pg 2 of 2"/>
+                     </div>
+                  </div>
+                  <div class="FL">
+                     <h:outputText styleClass="FL txt14 B pad5tp" value="TTC CLIENT :"/>
+                     <div class="FL pad5lt">
+                        <ace:textEntry id="MRClient" value="#{form.ttcClient}"  disabled="#{true}" styleClass="W350"/>
+                     </div>
+                     <h:outputText styleClass="FL txt14 B pad15lt pad5tp" value="JOB/PO #:"/>
+                     <div class="FL pad5lt">
+                        <ace:textEntry id="MRJOb" value="#{form.job} #{form.jobPo}"  disabled="#{true}" styleClass="W150"/>
+                     </div>
+                  </div>
+                  <div class="rowCont"></div>
+                  <div class="sfFormBorder1">
+                     <!-- Row 1 -->
+                     <div style="height:38px;border-bottom: 1px solid black;">
+                        <div class="W300 FL" style="border-right:1px solid black;height:38px;">
+                           <div class="pad2tp">
+                              <h:outputText styleClass="FL pad5lt B " value="PROJECT NAME"/>
+                              <br/>
+                              <div class="FL pad3tp pad5lt">
+                              </div>
+                              <ace:textEntry id="MRProjectName" value="#{form.projectName}"  disabled="#{true}" styleClass="W150"/>
+                           </div>
+                        </div>
+                        <div class="W450 FL" style="height:38px;">
+                           <div class="pad2tp">
+                              <h:outputText styleClass="FL pad5lt B" value="MODEL"/>
+                           </div>
+                           <br/>
+                           <div class="FL pad5lt pad3tp">
+                              <ace:textEntry id="MRModel" value="#{form.modelName}"  disabled="#{true}" styleClass="W100"/>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Row 2 -->
+                  <div class="FL pad10tp W200" style="height:450px;">
+                     <h:graphicImage value="" url="../../i/forms/modelreleasedetail.png" alt="" height="450px" />
+                  </div>
+                  <div class="rowCont" style="font-weight: bold;">
+                     <h:outputText styleClass="FL pad15lt pad10tp" value="4. 	 I represent and warrant that I am over" />
+                     <div class="FL pad5lt">
+                        <ace:textEntry id="warrant" value="#{form.age}"  disabled="true" maxlength="3"  styleClass="W50"/>
+                     </div>
+                    <!--  disabled="#{editable}" -->
+                     <h:outputText styleClass="FL pad5lt pad10tp" value="years of age (or if under" />
+                     <div class="FL pad5lt">
+                        <ace:textEntry id="underyears" maxlength="3" value="#{form.underAge}" disabled="true" styleClass="W50"/>
+                     </div>
+                     <h:outputText styleClass="FL pad5lt pad10tp" value="my parent or legal guardian will sign below to signify agreement." />
+                  </div>
+                    <div class="FL W100" style="height:67px;">
+                     <h:graphicImage value="" url="../../i/forms/modelreleasebody_1.png" alt="" height="67px" />
+                  </div>
+                  <div class="FL pad10tp W100" style="height:10px;margin-top: 72px;margin-left: 57px;">
+                     <h:graphicImage value="" url="../../i/forms/modelreleasebody_2.png" alt="" height="18px" />
+                  </div>
+                  <div class="rowCont" style="margin-top: -24px;margin-left: 420px;">
+                     <div class="FL pad5lt">
+                        <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:100px;">
+                           <h:panelGroup styleClass="FL pad5lt pad2tp">
+                              <h:selectBooleanCheckbox id="mdAcknowleged" value="#{form.acknowledged}"
+                                 disabled="#{not isEmpEdit}"
+                                 styleClass="iceSelBoolChkbx FL pad3tp">
+                                 <ace:ajax render="@form"/>
+                              </h:selectBooleanCheckbox>
+                           </h:panelGroup>
+                           <h:panelGroup styleClass="FL pad9tp pad5lt">
+                              <h:outputText styleClass="txt9 B" value="Acknowledged"/>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                   <div class="FL W100" style="height:60px;">
+                     <h:graphicImage value="" url="../../i/forms/modelreleasebody_3.png" alt="" height="60px" />
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad5lt">
+                        <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:80px;">
+                           <h:panelGroup styleClass="FL pad5lt pad2tp">
+                              <h:selectBooleanCheckbox id="model" value="#{form.model}"
+                                 disabled="#{not isEmpEdit}"
+                                 valueChangeListener="#{bean.listenModel}"
+                                 styleClass="iceSelBoolChkbx FL pad3tp">
+                                 <ace:ajax render="@form"/>
+                              </h:selectBooleanCheckbox>
+                           </h:panelGroup>
+                           <h:panelGroup styleClass="FL pad9tp pad5lt">
+                              <h:outputText styleClass="txt10" value="MODEL"/>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad5lt">
+                        <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:350px;">
+                           <h:panelGroup styleClass="FL pad5lt pad2tp">
+                              <h:selectBooleanCheckbox id="attorney" value="#{form.modelAgency}"
+                                  disabled="#{not isEmpEdit}"
+                                  valueChangeListener="#{bean.listenModelAgent}"
+                                 styleClass="iceSelBoolChkbx FL pad3tp">
+                                 <ace:ajax render="@form"/>
+                              </h:selectBooleanCheckbox>
+                           </h:panelGroup>
+                           <h:panelGroup styleClass="FL pad9tp pad5lt">
+                              <h:outputText styleClass="txt10" value="Model Agent as attorney-in-fact"/>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt">
+                        <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:180px;">
+                           <h:panelGroup styleClass="FL pad5lt pad2tp">
+                              <h:selectBooleanCheckbox id="modelProducer" value="#{form.producer}"  
+                                 disabled="#{not isAppEdit}"
+                                 styleClass="iceSelBoolChkbx FL pad3tp">
+                              </h:selectBooleanCheckbox>
+                           </h:panelGroup>
+                           <h:panelGroup styleClass="FL pad9tp pad5lt">
+                              <h:outputText styleClass="txt10" value="PRODUCER"/>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad5lt">
+                        <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:350px;">
+                           <h:panelGroup styleClass="FL pad5lt pad2tp">
+                              <h:selectBooleanCheckbox id="parentGuardian" value="#{form.guardian}"
+                                 disabled="#{not isEmpEdit}"
+                                 valueChangeListener="#{bean.listenGuardian}"
+                                 styleClass="iceSelBoolChkbx FL pad3tp">
+                                 <ace:ajax render="@form"/>
+                              </h:selectBooleanCheckbox>
+                           </h:panelGroup>
+                           <h:panelGroup styleClass="FL pad9tp pad5lt">
+                              <h:outputText styleClass="txt10" value="PARENT or GUARDIAN if MODEL is a minor"/>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont pad20tp">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Signature:" />
+                           </h:panelGroup>
+                           	<h:panelGroup rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+							  <h:panelGroup styleClass="btn_legend_left" style="float:left;margin-left: 55px;">
+									<h:panelGroup rendered="#{(bean.contactDoc.status ne 'PENDING') and isEmployee}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit" id="actionSubmitModel"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{(not isEmployee) or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt"/>
+										<span>
+											<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt"/>
+									</h:panelGroup>
+							  </h:panelGroup>
+							</h:panelGroup>
+							<span class="txt8">
+							 <h:outputText escape="false" 
+								  rendered="#{(bean.contactDoc.empSignature ne null)}">
+								  <h:outputText value="E-signed by" styleClass="U" />
+								  <h:outputText value=" #{bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+								  <h:outputText value=" #{bean.contactDoc.empSignature.displayTime}" />
+								  <br/>
+								  <h:outputText value="# #{bean.contactDoc.empSignature.uuid}"/>
+								  </h:outputText>
+								  </span>
+							</h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Signature:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                            	<!-- Sign Button  -->
+								<h:panelGroup rendered="#{((bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')
+										or (bean.contactDoc.status eq 'SUBMITTED')) and (bean.contactDoc.employerSignature eq null)}">
+							
+									<h:panelGroup styleClass="btn_legend_left" style="float:left;margin-left: 55px;">
+										<h:panelGroup rendered="#{(isAppEdit) or (contactFormBean.mayApprove)
+												or (isApprover)}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Sign &amp; Approve" id="actionEmployerSignMR"
+													action="#{contactFormBean.actionEmployerSign}"
+													title="Signature field" styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<h:panelGroup rendered="#{not ((isAppEdit) or (contactFormBean.mayApprove)
+												or (isApprover))}">
+											<span class="btnMiniLt"/>
+											<span>
+												<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+											</span>
+											<span class="btnMiniRt"/>
+										</h:panelGroup>
+									</h:panelGroup>
+	
+								</h:panelGroup>
+								<!-- Sign Button End -->
+								<span class="txt8">
+									<h:outputText escape="false" 
+										rendered="#{(bean.contactDoc.employerSignature ne null)}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{bean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+										<h:outputText value=" #{bean.contactDoc.employerSignature.displayTime}" />
+										<br/>
+										<h:outputText value="# #{bean.contactDoc.employerSignature.uuid}"/>
+									</h:outputText>
+								</span>
+								</h:panelGroup>
+								<!-- Sign Button End -->
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Print Name:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:70%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelPrintName1" maxlength="30" disabled="#{not isEmpEdit}"
+                                    value="#{form.modelPrintName}"
+                                    style="width:93%;"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Print Name:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:68%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelPrintName2" maxlength="30" 
+                                    value="#{form.producerPrintName}" disabled="#{not isAppEdit}"
+                                    style="width:93%;"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Date:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:78%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelDate" maxlength="8" disabled="true"
+                                    value="#{contactFormBean.contactDocument.empSignature.date}"
+                                    style="width:93%;">
+                                    <f:convertDateTime pattern="MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}"/>
+                                 </ace:textEntry>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Date:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:77%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="producerDate" maxlength="8" disabled="true"
+                                    value="#{contactFormBean.contactDocument.employerSignature.date}"
+                                    style="width:93%;">
+                                    <f:convertDateTime pattern="MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}"/>
+                                 </ace:textEntry>
+                                  <!-- disabled="#{not isAppEdit}" -->
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Email:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:78%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelEmail" maxlength="60" disabled="#{not isEmpEdit}"
+                                     value="#{form.modelEmail}"
+                                    style="width:93%;"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Company :" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:63%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelCompany" maxlength="30"
+                                    value="#{form.modelAgencyCompany}"  disabled="#{not isAppEdit}"
+                                    style="width:93%;"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B ">
+                              <h:outputText value="Phone:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:77%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelPhone1" maxlength="13" disabled="#{not isEmpEdit}"
+                                    value="#{form.modelPhone}"
+                                    style="width:93%;">
+                                 </ace:textEntry>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Phone:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:76%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelPhone2" maxlength="13"
+                                    value="#{form.producerPhone}" disabled="#{not isAppEdit}"
+                                    style="width:93%;">
+                                 </ace:textEntry>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Model Agency Name:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt B" style="min-width:30%; width:61%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelAgencyName" maxlength="30" disabled="true"
+                                    value="#{form.modelAgencyText}"   
+									style="width:93%;"/>
+								</span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                     <div class="FL pad5lt DIB W49percnt H26 ">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Email:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt B" style="min-width:30%;width:77%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="producerEmail1" maxlength="60"
+                                    value="#{form.producerEmail}" disabled="#{not isAppEdit}"
+                                    style="width:93%;"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Model Agency Street:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%;width:61%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelAgencyStreet" maxlength="60" disabled="#{(not (isAppEdit or isEmpEdit) or form.modelAgencyNo)}"
+                                    value="#{form.modelAgencyStreet}"
+                                    style="width:93%"/>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Model Agency City/State/Zip:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:52%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelAgencyCity" maxlength="38" 
+                                    value="#{form.modelAddress.addrLine1}" disabled="#{(not (isAppEdit or isEmpEdit) or form.modelAgencyNo)}"
+                                    style="width:93%;" />
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont">
+                     <div class="FL pad10lt DIB W49percnt H26">
+                        <h:panelGroup styleClass="FL rowCont pad2tp pad5lt">
+                           <h:panelGroup styleClass="FL txt10 pad3tp B">
+                              <h:outputText value="Model Agency Phone:" />
+                           </h:panelGroup>
+                           <h:panelGroup>
+                              <span class="FL fd_sm2 pad3lt" style="min-width:30%; width:61%;border-bottom:1px solid black;">
+                                 <ace:textEntry id="modelAgencyPhone" maxlength="13" disabled="#{(not (isAppEdit or isEmpEdit) or form.modelAgencyNo)}"
+                                    value="#{form.modelAgencyPhone}"
+                                    style="width:93%;">
+                                 </ace:textEntry>
+                              </span>
+                           </h:panelGroup>
+                        </h:panelGroup>
+                     </div>
+                  </div>
+                  <div class="rowCont pad30tp">
+                  <!-- HISTORY BOX -->
+				   <h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+						<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:795px;margin-bottom:15px;">
+							<ui:include src="signatureHistory.xhtml">
+								<ui:param name="bean" value="#{bean}" />
+								<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+							</ui:include>
+						</div>
+					</h:panelGroup>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</ui:composition>

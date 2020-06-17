@@ -1,0 +1,191 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- The Documents & Packets mini-tab, under Cast & Crew / Onboarding -->
+
+	<c:set var="show" value="#{not empty authBean.pgFields['10.1,view']}" />
+
+	<ace:tabPane label="#{show ? 'Documents &amp; Packets' : ''}" disabled="#{not show}">
+
+		<div class="rowCont">
+			<!--  DOCUMENT LIST (Left side) -->
+			<div class="FL" style="width:42%">
+				<ui:include src="docList.xhtml">
+					<ui:param name="tag" value="Sp" /><!-- start-packet instance -->
+				</ui:include>
+			</div>
+
+			<!-- Right side - packet list and documents in selected packet -->
+			<div class="FL" style="width:57%">
+				<div class="rowCont">
+
+					<!-- PACKET LIST -->
+					<div class="blueLegendContWrap pad15tp">
+						<div class="blueLegendCont pad10tp"
+								style="width:88%;margin-left:12%">
+							<!-- legend for packet list start -->
+							<span class="legendHdg">Packet List</span>
+
+							<!-- legend buttons -->
+
+							<h:panelGroup styleClass="btn_legend pad10rt">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Rename"
+										action="#{packetListBean.actionRename}"
+										title="Rename the selected Packet."
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="btn_legend pad5rt">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Delete"
+										onfocus="focusOn('popInput');"
+										action="#{packetListBean.actionDelete}"
+										title="Delete the Packet."
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="btn_legend pad5rt">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="New"
+										action="#{packetListBean.actionCreate}"
+										title="Create a new Packet."
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<!-- Packet list table -->
+							<ace:dataTable id="packetTable"
+									value="#{packetListBean.packetList}" var="item"
+									rowIndexVar="idx"
+									scrollable="true"
+									selectionMode="single"
+									styleClass="bk_sl_grid vscroll"
+									rowSelectListener="#{packetListBean.listenRowClicked}"
+									rowUnselectListener="#{packetListBean.listenRowUnClicked}"
+									stateMap="#{packetListBean.stateMap}">
+
+								<!-- the Name -->
+								<ace:column id="name" headerText="Name" selected="true" 
+										styleClass="CT" style="width:50%;">
+									<h:outputText styleClass="pad20lt" value="#{item.name}" />
+								</ace:column>
+
+								<!-- the lastModified -->
+								<ace:column id="lastModified" headerText="# of Docs" styleClass="CT" style="width:25%;">
+									<h:outputText rendered="#{item.documentCount ne null}" value="#{item.documentCount}">
+									</h:outputText>
+									<h:outputText rendered="#{item.documentCount eq null}" value="0"/>
+								</ace:column>
+
+								<!-- the Status -->
+								<ace:column id="status" headerText="Status" styleClass="CT" style="width:25%;">
+									<h:outputText value="#{item.status.label}">
+									</h:outputText>
+								</ace:column>
+
+							</ace:dataTable>
+						</div>
+					</div>
+					<!-- End of packet list -->
+
+					<div class="rowCont">
+						<!-- ********** Horizontal gap between top and bottom halves ********* -->
+						<div class="W12percnt FL" style="width:12%;margin-top:7%;">
+							<span>
+								<h:outputText class="pad5tp FL" escape="false" style="text-align:center;"
+									value="Copy selected &lt;/br&gt; documents into Packet">
+								</h:outputText>
+								<span class="DIB CT W100percnt">
+									<h:commandButton value=""
+										action="#{packetListBean.actionMoveDocumentToPacket}" styleClass="Btn pad5tp btnArrowRightCircle"
+										title="Move the checked documents into the selected packet">
+									</h:commandButton>
+								</span>
+							</span>
+						</div>
+
+						<!-- Lower right: list of documents in current packet -->
+						<div class="FL W88percnt ">
+							<div class="blueLegendContWrap">
+								<div class="blueLegendCont"
+										style="width:100%;margin-top:5%">
+									<!-- legend for packet's document list start -->
+									<span class="legendHdg">
+										<h:panelGroup rendered="#{packetListBean.clickedPacketName ne null}">
+											<h:outputText value=" Documents in : #{packetListBean.clickedPacketName}"/>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{packetListBean.clickedPacketName eq null}">
+											<h:outputText value=" Documents in :"/>
+										</h:panelGroup>
+									</span>
+
+									<h:panelGroup styleClass="btn_legend LH18">
+									<!-- No legend buttons, so do this to align the table below with the one on the left -->
+									</h:panelGroup>
+
+									<!-- packet's document table -->
+									<div class="W100percnt">
+										<ace:dataTable id="packetDocTable"
+											value="#{packetListBean.documentList}" var="doc"
+											rowIndexVar="idx"
+											scrollable="true"
+											styleClass="bk_sl_grid"
+											scrollHeight="130">
+
+											<!-- the delete [cross] buttons -->
+											<ace:column styleClass="CT" style="width:10%;">
+												<h:commandButton value="" styleClass="deleteXbtn"
+													action="#{packetListBean.actionRemoveDocument}" title="Remove">
+													<f:setPropertyActionListener value="#{doc}"
+														target="#{packetListBean.documentToRemove}"/>
+												</h:commandButton>
+											</ace:column>
+
+											<!-- the Icons -->
+											<ace:column styleClass="CT" style="width:10%;">
+												<h:panelGroup>
+													<h:graphicImage rendered="#{doc.mimeType eq 'MS_WORD'}"
+														value="../../i/icon_word_18.png" alt=""/>
+													<h:graphicImage rendered="#{doc.mimeType eq 'PDF' or doc.mimeType eq 'LS_FORM'}"
+														value="../../i/icon_pdf_18.png" alt=""/>
+													<h:graphicImage value="../../i/icon_document_18.png" alt=""
+														rendered="#{doc.mimeType ne 'PDF' and doc.mimeType ne 'MS_WORD' and
+															 doc.mimeType ne 'LS_FORM'}"/>
+												</h:panelGroup>
+											</ace:column>
+
+											<!-- the Name -->
+											<ace:column headerText="Name" selected="true" styleClass="CT" style="width:50%;">
+												<div class="FL pad20lt" style="text-align:left;">
+													<h:outputText value="#{doc.normalizedName}" >
+													</h:outputText>
+												</div>
+											</ace:column>
+
+											<!-- Modified -->
+											<ace:column  headerText="Modified" styleClass="CT" style="width:30%;">
+												<h:outputText value="#{doc.created}">
+												<f:convertDateTime pattern="M/d/yyyy h:mm a"
+													timeZone="#{applicationScopeBean.timeZone}"/>
+												</h:outputText>
+											</ace:column>
+
+										</ace:dataTable>
+									</div><!-- packet's document table end -->
+								</div>
+							</div>
+						</div>
+					</div> <!-- Bottom -->
+				</div>
+
+		</div>
+		</div>
+	</ace:tabPane>
+</ui:composition>

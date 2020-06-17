@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- One row of DAYS table in DPR -->
+	<!-- parameters: -->
+	<!--   title: row title text -->
+	<!--   editMode: true or (false or undefined) -->
+	<!--   editStatusMode: true or (false or undefined) -->
+	<!--   dprDays: dprDays object with counts -->
+	<!--   dprDays2: dprDays object with used-to-date counts, only set for last row. -->
+
+	<div class="rowCont W100percnt">
+		<div class="dprDayRowHdr">
+			<h:outputText value="#{title}" />
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.units[1]-dprDays2.units[1]}">
+				<!-- NOTE: For Scheduled and Actual rows, dprDays2 is null, so subtraction has no effect! -->
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.units[1]}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.units[2]-dprDays2.units[2]}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.units[2]}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.rehearse-dprDays2.rehearse}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.rehearse}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.test-dprDays2.test}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.test}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.reshoot-dprDays2.reshoot}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.reshoot}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.holiday-dprDays2.holiday}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.holiday}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.insurance-dprDays2.insurance}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.insurance}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" rendered="#{not editMode}" value="#{dprDays.travel-dprDays2.travel}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{editMode}" styleClass="dprDayEd CT" value="#{dprDays.travel}" maxlength="5">
+				<f:convertNumber type="number" pattern="0.#" />
+			</ace:textEntry>
+		</div>
+		<div class="dprDay">
+			<h:outputText styleClass="pad3tp" value="#{dprDays.total-dprDays2.total}">
+				<f:convertNumber type="number" pattern="0.#" />
+			</h:outputText>
+		</div>
+		<div class="dprDayStatus">
+			<h:outputText styleClass="pad3tp" rendered="#{not (editMode || editStatusMode)}" value="#{daysStatus}" />
+			<ace:textEntry rendered="#{editMode || editStatusMode}" styleClass="dprDayEd" value="#{daysStatus}" maxlength="50" />
+		</div>
+	</div>
+
+</ui:composition>

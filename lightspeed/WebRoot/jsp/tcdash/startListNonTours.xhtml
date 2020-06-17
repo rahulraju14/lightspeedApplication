@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- Contents of Start Forms panelTab of Dashboard page,
+	for NON-TOURS production types -->
+
+	<div>
+		<!-- SHOW ALL PROJECTS CHECKBOX -->
+		<div class="pad10lt pad3tp pad15bm">
+			<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+				<h:selectBooleanCheckbox value="#{startFormListBean.showAllProjects}"
+						valueChangeListener="#{startFormListBean.listenAllProjects}"
+						rendered="#{aicp and (not empty authBean.pgFields['9.2,all_projects'])}">
+						Show all Projects
+					<f:ajax execute="@this" render="@all"/>
+				</h:selectBooleanCheckbox>
+			</icecore:setEventPhase>
+		</div>
+		<div class="CB"></div>
+	</div>
+
+	<div style="margin-top:-10px;"><!-- top half of page; scrollable -->
+		<!-- Legend wrapper -->
+		<div class="blueLegendContWrap pad9tp">
+			<div class="blueLegendCont"> <!-- Blue content -->
+				<span class="legendHdg" ><!-- blue legend header goes here if needed --></span>
+
+				<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite}">
+					<!-- left-side legend buttons
+					<h:panelGroup styleClass="btn_legend_left pad10rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Approve"
+								action="#{startFormListBean.actionApprove}"
+								title="Approve the timecards that are checked."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					-->
+				</h:panelGroup>
+
+				<h:panelGroup styleClass="btn_legend">
+					<span class="btnMiniLtHot" />
+						<ace:linkButton value="Refresh"
+							action="#{startFormListBean.actionRefresh}"
+							title="Refresh the list of Start forms."
+							styleClass="btnMiniCt" />
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+
+				<div class="FL rowCont gradTbl3">
+					<ace:dataTable id="sftable" styleClass="gradTbl3 CT txt11"
+						singleSort="true"
+						value="#{startFormListBean.itemList}" var="emp" rowClassStyle="CT txt12"
+						scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+						scrollHeight="#{headerViewBean.mobile ? '' : '305'}"
+						style="width:100%;max-width:100%;overflow-x:hidden;overflow-y:scroll">
+						<!-- ORDER: status, account, free, name, dept, union, occup., occ code, rate, guar., start, type, terms -->
+
+						<!-- STATUS ICON -->
+						<ace:column headerText="Status" styleClass="gradNoBkSort" style="width:#{aicp ? '5' : '5'}%;">
+							<!-- <x:facet name="header">
+							<div class="CT">
+							<ice:commandSortHeader columnName="status" arrow="true">
+							<h:outputText styleClass="gradNoBkSort" value=" headerText: Status  " />
+							</ice:commandSortHeader>
+								</div>
+	</f:facet> -->
+
+							<h:commandButton action="#{jumpBean.actionJump}" value=""
+									title="#{emp.startForm.hasRequiredFields
+										? 'Form complete -- all required fields have data.'
+										: 'Form incomplete -- required field(s) missing!'}"
+									rendered="#{(emp.startForm ne null)}"
+									image="#{emp.startForm.hasRequiredFields
+										? '../../i/icon_tc_10_appr.png'
+										: '../../i/icon_tc_09_resub_ready.png'}">
+								<f:setPropertyActionListener value="#{(headerViewBean.production.allowOnboarding ? 'payrollStart' : 'tcstarts')}"
+										target="#{jumpBean.jumpTo}"/>
+								<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{emp.contact.id}" target="#{jumpBean.value}"/>
+								<!-- Next two entries are for Onboarding environment -->
+								<f:setPropertyActionListener value="com.lightspeedeps.employmentId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{emp.id}" target="#{jumpBean.value}"/>
+								<!-- Next two entries are for NON-onboarding environment -->
+								<f:setPropertyActionListener value="com.lightspeedeps.StartFormId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{emp.startForm.id}" target="#{jumpBean.value}"/>
+								<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+							</h:commandButton>
+
+						</ace:column>
+
+						<!-- JOB NUMBER (AICP) -->
+						<ace:column sortBy="#{emp.startForm.jobNumber}" headerText="Job#" rendered="#{aicp}" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '6.5' : '0'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" styleClass="CT" value="#{emp.startForm.jobNumber}" />
+							<h:outputText rendered="#{emp.startForm eq null}" styleClass="CT" value=" " />
+						</ace:column>
+
+						<!-- JOB NAME (AICP) -->
+						<ace:column sortBy="#{emp.startForm.jobName}" headerText="Job Name" rendered="#{aicp}" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '9' : '0'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" styleClass="CT" value="#{emp.startForm.jobName}" />
+							<h:outputText rendered="#{emp.startForm eq null}" styleClass="CT" value=" " />
+						</ace:column>
+
+						<!-- ACCOUNT CODES -->
+						<ace:column sortBy="#{emp.account.major} #{emp.account.dtl} #{emp.account.sub} #{emp.account.set}" headerText="Account Code" 
+							rendered="#{! aicp}" styleClass="gradNoBkSort" style="width:#{aicp ? '0' : '15'}%;">
+							<div class="W100percnt">
+								<div class="acSl acPrdT"><h:outputText value="#{emp.account.major}&#160;"/></div>
+								<div class="acSl acDtlT"><h:outputText value="#{emp.account.dtl}&#160;"/></div>
+								<div class="acSl acSubT"><h:outputText value="#{emp.account.sub}&#160;"/></div>
+								<div class="acSl acSetT"><h:outputText value="#{emp.account.set}&#160;"/></div>
+							</div>
+						</ace:column>
+
+						<!-- FREE 1 -->
+						<ace:column sortBy="#{emp.account.free}" headerText="F1" rendered="#{! aicp}" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '0' : '2'}%;">
+							<div class="acSl acFrT"><h:outputText value="#{emp.account.free}"/></div>
+						</ace:column>
+
+						<!-- FREE 2 -->
+						<ace:column sortBy="#{emp.account.free2}" headerText="F2" rendered="#{! aicp}" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '0' : '2'}%;">
+							<div class="acSl acFrT"><h:outputText value="#{emp.account.free2}"/></div>
+						</ace:column>
+
+						<!-- NAME -->
+						<ace:column sortBy="#{emp.contact.user.lastNameFirstName}" headerText="Name" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '12' : '11'}%;">
+							<h:outputText styleClass="pad5lt" value="#{emp.contact.user.lastName}" />,&#160;
+							<h:outputText styleClass=" " value="#{emp.contact.user.firstName}" />
+						</ace:column>
+
+						<!-- DEPARTMENT -->
+						<ace:column sortBy="#{emp.department.name}" headerText="Department" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '10' : '10'}%;">
+							<h:outputText styleClass="FL pad5lt" value="#{emp.department.name}" />
+						</ace:column>
+
+						<!-- UNION -->
+						<ace:column sortBy="#{emp.startForm.unionLocalNum}" headerText="Union" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '5' : '5'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.unionLocalNum}" />
+							<h:outputText rendered="#{emp.startForm eq null}" value= " " />
+						</ace:column>
+
+						<!-- OCCUPATION -->
+						<ace:column sortBy="#{emp.occupation}" headerText="Occupation" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '16' : '14'}%;">
+							<h:outputText styleClass="FL pad5lt" value="#{emp.occupation}" />
+						</ace:column>
+
+						<!-- OCCUPATION CODE -->
+						<ace:column sortBy="#{emp.startForm.occupationCode}" headerText="Occ. Code" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '6' : '6'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.occupationCode}" />
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+						<!-- PROD BATCH
+						<ace:column sortBy="#{emp.productionBatch.name}" headerText="Batch">
+							<h:outputText styleClass="FL pad5lt" value="#{emp.productionBatch.name}" />
+						</ace:column>
+						-->
+
+						<!-- RATE -->
+						<ace:column sortBy="#{emp.startForm.rate}" headerText="Rate" styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '7' : '7'}%;"	>
+							<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.rate}" />
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+						<!-- GUARANTEED HOURS -->
+						<ace:column sortBy="#{emp.startForm.guarHours}" headerText="Guar." styleClass="gradNoBkSort" 
+							style="width:#{aicp ? '5' : '5'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.guarHours}" >
+								<f:convertNumber type="number" pattern="##0.##" />
+							</h:outputText>
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+						<!-- START DATE -->
+						<ace:column sortBy="#{(emp.startForm.effectiveStartDate ne null) ? emp.startForm.effectiveStartDate : emp.startForm.workStartDate}" 
+							headerText="Start&#160;Date" styleClass="gradNoBkSort" style="width:#{aicp ? '6' : '6'};%;">
+							<h:outputText value="#{emp.startForm.effectiveStartDate}"
+									rendered="#{emp.startForm.effectiveStartDate ne null}">
+								<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+							<h:outputText value="#{emp.startForm.workStartDate}"
+									rendered="#{(emp.startForm.effectiveStartDate eq null) and (emp.startForm ne null)}">
+								<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+						<!-- EMPLOYEE TYPE (WEEKLY/HOURLY) -->
+						<ace:column sortBy="#{emp.startForm.rateType.label}" headerText="Emp. Type" styleClass="gradNoBkSort"
+							style="width:#{aicp ? '6.5' : '6'}%;">
+							<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.rateType.label}"/>
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+						<!-- TERMS (STUDIO/LOC) -->
+						<ace:column sortBy="#{emp.startForm.useStudioOrLoc}" headerText="Terms" styleClass="gradNoBkSort"
+							style="width:#{aicp ? '6' : '6'}%;">
+							<h:panelGroup rendered="#{emp.startForm ne null}">
+								<h:outputText rendered="#{emp.startForm.useStudioOrLoc eq 'S'}" value="Studio"/>
+								<h:outputText rendered="#{emp.startForm.useStudioOrLoc eq 'L'}" value="Distant"/>
+							</h:panelGroup>
+							<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+						</ace:column>
+
+					</ace:dataTable>
+				</div><!-- end of dataTable wrapper -->
+			</div><!-- end of blue content -->
+		</div><!-- end of blue wrapper -->
+	</div><!-- end scrolltop div -->
+</ui:composition>

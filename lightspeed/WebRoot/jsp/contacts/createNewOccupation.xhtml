@@ -1,0 +1,337 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- Create new Role pop-up on Cast & Crew page -->
+
+<!-- Params:  -->
+<!--  aicp - boolean - true if Commercial/AICP production -->
+
+<h:form rendered="#{contactViewBean.selectedTab eq 0}" id="createRole">
+	<c:set var="bean" value="#{createNewOccupationBean}" />
+	
+	<ace:dialog id="newOccupationPopup"
+			visible="#{bean.visible}"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popup"
+			style="width:650px; height:455px;">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+	
+		<div class="popBdy" style="width:650px; height:455px;">
+
+			<div class="CT rowCont W98percnt pad20tp">
+				<ui:include src="../common/errorsPopup.xhtml" />
+			</div>
+
+			<div class="addroleCont2">
+				<div class="popup_main">
+					<div class="rowCont FL pad10tp">
+						<!-- Status -->
+						<h:panelGroup>
+							<span class="FL W8percnt">
+								 <h:outputText styleClass="fdNm" value="Status:" />
+							</span>
+							<span class="FL W10percnt">
+								 <h:outputText styleClass="fdNm" rendered="#{! empty contactViewBean.currentEmployment.status}"
+								 		value="#{contactViewBean.currentEmployment.status.label}" style="font-weight:normal"/>
+								 <h:outputText styleClass="fdNm" rendered="#{empty contactViewBean.currentEmployment.status}" 
+								 		style="font-weight:normal" value="N/A"/>
+							</span>
+						</h:panelGroup>
+						
+						<!-- PROJECT (optional) -->
+						<h:panelGroup styleClass="FR W50percnt" 
+								rendered="#{(headerViewBean.production.type.aicp)}">
+							<div class="FL W25percnt">
+								 <h:outputText styleClass="fdNm"  value="#{contactViewBean.projectTitle}:"/>
+							</div>
+							<div class="fd FL W70percnt" style="line-height:22px; font-weight:normal;">
+								<h:selectOneMenu id="projectList"
+									styleClass="selRole W65percnt" tabindex="3" 
+									disabled="#{! contactViewBean.editMode or 
+										createNewOccupationBean.adminDept or 
+										(not createNewOccupationBean.isCreate)}"
+									value="#{createNewOccupationBean.projectId}" style="margin-right:5px; min-width:220px;" 
+									valueChangeListener="#{createNewOccupationBean.listenChangeProject}">
+									<f:selectItems value="#{createNewOccupationBean.projectList}" />
+										<ace:ajax />
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+					</div>
+					
+					<!-- main div -->
+					<div class="rowCont pad20tp" style="height: 285px;">
+					<!-- Left part start -->
+						<div class="W60percnt FL ">
+							
+							<!-- Name -->
+							<div class="rowCont">
+								<span class="FL W12percnt">
+									 <h:outputText styleClass="fdNm" value="Name:" />
+								</span>
+								<span class="FL" style="line-height:22px; font-weight:normal">
+									<h:outputText value="#{contactViewBean.currentEmployment.contact.displayName}" />
+								</span>
+							</div>
+							
+							<!-- DEPARTMENT -->
+							<div class="rowCont FL padPop10tp">
+								<span class="FL W22percnt">
+									 <h:outputText styleClass="fdNm" value="Dept.:" />
+								</span>
+								<h:panelGroup rendered="#{createNewOccupationBean.showDepartmentLabel}"> 
+									<span class="fd FL">
+										<h:outputText styleClass="fdNm"  
+											style="font-weight:normal; width:230px;" value="#{contactViewBean.currentEmployment.department.name}" />
+									</span>
+								</h:panelGroup>
+								<h:panelGroup styleClass="fdNm" rendered="#{not createNewOccupationBean.showDepartmentLabel}">
+									<span class="fd FL">
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu id="deptList" tabindex="3"
+													disabled="#{! contactViewBean.editMode}"
+													value="#{createNewOccupationBean.departmentId}" 
+													valueChangeListener="#{createNewOccupationBean.changeDepartment}"
+													styleClass="selRole" style="width:225px;">
+												<f:selectItems value="#{createNewOccupationBean.departmentDL}" />
+													<ace:ajax />
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+									</span>
+								</h:panelGroup>
+							</div>
+							
+							<!-- OCCUPATION START -->
+							<div class="rowCont padPop10tp">
+								<span class="FL W22percnt">
+									 <h:outputText styleClass="fdNm" value="Occupation:" />
+								</span>
+								<span class="fd FL" style="width:225px;">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu id="roleList" tabindex="4"
+												disabled="#{! contactViewBean.editMode}"
+												valueChangeListener="#{createNewOccupationBean.changeRole}"
+												value="#{createNewOccupationBean.role}" styleClass="selRole"
+												style="width:225px;">
+											<f:converter converterId="lightspeed.RoleConverter" />
+											<f:selectItems value="#{createNewOccupationBean.roleDL}" />
+												<ace:ajax />
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</span>
+							</div>
+							<h:panelGroup rendered="#{createNewOccupationBean.showRoleName}">
+								<div class="rowCont padPop10tp">
+									<span class="FL W22percnt">
+										 <h:outputText styleClass="fdNm" value="New Role:" />
+									</span>
+									<span class="fd FL">
+										<ace:textEntry id="roleName" styleClass="W225" maxlength="50" tabindex="5"
+											value="#{createNewOccupationBean.roleName}"/>
+									</span>
+								</div>
+							</h:panelGroup>
+							<!-- OCCUPATION END -->
+							
+							<!-- check box  -->
+							<h:panelGroup rendered="#{(headerViewBean.production.type.aicp)
+													and (createNewOccupationBean.isCreate)
+													and (not empty createNewOccupationBean.startFormList)
+													and (not createNewOccupationBean.adminDept)
+													and (not headerViewBean.production.allowOnboarding)}">
+								<div class="FL rowCont pad35tp">
+									 <icecore:setEventPhase events="ValueChangeEvent" 
+									 		phase="INVOKE_APPLICATION">
+										<h:selectBooleanCheckbox id="useSameTermsCheckbox" value="#{createNewOccupationBean.useSameTerms}">
+											<ace:ajax />
+										</h:selectBooleanCheckbox>
+									</icecore:setEventPhase>
+									<h:outputText styleClass="pad5lt" style="font-weight: normal" escape="false"
+										value="Automatically create a new Payroll Start Form and populate&lt;br/&gt;
+												&#160; &#160; &#160;&#160; it with the same terms from the following existing Start Form:" />	
+									
+									<span class="fd FL pad8tp">
+										<h:selectOneMenu id="startFormList" tabindex="3" value="#{createNewOccupationBean.startFormId}"
+											styleClass="W195 pad25lt">
+											<f:selectItems value="#{createNewOccupationBean.startFormList}"/>
+												<ace:ajax />
+										</h:selectOneMenu>
+									</span>
+								</div>
+								
+								<!-- Work Start Date Start -->
+								<div class="FL rowCont pad12tp pad35lt" style="height:50px;">
+									<span class="fdNm_w2 rowCont"> 
+										<h:outputText value="Work Start Date:" />
+									</span>
+									<ace:dateTimeEntry id="workStartDate"
+										styleClass="fd_sm pad20lt" tabindex="0"
+										value="#{createNewOccupationBean.workStartDate}"
+										renderAsPopup="true">
+										<f:converter converterId="lightspeed.MultiDateConverter" />
+											<ace:ajax />
+									</ace:dateTimeEntry>
+								</div>
+							</h:panelGroup>
+							
+							<!-- Episode list -->
+							<h:panelGroup rendered="#{(headerViewBean.production.type eq 'TELEVISION_SERIES')}"> 
+								<div class="pad25tp pad15lt">
+									<h:outputText value="Episodes:"/>
+									<h:outputText value="All Episodes" styleClass="pad10lt"
+									rendered="#{createNewOccupationBean.adminDept and contactViewBean.editMode}" />
+								</div>
+								<h:panelGroup rendered="#{(createNewOccupationBean.adminDept and (not contactViewBean.editMode)) or
+										(not createNewOccupationBean.adminDept)}">
+									<ace:dataTable scrollable="true" rowIndexVar="idx"
+											value="#{createNewOccupationBean.projectListDL}"
+											var="item" styleClass="bk_sl_grid pad15tp pad15lt" 
+											selectionMode="single" stateMap="#{createNewOccupationBean.stateMap}"  
+											rowSelectListener="#{createNewOccupationBean.listenProjectRowSelect}"
+											style="width:70%" rowUnselectListener="#{createNewOccupationBean.listenProjectRowUnselect}">
+											
+										<ace:column styleClass="W5percnt">
+											<icecore:setEventPhase events="ValueChangeEvent"
+												phase="INVOKE_APPLICATION">
+												<h:selectBooleanCheckbox value="#{item.checked}" 
+													disabled="#{! contactViewBean.editMode or ! item.allowEnable}"
+													valueChangeListener="#{createNewOccupationBean.listenProjectSingleCheck}">
+													<f:attribute name="selectedRow" value="#{item}"></f:attribute>
+														<ace:ajax />
+												</h:selectBooleanCheckbox>
+											</icecore:setEventPhase>	
+										</ace:column>
+										
+										<ace:column  styleClass="W30percnt" style="text-align:left;">
+											<div class="FL pad10lt">
+												<h:outputText  value="#{item.title}" />
+											</div>
+										</ace:column>
+										
+									</ace:dataTable>
+								</h:panelGroup>
+							</h:panelGroup>
+							
+						</div>
+						<!-- Left part end -->
+						
+						<!-- Right part start  -->
+						<div class="W40percnt FL ">
+						
+							<!-- UNIT START -->
+							<div class="rowCont">
+								<h:panelGroup rendered="#{! createNewOccupationBean.singleUnit and 
+									((createNewOccupationBean.adminDept and (not contactViewBean.editMode)) or
+										(not createNewOccupationBean.adminDept))}">
+									<div class="FL rowCont" style="margin-bottom:5px;">
+										<h:outputText styleClass="fdNm" value="Unit:"/>
+									</div>
+									
+									<div class="pad5lt">
+										<h:panelGroup style="font-weight: normal;"
+											rendered="#{(headerViewBean.production.type eq 'TELEVISION_SERIES') and
+														(! createNewOccupationBean.displayUnits)}" >
+										 	Click on an episode to<br/>
+										 	view the employee's<br/> 
+										 	unit membership for<br/>
+										 	that episode.
+										</h:panelGroup>
+									</div>
+									
+									<h:panelGroup rendered="#{(headerViewBean.production.type.aicp) or
+												(headerViewBean.production.type.feature) or
+												(createNewOccupationBean.displayUnits)}">
+												
+										<ace:dataTable scrollable="true" rowIndexVar="idx"
+												value="#{createNewOccupationBean.unitList}"
+												var="item" styleClass="bk_sl_grid pad10tp"
+												style="width:70%">
+												
+											<ace:column styleClass="W5percnt">
+												<icecore:setEventPhase events="ValueChangeEvent"
+													phase="INVOKE_APPLICATION">
+													<h:selectBooleanCheckbox value="#{item.checked}"
+														disabled="#{(! contactViewBean.editMode) or
+														((headerViewBean.production.type eq 'TELEVISION_SERIES') and
+														(! (createNewOccupationBean.lastSelectedProject.checked and
+															createNewOccupationBean.lastSelectedProject.allowEnable)))}"
+														valueChangeListener="#{createNewOccupationBean.listenUnitSingleCheck}">
+														<f:attribute name="selectedRow" value="#{item}" />
+															<ace:ajax />
+													</h:selectBooleanCheckbox>
+												</icecore:setEventPhase>	
+											</ace:column>
+											
+											<ace:column  styleClass="W30percnt" style="text-align:left;">
+												<div class="FL pad10lt">
+													<h:outputText  value="#{item.name}" />
+												</div>
+											</ace:column>
+										</ace:dataTable>
+									</h:panelGroup>
+								</h:panelGroup>
+							</div> <!-- UNIT END -->
+								
+						</div> <!-- Right part end  -->
+					</div> <!-- main rowCont div -->
+					
+					<div style="height:15px;">
+			            <h:outputText styleClass="RED txt14" style="margin-left:30%"
+			        	    value="#{createNewOccupationBean.errorMessage}"
+			           		rendered="#{(createNewOccupationBean.projectOrUnitError)}"/>
+            			 <h:panelGroup rendered="#{(! createNewOccupationBean.projectOrUnitError)}">
+			     		 <br/>
+				         </h:panelGroup>
+		            </div>	
+			            
+					<!-- Save and cancel buttons  -->
+					<div class="popBtnCont pad25lt" style="margin-top:10px;">
+						<span class="FR">
+							<span class="btnPriEnbLt" />
+							<span>
+								<h:panelGroup rendered="#{contactViewBean.editMode}">
+									<ace:linkButton id="cancelButton" value="Cancel" tabindex="7" onclick="queueClick(this,event);"
+											action="#{createNewOccupationBean.actionCancel}" 
+											styleClass="btnPriEnbCt" />
+								</h:panelGroup>
+								<h:panelGroup rendered="#{! contactViewBean.editMode}">
+									<ace:linkButton value="Close" tabindex="7"
+											action="#{createNewOccupationBean.actionCancel}" 
+											styleClass="btnPriEnbCt" />
+								</h:panelGroup>
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+						<h:panelGroup rendered="#{contactViewBean.editMode}"> 
+							<span class="FR pad5rt">
+								<span class="btnSecHotLt" />
+								<span>
+									<ace:linkButton id="addButton" value="OK" tabindex="6" onclick="queueClick(this,event);"
+									action="#{contactViewBean.actionAddRole}" styleClass="btnSecHotCt" />
+								</span>
+								<span class="btnSecHotRt" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Buttons end -->
+							
+				</div> <!-- popup_main div -->
+			</div> <!-- addRole div -->
+		</div> <!-- popBdy div -->
+
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

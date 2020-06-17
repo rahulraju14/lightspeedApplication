@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hotCostsWeeklyDetailByDeptXls" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="1008" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="6a793dff-facd-4ea8-a31c-6fd203cb28f7">
+	<property name="ireport.zoom" value="1.4641000000000028"/>
+	<property name="ireport.x" value="377"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.lang.Boolean"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="style_variance">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($V{deptHoursVariance}.doubleValue() > 0) ? new Boolean(true) : new Boolean(false)]]></conditionExpression>
+			<style mode="Transparent" forecolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($V{deptHoursVariance}.doubleValue() < 0) ? new Boolean(true) : new Boolean(false)]]></conditionExpression>
+			<style mode="Transparent" forecolor="#0000FF"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($V{deptHoursVariance}.doubleValue() == 0) ? new Boolean(true) : new Boolean(false)]]></conditionExpression>
+			<style mode="Transparent" forecolor="#000000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="deptId" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="prodId" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="weekEndDate" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dateTimeFormat" class="java.text.DateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_FORMAT_FACTORY}.createDateFormat("yyyy-MM-dd", $P{REPORT_LOCALE}, $P{REPORT_TIME_ZONE})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["select whc.id, ct.display_name, emp.occupation, emp.acct_dtl, emp.acct_sub, emp.acct_set, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Sun_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=2), 0) as Mon_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=3), 0) as Tue_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=4), 0) as Wed_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=5), 0) as Thu_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=6), 0) as Fri_Cost, "
++ "	COALESCE((select actual_cost from daily_hot_cost where weekly_id=whc.id and day_num=7), 0) as Sat_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Bdgtd_Sun_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=2), 0) as Bdgtd_Mon_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=3), 0) as Bdgtd_Tue_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=4), 0) as Bdgtd_Wed_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=5), 0) as Bdgtd_Thu_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=6), 0) as Bdgtd_Fri_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=7), 0) as Bdgtd_Sat_Cost, "
++ "	COALESCE((select budgeted_cost from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Bdgtd_Sun_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Bdgtd_Sun_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=2), 0) as Bdgtd_Mon_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=3), 0) as Bdgtd_Tue_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=4), 0) as Bdgtd_Wed_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=5), 0) as Bdgtd_Thu_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=6), 0) as Bdgtd_Fri_MPV_Cost, "
++ "	COALESCE((select budgeted_mpv_cost from daily_hot_cost where weekly_id=whc.id and day_num=7), 0) as Bdgtd_Sat_MPV_Cost, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Sun_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=2), 0) as Mon_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=3), 0) as Tue_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=4), 0) as Wed_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=5), 0) as Thu_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=6), 0) as Fri_Hours, "
++ "	COALESCE((select hours from daily_hot_cost where weekly_id=whc.id and day_num=7), 0) as Sat_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=1), 0) as Bdgtd_Sun_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=2), 0) as Bdgtd_Mon_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=3), 0) as Bdgtd_Tue_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=4), 0) as Bdgtd_Wed_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=5), 0) as Bdgtd_Thu_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=6), 0) as Bdgtd_Fri_Hours, "
++ "	COALESCE((select budgeted_hours from daily_hot_cost where weekly_id=whc.id and day_num=7), 0) as Bdgtd_Sat_Hours "
++ " from contact ct, employment emp, weekly_hot_costs whc where whc.Prod_id='" + $P{prodId} + "' and whc.department_id=" + $P{deptId}
++ " and emp.id = whc.employment_id and ct.id = emp.contact_id and whc.end_date='" + $P{weekEndDate}.toString() + "'"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Occupation" class="java.lang.String"/>
+	<field name="Display_Name" class="java.lang.String"/>
+	<field name="Sun_Cost" class="java.lang.Double"/>
+	<field name="Tue_Cost" class="java.lang.Double"/>
+	<field name="Wed_Cost" class="java.lang.Double"/>
+	<field name="Thu_Cost" class="java.lang.Double"/>
+	<field name="Fri_Cost" class="java.lang.Double"/>
+	<field name="Sat_Cost" class="java.lang.Double"/>
+	<field name="Acct_Set" class="java.lang.String"/>
+	<field name="Acct_Dtl" class="java.lang.String"/>
+	<field name="Mon_Cost" class="java.lang.Double"/>
+	<field name="Sun_Hours" class="java.lang.Double"/>
+	<field name="Tue_Hours" class="java.lang.Double"/>
+	<field name="Wed_Hours" class="java.lang.Double"/>
+	<field name="Thu_Hours" class="java.lang.Double"/>
+	<field name="Fri_Hours" class="java.lang.Double"/>
+	<field name="Sat_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Sun_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Mon_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Tue_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Wed_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Thu_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Fri_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Sat_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Sun_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Mon_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Tue_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Wed_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Thu_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Fri_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Sat_MPV_Cost" class="java.lang.Double"/>
+	<field name="Bdgtd_Sun_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Mon_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Tue_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Wed_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Thu_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Fri_Hours" class="java.lang.Double"/>
+	<field name="Bdgtd_Sat_Hours" class="java.lang.Double"/>
+	<field name="Acct_Sub" class="java.lang.String"/>
+	<field name="Mon_Hours" class="java.lang.Double"/>
+	<variable name="hoursVariance" class="java.lang.Double">
+		<variableExpression><![CDATA[($F{Sun_Hours} + $F{Mon_Hours}+ $F{Tue_Hours} + $F{Wed_Hours}
++ $F{Thu_Hours} + $F{Fri_Hours} + $F{Sat_Hours}) -
+($F{Bdgtd_Sun_Hours} + $F{Bdgtd_Mon_Hours} + $F{Bdgtd_Tue_Hours}
++ $F{Bdgtd_Wed_Hours} + $F{Bdgtd_Thu_Hours} + $F{Bdgtd_Fri_Hours}
++ $F{Bdgtd_Sat_Hours})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="costVariance" class="java.lang.Double" calculation="Variance">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[0.0]]></initialValueExpression>
+	</variable>
+	<variable name="actualHours" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Sun_Hours} + $F{Mon_Hours} + $F{Tue_Hours} + $F{Wed_Hours}
++ $F{Thu_Hours} + $F{Fri_Hours} + $F{Sat_Hours}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="budgetedHours" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Bdgtd_Sun_Hours} + $F{Bdgtd_Mon_Hours} + $F{Bdgtd_Tue_Hours}
++ $F{Bdgtd_Wed_Hours} + $F{Bdgtd_Thu_Hours} + $F{Bdgtd_Fri_Hours}
++ $F{Bdgtd_Sat_Hours}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="actualCost" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Sun_Cost} + $F{Mon_Cost} + $F{Tue_Cost}
++ $F{Wed_Cost} + $F{Thu_Cost} + $F{Fri_Cost} +$F{Sat_Cost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="budgetedCost" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{Bdgtd_Sun_Cost} + $F{Bdgtd_Mon_Cost} + $F{Bdgtd_Tue_Cost}
++ $F{Bdgtd_Wed_Cost} + $F{Bdgtd_Thu_Cost} + $F{Bdgtd_Fri_Cost}
++ $F{Bdgtd_Sat_Cost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptTotalSunCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Sun_Cost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptTotalMonCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Mon_Cost}]]></variableExpression>
+	</variable>
+	<variable name="deptTotalTueCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Tue_Cost}]]></variableExpression>
+	</variable>
+	<variable name="deptTotalWedCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Wed_Cost}]]></variableExpression>
+	</variable>
+	<variable name="deptTotalThuCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Thu_Cost}]]></variableExpression>
+	</variable>
+	<variable name="deptTotalFriCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Fri_Cost}]]></variableExpression>
+	</variable>
+	<variable name="deptTotalSatCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Sat_Cost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptActualCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualCost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptBudgetedCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{budgetedCost}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptActualHours" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualHours}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptBudgetedHours" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{budgetedHours}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="deptHoursVariance" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{hoursVariance}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{REPORT_COUNT} > 0]]></printWhenExpression>
+			<textField>
+				<reportElement uuid="acbf5a28-dd6f-4b0d-9a90-b8d2030b8937" style="tcDefBox" x="1" y="0" width="111" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Display_Name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7a75fa6e-d3fc-40bd-ad8a-8c81434efcae" style="tcDefBox" x="224" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#">
+				<reportElement uuid="38d2f915-66f0-4014-bcb7-db9e74fd19db" style="tcDefBox" x="724" y="0" width="50" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{budgetedHours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement uuid="3da882c0-5bb6-4f0c-b4db-2bd608b7e9d4" style="tcDefBox" x="944" y="0" width="60" height="20"/>
+				<box leftPadding="0" rightPadding="1">
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{costVariance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="888dd3b5-5f71-4cb6-8b21-5e51e0cd932e" style="tcDefBox" x="884" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{budgetedCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00;-##,##0.00">
+				<reportElement uuid="7e0395b3-86a9-4bf4-80b3-e57753e67df1" style="tcDefBox" x="824" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actualCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement uuid="ef71f4ec-4342-46bd-8a96-c2ece6bab54f" style="tcDefBox" x="774" y="0" width="50" height="20"/>
+				<box leftPadding="0" rightPadding="1">
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{hoursVariance}.doubleValue()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="181d78f4-e3c3-4de8-a884-ded40430a933" style="tcDefBox" x="112" y="0" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Acct_Dtl}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="41384bee-6af0-4f90-ba54-95df6e5ec622" style="tcDefBox" x="191" y="0" width="33" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Acct_Set}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2bbf9bcd-fa3b-4d1d-bbb2-208be19a9a40" style="tcDefBox" x="158" y="0" width="33" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Acct_Sub}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="1a5290a2-4195-4533-a2a1-1cbf3db9733c" style="tcDefBox" mode="Transparent" x="324" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Sun_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="2fe38407-16e6-4420-8610-eada55fe4991" style="tcDefBox" x="374" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mon_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="b55821d9-2ad5-49e2-8592-79ff0d237fb3" style="tcDefBox" x="424" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tue_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="5198980b-1f58-4519-8d32-848167a052a3" style="tcDefBox" x="474" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Wed_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="9c8330e6-b343-44f7-938f-78111d35de47" style="tcDefBox" x="524" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Thu_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="dc23f98a-438e-4331-b28a-2fa75481f166" style="tcDefBox" x="574" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fri_Cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0#" isBlankWhenNull="true">
+				<reportElement uuid="94bb4992-825b-4d84-82b5-347a173f3e70" style="tcDefBox" x="674" y="0" width="50" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actualHours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="d66473d1-ae6c-4e28-ba7c-a2a2bd5dece8" style="tcDefBox" x="624" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Sat_Cost}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="a8caeb64-8c81-44e3-910d-e045378e066a" style="tcDefBox" x="324" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalSunCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="4e51e23d-a789-4ad2-9d38-dc6306265464" style="tcDefBox" x="374" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalMonCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="ba787136-797b-40b5-b674-821de151a366" style="tcDefBox" x="424" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalTueCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="8b432dcd-1c59-462a-9bdd-9fb0d01a75ac" style="tcDefBox" x="524" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalThuCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="38cf713c-00e3-4060-a2c8-e0744acd372e" style="tcDefBox" x="574" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalFriCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="164bc856-1d19-4bd6-a298-6b1849075221" style="tcDefBox" x="624" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalSatCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="ec28581d-a817-49cc-8408-dcbf91a052c5" style="tcDefBox" x="474" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptTotalWedCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="35cd029e-129e-4979-a0bb-60685f1f229f" style="tcDefBox" x="824" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptActualCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="c0c899e8-37b9-4a11-a151-6a5480723eee" style="tcDefBox" x="884" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptBudgetedCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="ce81f958-d716-4587-bc50-63b3852ace39" style="tcDefBox" x="674" y="0" width="50" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptActualHours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="ad5eb0cb-018a-4fcf-81c2-8d7e91cd08f4" style="tcDefBox" x="724" y="0" width="50" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptBudgetedHours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="####0.00" isBlankWhenNull="true">
+				<reportElement uuid="9668c61e-12a4-4b87-96db-b431ee71a0ca" style="tcDefBox" mode="Transparent" x="774" y="0" width="50" height="20"/>
+				<box leftPadding="0" rightPadding="1">
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{deptHoursVariance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="91e92716-be9e-4cc7-a5e2-3149f1a283aa" style="tcDefBold" x="1" y="1" width="323" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totals: ]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="f41d6d1e-df53-4c33-9242-1e6a3edd15eb" x="1" y="0" width="1007" height="20"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="timecard2" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="725" leftMargin="36" rightMargin="31" topMargin="29" bottomMargin="25" scriptletClass="com.lightspeedeps.util.report.ReportScriptlet" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="tcAcct" style="tcDefBox" hAlign="Center"/>
+	<style name="tcMainMajor5" style="tcAcct">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Major}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcMainDtl5" style="tcAcct">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()==5)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Account_Dtl}.length()>5)]]></conditionExpression>
+			<style fontSize="6"/>
+		</conditionalStyle>
+	</style>
+	<style name="tcBoxMajor5" style="tcAcct">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[($F{Box_Acct_Major}.length()>4)]]></conditionExpression>
+			<style fontSize="7"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportLogo" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="sqlQry" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SELECT *, " +
+" (not w.allow_worked and employee_rate_type='Hourly' and (union_number is null or union_number='NonU')) as useOnCall, " +
+" CASE w.retirement_plan " +
+    " when '4' then '401K' " +
+    " when 'P' then 'PHBP' " +
+    " else '' " +
+    " end as retirePlan, " +
+" CASE sf.employment_basis " +
+	" when 'FT' then 'Full Time' " +
+	" when 'PT' then 'Part Time' " +
+	" when 'VAR' then 'Variable Hours' " +
+	" when 'SNL' then 'Seasonal' " +
+	" else 'N/A' " +
+	" end as aca_empl " +
+" FROM weekly_time_card w, start_form sf where w.end_date = '2013-11-23' /*9/21/13;2/8/14*/ " +
+" and w.start_form_id = sf.id " +
+"/* and w.last_name = 'Crumbs' */ order by w.last_name;"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="reportTimeZone" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="sfDAO" class="com.lightspeedeps.dao.StartFormDAO" isForPrompting="false"/>
+	<parameter name="payBreakQuery" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="payJobQuery" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="includeMiles" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="includeBoxRental" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="includeAttachments" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="includeBreakdown" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="hideTcGuarantee" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dayTypeSqlCase" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA['case' expression for printing DayType values]]></parameterDescription>
+	</parameter>
+	<parameter name="aicp" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="teamPayroll" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mayUseOnCall" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="customBoxRental" class="java.lang.String"/>
+	<parameter name="customMileage" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="end_date" class="java.sql.Date"/>
+	<field name="Status" class="java.lang.String">
+		<fieldDescription><![CDATA[timecard's current LS status]]></fieldDescription>
+	</field>
+	<field name="Last_Name" class="java.lang.String"/>
+	<field name="First_Name" class="java.lang.String"/>
+	<field name="Social_Security" class="java.lang.String"/>
+	<field name="Loan_Out_Corp" class="java.lang.String"/>
+	<field name="Prod_Name" class="java.lang.String"/>
+	<field name="Prod_Co" class="java.lang.String"/>
+	<field name="Off_Production" class="java.lang.Boolean"/>
+	<field name="Occupation" class="java.lang.String"/>
+	<field name="Occ_Code" class="java.lang.String"/>
+	<field name="Union_Number" class="java.lang.String"/>
+	<field name="Rate" class="java.math.BigDecimal"/>
+	<field name="guar_hours" class="java.math.BigDecimal"/>
+	<field name="State_Worked" class="java.lang.String"/>
+	<field name="City_Worked" class="java.lang.String"/>
+	<field name="Fed_Corp_Id" class="java.lang.String"/>
+	<field name="State_Corp_Id" class="java.lang.String"/>
+	<field name="Account_Major" class="java.lang.String"/>
+	<field name="Account_Dtl" class="java.lang.String"/>
+	<field name="Account_Set" class="java.lang.String"/>
+	<field name="Free" class="java.lang.String"/>
+	<field name="Private_Comments" class="java.lang.String"/>
+	<field name="Grand_Total" class="java.math.BigDecimal"/>
+	<field name="Comments" class="java.lang.String"/>
+	<field name="Adjusted" class="java.lang.Boolean"/>
+	<field name="Start_Form_Id" class="java.lang.Integer"/>
+	<field name="ACA_End_Work_Date" class="java.util.Date"/>
+	<field name="ACA_Leave_End" class="java.util.Date"/>
+	<field name="ACA_Leave_Start" class="java.util.Date"/>
+	<field name="Account_Loc" class="java.lang.String"/>
+	<field name="Account_Sub" class="java.lang.String"/>
+	<field name="Free2" class="java.lang.String"/>
+	<field name="Work_Zip" class="java.lang.String"/>
+	<field name="retirePlan" class="java.lang.String"/>
+	<field name="aca_empl" class="java.lang.String"/>
+	<field name="useOnCall" class="java.lang.Boolean"/>
+	<variable name="pbLineCount" class="java.lang.Integer" calculation="System"/>
+	<variable name="sigLineCount" class="java.lang.Integer" calculation="System"/>
+	<group name="detailBreak" isStartNewPage="true" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{Id}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<background>
+		<band height="500">
+			<printWhenExpression><![CDATA[$F{Status}.equals("VOID")]]></printWhenExpression>
+			<image>
+				<reportElement x="0" y="141" width="725" height="251" uuid="bd240646-ed96-409c-b322-04ca80e85a91"/>
+				<imageExpression><![CDATA[$P{reportsTemplate}+"/void.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="65" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="540" height="52" uuid="8d8d4cba-d4c1-415c-af51-bf5bdc990e01"/>
+				<subreportParameter name="aicp">
+					<subreportParameterExpression><![CDATA[$P{aicp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionTimeZone">
+					<subreportParameterExpression><![CDATA[$P{productionTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportTimeZone">
+					<subreportParameterExpression><![CDATA[$P{reportTimeZone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="sfDAO">
+					<subreportParameterExpression><![CDATA[$P{sfDAO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tcHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="371" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="58" width="275" height="1" uuid="a0bc8b01-e5ea-4c53-8662-5e6099c279de"/>
+			</line>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="20" width="275" height="52" uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="275" y="20" width="250" height="39" uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="525" y="20" width="125" height="13" uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="525" y="33" width="200" height="26" uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="650" y="20" width="75" height="13" uuid="6fb02fe4-6ea2-49db-9d03-b4ce4917f4da"/>
+			</rectangle>
+			<staticText>
+				<reportElement style="tcDefBold" x="0" y="0" width="50" height="20" uuid="1e8eaa2c-9362-4334-b9fd-1372e295c9fc"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="tcDefBold" x="75" y="0" width="200" height="20" uuid="c1a48690-985a-4bb3-9886-1404f070c3ff"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Last_Name} + ", " + $F{First_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="275" y="0" width="25" height="20" uuid="c8c57c42-8562-445c-badc-683f9547b294"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[W/E:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement style="tcDefault" x="300" y="0" width="50" height="20" uuid="b220cbbc-f093-4fca-9ce6-00394c35247e"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault" x="350" y="0" width="25" height="20" uuid="b220cbbc-f093-4fca-9ce6-00394c35247e"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[($F{Adjusted} ? "- ADJ" : "")]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement style="tcDefBold" x="375" y="0" width="100" height="20" uuid="b220cbbc-f093-4fca-9ce6-00394c35247e"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[($F{Off_Production} ? "OFF PRODUCTION" : "")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBold" mode="Transparent" x="475" y="0" width="250" height="20" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Prod_Name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="275" y="20" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Loan-Out:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="325" y="20" width="200" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Loan_Out_Corp}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="2" y="46" width="23" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[SS#:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="25" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.startFormSSN4A($F{Start_Form_Id})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="0" y="20" width="75" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Production Co.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="75" y="20" width="125" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Prod_Co}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="200" y="20" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Union:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="250" y="20" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Union_Number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="275" y="33" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Federal ID:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="325" y="33" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[($P{REPORT_SCRIPTLET}.startFormFedId($F{Start_Form_Id}))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="375" y="33" width="75" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[State Corp#:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="450" y="33" width="75" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{State_Corp_Id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="75" y="46" width="23" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Rate:]]></text>
+			</staticText>
+			<textField pattern="#,###.00##" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="100" y="46" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="150" y="46" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Guar:]]></text>
+			</staticText>
+			<textField pattern="0.#" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="175" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9">
+					<printWhenExpression><![CDATA[!($F{Union_Number}.equals("NonU") && $P{hideTcGuarantee})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{guar_hours}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="0" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Occ.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="25" y="33" width="175" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Occupation}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="200" y="33" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Occ. Code:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="250" y="33" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{Occ_Code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="275" y="46" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Work Loc:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="325" y="46" width="125" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{City_Worked} +", " +  $F{State_Worked} + " " + ($F{Work_Zip} == null ? "" : $F{Work_Zip})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="500" y="46" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Acct:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="300" y="59" width="100" height="14" isPrintInFirstWholeBand="true" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[PAY BREAKDOWN]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="76" width="25" height="9" uuid="22331e6c-6f52-4c33-92fd-86ea04d51d0b"/>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="sigCount" toVariable="sigLineCount"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc1SigCount.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="85" width="275" height="130" uuid="7031b5db-d8b6-4c3b-9c23-c177598c5cbf">
+					<printWhenExpression><![CDATA[!($F{useOnCall} && $P{mayUseOnCall})]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="dayTypeSqlCase">
+					<subreportParameterExpression><![CDATA[$P{dayTypeSqlCase}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="imagesPath">
+					<subreportParameterExpression><![CDATA[$P{imagesPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="includeBreakdown">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc2Days.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="85" width="275" height="130" uuid="7031b5db-d8b6-4c3b-9c23-c177598c5cbf">
+					<printWhenExpression><![CDATA[$F{useOnCall} && $P{mayUseOnCall}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="dayTypeSqlCase">
+					<subreportParameterExpression><![CDATA[$P{dayTypeSqlCase}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="includeBreakdown">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc2DaysOnCall.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="215" width="270" height="143" uuid="1204cb9c-2676-4fab-8673-d5e0cd5a9ee9"/>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc3Signatures.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="275" y="72" width="450" height="286" uuid="1a1c2b1a-b291-40a6-82f8-c7d65496482c"/>
+				<subreportParameter name="payBreakQuery">
+					<subreportParameterExpression><![CDATA[$P{payBreakQuery}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown} ? $F{Id} : 0]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="lineCount">
+					<subreportParameterExpression><![CDATA["32"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="includeBreakdown">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="teamPayroll">
+					<subreportParameterExpression><![CDATA[$P{teamPayroll}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="lineCount" toVariable="pbLineCount"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc1PayBreak.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement style="tcDefBold" x="0" y="59" width="75" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[Emp. Ended:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="50" y="59" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{ACA_End_Work_Date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="100" y="59" width="75" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<text><![CDATA[Unpaid Leave:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yy" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="175" y="59" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{ACA_Leave_Start}]]></textFieldExpression>
+			</textField>
+			<textField pattern="&apos;to &apos;MM/dd/yy" isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="225" y="59" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textFieldExpression><![CDATA[$F{ACA_Leave_End}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="525" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Account_Loc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="550" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<box>
+					<pen lineWidth="0.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{Account_Major}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="575" y="46" width="50" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Account_Dtl}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="625" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Account_Sub}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="650" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Account_Set}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="675" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Free}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefBox" x="700" y="46" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Free2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBox" x="525" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Loc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="550" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Pr/Ep]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="575" y="33" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Detail]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="625" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Sub]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="650" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Set]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="675" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[F1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBox" x="700" y="33" width="25" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[F2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="tcDefBold" x="650" y="20" width="50" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Retire:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="700" y="20" width="25" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9">
+					<printWhenExpression><![CDATA[!($F{Union_Number}.equals("NonU") && $P{hideTcGuarantee})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{retirePlan}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tcDefBold" x="525" y="20" width="75" height="13" uuid="b9b8b629-83dc-457d-8b30-db0cb4ec7753"/>
+				<text><![CDATA[ACA Emp Basis:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault" x="600" y="20" width="51" height="13" uuid="cc85c5a3-40f7-41e3-8968-353f48ae05e9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{aca_empl}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="275" y="45" width="250" height="1" uuid="a0bc8b01-e5ea-4c53-8662-5e6099c279de"/>
+			</line>
+		</band>
+		<band height="169" splitType="Prevent">
+			<subreport>
+				<reportElement x="0" y="0" width="725" height="169" uuid="d39c7326-52cd-4a05-a8ea-593bf9cf8059"/>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="includeBreakdown">
+					<subreportParameterExpression><![CDATA[$P{includeBreakdown}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="payJobQuery">
+					<subreportParameterExpression><![CDATA[$P{payJobQuery}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tc2Jobs.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="1" splitType="Immediate">
+			<printWhenExpression><![CDATA[$P{includeBoxRental}]]></printWhenExpression>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="540" height="1" isRemoveLineWhenBlank="true" uuid="694b951d-59c4-4b0f-bc03-361e2984a25c"/>
+				<subreportParameter name="aicp">
+					<subreportParameterExpression><![CDATA[$P{aicp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="customBoxRental">
+					<subreportParameterExpression><![CDATA[$P{customBoxRental}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="imagesPath">
+					<subreportParameterExpression><![CDATA[$P{imagesPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/boxRentalNoHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band splitType="Immediate">
+			<printWhenExpression><![CDATA[$P{includeMiles}]]></printWhenExpression>
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="540" height="0" isRemoveLineWhenBlank="true" uuid="694b951d-59c4-4b0f-bc03-361e2984a25c"/>
+				<subreportParameter name="customMileage">
+					<subreportParameterExpression><![CDATA[$P{customMileage}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="imagesPath">
+					<subreportParameterExpression><![CDATA[$P{imagesPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/mileageNoHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="2">
+			<printWhenExpression><![CDATA[$P{includeAttachments}]]></printWhenExpression>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="225" height="1" uuid="76c082f3-1e18-4158-8fea-20386dc4ec8a"/>
+				<subreportParameter name="weeklyId">
+					<subreportParameterExpression><![CDATA[$F{Id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/tc/tcAttachment.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="200" height="17" uuid="78d13ac4-afad-46f1-b704-f74ecc212e5d"/>
+				<subreportParameter name="reportLogo">
+					<subreportParameterExpression><![CDATA[$P{reportLogo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="productionName"/>
+				<subreportParameter name="reportsTemplate">
+					<subreportParameterExpression><![CDATA[$P{reportsTemplate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectName"/>
+				<subreportExpression><![CDATA[$P{reportsTemplate} + "/common/rptWideFooter.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement style="tcDefault" x="582" y="0" width="69" height="17" uuid="494f17ca-f952-4bf9-a735-d28c3ecbb3c2">
+					<printWhenExpression><![CDATA[$V{pbLineCount} > 20 ||
+$V{sigLineCount} > 5 ||
+$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="tcDefault" x="651" y="0" width="49" height="17" uuid="494f17ca-f952-4bf9-a735-d28c3ecbb3c2">
+					<printWhenExpression><![CDATA[($V{pbLineCount} > 20 ||
+    $V{sigLineCount} > 5 ) &&
+$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[" (Cont'd)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement key="" x="175" y="14" width="216" height="17" uuid="41ac2c8d-b343-4e60-a86d-ff97eeb07e99"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No timecards met your selection criteria]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- BILLING minitab of the Admin / Payroll Services page -->
+
+	<ace:tabPane label="Billing" id="billingTab">
+
+		<div class="rowGradient">
+			<div class="rowCont pad20lt pad20tp">
+
+				<!-- TIMECARD FEE PERCENT -->
+				<div class="rowCont FL">
+					<span class="fdNm_w" style="width:155px;">
+						<h:outputText value="Timecard Fee Percent:" />
+					</span>
+					<h:panelGroup rendered="#{not payrollServiceListBean.editMode}" styleClass="pad3tp">
+						<span class="fd_sm2">
+							<h:outputText value="#{payrollServiceListBean.element.timecardFeePercent}">
+								<f:convertNumber type="number" pattern="#0.00#" />
+							</h:outputText>
+							<h:outputText rendered="#{payrollServiceListBean.element.timecardFeePercent ne null}" value="%" styleClass="pad3lt"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="RT" size="5" maxlength="7" value="#{payrollServiceListBean.element.timecardFeePercent}">
+								<f:convertNumber type="number" pattern="#0.00#" />
+							</ace:textEntry>
+							<span>%</span>
+						</span>
+					</h:panelGroup>
+				</div>
+
+				<!-- DOCUMENT FEE AMOUNT -->
+				<div class="rowCont pad15tp FL">
+					<span class="fdNm_w" style="width:155px;">
+						<h:outputText value="Document Fee Amount:" />
+					</span>
+					<h:panelGroup rendered="#{not payrollServiceListBean.editMode}" styleClass="pad3tp">
+						<span class="fd_sm2">
+							<h:outputText value="#{payrollServiceListBean.element.documentFeeAmount}">
+								<f:convertNumber type="number" pattern="$ #,##0.00##" />
+							</h:outputText>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{payrollServiceListBean.editMode}">
+						<span class="fd1">
+							<ace:textEntry styleClass="RT" size="5" maxlength="7" value="#{payrollServiceListBean.element.documentFeeAmount}">
+								<f:convertNumber type="number" pattern="#,##0.00##" />
+							</ace:textEntry>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</div>
+
+	</ace:tabPane>
+
+</ui:composition>

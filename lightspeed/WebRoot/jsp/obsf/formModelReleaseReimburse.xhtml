@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+   <div class="W1000" style="width:1000px">
+      <div class="FL" style="float: left;width:130px;margin-left: 20px;">
+         <div class="FL W200" style="height:18px;border-bottom:1px solid black;">
+            <div class="CT" style="height:18px;background:black;">
+               <h:outputText value="REIMBURSEMENTS " styleClass="txt14 B" style="color:white"/>
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:80px;border-bottom:1px solid black;">
+            <div class="CT" style="height:27px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;">
+            </div>
+            <div class="CT" style="height:15px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;">
+               <h:outputText value="TYPE" styleClass="txt18 B" />
+            </div>
+            <div class="CT" style="height:32px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;">
+            </div>
+         </div>
+         <div class="FL W200" style="height:18px;border-bottom:1px solid black;">
+            <div class="CT" style="height:18px;background:black;">
+               <h:outputText value="PER DIEM" styleClass="txt14 B" style="color:white"/>
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:80px;">
+            <div class="CT" style="height:30px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;">
+            </div>
+            <div class="CT" style="height:15px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;">
+               <h:outputText value="RATE" styleClass="txt18 B" />
+            </div>
+            <div class="CT" style="height:30px;background:#E4E4E4;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;">
+            </div>
+         </div>
+         <div class="FL W200" style="height:18px;border-bottom:1px solid black;">
+            <div class="CT" style="height:18px;background:black;">
+               <h:outputText value="ADDITIONAL PROVISIONS" styleClass="txt14 B" style="color:white"/>
+            </div>
+         </div>
+          <div class="FL CT W130" style="height:112px;border-left:1px solid black;border-bottom:1px solid black;">
+              <ace:textAreaEntry id="comment2Input" value="#{form.additionalProvisions}"  style="width: 790px;height: 103px;" maxlength="300"  labelPosition="inField" required="false" optionalIndicator=" (Opt.)" indicatorPosition="labelRight" resizable="false">
+              </ace:textAreaEntry>
+         </div>
+      </div>
+      <div class="FL" style="float: left;width:700px">
+         <div class="FL pad1tp" style="height:18px;border-bottom:1px solid black;width: 667px;">
+            <div class="FL W600 pad80lt B">
+               <h:outputText styleClass="txt11" value="Receipts are required.  Amounts paid without receipts are considered wages and subject to payroll taxes."/>
+            </div>
+         </div>
+          <!-- Reimbursements Section -->
+         <div class="FL" style="height:97px;border-bottom:1px solid black;width: 667px;;border-right:1px solid black;">
+            <div class="FL W90percnt">
+            <h:panelGroup styleClass="FL pad5lt pad3tp" style="width:620px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="unlimited1" value="#{form.nonTaxable}"
+                     disabled="#{not editable}"
+                     valueChangeListener="#{bean.listenNonTaxable}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax execute="@this" render="@all"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp">
+                  <h:outputText styleClass="txt10" value="Non-Taxable"/>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5tp pad8lt">
+			   <!-- LS-3182 Add 'Attach receipts/kit' button that will perform the same functionality as the Attach button" -->
+					<span class="FR pad5rt">
+						<span class="btnMiniLtHot"/>
+						<span>
+							<ace:linkButton value="Attach receipts/kit" action="#{contactFormBean.actionUploadAttachment}"
+								disabled="#{not form.nonTaxable}"  title="Upload an attachment for the selected document." styleClass="btnMiniCt" />
+						</span>
+						<span class="btnMiniRtHot"/>
+					</span>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad8lt">
+                  <h:outputText styleClass="txt10" value="$"/>
+               </h:panelGroup>
+               <h:panelGroup>
+                   <span class="txt9 FL fd_sm2 pad3lt pad5tp" style="min-width:15%;">
+                        <ace:textEntry id="mdNonTaxableTotal" maxlength="12"
+                           value="#{form.nonTaxableTotal}" disabled="#{not form.nonTaxable or not editable}"
+                           style="width:80px">
+                            <f:convertNumber type="number" pattern="#0.000" />
+                        </ace:textEntry>
+                   </span>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt">
+                  <h:outputText styleClass="txt10" value="Total"/>
+               </h:panelGroup>
+               <h:panelGroup  rendered="#{form.employerAttachDoc}"  styleClass="FL pad5lt">
+                  <h:outputText  styleClass="txt11 B"  style="color:red; position: absolute; margin-top: -1px; width: 292px;" 
+                  value="Your Employer has attached one or more receipts."/>
+               </h:panelGroup>
+                <h:panelGroup  rendered="#{form.employerAttachDoc}" styleClass="FL pad5lt">
+                    <h:outputText  styleClass="txt11 B" style="color:red; margin-left: 1px; position: absolute; width: 249px; margin-top: 17px;" 
+                    value="You may attach more receipts if applicable."/>
+                 </h:panelGroup>
+            </h:panelGroup>
+            </div>
+             <div class="FL W90percnt" style="margin-top: -7px;">
+              <h:outputText styleClass="txt9" style="margin-left: 95px;" value="*REQUIRED"/>
+             </div>
+            <div class="FL W90percnt pad7tp">
+            <h:panelGroup styleClass="FL pad5lt" style="width:300px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="unlimited2" value="#{form.taxable}"
+                     disabled="#{not editable}"
+                     valueChangeListener="#{bean.listenTaxable}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                      <ace:ajax execute="@this" render="@all"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp">
+                  <h:outputText styleClass="txt10" value="Taxable"/>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad8lt">
+                  <h:outputText styleClass="txt10" value="*No receipt available"/>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad8lt">
+                  <h:outputText styleClass="txt10" value="$"/>
+               </h:panelGroup>
+               <h:panelGroup>
+                   <span class="txt9 FL fd_sm2 pad3lt pad5tp" style="min-width:20%;">
+                        <ace:textEntry id="mdTaxableTotal" maxlength="12"
+                           value="#{form.taxableTotal}" disabled="#{not form.taxable or not editable}"
+                           valueChangeListener="#{bean.listenTaxable}"
+                           style="width:80px">
+                            <f:convertNumber type="number" pattern="#0.000" />
+                        </ace:textEntry>
+                   </span>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt">
+                  <h:outputText styleClass="txt10" value="Total"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            </div>
+         </div>
+         <!-- Per Diem Section -->
+         <div class="FL" style="height:97px;border-bottom:1px solid black;width: 667px;;border-right:1px solid black;">
+            <div class="FL W90percnt">
+            <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:240px;">
+               <h:panelGroup styleClass="FL pad7tp pad5lt">
+                  <h:outputText styleClass="txt10" value="$"/>
+               </h:panelGroup>
+               <h:panelGroup>
+                   <span class="FL fd_sm2 pad3lt" style="min-width:23%; width:45px">
+                        <ace:textEntry id="mdRateAmount" maxlength="14"
+                           value="#{form.perdiemAmount}"
+                           valueChangeListener="#{bean.listenRateAmount}"
+                           style="width:20px">
+                            <ace:ajax execute="@this" render="@all"/>
+                            <f:convertNumber type="number" pattern="#0.00000" />
+                        </ace:textEntry>
+                   </span>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad10lt">
+                  <h:outputText styleClass="txt10" value="per day for"/>
+               </h:panelGroup>
+               <h:panelGroup>
+                     <span class="FL fd_sm2 pad3lt" style="min-width:10%; width:45px">
+                        <ace:textEntry id="mdRatePerDay" maxlength="2" disabled="#{empty form.perdiemAmount or not editable}"
+                           value="#{form.perdiemDays}"
+                           style="width:20px">
+                            <f:convertNumber type="number"/>
+                        </ace:textEntry>
+                     </span>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad10lt">
+                  <h:outputText styleClass="txt10" value="day(s) total"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            </div>
+            <div class="FL W90percnt">
+	            <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:170px;">
+	               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:105px;">
+	                  <h:outputText styleClass="txt10" value="Check all that apply:"/>
+	               </h:panelGroup>
+	               <h:panelGroup styleClass="FL pad2tp">
+	                  <h:selectBooleanCheckbox id="mdLodging" value="#{form.lodging}"
+	                     disabled="#{empty form.perdiemAmount or not editable}"
+	                     styleClass="iceSelBoolChkbx FL pad3tp">
+	                  </h:selectBooleanCheckbox>
+	               </h:panelGroup>
+	               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:25px;">
+	                  <h:outputText styleClass="txt10" value="Lodging"/>
+	               </h:panelGroup>
+	            </h:panelGroup>
+	            <h:panelGroup styleClass="FL pad5lt pad10tp" style="width:200px;">
+	               <h:panelGroup styleClass="FL pad2tp">
+	                  <h:selectBooleanCheckbox id="mdMealsIncidental" value="#{form.mealsIncidentals}"
+	                     disabled="#{empty form.perdiemAmount or not editable}"
+	                     styleClass="iceSelBoolChkbx FL pad3tp">
+	                  </h:selectBooleanCheckbox>
+	               </h:panelGroup>
+	               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:163px;">
+	                  <h:outputText styleClass="txt10" value="Meals &amp; Incidentals"/>
+	               </h:panelGroup>
+	            </h:panelGroup>
+            </div>
+         </div>
+      </div>
+      <div class="FL" style="height:114px;border-bottom:1px solid black;width: 667px;;border-right:1px solid black;">
+      </div>
+      <div class="FL" style="height:50px;width: 667px;">
+      </div>
+   </div>
+</ui:composition>

@@ -1,0 +1,286 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- CLONE TIMECARDS dialog box -->
+
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+	<h:form>
+		<ace:dialog visible="#{cloneTimecardBean.visible}"
+				header="#{cloneTimecardBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{cloneTimecardBean.actionCancel}"/>			
+			
+			<div class="popNewContactBdy">
+				<div class="CT rowCont" style="width:96%;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div class="addcontactCont">
+					<div class="popup_main ">
+						<div id="qcform">
+							<div class="FL rowCont W100percnt">
+								<!-- CLONE NOT DONE YET - display controls for performing clone -->
+								<h:panelGroup rendered="#{! cloneTimecardBean.done}">
+									<div class="W90percnt MA txt12 B_false">
+										<span class="">
+											<h:panelGroup>
+												Clone times (including Day Types, NDMs and MPVs) from the current timecard
+												<h:outputText value="(#{timecardBean.tcUser.lastNameFirstName}," />
+												w/e
+												<h:outputText value="#{timecardBean.weeklyTimecard.endDate}" >
+													<f:convertDateTime pattern="M/d/yyyy)" timeZone="#{timezone}" />
+												</h:outputText>
+												to other people's timecards for the same week ending.
+											</h:panelGroup>
+										</span>
+									</div>
+
+									<div class="popup_inner pad26tp">
+										<span class="popup_inner_leg">
+											Select Days to Copy
+										</span>
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+
+										<span class="rowCont pad20lt">
+											<h:panelGroup styleClass="ckbx">
+													<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectAllDays}"
+															valueChangeListener="#{cloneTimecardBean.listenSelectAllDays}"  >
+														<ace:ajax/>
+													</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl_B pad4lt">
+													Select All Days<br/>
+												</span>
+											</h:panelGroup>
+										</span>
+										<span class="rowCont pad20lt pad5tp">
+											<span class="ckbx FL">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[0]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[0]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[1]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[1]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[2]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}" >
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[2]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[3]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[3]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[4]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[4]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[5]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}">
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[5]}" />
+												</span>
+											</span>
+											<span class="ckbx pad15lt">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectDay[6]}"
+														valueChangeListener="#{cloneTimecardBean.listenSelectDay}" >
+													<ace:ajax/>
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl pad3lt">
+													<h:outputText value="#{cloneTimecardBean.timecardDays[6]}" />
+												</span>
+											</span>
+										</span>
+										</icecore:setEventPhase>
+									</div>
+
+									<div class="popup_inner pad30tp">
+										<span class="popup_inner_leg pad5rt">
+											Select Recipients
+										</span>
+											<div class="MA pad10bm" style="width:90%;">
+												<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+													<span class="pad2lt">
+														<h:panelGroup styleClass="ckbx">
+																<h:selectBooleanCheckbox value="#{cloneTimecardBean.selectAllTargets}"
+																		valueChangeListener="#{cloneTimecardBean.listenSelectAllTargets}">
+																	<ace:ajax/>
+																</h:selectBooleanCheckbox>
+															<span class="ckbxTxtLbl_B pad3lt">
+																Select All Recipients
+															</span>
+														</h:panelGroup>
+													</span>
+												</icecore:setEventPhase>
+												<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+													<ace:dataTable styleClass="gradTbl3 CT W100percnt"
+															style="width:100%;max-width:100%;" rowStyleClass="CT"
+															scrollable="true" scrollHeight="190"
+															value="#{cloneTimecardBean.recipients}" var="recip">
+														<!-- Checkbox -->
+														<ace:column styleClass="CT" style="border:0;">
+															<h:selectBooleanCheckbox
+																	valueChangeListener="#{cloneTimecardBean.listenSelectTarget}"
+																	 value="#{recip.checked}">
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</ace:column>
+														<!-- Name and Occupation -->
+														<ace:column styleClass="B_false">
+															<h:outputText value="#{recip.name} - " />
+															<h:outputText value="#{recip.occupation}" />
+														</ace:column>
+													</ace:dataTable>
+												</icecore:setEventPhase>
+											</div>
+									</div><!-- end inner box -->
+
+									<div class="MA W90percnt">
+										<div class="rowCont pad5tp pad20lt">
+											<h:panelGroup styleClass="ckbx">
+												<h:selectBooleanCheckbox value="#{cloneTimecardBean.cloneOverwriteTimes}"
+														 />
+												<span class="ckbxTxtLbl pad3lt">
+													Overwrite existing times, Day Types, NDMs and MPVs on recipient timecards.
+												</span>
+											</h:panelGroup>
+										</div>
+
+										<!-- 'COPY SET' CHECKBOX -->
+										<div class="rowCont pad20lt">
+											<h:outputText rendered="#{! aicp}">
+												<h:panelGroup styleClass="ckbx">
+													<h:selectBooleanCheckbox value="#{cloneTimecardBean.cloneCopySet}">
+													</h:selectBooleanCheckbox>
+													<span class="ckbxTxtLbl pad3lt">
+														Copy <b>Set</b> to recipient timecards.
+													</span>
+												</h:panelGroup>
+											</h:outputText>&#160;
+										</div>
+
+									</div>
+
+								</h:panelGroup><!-- end "not done" section -->
+
+								<!--  DONE SECTION -->
+								<h:panelGroup rendered="#{cloneTimecardBean.done}">
+									<div class="W90percnt MA txt12 B_false pad20tp">
+										<span class="">
+											<h:panelGroup>
+												Clone of timecard
+												<h:outputText value="(#{timecardBean.tcUser.lastNameFirstName}," />
+												w/e
+												<h:outputText value="#{timecardBean.weeklyTimecard.endDate}" >
+													<f:convertDateTime pattern="M/d/yyyy)" timeZone="#{timezone}" />
+												</h:outputText>
+												completed.
+											</h:panelGroup>
+											<br/><br/><br/>
+											<h:panelGroup styleClass="pad20tp B">
+												<h:outputText rendered="#{! cloneTimecardBean.errors}"
+														value="All selected timecards (#{cloneTimecardBean.cloned}) were successfully changed." />
+												<h:outputText rendered="#{cloneTimecardBean.errors}"
+														styleClass="errors"
+														value="Only #{cloneTimecardBean.cloned} timecards were cloned; the following timecards were NOT updated." />
+											</h:panelGroup>
+										</span>
+									</div>
+
+									<h:panelGroup rendered="#{cloneTimecardBean.errors}">
+										<div class="popup_inner pad30tp">
+											<span class="popup_inner_leg">
+												Failed Timecards
+											</span>
+											<div class="MA pad10bm" style="width:90%;">
+												 <ace:dataTable styleClass="gradTbl3 W100percnt"
+														style="width:100%;max-width:100%;" rowStyleClass="CT"
+														scrollable="true" scrollHeight="190"
+														value="#{cloneTimecardBean.errorEntries}" var="recip">
+
+													<!-- Name and Occupation -->
+													<ace:column>
+														<h:outputText value="#{recip.name} - " />
+														<h:outputText value="#{recip.occupation}" />
+													</ace:column>
+												</ace:dataTable>
+											</div>
+										</div>
+									</h:panelGroup><!-- end inner box -->
+								</h:panelGroup><!-- end "done" section (completion messages) -->
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont4 padPop50rt pad10tp">
+					<h:panelGroup rendered="#{! cloneTimecardBean.done}">
+						<span class="FR pad10rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+							<ace:linkButton value="Cancel"
+								action="#{cloneTimecardBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Clone"
+								action="#{cloneTimecardBean.actionClone}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{cloneTimecardBean.done}">
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Ok"
+								action="#{cloneTimecardBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

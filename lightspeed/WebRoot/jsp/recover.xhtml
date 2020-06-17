@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+
+<h:head>
+<!--
+	Error recovery page for desktop (non-mobile) devices.  We come here from the link in either the
+	404.html, 500.html, or similar error pages.
+	The contents of this page is not normally displayed, as the invocation of HeaderViewBean.getRecover()
+	(see below) will cause a forwarding of our session to the home page.  However, in case that fails,
+	the page contents are basically the same as the 500.html page.
+ -->
+
+	<!-- Title text displayed will depend on which domain the user is coming from.
+		 coming from TTC online domain will display TTC Online specific wording.
+		 All else will display Lightspeed specific wording.
+	-->
+	<title>#{headerViewBean.domainTabTitle} Recovery</title>
+	<link href="../c/global.css" rel="stylesheet" type="text/css" />
+</h:head>
+
+<h:body>
+	<div id="topCont">
+		<div class="topLt logo FL pad5lt"></div>
+	</div>
+	<div class="CB"></div>
+		<!-- This "output" actually causes a forwarding operation, due to the action
+				of HeaderViewBean.recover(). -->
+		<h:outputText value="#{headerViewBean.recover}" />
+
+		<!--  This page should never be seen by the end user! -->
+	<div class="pad20lt">
+		<h4 class="pad30tp">
+		Sorry, we had a problem trying to display that page.
+		</h4>
+		<h4>
+		Try using your browser's "Back" button,
+		or click&#160;<a href="../login.jsf">here</a> for the #{headerViewBean.domainTabTitle} Login page.
+		</h4>
+		<h5>
+		[recover.xhtml]
+		</h5>
+	</div>
+
+</h:body>
+</html>

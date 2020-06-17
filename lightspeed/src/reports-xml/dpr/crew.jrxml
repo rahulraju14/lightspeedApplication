@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="crew" pageWidth="180" pageHeight="1008" whenNoDataType="AllSectionsNoDetail" columnWidth="180" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e8dc20fc-dc9f-4efd-8f2b-095bde2c58c0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="dprId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[98]]></defaultValueExpression>
+	</parameter>
+	<parameter name="columnDcIds" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1057,1059,1050,1058,1045,1060,1071,1072,1001"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catering_1" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catering_2" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catering_3" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catering_4" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="productionId" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select department.Std_Dept_Id, tc.call_time, tc.wrap, tc.mpv1, tc.mpv2,
+contact.display_name, department.name, tc.dpr_crew_id, department.id as Department_Id, tc.role
+from department left join time_card tc on (tc.department_id = department.id and tc.dpr_crew_id = $P{dprId})
+left join contact on tc.contact_id = contact.id
+left join user on  user.id = contact.user_id
+where
+( department.id in ($P!{columnDcIds}) or
+  (department.std_dept_id in ($P!{columnDcIds}) and department.production_id=$P!{productionId})
+)
+and dpr_crew_id is not null
+order by department.list_priority, tc.List_Priority, display_name;]]>
+	</queryString>
+	<field name="call_time" class="java.math.BigDecimal"/>
+	<field name="wrap" class="java.math.BigDecimal"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="role" class="java.lang.String"/>
+	<field name="mpv1" class="java.lang.String"/>
+	<field name="mpv2" class="java.lang.String"/>
+	<field name="display_name" class="java.lang.String"/>
+	<field name="Department_Id" class="java.lang.Integer"/>
+	<field name="Std_Dept_Id" class="java.lang.Integer"/>
+	<group name="dept_name">
+		<groupExpression><![CDATA[($F{Std_Dept_Id}==null ? $F{Department_Id} : $F{Std_Dept_Id})]]></groupExpression>
+		<groupHeader>
+			<band height="10" splitType="Stretch">
+				<staticText>
+					<reportElement uuid="f26d06d4-ae5e-4dd8-9417-5327d240e361" key="staticText-1" style="prDefBoxBold" mode="Opaque" x="0" y="0" width="9" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[#]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="f5bd7b68-1109-4ed3-960f-e5d7e8144d70" key="textField" style="prDefBoxBold" mode="Opaque" x="9" y="0" width="117" height="10" forecolor="#000000" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="3ee8d7a0-1215-4988-bbc0-a984094b2bfe" key="staticText-4" style="prDefBoxBold" mode="Opaque" x="126" y="0" width="18" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<text><![CDATA[In]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2226e961-5c21-4f36-a91e-ca5c881626db" key="staticText-5" style="prDefBoxBold" mode="Opaque" x="144" y="0" width="18" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<text><![CDATA[Out]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2226e961-5c21-4f36-a91e-ca5c881626db" key="staticText-5" style="prDefBoxBold" mode="Opaque" x="162" y="0" width="18" height="10" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<text><![CDATA[MP]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30" splitType="Prevent">
+				<printWhenExpression><![CDATA[$F{Department_Id} == 115 || $F{Std_Dept_Id} == 115 || $F{name}.contains("Catering")]]></printWhenExpression>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="fdf05ab3-f135-4232-9dfd-1481bf018641" key="textField" mode="Transparent" x="63" y="10" width="63" height="10"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{catering_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="fdf05ab3-f135-4232-9dfd-1481bf018641" key="textField" mode="Transparent" x="63" y="20" width="63" height="10"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{catering_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="fdf05ab3-f135-4232-9dfd-1481bf018641" key="textField" x="126" y="10" width="18" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{catering_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement uuid="fdf05ab3-f135-4232-9dfd-1481bf018641" key="textField" x="126" y="20" width="18" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{catering_4}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="116bbfdb-cf4b-47db-bd2f-0b3667bd236d" key="textField" x="0" y="0" width="9" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b10a3c03-4374-48c2-b58a-5e7498fe0f4a" key="textField" x="9" y="0" width="54" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{display_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4503cdfd-5dde-4c16-a7e6-a2d6bd7d8cd5" key="textField" x="63" y="0" width="63" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{role}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.0#" isBlankWhenNull="true">
+				<reportElement uuid="cb36bd41-5272-469f-9ebe-b984d9b0f78c" key="textField" x="126" y="0" width="18" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{call_time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#.0#" isBlankWhenNull="true">
+				<reportElement uuid="5e269b4d-9158-4bdc-b484-41542b5850f4" key="textField" x="144" y="0" width="18" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{wrap}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="5e269b4d-9158-4bdc-b484-41542b5850f4" key="textField" x="162" y="0" width="9" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mpv1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="5e269b4d-9158-4bdc-b484-41542b5850f4" key="textField" x="171" y="0" width="9" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="6" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mpv2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

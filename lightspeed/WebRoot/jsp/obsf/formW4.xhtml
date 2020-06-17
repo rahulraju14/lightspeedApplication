@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<c:set var="formVersion" value="#{formW4Bean.form.version}" />
+	<c:set var="formDir" value="w4_20#{formVersion}" />
+	<c:set var="pre2018style" value="#{formVersion lt 18}" />
+	<c:set var="is2018style" value="#{formVersion ge 18}" />
+	<c:set var="is2019style" value="#{formVersion ge 19}" />
+	
+	<h:panelGroup label="Form W-4" 
+		rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+		<div class="miniTab pad15lt FL" style="width:840px;">
+
+			<!-- scrolling container -->
+			<div class="BKwhite sfFormBorder1">
+				<div class="pad10lt pad10rt" style="width:840px;">
+					<!-- Header image -->
+					<h:graphicImage rendered="#{is2018style}" style="width:820px;margin-left:-1px; margin-top:15px;" 
+						url="../../i/forms/#{formDir}/formW4HeaderImg1.png" alt=""/>
+					<h:graphicImage style="width:820px;" alt="" url="../../i/forms/#{formDir}/formW4HeaderImg.png"/>
+					
+					<!-- Personal Allowance Worksheet for the versions before 2018. -->
+					<c:if test="#{pre2018style}">
+						<ui:include src="formW4PersonalSheet.xhtml">
+							<ui:param name="formDir" value="#{formDir}" />
+							<ui:param name="formVersion" value="#{formVersion}" />
+							<ui:param name="pre2018style" value="#{pre2018style}" />
+							<ui:param name="is2018style" value="#{is2018style}" />
+							<ui:param name="is2019style" value="#{is2019style}" />
+						</ui:include>
+					
+						<h:graphicImage style="width:820px; margin-top:-1px;" alt=""
+								url="../../i/forms/#{formDir}/formW4Img_2.png"/>
+					</c:if>
+
+					<!-- Main form [Employee details] -->
+					<ui:include src="formW4EmpCertificate.xhtml">
+						<ui:param name="formDir" value="#{formDir}" />
+						<ui:param name="formVersion" value="#{formVersion}" />
+						<ui:param name="pre2018style" value="#{pre2018style}" />
+						<ui:param name="is2018style" value="#{is2018style}" />
+						<ui:param name="is2019style" value="#{is2019style}" />
+					</ui:include>
+
+					<h:outputText value="&#160;" styleClass="LH18"/>
+				</div>
+			</div><!-- scrolling container End-->
+			
+			<!-- SECOND PAGE for 2018 version -->
+			<h:panelGroup rendered="#{is2018style}">
+				<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+				<div class="BKwhite FL sfFormBorder1" style="width:838px;">
+					<h:graphicImage style="width:820px;margin-left:10px;" url="../../i/forms/#{formDir}/formW4Img_8.png" alt=""/>
+					<h:graphicImage style="width:820px;margin-top:-1px; margin-left:8px;" url="../../i/forms/#{formDir}/formW4Img_9.png" alt=""/>
+				</div>
+			</h:panelGroup>
+			
+			<!-- 2018 PAGE 3:  PERSONAL ALLOWANCE WORKSHEET + DEDUCTIONS AND ADJUSTMENTS WORKSHEET -->
+			<c:if test="#{is2018style}">
+				<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+				<ui:include src="formW4PersonalSheet.xhtml">
+					<ui:param name="formDir" value="#{formDir}" />
+					<ui:param name="formVersion" value="#{formVersion}" /><!-- hard-code so generated ID's are unique -->
+					<ui:param name="pre2018style" value="#{pre2018style}" />
+					<ui:param name="is2018style" value="#{is2018style}" />
+					<ui:param name="is2019style" value="#{is2019style}" />
+				</ui:include>
+			</c:if>
+			
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+			
+			<!-- (2017: DEDUCTIONS AND ADJUSTMENTS WORKSHEET)
+				 + 2-EARNERS + TABLES
+				 = 2018: page 4;  2017: page 2. -->
+			<ui:include src="formW4SecondPage.xhtml">
+				<ui:param name="formDir" value="#{formDir}" />
+				<ui:param name="formVersion" value="#{formVersion}" />
+				<ui:param name="pre2018style" value="#{pre2018style}" />
+				<ui:param name="is2018style" value="#{is2018style}" />
+				<ui:param name="is2019style" value="#{is2019style}" />
+			</ui:include>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formW4Bean}" />
+						<ui:param name="events" value="#{formW4Bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+
+</ui:composition>

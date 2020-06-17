@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Change Details mini-tab on Admin & Prod Admin / Changes pages -->
+
+	<!--  Entry Tab   -->
+	<ace:tabPane label="Change details">
+		<div class="rowCont" id="changeDetail" style="overflow-y:auto;">
+			<div class="MA W98percnt">
+				<table class="W100percnt">
+
+					<tr>
+						<td class="B W10percnt">
+							Info
+						</td>
+						<td>
+							<h:outputText
+								value="##{changeBean.change.id}" />&#160;
+							<h:outputText styleClass="pad10lt" value="#{changeBean.change.startTime}" >
+								<f:convertDateTime pattern="EEE, MMM d, yyyy - h:mm:ss a" timeZone="#{applicationScopeBean.timeZone}"/>
+							</h:outputText>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="B W10percnt">
+							Type / Action
+						</td>
+						<td>
+							<h:outputText
+								value="#{changeBean.change.type}" />&#160; / &#160;
+							<h:outputText
+								value="#{changeBean.change.action}" />&#160;
+						</td>
+					</tr>
+
+					<tr>
+						<td class="B">
+							User Name
+						</td>
+						<td>
+							<h:outputText
+								value="#{changeBean.change.userName}" />&#160;
+						</td>
+					</tr>
+
+					<tr>
+						<td class="B">
+							Production
+						</td>
+						<td>
+							<h:panelGroup rendered="#{changeBean.change.production ne null}">
+								<h:outputText
+									value="#{changeBean.change.production.title}" />&#160;
+								<h:outputText styleClass="pad5lt" value="(##{changeBean.change.production.id})" />&#160;
+								<h:outputText styleClass="pad5lt" value="#{changeBean.change.production.type}" />&#160;
+								<h:outputText styleClass="pad10lt" value="Owner: #{changeBean.change.production.owningAccount}" />
+							</h:panelGroup>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="B">
+							Project
+						</td>
+						<td>
+							<h:outputText
+								value="#{changeBean.change.project.title}" />&#160;
+							<h:outputText styleClass="pad5lt" rendered="#{changeBean.change.project ne null}"
+								value="(##{changeBean.change.project.id})" />
+						</td>
+					</tr>
+
+					<tr>
+						<td class="B" style="vertical-align: top;">
+							Description
+						</td>
+						<td>
+							<h:outputText escape="false"
+								value="#{changeBean.change.description}" />
+						</td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</ace:tabPane>
+
+</ui:composition>

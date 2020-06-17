@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:head>
+		<!-- Title text displayed will depend on which domain the user is coming from.
+			 coming from TTC online domain will display TTC Online specific wording.
+			 All else will display Lightspeed specific wording.
+		-->
+		<title>#{headerViewBean.domainTabTitle} Calendar</title>
+
+		<ui:include src="../common/head.xhtml" />
+
+		<script language="javascript">
+			function resize() {
+
+				element = document.getElementById('prscheditFrm:calEditScroll');
+				resizeElement(element, 258, 330);
+			}
+
+			var formname = "prscheditFrm";
+		</script>
+		<style type="text/css">
+			.drag_image {position:relative;z-index:10;cursor:move;}
+			.date_image {position:relative;top:5px;left:-5px;}
+			.dayMkr {z-index:10;cursor:move;}
+		</style>
+	</h:head>
+	<h:body>
+		<script type="text/javascript">
+			ice.ace.jq( document ).ready(function() {
+				initDomLoaded(); // do our standard page initialization tasks.
+			});
+		</script>
+		<h:form id="prscheditFrm">
+			<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+				<f:attribute name="tabid" value="calendar" />
+			</h:outputText>
+
+			<div id="main">
+				<ui:include src="../common/header2.xhtml" />
+				<div id="mainCont">
+					<div id="ctrCont">
+						<div id="pnlCont">
+
+							<div id="pnlFull" class="MA">
+
+								<h:panelGroup styleClass="errMsgContFull pad16tp">
+									<ui:include src="../common/errorsMain.xhtml" />
+								</h:panelGroup>
+
+								<div class="topBdrCont FL">
+									<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+								</div>
+
+								<div class="rowCont ltrtBdr BKwhite FL">
+
+									<div class="rowCont">
+										<div class="pnlHdrTxt FL #{headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1 ? 'hdrUnitIcon' : ''}">
+											<h:outputText
+											  rendered="#{headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1}"
+											  styleClass="FL NW txtBrtBlue txt12 pad4tp pad8lt #{headerViewBean.project.hasUnits ? '' : 'pad30lt'}"
+											  value="#{calendarEditBean.unit.number}" />
+											<div class="FL W80percnt">
+												<h:outputText
+													styleClass="FL W300 #{(headerViewBean.project.hasUnits and calendarViewBean.unit.number gt 1) ? 'pad-14tp pad30lt' : ''}"
+												value="#{headerViewBean.project.title}"/>
+											</div>
+										</div>
+
+										<h:panelGroup>
+											<span class="FR pad5rt">
+												<span class="btnPriDisLt" />
+												<h:commandLink
+													value="Edit"
+													styleClass="btnPriDisCt" type="text" onclick="return false;" />
+												<span class="btnPriDisRt" />
+											</span>
+											<h:panelGroup styleClass="FR pad15rt pad10tp"
+												rendered="#{headerViewBean.project.hasUnits}">
+												<h:outputText styleClass="FL B" value="Unit:" />
+												<h:outputText
+													styleClass="FL pad5lt"
+													value="#{calendarEditBean.unit.name}" />
+											</h:panelGroup>
+										</h:panelGroup>
+									</div>
+
+									<div id="calTopEditCont" class="rowDivider pad3tp"></div>
+
+									<div id="calBtmEditCont">
+										<div class="centerFullPg MA pad15tp">
+
+											<div class="calBtmEditCol1 FL">
+												<div class="calDatesCont FL">
+													<span class="rowCont FL">
+														<span class="fdNm_lg">Start Date:</span>
+														<span class="fd_lg">
+															<ace:dateTimeEntry styleClass="cal_date" tabindex="0"
+																	id="StartDate" required="true" title="Enter project start date"
+																	value="#{calendarEditBean.startDate}"
+																	valueChangeListener="#{calendarEditBean.changeStartDate}"
+																	renderAsPopup="true">
+																<f:converter converterId="lightspeed.MultiDateConverter"/>
+																<ace:ajax/>
+															</ace:dateTimeEntry>
+														</span>
+													</span>
+													<span class="fdNm_lg">Scheduled Finish:</span>
+													<h:outputText styleClass="fd_lg" value="#{calendarEditBean.endDate}">
+														<f:convertDateTime pattern="EEEE, MMMM d, yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+													</h:outputText>
+												</div>
+
+												<div class="calDayMkrContWrap FR pad10tp pad10rt">
+													<h:panelGroup rendered="false"><!-- TODO : Hide the entire drag/drop marker list until we fix the functionality! -->
+													<div id="calDayMkrCont" class="FL">
+														<div class="subSecHdg_calDayMkr">Drag n'Drop Day Marker</div>
+														<span class="FL W90 pad50lt">
+															<h:panelGroup
+																style="z-index:10;cursor:move;">
+																<!-- 
+																xdragListener="#{calendarEditBean.dragListener}"
+																xdragOptions="dragGhost"
+																xdragMask="dragging, DRAG_CANCEL, hover_start, hover_end"
+																 -->
+																<h:graphicImage value="" alt=""
+																	url="../../i/icon_holiday.gif" styleClass="drag_image" />
+															</h:panelGroup>
+															<h:panelGroup
+																style="z-index:10;cursor:move;"
+																styleClass="pad10tp">
+																<h:graphicImage value="" alt=""
+																	url="../../i/icon_company_travel.gif" styleClass="drag_image" />
+																</h:panelGroup>
+															<h:panelGroup
+																style="z-index:10;cursor:move;"
+																styleClass="pad10tp">
+																<h:graphicImage value="" alt=""
+																	url="../../i/icon_other_travel.gif" styleClass="drag_image" />
+															</h:panelGroup>
+															<h:panelGroup
+																style="z-index:10;cursor:move;"
+																styleClass="pad10tp">
+																<h:graphicImage value="" alt=""
+																	url="../../i/icon_off.gif" styleClass="drag_image" />
+															</h:panelGroup>
+															<h:panelGroup
+																style="z-index:10;cursor:move;"
+																styleClass="pad10tp">
+																<h:graphicImage value="" alt=""
+																	url="../../i/icon_work.gif" styleClass="drag_image" />
+															</h:panelGroup>
+														</span>
+													</div>
+													</h:panelGroup><!-- END DELIBERATE HIDING -->
+												</div><!-- end calDayMarkerCont -->
+
+											</div><!-- end calBtmEditCol1 -->
+
+											<div class="calBtmEditCol2 FR">
+												<div class="calTopEditPagtr">
+													<div class="FL W110">
+														<h:commandLink value="" alt=""	styleClass="FL"
+															action="#{calendarEditBean.prevMonth}" >
+															<h:graphicImage value="" alt=""
+																url="../../i/previous.gif" title="Previous Month" />
+														</h:commandLink>
+														<div class="FL CT W75">
+															<h:outputText styleClass="pgntrTxt" value="#{calendarEditBean.monthNames[calendarEditBean.curMonth]}" />
+														</div>
+														<h:commandLink value=""	styleClass="FL"
+															action="#{calendarEditBean.nextMonth}" >
+															<h:graphicImage value="" alt=""
+															url="../../i/next.gif" title="Next Month" />
+														</h:commandLink>
+													</div>
+													<span class="FR">
+														<h:commandLink value="" action="#{calendarEditBean.prevYear}">
+															<h:graphicImage value="" alt="" url="../../i/previous.gif"
+															title="Previous Year" />
+														</h:commandLink>
+														<h:outputText styleClass="pgntrTxt" value="#{calendarEditBean.curYear}"/>
+														<h:commandLink value="" action="#{calendarEditBean.nextYear}">
+															<h:graphicImage value="" alt="" url="../../i/next.gif"
+																title="Next Year" />
+														</h:commandLink>
+													</span>
+												</div>
+
+												<div class="calDaysOffContWrap FL">
+													<div class="LH20 pad10bm">
+														<b>Note:</b> Edit the strip board to change the <u>number</u> of shooting days.
+													</div>
+													<div class="subSecHdg_calDaysOff">Days Off</div>
+													<div id="calDaysOffCont" class="FL">
+														<div class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[1]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="1"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</div>
+														<div class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[2]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="2"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</div>
+														<span class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[3]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="3"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</span>
+														<span class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[4]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="4"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</span>
+														<span class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[5]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}" >
+																<f:attribute name="dayofWeek" value="5"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</span>
+														<span class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[6]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="6"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</span>
+														<span class="fd_ckbx">
+															<h:selectBooleanCheckbox
+																value="#{calendarEditBean.weeklyDaysOff[7]}"
+																valueChangeListener="#{calendarEditBean.daysOffListener}">
+																<f:attribute name="dayofWeek" value="7"/>
+																<ace:ajax/>
+															</h:selectBooleanCheckbox>
+														</span>
+													</div>
+												</div><!-- end Days Off legend -->
+
+												<h:panelGroup id="calEditScroll" styleClass="calEditScroll" scrollHeight="330px">
+													<ace:dataTable styleClass="grid1cal"
+															value="#{calendarEditBean.weekList}" var="oneweek">
+														
+														<ace:column headerText="Sunday" id="Sunday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[1]}" />
+															<h:commandLink value="" rendered="#{oneweek.showDataDay[1]}"
+																id="imageChangeDay1">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber1">
+																<!-- 
+																		dropTarget="true"
+																		dropValue="#{oneweek}">
+																 -->
+																	<h:panelGroup id="dayNumber1"
+																		styleClass="dayMkr">
+																		<!-- 
+																		dragMask="dragging,hover_end,hover_start,dropped"
+																		dragListener="#{calendarEditBean.dragListenerCal}"
+																		dragOptions="dragGhost" dropTarget="true"
+																		draggable="true" dropValue="#{oneweek}">
+																		 -->
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image" alt=""
+																			value="#{oneweek.imagePathDay[1]}"
+																			rendered="#{oneweek.showDataDay[1]}"/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Monday" id="Monday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[2]}" />
+															<h:commandLink value="" rendered="#{oneweek.showDataDay[2]}"
+																id="imageChangeDay2">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber2">
+																	<h:panelGroup id="dayNumber2"
+																			styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage id="imgDay2" styleClass="date_image"
+																			value="#{oneweek.imagePathDay[2]}" alt=""
+																			rendered="#{oneweek.showDataDay[2]}"/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Tuesday" id="Tuesday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[3]}" />
+															<h:commandLink value="" rendered="#{oneweek.showDataDay[3]}"
+																id="imageChangeDay3">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber3">
+																	<h:panelGroup id="dayNumber3"
+																			styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image"	value="#{oneweek.imagePathDay[3]}"
+																			rendered="#{oneweek.showDataDay[3]}" alt=""/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Wednesday" id="Wednesday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[4]}" />
+															<h:commandLink value="" rendered="#{oneweek.showDataDay[4]}"
+																id="imageChangeDay4">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber4">
+																	<h:panelGroup id="dayNumber4"
+																			styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image" alt=""
+																			value="#{oneweek.imagePathDay[4]}"
+																			rendered="#{oneweek.showDataDay[4]}"/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Thursday" id="Thursday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[5]}" />
+															<h:commandLink value=""	rendered="#{oneweek.showDataDay[5]}"
+																id="imageChangeDay5">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber5">
+																	<h:panelGroup id="dayNumber5"
+																			styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image" alt=""
+																			value="#{oneweek.imagePathDay[5]}"
+																			rendered="#{oneweek.showDataDay[5]}"/>
+																	</h:panelGroup>
+															  </h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Friday" id="Friday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[6]}" />
+															<h:commandLink value=""	rendered="#{oneweek.showDataDay[6]}"
+																id="imageChangeDay6">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber6">
+																	<h:panelGroup id="dayNumber6"
+																		styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image" alt=""
+																			value="#{oneweek.imagePathDay[6]}"
+																			rendered="#{oneweek.showDataDay[6]}"/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+														<ace:column headerText="Saturday" id="Saturday" styleClass="daybox_sm">
+															<h:outputText styleClass="FL B W20" value="#{oneweek.dayNumber[7]}" />
+															<h:commandLink value="" rendered="#{oneweek.showDataDay[7]}"
+																id="imageChangeDay7">
+																<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																<h:panelGroup id="dropDayNumber7">
+																	<h:panelGroup id="dayNumber7"
+																			styleClass="dayMkr">
+																		<f:attribute name="monthDaysObj" value="#{oneweek}" />
+																		<h:graphicImage styleClass="date_image" alt=""
+																			value="#{oneweek.imagePathDay[7]}"
+																			rendered="#{oneweek.showDataDay[7]}"/>
+																	</h:panelGroup>
+																</h:panelGroup>
+															</h:commandLink>
+														</ace:column>
+													</ace:dataTable>
+												</h:panelGroup><!-- end calScroll -->
+											</div><!-- end calBtmEditCol2 -->
+										</div><!-- ctr centerCont -->
+
+										<div class="rowBtnCal">
+											<div class="rowBtnBdr"></div>
+											<h:panelGroup>
+												<span class="FR pad10rt">
+													<span class="btnPriEnbLt" />
+													<h:commandLink styleClass="btnPriEnbCt" action="calendar"
+														onmouseup="showErrors();"
+														value="Cancel" actionListener="#{calendarEditBean.cancel}" />
+													<span class="btnPriEnbRt" />
+												</span>
+											</h:panelGroup>
+											<h:panelGroup>
+												<span class="FR pad5rt">
+													<span class="btnSecHotLt" />
+													<h:commandLink value="Save" styleClass="btnSecHotCt"
+														onmouseup="showErrors();"
+														action="#{calendarEditBean.actionSave}" />
+													<span class="btnSecHotRt" />
+												</span>
+											</h:panelGroup>
+										</div>
+									</div><!-- end calBtmCont -->
+								</div><!-- end outer content cont -->
+								<div class="btmBdrCont FL">
+									<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+								</div>
+							</div><!-- end pnlFull -->
+						</div><!--  end pnlCont -->
+					</div><!-- end ctrCont -->
+					<div class="CB"></div><!-- clears float for liquid layout -->
+				</div><!-- end mainCont -->
+
+				<div class="footerCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+			</div><!-- end main -->
+		</h:form>
+		<ui:include src="../common/releaseNotes.xhtml" />
+		<ui:include src="../common/popupcheckbox.xhtml" />
+	</h:body>
+</html>

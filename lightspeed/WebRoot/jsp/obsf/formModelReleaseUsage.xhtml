@@ -1,0 +1,507 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <f:loadBundle var="msg"	basename="com.lightspeedeps.util.app.messageResources" />
+   <div class="W1000" style="width:1000px">
+      <div class="FL sfFormBorder1" style="float: left;width:130px;margin-left: 20px;">
+         <div class="FL W130" style="height:45px;border-bottom:1px solid black;">
+            <div class="CT" style="height:10px;background:black;">
+            </div>
+            <div class="CT" style="height:15px;background:black;">
+               <h:outputText value="USAGE" styleClass="txt18 B" style="color:white"/>
+            </div>
+            <div class="CT"  style="height:20px;background:black;">
+               <h:outputText styleClass="txt11 B pad2tp" value="Check all that apply" style="color:white"/>
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:80px;border-bottom:1px solid black;background:#E4E4E4;">
+            <div class="CT" style="height:30px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:10px;background:#E4E4E4;">
+               <h:outputText value="MEDIA" styleClass="txt18 B" />
+            </div>
+         </div>
+         <div class="FL CT W130" style="height:60px;border-bottom:1px solid black;background:#E4E4E4;">
+            <div class="CT" style="height:15px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:45px;background:#E4E4E4;">
+               <h:outputText value="TERM" styleClass="txt18 B" />
+               <br/>
+               <h:outputText value="(select one)" styleClass="txt11 B"/>
+            </div>
+         </div>
+         <div class="FL W130" style="height:60px;background:#E4E4E4;border-bottom:1px solid black;">
+            <div class="CT" style="height:15px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:45px;background:#E4E4E4;">
+               <h:outputText value="TERRITORY" styleClass="txt18 B" />
+               <br/>
+               <h:outputText value="(select all that apply)" styleClass="txt11 B"/>
+            </div>
+         </div>
+         <div class="FL W130" style="height:90px;background:#E4E4E4;">
+            <div class="CT" style="height:25px;background:#E4E4E4;">
+            </div>
+            <div class="CT" style="height:65px;background:#E4E4E4;">
+               <h:outputText value="OPTIONAL" styleClass="txt18 B" />
+               <br/>
+               <h:outputText value="RE-USE" styleClass="txt18 B"/>
+            </div>
+         </div>
+      </div>
+      <div class="FL" style="float: left;width:700px">
+         <div class="FL pad1tp" style="height:45px;border-bottom:1px solid black;width: 667px;">
+         	<div class="cityDropDown">
+				<c:if test="#{bean.showOtherCities}">
+					<h:panelGroup styleClass="FL  pad2tp">
+						<h:panelGroup styleClass="FL txt10 pad3tp">
+							<h:outputText value="OTHER CITY NAME"></h:outputText>
+						</h:panelGroup>
+						<h:panelGroup>
+							<span class="txt9 FL fd_sm2 pad3lt"
+								style="min-width: 30%; width: 160px; height: 28px;"> <ace:textEntry
+									id="MROtherCityName" maxlength="30"
+									value="#{form.otherCityName}" style="width:224px">
+									<ace:ajax execute="@this" render="@all" />
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+				</c:if>
+			</div>
+            <div class="FL pad10tp W200">
+               <h:panelGroup styleClass="FL pad5lt pad13tp" style="width:80px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="modelUsageYes" value="#{form.usageYes}"
+                        disabled="#{not isAppEdit}"
+                        valueChangeListener="#{bean.listenUsageYes}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad7tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Yes"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt pad13tp" style="width:80px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="modelUsageNo" value="#{form.usageNo}"
+                        disabled="#{not isAppEdit}"
+                        valueChangeListener="#{bean.listenUsageNo}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad7tp pad5lt">
+                     <h:outputText styleClass="txt10" value="No"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+         <!-- Media Section -->
+         <div class="FL" style="height:80px;border-bottom:1px solid black;width: 667px;;border-right:1px solid black;">
+            <h:panelGroup styleClass="FL pad5lt" style="width:90px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelUnlimited"   disabled="#{form.usageNo or not isAppEdit}" value="#{form.unlimited}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt">
+                  <h:outputText styleClass="txt10" value="UNLIMITED"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:190px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="unlimitedExcptOut" value="#{form.unlimitedExceptOutdoor}"
+                    disabled="#{form.usageNo or not isAppEdit}"  styleClass="iceSelBoolChkbx FL pad3tp">
+                    <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:163px;">
+                  <h:outputText styleClass="txt10" value="UNLIMITED except OUTDOOR"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:280px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="electricMedia" disabled="#{form.usageNo or not isAppEdit}"  value="#{form.electricMedia}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:250px;">
+                  <h:outputText styleClass="txt10" value="ELECTRONIC MEDIA (including Internet/New Media)"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="bRoll"  value="#{form.broll}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="B-ROLL"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:110px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="directmail"  value="#{form.directMail}"
+                     disabled="#{form.usageNo or not isAppEdit}" styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:80px;">
+                  <h:outputText styleClass="txt10" value="DIRECT MAIL"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="collateral"  value="#{form.collateral}"
+                      disabled="#{form.usageNo or not isAppEdit}" styleClass="iceSelBoolChkbx FL pad3tp">
+                      <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="COLLATERAL"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelIsm"  value="#{form.ism}"  disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="ISM"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelpr"  value="#{form.pr}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="PR"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelPrint"  value="#{form.print}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="PRINT"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelcircular"  value="#{form.circular}" disabled="#{form.usageNo or not isAppEdit}"	
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="CIRCULAR"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelIndustrial" value="#{form.industrial}" disabled="#{form.usageNo or not isAppEdit}"              
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                      <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="INDUSTRIAL"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;height:38px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelOther" 
+                     value="#{form.mediaOther}" disabled="#{form.usageNo or not isAppEdit}"
+                     valueChangeListener="#{bean.listenMediaOther}" 
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="OTHER:"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="txt9" style="height:28px;width:767px;">
+            	<span class="txt9">
+                   <ace:textEntry id="modelExclusivityDurationText"  maxlength="20" 
+                     value="#{form.mediaOtherText}" disabled="#{not form.mediaOther or not isAppEdit}"
+                     style="width:300px;height:15px;border-bottom:solid 1px;"/>
+                </span>
+             </h:panelGroup>
+         </div>
+         <!-- Term Section -->
+         <div class="FL" style="height:60px;border-bottom:1px solid black;width:667px;border-right:1px solid black;">
+            <div class="rowCont">
+               <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="modelTerm" disabled="#{form.usageNo or not isAppEdit}" value="#{form.term}"
+                        valueChangeListener="#{bean.listenTerm}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt pad2tp" style="min-width:35%;width:34%;height:28px;">
+                        <ace:textEntry id="modelTermtext" maxlength="2" 
+                           value="#{form.termMonth}" disabled="#{not form.term}"
+                           style="width:99%;border-bottom:solid 1px;"/>
+                     </span>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL  pad4tp">
+                  <h:panelGroup styleClass="FL txt10 pad3tp">
+                     <h:outputText value="month(s) from date/first use. First use no later than" />
+                  </h:panelGroup>
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt" style="min-width:10%; width:60px;height:28px;">
+                        <ace:textEntry id="modelFirstUse" maxlength="5" 
+                           value="#{form.termRefDate}" disabled="#{not form.term or form.usageNo or not isAppEdit}"
+                           style="width:60px">
+                           <f:convertDateTime pattern="MM/dd" timeZone="#{applicationScopeBean.timeZone}"/>
+                        </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad12lt pad2tp">
+                  <h:panelGroup styleClass="FL txt12 pad5tp pad2lt">
+                     <h:outputText value="20" />
+                  </h:panelGroup>
+                  <h:panelGroup>
+                     <span class="txt10 FL fd_sm2 pad3lt pad2tp" style="min-width:10%; width:60px;height:28px;">
+                        <ace:textEntry id="modelFirstUseText" maxlength="2" disabled="#{not form.term or form.usageNo or not isAppEdit}"
+                           value="#{form.termRefYear}"
+                           style="width:60px">
+                           <f:convertDateTime pattern="yy" timeZone="#{applicationScopeBean.timeZone}"/>
+                         </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+            <div class="rowCont">
+               <h:panelGroup styleClass="FL" style="width:130px;">
+                  <h:panelGroup styleClass="FL pad5lt pad2tp">
+                     <h:selectBooleanCheckbox id="unlimitedTime" value="#{form.unlimitedTime}" disabled="#{form.usageNo or not isAppEdit}"
+                        valueChangeListener="#{bean.listenUnlimitedTime}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Unlimited Time"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad5lt" style="width:135px;">
+                  <h:panelGroup styleClass="FL pad5lt pad2tp">
+                     <h:selectBooleanCheckbox id="unlimitedTimeCB" value="#{form.termOther}" disabled="#{form.usageNo or not isAppEdit}" 
+                        valueChangeListener="#{bean.listenTermOther}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax render="@form"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad6tp pad5lt">
+                     <h:outputText styleClass="txt10" value="Other"/>
+                  </h:panelGroup>
+                  <!--LS-3135 add new text entry -->
+                  <h:panelGroup>
+                     <span class="txt9 FL fd_sm2 pad3lt pad3tp" style="min-width:10%; width:60px;height:28px;">
+                        <ace:textEntry id="modelTermOtherText" maxlength="16" 
+                           value="#{form.termOtherText}" disabled="#{not form.termOther}"
+                           style="width:60px">
+                        </ace:textEntry>
+                     </span>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+         <!-- Territory Section -->
+         <div class="FL" style="height:60px;border-bottom:1px solid black;width:667px;border-right:1px solid black;">
+            <h:panelGroup styleClass="FL pad5lt" style="width:345px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelNorthAmerica"  value="#{form.northAmerica}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:320px;">
+                  <h:outputText styleClass="txt10" value="North America (includes United States’ territories and possessions.)"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:110px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelEuropeanUnion"  value="#{form.europeanUnion}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                      <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:83px;">
+                  <h:outputText styleClass="txt10" value="European Union"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:100px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelSouthAmerica"  value="#{form.southAmerica}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:75px;">
+                  <h:outputText styleClass="txt10" value="South America"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelAsia"  value="#{form.asia}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="Asia"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:85px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelWorldWide"  value="#{form.worldWide}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:50px;">
+                  <h:outputText styleClass="txt10" value="Worldwide"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:420px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelWWElectricMedia"  value="#{form.worldWideElectronicMedia}" disabled="#{form.usageNo or not isAppEdit}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax render="@form"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:300px;">
+                  <h:outputText styleClass="txt10" value="Worldwide for Electronic Media (includes Internet / New Media)"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="FL pad5lt" style="width:50px;">
+               <h:panelGroup styleClass="FL pad2tp">
+                  <h:selectBooleanCheckbox id="modelOtherTerritory"  value="#{form.territoryOther}" disabled="#{form.usageNo or not isAppEdit}"
+                     valueChangeListener="#{bean.listenTerritoryOther}"
+                     styleClass="iceSelBoolChkbx FL pad3tp">
+                     <ace:ajax execute="@this" render="@all"/>
+                  </h:selectBooleanCheckbox>
+               </h:panelGroup>
+               <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:20px;">
+                  <h:outputText styleClass="txt10" value="Other:"/>
+               </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup>
+               <span class="txt9 FL fd_sm2 pad3lt pad3tp" style="min-width:10%; width:30px;height:28px;">
+                  <ace:textEntry id="modelresponsibleName" maxlength="16"  disabled="#{not form.territoryOther or not isAppEdit}" 
+                     value="#{form.territoryOtherText}"
+                     style="width:30px"/>
+               </span>
+            </h:panelGroup>
+         </div>
+         <!-- Optional Re-Use Section -->
+         <div class="FL" style="height:90px;border-bottom:1px solid black;width:667px;border-right:1px solid black;">
+            <div class="">
+               <h:panelGroup styleClass="FL pad5lt" style="width:50px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="modelResueMedia" value="#{form.optionalReuseYes}" disabled="#{form.usageNo or not isAppEdit}"
+                        valueChangeListener="#{bean.listenOptionalReuseYes}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:20px;">
+                     <h:outputText styleClass="txt10" value="Yes"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <div class="pad3tp">
+                  <h:panelGroup styleClass="FL  pad2tp pad20lt">
+                     <h:panelGroup styleClass="FL txt10 pad3tp">
+                        <h:outputText value="RE-USE MEDIA:" />
+                     </h:panelGroup>
+                     <h:panelGroup>
+                        <span class="txt9 FL fd_sm2 pad3lt" style="min-width:30%; width:160px;height:28ps;">
+                           <ace:textEntry id="modelResueMediaText" maxlength="20" disabled="#{not form.optionalReuseYes or not isAppEdit}"
+                              value="#{form.reuseMedia}"
+                              style="width:100px"/>
+                        </span>
+                     </h:panelGroup>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL  pad2tp pad15lt">
+                     <h:panelGroup styleClass="FL txt10 pad3tp">
+                        <h:outputText value="RE-USE TERM(S):" />
+                     </h:panelGroup>
+                     <h:panelGroup>
+                        <span class="txt9 FL fd_sm2 pad3lt" style="min-width:30%; width:160px;height:28px;">
+                           <ace:textEntry id="reUseTerm" maxlength="16" disabled="#{not form.optionalReuseYes or not isAppEdit}"
+                              value="#{form.reuseTerm}"
+                              style="width:100px"/>
+                        </span>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+               <div class="pad25lt">
+                  <h:panelGroup styleClass="FL  pad2tp pad20lt">
+                     <h:panelGroup styleClass="FL txt10 pad3tp pad30lt">
+                        <h:outputText value="RE-USE TERRITORY:" />
+                     </h:panelGroup>
+                     <h:panelGroup>
+                        <span class="txt9 FL fd_sm2 pad3lt" style="min-width:30%; width:160px;height:28px;">
+                           <ace:textEntry id="reuseTerritory" maxlength="16" disabled="#{not form.optionalReuseYes or not isAppEdit}"
+                              value="#{form.reuseTerritory}"
+                              style="width:100px"/>
+                        </span>
+                     </h:panelGroup>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL  pad2tp">
+                     <h:panelGroup styleClass="FL txt10 pad3tp">
+                        <h:outputText value="RE-USE FEE:" />
+                     </h:panelGroup>
+                     <h:panelGroup>
+                        <span class="txt9 FL fd_sm2 pad3lt" style="min-width:30%; width:160px;height:28px;">
+                           <ace:textEntry id="reUseFee" maxlength="11" disabled="#{not form.optionalReuseYes or not isAppEdit}"
+                              value="#{form.reuseFee}"
+                              style="width:100px">
+                              <ace:ajax execute="@this" render="@all"/>
+                           </ace:textEntry>
+                        </span>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </div>
+            </div>
+            <div class="rowCont" style="border-top:1px solid black;">
+               <h:panelGroup styleClass="FL pad5lt" style="width:50px;">
+                  <h:panelGroup styleClass="FL pad2tp">
+                     <h:selectBooleanCheckbox id="optionalReuseNo" disabled="#{form.usageNo or not isAppEdit}" value="#{form.optionalReuseNo}"
+                        valueChangeListener="#{bean.listenOptionalReuseNo}"
+                        styleClass="iceSelBoolChkbx FL pad3tp">
+                        <ace:ajax execute="@this" render="@all"/>
+                     </h:selectBooleanCheckbox>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="FL pad7tp pad5lt" style="width:20px;">
+                     <h:outputText styleClass="txt10" value="No"/>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </div>
+         </div>
+      </div>
+   </div>
+</ui:composition>

@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- List of scenes near top of front page of DPR -->
+	<div class="FL rowCont pad20tp rowGradient pad40bm">
+		<ace:dataTable styleClass="bk_sl_grid"
+			style="width:100%;max-width:100%;"
+			value="#{dprViewBean.dpr.dprScenes}"
+			var="sceneCall">
+
+			<ace:column headerText="Set/Scene Description" style="width:40%;">
+				<h:outputText rendered="#{not dprViewBean.editMode}" value="#{sceneCall.title}" />&#160;
+				<h:panelGroup rendered="#{dprViewBean.editMode}">
+					<ace:textEntry value="#{sceneCall.title}"
+							maxlength="200" styleClass="W95percnt pad5lt" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText="Episode #" rendered="#{headerViewBean.production.type.crossProject}" style="width:7%;">
+				<div class="CT">
+					<h:outputText rendered="#{not dprViewBean.editMode}" value="#{sceneCall.episode}" >&#160;
+						</h:outputText>
+					<h:panelGroup rendered="#{dprViewBean.editMode}">
+						<ace:textEntry value="#{sceneCall.episode}" size="6" maxlength="10" />
+					</h:panelGroup>
+				</div>
+			</ace:column>
+
+			<ace:column headerText=" Scene #" style="width:7%;">
+				<div class="CT">
+					<h:panelGroup rendered="#{not dprViewBean.editMode}">
+						<ace:linkButton value="#{sceneCall.sceneNumber}"
+								action="breakdown" actionListener="#{breakdownBean.openSheet}"
+								rendered="#{(not headerViewBean.production.type.crossProject) and
+										(not empty authBean.pgFields['6.2,link_scene'])}">
+							<f:attribute name="sceneNo" value="#{sceneCall.sceneNumber}"/>
+						</ace:linkButton>
+						<h:outputText value="#{sceneCall.sceneNumber}"
+								rendered="#{(headerViewBean.production.type.crossProject) or
+										(empty authBean.pgFields['6.2,link_scene'])}" />
+						&#160;
+					</h:panelGroup>
+					<h:panelGroup rendered="#{dprViewBean.editMode}">
+						<ace:textEntry value="#{sceneCall.sceneNumber}" size="6" maxlength="10" />
+					</h:panelGroup>
+				</div>
+			</ace:column>
+
+			<ace:column headerText=" Location" style="width:38%;">
+				<h:outputText rendered="#{not dprViewBean.editMode}" escape="false" value="#{sceneCall.location}">&#160;
+				</h:outputText>
+				<h:panelGroup rendered="#{dprViewBean.editMode}">
+					<ace:textAreaEntry rows="2" value="#{sceneCall.location}"
+							maxlength="1000" styleClass="W95percnt stdTxtArea pad5lt" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column headerText=" Miles" style="width:8%;">
+				<h:outputText rendered="#{not dprViewBean.editMode}" value="#{sceneCall.mileage}">&#160;
+				</h:outputText>
+				<h:panelGroup  styleClass="pad5lt w95percnt" rendered="#{dprViewBean.editMode}">
+					<ace:textEntry value="#{sceneCall.mileage}" size="10" maxlength="100" />
+				</h:panelGroup>
+			</ace:column>
+		</ace:dataTable>
+	</div>
+
+</ui:composition>

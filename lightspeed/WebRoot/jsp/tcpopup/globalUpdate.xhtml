@@ -1,0 +1,243 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+<!-- popup for the Payroll Globals - Update Timecard function -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<h:form>
+		<ace:dialog visible="#{globalUpdateBean.visible}"
+				header="#{globalUpdateBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{globalUpdateBean.actionCancel}"/>		
+			<div class="popupBdy6AW" style="">
+				<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+
+				<div>
+					<div class="popup_main">
+						<h:panelGroup rendered="#{! globalUpdateBean.done}">
+						<div class="rowCont">
+							<div class="rowCont pad10tp N">
+									<h:outputText value="#{msg.Payroll_Global_Update_WeekEndingPt1} " />
+									<h:outputText styleClass="B U"
+											value="#{globalUpdateBean.weekEndDate}">
+										<f:convertDateTime pattern=" MM/dd/yyyy " timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+									<h:outputText value="#{ msg.Payroll_Global_Update_WeekEndingPt2}" />
+							</div>
+							<div class="rowCont pad10tp N">
+								<h:outputText value="#{msg.Payroll_Global_Update_DeptUpdate}" />
+								<h:panelGroup styleClass="pad4lt">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu immediate="true" styleClass="pad8lt"
+											value="#{globalUpdateBean.deptId}" style="width:25%;"
+											valueChangeListener="#{globalUpdateBean.listenDeptChange}" >
+											<f:selectItems value="#{globalUpdateBean.departmentsDL}"/>
+											<f:ajax execute="@this" render="@all"/>
+										</h:selectOneMenu>
+									</icecore:setEventPhase>
+								</h:panelGroup>
+							</div>
+							<div class="rowCont pad10tp">
+								<h:panelGroup rendered="#{! aicp}">
+									<span class=" ">
+										<h:panelGrid columnClasses="W15percnt,W7percnt,W10percnt,W7percnt,W10percnt,W7percnt,W10percnt,W7percnt,W10percnt" columns="9" styleClass="miniPanel">
+											<h:outputText styleClass="B pad5rt" value="Episode Coding:" />
+											<!-- Job 1 -->
+											<h:outputText styleClass="B pad5rt"  value="#{msg.Payroll_Globals_Job1EpiCode}" />
+
+											<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+												styleClass=" " value="#{payrollGlobalsBean.job1EpiCode}" />
+											<ace:textEntry maxlength="6" id="Job1EpiCode" size="10"
+												value="#{payrollGlobalsBean.job1EpiCode}"
+												rendered="#{payrollGlobalsBean.editMode}" />
+
+											<!-- Job 2 -->
+											<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job2EpiCode}" />
+											<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+												styleClass="W10" value="#{payrollGlobalsBean.job2EpiCode}" />
+											<ace:textEntry maxlength="6" id="Job2EpiCode" size="10"
+												value="#{payrollGlobalsBean.job2EpiCode}"
+												rendered="#{payrollGlobalsBean.editMode}" />
+											<!-- Job 3 -->
+											<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job3EpiCode}" />
+											<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+												styleClass=" " value="#{payrollGlobalsBean.job3EpiCode}" />
+											<ace:textEntry maxlength="6" id="Job3EpiCode" size="10"
+												value="#{payrollGlobalsBean.job3EpiCode}"
+												rendered="#{payrollGlobalsBean.editMode}" />
+											<!-- Job 4 -->
+											<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job4EpiCode}" />
+											<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+												styleClass=" " value="#{payrollGlobalsBean.job4EpiCode}" />
+											<ace:textEntry maxlength="6" id="Job4EpiCode" size="10"
+												value="#{payrollGlobalsBean.job4EpiCode}"
+												rendered="#{payrollGlobalsBean.editMode}" />
+										</h:panelGrid>
+									</span>
+								</h:panelGroup>
+							</div>
+
+							<div class="rowCont pad10tp">
+								<!-- Daily timecard section -->
+								<ace:dataTable styleClass="gradTbl2 txt10 CT" id="cday"
+									value="#{payrollGlobalsBean.weeklyTimecard.dailyTimes}" rowStyleClass="CT txt11"
+									var="dailyTime" style="width:100%;max-width:100%;overflow-x:hidden;">
+
+									<!-- ** Include all daily columns ** -->
+									<ui:include src="../tcpref/globalDaily.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+										<ui:param name="popup" value="#{true}" />
+									</ui:include>
+
+								</ace:dataTable>
+
+							</div>
+
+							<div class="rowCont pad10tp">
+								<h:outputText value="#{msg.Generic_PleaseNote}" />
+							</div>
+							<div class="rowCont pad10lt">
+
+								<div class="rowCont pad15tp">
+									<h:outputText value="#{msg.Payroll_Global_Update_EmployeeInfoNotEffectedTitle}" />
+								</div>
+								<div class="rowCont B_false">
+									<h:outputText value="#{msg.Payroll_Global_Update_EmployeeInfoNotEffected}" />
+								</div>
+
+								<div class="rowCont B pad15tp">
+									<h:outputText value="#{msg.Payroll_Global_Update_ApptrovedNotUpdateTitle}" />
+								</div>
+								<div class="rowCont B_false">
+									<h:outputText value="#{msg.Payroll_Global_Update_ApptrovedNotUpdated}" />
+								</div>
+
+								<div class="rowCont B pad15tp">
+									<h:outputText value="#{msg.Payroll_Global_Update_EmptyFieldsTitle}" />
+								</div>
+								<div class="rowCont B_false">
+									<h:outputText value="#{msg.Payroll_Global_Update_EmptyFields}" />
+								</div>
+							</div>
+
+							<!-- SELECTIONS -->
+							<div class="rowCont pad10tp">
+								<div class="rowCont">
+									<span class="ckbxTxtLbl FL">
+										<h:selectBooleanCheckbox 
+											value="#{globalUpdateBean.overwriteData}" styleClass="ckbx" />
+									</span>
+									<span class="ckbxTxtLbl FL pad5lt">
+										<h:outputText value="#{msg.Payroll_Globals_Update_OverwriteData}" />
+									</span>
+								</div>
+
+								<div class="rowCont pad5tp">
+									<span class="ckbxTxtLbl FL">
+										<h:selectBooleanCheckbox 
+											value="#{globalUpdateBean.includeOffProduction}" styleClass="ckbx" />
+									</span>
+									<span class="ckbxTxtLbl FL pad5lt">
+										<h:outputText value="#{msg.Payroll_Globals_Update_OffProduction}" />
+									</span>
+								</div>
+							</div>
+						</div>
+						</h:panelGroup><!-- end "not done" section -->
+
+						<!--  DONE SECTION -->
+						<h:panelGroup rendered="#{globalUpdateBean.done}">
+							<div class="W90percnt MA txt12 B_false pad20tp">
+								<span class="">
+									<h:panelGroup>
+										<h:outputText value="#{msg.Payroll_Global_Update_UpdateTimecards}" />
+										<h:outputText value="#{globalUpdateBean.weekEndDate}" >
+											<f:convertDateTime pattern=" MM/dd/yyyy " timeZone="#{applicationScopeBean.timeZone}" />
+										</h:outputText>
+										<h:outputText value="#{msg.Generic_Completed}" />
+									</h:panelGroup>
+									<br/><br/><br/>
+									<h:panelGroup styleClass="pad20tp B">
+										<h:outputText rendered="#{! globalUpdateBean.errors}"
+												value="#{msg.Payroll_AllTimecards} (#{globalUpdateBean.updated}) #{msg.Payroll_Globals_Update_AllSuccessfullyUpdated}" />
+										<h:outputText rendered="#{globalUpdateBean.errors}"
+												styleClass="errors"
+												value="#{msg.Generic_Only} #{globalUpdateBean.updated} #{msg.Payroll_Globals_Update_PartialSuccessUpdated}" />
+									</h:panelGroup>
+								</span>
+							</div>
+
+							<h:panelGroup rendered="#{globalUpdateBean.errors}">
+								<div class="popup_inner pad30tp">
+									<span class="popup_inner_leg">
+										<h:outputText value="#{msg.Payroll_Failed_Timecards}" />
+									</span>
+									<div class="MA pad10bm" style="width:90%;">
+										 <ace:dataTable styleClass="gradTbl3 W100percnt"
+											style="width:100%;max-width:100%;"
+											scrollable="true" scrollHeight="190"
+											value="#{globalUpdateBean.errorEntries}" var="recip">
+
+											<!-- Name and Occupation -->
+											<ace:column> 
+												<h:outputText value="#{recip.lastName}, #{recip.firstName} - " />
+												<h:outputText value="#{recip.occupation}" />
+											</ace:column>
+										</ace:dataTable>
+									</div>
+								</div>
+							</h:panelGroup><!-- end inner box -->
+
+						</h:panelGroup><!-- end "done" section (completion messages) -->
+					</div>
+				</div>
+
+				<div class="popBtnCont4">
+					<h:panelGroup rendered="#{! globalUpdateBean.done}">
+						<span class="FR padPop25rt">
+							<span class="btnPriEnbLt"/>
+							<span>
+								<ace:linkButton value="#{globalUpdateBean.buttonCancelLabel}"
+									action="#{globalUpdateBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt"/>
+						</span>
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+								<ace:linkButton value="#{globalUpdateBean.buttonOkLabel}"
+									action="#{globalUpdateBean.actionUpdate}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{globalUpdateBean.done}">
+						<span class="FR pad10rt">
+							<span class="btnSecHotLt"/>
+							<span>
+							<ace:linkButton value="Ok"
+								action="#{globalUpdateBean.actionOk}" styleClass="btnSecHotCt" />
+							</span>
+							<span class="btnSecHotRt"/>
+						</span>
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Change Bank Account Information -->
+
+	<c:set var="change" value="#{formDepositBean.form.changeAccount and formDepositBean.empEdit}" />
+
+	<div class="BKwhite" style="width:820px;">
+
+		<div class="rowCont FL pad18tp">
+			<span class="pad15lt FL">
+				<h:outputText styleClass="FL B I txt13" value="CHANGE Bank Account information." />
+			</span>
+			<span class="FL pad10lt">
+				<h:outputText styleClass="FL B I" value="Complete Old Bank Account information below if changing account." />
+			</span>
+		</div>
+
+		<div class="rowCont FL pad6tp">
+			<span style="width:100px;">
+				<h:outputText styleClass="FL B U I txt13 pad15lt" value="Old Bank Account Information:" />
+			</span>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- OLD ACCOUNT NAME -->
+			<div class="W40percnt FL pad15lt">
+				<span class="fdNm" style="width:123px;">
+					<h:outputText styleClass="FL" value="Old Account Name:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2">
+						<ace:textEntry maxlength="50" styleClass="FL" style="width:56%; min-width:55%"
+							value="#{formDepositBean.form.oldAccountName}"
+							disabled="#{not change}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- ACCOUNT TYPE 2 -->
+			<div class="FL" style="width:29%">
+				<span>
+					<h:outputText styleClass="FL B pad3tp pad5lt" value="TYPE:" />
+				</span>
+				 <span class="FL pad5lt pad1tp #{change and (formDepositBean.form.oldAccountType eq null) ? 'requiredDiv' : ''}">
+				 <icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+					<ace:buttonGroup id="oldAccountType" mutuallyExclusive="true"
+						layout="lineDirection" styleClass="pad-1tp">
+						<span class="FL I">
+							<ace:radioButton group="oldAccountType" id="CHKOld"
+								disabled="#{not change}"
+								label="CHECKING" labelPosition="right"
+								value="#{formDepositBean.oldAcctType[0]}"
+								valueChangeListener="#{formDepositBean.listenOldAccountType}">
+								<ace:ajax execute="oldAccountType" event="activate" render="oldAccountType"/>
+							</ace:radioButton>
+						</span>
+						<span class="pad5lt FL I">
+							<ace:radioButton group="oldAccountType" id="SAVOld"
+								disabled="#{not change}"
+								label="SAVINGS" labelPosition="right"
+								value="#{formDepositBean.oldAcctType[1]}"
+								valueChangeListener="#{formDepositBean.listenOldAccountType}">
+								<ace:ajax execute="oldAccountType" event="activate" render="oldAccountType"/>
+							</ace:radioButton>
+						</span>
+					</ace:buttonGroup>
+				</icecore:setEventPhase>
+				</span>
+			</div>
+		</div>
+
+		<div class="rowCont FL pad5tp">
+			<!-- OLD ACCOUNT NUMBER -->
+			<div class="W35percnt FL pad15lt">
+				<span class="fdNm" style="width:123px;">
+					<h:outputText styleClass="FL" value="Old Account #:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{change and (empty formDepositBean.form.oldAccountNumber) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="25" styleClass="FL"
+							style="width:53%; min-width:50%;"
+							value="#{formDepositBean.form.oldAccountNumber}"
+							disabled="#{not change}">
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+
+			<!-- OLD ABA ROUTING -->
+			<div class="W31percnt FL">
+				<span  class="fdNm pad10lt" style="width:115px;">
+					<h:outputText styleClass="FL" value="Old ABA Routing #:" />
+				</span>
+				<h:panelGroup>
+					<span class="fd_sm2 #{change and (empty formDepositBean.form.oldABARouting) ? 'requiredField' : ''}">
+						<ace:textEntry maxlength="10" styleClass="FL"
+							style="min-width:40%; width:46%;"
+							value="#{formDepositBean.form.oldABARouting}"
+							disabled="#{not change}">
+							<!-- <f:converter converterId="lightspeed.ABARoutingConverter" /> -->
+						</ace:textEntry>
+					</span>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<!-- OLD BANK NAME -->
+		<div class="W67percnt FL pad15lt pad5tp">
+			<span  class="fdNm"  style="width:123px;" >
+				<h:outputText styleClass="FL" value="Old Bank Name:" />
+			</span>
+			<h:panelGroup>
+				<span class="fd_sm2 #{change and (empty formDepositBean.form.oldBankName) ? 'requiredField' : ''}">
+					<ace:textEntry maxlength="50" styleClass="FL" style="width:74%"
+						value="#{formDepositBean.form.oldBankName}"
+						disabled="#{not change}">
+					</ace:textEntry>
+				</span>
+			</h:panelGroup>
+		</div>
+
+	</div>
+</ui:composition>

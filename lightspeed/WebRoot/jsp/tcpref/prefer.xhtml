@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Payroll Preferences</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+	var element = document.getElementById('tcpref:miniView');
+	resizeElement(element, 180, 390);
+
+	/* resize Globals scrolling div */
+	element = document.getElementById('gscrolldiv');
+	resizeElement(element, 225, 340); // extends into "rowBtnBdr" gradient!
+
+	/* resize hierarchy department table */
+	element = document.getElementById('tcpref:memDeptList');
+	resizeElement(element, 305, 320);
+
+	/* resize hierarchy members table */
+	element = document.getElementById('tcpref:prodMembers');
+	resizeElement(element, 340, 285);
+
+	/* resize batch setup - unbatched start-forms table */
+	resizeScrollable('tcpref:unbatchedtable', 350, 244);
+
+	/* resize batch setup - unbatched start-forms table */
+	resizeScrollable('tcpref:batchedtable', 350, 244);
+
+	</c:if>
+	/* stop client/server interaction on every scroll click... */
+	//clearOnScroll('tcpref:batchedtable');
+	//clearOnScroll('tcpref:unbatchedtable');
+
+}
+
+var formname = "tcpref";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="tcpref">
+
+		<!-- ensure the proper main menu and sub-menu tabs are selected: -->
+		<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden">
+			<f:attribute name="tabid" value="tcpreferences" />
+		</h:outputText>
+		<!-- restore our saved mini-tab selection: -->
+		<h:outputText value="#{headerViewBean.checkMiniTab}" style="display:none;" />
+
+<div id="main">
+
+	<ui:include src="../common/header2.xhtml" />
+
+	<c:set var="aicp" value="#{headerViewBean.production.type.aicp}" />
+
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="FL rowCont ltrtBdr BKwhite">
+
+						<h:panelGroup>
+							<ui:include src="../common/errorsMain.xhtml" />
+						</h:panelGroup>
+
+						<div class="rowCont">
+							<div class="W50percnt FL">
+								<h:outputText styleClass="pnlHdrTxt" value="Payroll Preferences#{aicp ? ':' : ''} #{aicp ? headerViewBean.project.title : ''}" />
+							</div>
+							<!--
+							<h:outputText rendered="#{headerViewBean.miniTab eq 2}">
+								<h:outputText rendered="#{(not batchSetupBean.editMode) and
+											(not empty authBean.pgFields['0.1,account'])}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+											<ace:linkButton value="Print Batch List" action="#{batchSetupBean.actionPrint}"
+												styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:outputText>
+							</h:outputText>
+							 -->
+
+							<h:panelGroup rendered="#{headerViewBean.miniTab eq 3 and (not empty authBean.pgFields['9.9,edit'])}">
+								<h:panelGroup rendered="#{(not payrollGlobalsBean.editMode)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Edit" action="#{payrollGlobalsBean.actionEdit}" styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{payrollGlobalsBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt"/>
+										<span>
+										<ace:linkButton value="Edit" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{headerViewBean.miniTab eq 0 and (not empty authBean.pgFields['9.9,edit'])}">
+								<h:panelGroup rendered="#{(not payrollSetupBean.editMode)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Edit" action="#{payrollSetupBean.actionEdit}" styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{payrollSetupBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt"/>
+										<span>
+										<ace:linkButton value="Edit" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:panelGroup>
+							</h:panelGroup>
+
+							<!--
+							<h:outputText rendered="#{headerViewBean.miniTab eq 4}">
+								<h:outputText rendered="#{(not payrollServiceBean.editMode)}">
+									<span class="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+										<ace:linkButton value="Edit" action="#{payrollServiceBean.actionEdit}"
+												styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt"/>
+									</span>
+								</h:outputText>
+								<h:outputText rendered="#{payrollServiceBean.editMode}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt"/>
+										<span>
+										<ace:linkButton value="Edit"
+												styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt"/>
+									</span>
+								</h:outputText>
+							</h:outputText>
+							 -->
+
+						</div>
+
+						<div class="centerFullTb MA">
+
+							<h:panelGrid id="miniView" styleClass="miniPanel">
+
+								<!-- Tabs for Payroll Preferences -->
+								<ace:tabSet id="tabs" selectedIndex="#{headerViewBean.miniTab}" >
+
+									<!-- SETUP mini-tab -->
+									<ui:include src="setup.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- Approver Hierarchy mini-tab -->
+									<ui:include src="hierarchy.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- Batch Setup mini-tab -->
+									<ui:include src="batch.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+									<!-- GLOBALS mini-tab -->
+									<ui:include src="globals.xhtml">
+										<ui:param name="aicp" value="#{aicp}" />
+									</ui:include>
+
+								</ace:tabSet><!--  END TAB set for Contact Details  -->
+
+								</h:panelGrid><!-- end miniView -->
+							<!-- secondary buttons -->
+							<div class="rowBtn">
+								<div class="rowBtnBdr"></div>
+
+								<!-- PAYROLL GLOBALS SAVE and CANCEL BUTTONS -->
+								<h:panelGroup rendered="#{(headerViewBean.miniTab eq 3)}">
+									<h:panelGroup rendered="#{(payrollGlobalsBean.editMode)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt"
+													 value="Cancel" action="#{payrollGlobalsBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- SAVE BUTTON -->
+									<h:panelGroup rendered="#{(payrollGlobalsBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+											<ace:linkButton value="Save" onmouseup="showErrors();"
+												 action="#{payrollGlobalsBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- PAYROLL SETUP SAVE and CANCEL BUTTONS -->
+								<h:panelGroup rendered="#{(headerViewBean.miniTab eq 0)}">
+									<h:panelGroup rendered="#{(payrollSetupBean.editMode)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt"
+													 value="Cancel" action="#{payrollSetupBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:panelGroup>
+									<!-- SAVE BUTTON -->
+									<h:panelGroup rendered="#{(payrollSetupBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+											<ace:linkButton value="Save" onmouseup="showErrors();"
+												 action="#{payrollSetupBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- PAYROLL SERVICE BUTTONS
+								<h:outputText rendered="#{(headerViewBean.miniTab eq 4)}">
+									<h:outputText rendered="#{(payrollServiceBean.editMode)}">
+										<span class="FR pad10rt">
+											<span class="btnPriEnbLt"/>
+											<span>
+												<ace:linkButton styleClass="btnPriEnbCt"
+													 value="Cancel" action="#{payrollServiceBean.actionCancel}" />
+											</span>
+											<span class="btnPriEnbRt"/>
+										</span>
+									</h:outputText>
+									<!- - SAVE BUTTON - ->
+									<h:outputText rendered="#{(payrollServiceBean.editMode)}">
+										<span class="FR pad5rt">
+											<span class="btnSecHotLt"/>
+											<span>
+											<ace:linkButton value="Save" onmouseup="showErrors();"
+												 action="#{payrollServiceBean.actionSave}" styleClass="btnSecHotCt" />
+											</span>
+											<span class="btnSecHotRt"/>
+										</span>
+									</h:outputText>
+								</h:outputText>
+								-->
+
+							</div><!-- end secondary buttons -->
+
+						</div><!-- end contactDetailCont -->
+
+					</div>
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+		<div class="CB"></div><!-- clears float for liquid layout -->
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" />
+<ui:include src="../common/popupinput.xhtml" />
+<ui:include src="../tcpopup/globalUpdate.xhtml">
+	<ui:param name="aicp" value="#{aicp}" />
+</ui:include>
+</h:body>
+</html>

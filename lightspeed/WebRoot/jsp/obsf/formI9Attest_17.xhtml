@@ -1,0 +1,416 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL BKwhite">
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I am aware that federal law provides for imprisonment and/or fines for false statements or
+					use of false documents in &lt;/br&gt; connection with the completion of this form." />
+		</div>
+
+		<div class="FL rowCont">
+			<div class="rowCont FL">
+				<h:outputText styleClass="LH10" value="&#160;" />
+			</div>
+			<h:outputText styleClass="txt13 B" escape="false"
+				value="I attest, under penalty of perjury, that I am (check one of the following):" />
+		</div>
+
+		<!-- Citizenship Radio buttons Start -->
+		<div class="FL pad5tp">
+			<ace:buttonGroup styleClass="sp_radio" mutuallyExclusive="true"
+				id="CITIZENSHIP_STATUS_17"
+				layout="pageDirection">
+
+			<div class="rowCont pad5tp sfFormBorder1" style="height:92px;width:810px; ">
+
+			<div class="FL W10percnt" style="z-index:100;">
+				<!-- z-index necessary so radio buttons are on top of following div(s) -->
+				<h:selectOneRadio styleClass="h_radio p8"
+						id="CITIZENSHIP_STATUS_17" value="#{formI9Bean.citizenshipType}"
+						layout="pageDirection" disabled="#{not formI9Bean.empEdit}"
+						valueChangeListener="#{formI9Bean.listenValueChange}">
+	
+					<f:selectItem itemValue="c" itemLabel="" />
+					<f:selectItem itemValue="n" itemLabel="" />
+					<f:selectItem itemValue="p" itemLabel="" />
+					<f:selectItem itemValue="a" itemLabel="" />
+					<ace:ajax />
+				</h:selectOneRadio>
+			</div>
+
+			<!-- reposition the div with text, etc., to be next to the radio buttons -->
+			<div style="left:0;top:0;position:absolute;">
+
+				<!-- CITIZENSHIP STATUS CITIZEN -->
+				<div class="rowCont B_false pad5tp" style="height:25px;border-bottom:solid 1px;">
+					<div class="pad30lt">
+					<h:outputText styleClass="FL" value="A citizen of the United States" />
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="citizenshipType_a-4" tabindex="-1"
+						styleClass="i9InfoIcon pad5lt"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="A Citizen of the United States - Click for more information">
+					</h:commandButton>
+					</div>
+				</div>
+
+				<!-- CITIZENSHIP STATUS NON CITIZEN -->
+				<div class="rowCont pad5tp B_false" style="height:22px;border-bottom:solid 1px;">
+					<div class="pad30lt">
+					<span class="FL"> 
+					<h:outputText value="A noncitizen national of the United States (See instructions)" />
+					</span>
+					<!-- Help Icon/Button -->
+					<h:commandButton value="" id="citizenshipType_b-4" tabindex="-1"
+						styleClass="FL i9InfoIcon pad5lt pad1tp"
+						actionListener="#{formI9Bean.listenShowHelp}"
+						title="A noncitizen national of the United States - Click for more information">
+					</h:commandButton>
+					</div>
+				</div>
+
+				<!-- CITIZENSHIP STATUS PERMANENT RESIDENT -->
+				<div class="rowCont B_false pad5tp pad30lt" style="height:25px;">
+					<span class="FL W100percnt">
+						<span class="FL pad-3tp"> 
+					<h:outputText value="A lawful permanent resident" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="citizenshipType_c-4" tabindex="-1"
+							styleClass="FL i9InfoIcon pad3lt"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="A lawful permanent resident - Click for more information">
+						</h:commandButton>
+
+						<!-- ALIEN REGISTRATION NUMBER 1 -->
+						<h:outputText styleClass="FL" value="(Alien Registration Number/USCIS Number):" />
+						<h:outputText styleClass="FL" value="&#160; A"
+								rendered="#{formI9Bean.form.alienUscis1 eq 'A'}"/>
+						<span class="#{((formI9Bean.citizenshipType eq 'p') and
+								empty (formI9Bean.form.alienRegNumber1)) ? 'requiredField' : ''}">
+							<ace:textEntry id="ALIEN_REG_NUMBER1_17"
+								maxlength="35" styleClass="FL W24percnt pad-3tp pad3lt" style="line-height:21px;height:13px"
+								disabled="#{not formI9Bean.empEdit or formI9Bean.citizenshipType ne 'p'}"
+								value="#{formI9Bean.form.alienRegNumber1}" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="alienRegNumber1-4" tabindex="-1"
+							styleClass="FL i9InfoIcon pad5lt"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Alien Registration Number/USCIS Number - Click for more information">
+						</h:commandButton>
+
+						<!-- ALIEN REGISTRATION NUMBER / USCIS NUMBER TYPE 1 -->
+						<span class="fd_sm">
+							<h:selectOneMenu id="ALIEN_USCIS1_17"
+								styleClass="FL W15percnt pad3lt pad-3tp"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.empEdit or formI9Bean.citizenshipType ne 'p'}"
+								value="#{formI9Bean.form.alienUscis1}">
+								<f:selectItems value="#{formI9Bean.alienUscisTypeList}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</span>
+				</div>
+			</div>
+
+			</div>
+
+			<!-- div for 3-D Barcode image start -->
+			<div class="FL rowCont">
+
+				<!-- CITIZENSHIP STATUS ALIEN -->
+				<div style="border-left:solid 1px;border-right:solid 1px;width:615px;margin-top:-9px;">
+					<div class="rowCont B_false pad10tp pad30lt">
+						<span class="FL"> 
+					<h:outputText value="An alien authorized to work" />
+						</span>
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="citizenshipType_d-4"
+							styleClass="FL i9InfoIcon pad3lt" tabindex="-1"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="An alien authorized to work - Click for more information">
+						</h:commandButton>
+						<h:outputText styleClass="FL pad2tp" value="until (expiration date, if applicable, mm/dd/yyyy): " />
+						<!-- Help Icon/Button -->
+						<h:commandButton value="" id="workAuthExpDate-4" tabindex="-1"
+							styleClass="FL i9InfoIcon pad5lt pad2tp"
+							actionListener="#{formI9Bean.listenShowHelp}"
+							title="Expiration Date - Click for more information">
+						</h:commandButton>
+
+						<!-- WORK AUTHORIZATION EXPIRATION DATE -->
+						<span class="FL" style="width:60px;">
+							<h:panelGroup rendered="#{(not empty formI9Bean.form.workAuthExpirationDate) or
+									(formI9Bean.citizenshipType eq 'a')}">
+							<ace:dateTimeEntry id="WORK_AUTH_EXPIRATION_DATE_17"
+								value="#{formI9Bean.form.workAuthExpirationDate}"
+								style="display:inline; width:80px;line-height:21px;height:13px;
+									#{(not formI9Bean.empEdit and empty formI9Bean.form.workAuthExpirationDate) ? 'display:none' : ''}"
+								tabindex="0" renderAsPopup="true"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								disabled="#{not formI9Bean.empEdit or formI9Bean.citizenshipType ne 'a'}"
+								styleClass="FL pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+									empty (formI9Bean.form.workAuthExpirationDate)) ? 'requiredField' : ''}">
+								<f:converter converterId="lightspeed.MultiDateConverter" />
+							</ace:dateTimeEntry>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{(not formI9Bean.empEdit and (empty formI9Bean.form.workAuthExpirationDate)) or
+									(formI9Bean.citizenshipType ne 'a')}">
+								<span class="fd_sm2 pad5lt">
+									<ace:textEntry styleClass="W100percnt"
+										disabled="true" value="N/A" />
+								</span>
+							</h:panelGroup>
+						</span>
+						<h:outputText styleClass="rowCont pad25lt" escape="false"
+							value="Some aliens may write &quot;N/A&quot; in this field. &lt;em&gt;(See instructions)&lt;/em&gt;" />
+					</div>
+				</div>
+
+				<!-- HELP TEXT'S ROW 4 -->
+				<div class="rowCont pad-1tp">
+					<h:panelGroup styleClass="FL" rendered="#{formI9Bean.helpRow eq '4'}">
+						<div class="i9HelpTextBox">
+							<h:commandButton value="" styleClass="closeHelpText" action="#{formI9Bean.actionCloseHelp}" />
+							<h:outputText styleClass="fd_sm2" escape="false" value="#{msg[formI9Bean.helpText]}"/>
+						</div>
+					</h:panelGroup>
+				</div>
+				<!-- div below the helpText -->
+				<div class="rowCont FL" style="min-height:200px; y-overflow:hidden;margin-top:-16px">
+					<!-- Middle part for Aliens Start -->
+					<div class="FL" style=" border-left:solid 1px;border-right:solid 1px;border-bottom:solid 1px;width:615px;">
+
+						<div class="FL rowCont">
+							<h:outputText styleClass="LH3" value="&#160;" />
+						</div>
+
+						<h:outputText escape="false" styleClass="pad5tp pad12lt"
+							value="&lt;em&gt; Aliens authorized to work must provide only one of the following document numbers to
+							complete Form I-9: &lt;/br&gt; &#160; &#160; An Alien Registration Number/USCIS Number OR Form I-94 Admission
+							Number OR Foreign Passport Number.&lt;/em&gt;" />
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="LH10" value="&#160;" />
+						</div>
+
+						<div class="W100percnt FL pad5tp pad10lt">
+
+							<!-- ALIEN REGISTRATION NUMBER 2 START -->
+							<div class="rowCont FL">
+								<span> <h:outputText escape="false" styleClass="FL"
+										value="1. Alien Registration Number/USCIS Number:" />
+								</span>
+								<!-- Help Icon/Button -->
+								<h:commandButton value="" id="alienRegNumber2-5"
+									styleClass="FL i9InfoIcon pad3lt" tabindex="-1"
+									actionListener="#{formI9Bean.listenShowHelp}"
+									title="Alien Registration Number/USCIS Number - Click for more information">
+								</h:commandButton>
+								<span class="fd_sm">
+									<span class="pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+											((empty formI9Bean.form.alienRegNumber2) or (formI9Bean.form.alienRegNumber2 eq 'N/A')) and
+											((empty formI9Bean.form.formI9AdmissionNo) or (formI9Bean.form.formI9AdmissionNo eq 'N/A')) and
+											((empty formI9Bean.form.foreignPassportNo) or (formI9Bean.form.foreignPassportNo eq 'N/A'))) ? 'requiredField' : ''}">
+										<h:outputText styleClass="FL" value="&#160; A"  id="alienNumberPrefix"
+											rendered="#{formI9Bean.form.alienUscis2 eq 'A'}"/>
+										<ace:textEntry id="ALIEN_REG_NUMBER2_17"
+											value="#{formI9Bean.form.alienRegNumber2}"
+											valueChangeListener="#{formI9Bean.listenValueChange}"
+											maxlength="35" styleClass="pad-5tp"
+											disabled="#{not formI9Bean.empEdit or
+												formI9Bean.citizenshipType ne 'a' or
+												((not empty formI9Bean.form.formI9AdmissionNo) and formI9Bean.form.formI9AdmissionNo ne 'N/A') or
+												((not empty formI9Bean.form.foreignPassportNo) and formI9Bean.form.foreignPassportNo ne 'N/A')}">
+											 <ace:ajax render="@this FORM_I94_ADMISSION_NO_17 FOREIGN_PASSPORT_NO_17 FOREIGN_COUNTRY_OF_ISSUANCE_17 ALIEN_USCIS2_17 alienNumberPrefix"/>
+										</ace:textEntry>
+									</span>
+									<!-- ALIEN REGISTRATION NUMBER / USCIS NUMBER TYPE 2 -->
+									<span>
+										<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+											<h:selectOneMenu id="ALIEN_USCIS2_17"
+												styleClass="W20percnt pad10lt"
+												valueChangeListener="#{formI9Bean.listenValueChange}"
+												disabled="#{not formI9Bean.empEdit or (formI9Bean.citizenshipType ne 'a')
+														or ((empty formI9Bean.form.alienRegNumber2) or formI9Bean.form.alienRegNumber2 eq 'N/A')}"
+												value="#{formI9Bean.form.alienUscis2}">
+												<f:selectItems value="#{formI9Bean.alienUscisTypeList}" />
+												<ace:ajax execute="@form" />
+											</h:selectOneMenu>
+										</icecore:setEventPhase>
+									</span>
+								</span>
+							</div>
+							<!-- ALIEN REGISTRATION NUMBER 2 END -->
+
+							<div class="rowCont" style="margin-left:15%">
+								<h:outputText styleClass="LH10 txt15 B" value="OR" />
+							</div>
+
+							<!-- FORM I-94 ADMISSION NUMBER START-->
+							<div class="rowCont FL pad5tp">
+								<span> <h:outputText escape="false" styleClass="FL"
+										value="2. Form I-94 Admission Number:" />
+								</span>
+								<!-- Help Icon/Button -->
+								<h:commandButton value="" id="formI9AdmissionNo-5"
+									styleClass="FL i9InfoIcon pad3lt" tabindex="-1"
+									actionListener="#{formI9Bean.listenShowHelp}"
+									title="Form I-94 Admission Number - Click for more information">
+								</h:commandButton>
+								<h:panelGroup>
+									<span class="fd_sm pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+										((empty formI9Bean.form.alienRegNumber2) or (formI9Bean.form.alienRegNumber2 eq 'N/A')) and
+										((empty formI9Bean.form.formI9AdmissionNo) or (formI9Bean.form.formI9AdmissionNo eq 'N/A')) and
+										((empty formI9Bean.form.foreignPassportNo) or (formI9Bean.form.foreignPassportNo eq 'N/A'))) ? 'requiredField' : ''}">
+										<ace:textEntry id="FORM_I94_ADMISSION_NO_17"
+											value="#{formI9Bean.form.formI9AdmissionNo}"
+											valueChangeListener="#{formI9Bean.listenValueChange}"
+											maxlength="35" styleClass="pad-5tp"
+											disabled="#{not formI9Bean.empEdit or
+												formI9Bean.citizenshipType ne 'a' or
+												((not empty formI9Bean.form.alienRegNumber2) and formI9Bean.form.alienRegNumber2 ne 'N/A') or
+												((not empty formI9Bean.form.foreignPassportNo) and formI9Bean.form.foreignPassportNo ne 'N/A')}">
+											<ace:ajax render="@this ALIEN_REG_NUMBER2_17 FOREIGN_PASSPORT_NO_17 FOREIGN_COUNTRY_OF_ISSUANCE_17 ALIEN_USCIS2_17"/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- FORM I-94 ADMISSION NUMBER END -->
+
+							<div class="rowCont" style="margin-left:15%">
+								<h:outputText styleClass="LH10 txt15 B" value="OR" />
+							</div>
+
+							<!-- FOREIGN PASSPORT NUMBER START -->
+							<div class="rowCont FL pad5tp">
+								<span> <h:outputText escape="false" styleClass="FL"
+										value="3. Foreign Passport Number:" />
+								</span>
+								<!-- Help Icon/Button -->
+								<h:commandButton value="" id="foreignPassportNo-5"
+									styleClass="FL i9InfoIcon pad3lt" tabindex="-1"
+									actionListener="#{formI9Bean.listenShowHelp}"
+									title="Foreign Passport Number - Click for more information">
+								</h:commandButton>
+								<h:panelGroup>
+									<span class="fd_sm2 pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+										((empty formI9Bean.form.alienRegNumber2) or (formI9Bean.form.alienRegNumber2 eq 'N/A')) and
+										((empty formI9Bean.form.formI9AdmissionNo) or (formI9Bean.form.formI9AdmissionNo eq 'N/A')) and
+										((empty formI9Bean.form.foreignPassportNo) or (formI9Bean.form.foreignPassportNo eq 'N/A'))) ? 'requiredField' : ''}">
+										<ace:textEntry id="FOREIGN_PASSPORT_NO_17"
+											maxlength="35" style="min-width:55%;"
+											value="#{formI9Bean.form.foreignPassportNo}"
+											valueChangeListener="#{formI9Bean.listenValueChange}"
+											styleClass="pad-5tp"
+											disabled="#{not formI9Bean.empEdit or
+												formI9Bean.citizenshipType ne 'a' or
+												((not empty formI9Bean.form.alienRegNumber2) and formI9Bean.form.alienRegNumber2 ne 'N/A') or
+												((not empty formI9Bean.form.formI9AdmissionNo) and formI9Bean.form.formI9AdmissionNo ne 'N/A')}">
+											<ace:ajax/>
+										</ace:textEntry>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- FOREIGN PASSPORT NUMBER END -->
+
+							<div class="rowCont FL">
+								<h:outputText styleClass="LH10" value="&#160;" />
+							</div>
+
+							<!-- COUNTRY OF ISSUANCE START -->
+							<div class="rowCont pad23lt FL">
+								<span> <h:outputText escape="false" styleClass="FL"
+										value="Country of Issuance:" />
+								</span>
+								<!-- Help Icon/Button -->
+								<h:commandButton value="" id="foreignCountryOfIssuance-5"
+									styleClass="FL i9InfoIcon pad3lt" tabindex="-1"
+									actionListener="#{formI9Bean.listenShowHelp}"
+									title="Country of Issuance - Click for more information">
+								</h:commandButton>
+								<!-- <h:panelGroup>
+									<span class="fd_sm2 pad5lt #{((formI9Bean.citizenshipType eq 'a') and
+										not empty (formI9Bean.form.formI9AdmissionNo) and
+										(not empty formI9Bean.form.alienRegNumber2) and
+										(empty formI9Bean.form.foreignCountryOfIssuance)) ? 'requiredField' : ''}">
+										<ace:textEntry
+											maxlength="35" styleClass="pad-5tp"
+											value="#{formI9Bean.form.foreignCountryOfIssuance}"
+											valueChangeListener="#{formI9Bean.listenValueChange}"
+											style="width:60%;"
+											disabled="#{not formI9Bean.empEdit or
+												formI9Bean.citizenshipType ne 'a' or
+												((not empty formI9Bean.form.alienRegNumber2) and formI9Bean.form.alienRegNumber2 ne 'N/A') or
+												((not empty formI9Bean.form.formI9AdmissionNo) and formI9Bean.form.formI9AdmissionNo ne 'N/A')}">
+											<ace:ajax execute="@this FOREIGN_COUNTRY_OF_ISSUANCE_17" />
+											<ace:ajax render="@this FOREIGN_COUNTRY_OF_ISSUANCE_17" event="blur"/>
+										</ace:textEntry>
+
+
+									</span>
+								</h:panelGroup> -->
+								<!-- <c:set var="disableCountryOfIssuance"
+									value="#{not formI9Bean.empEdit or
+												formI9Bean.citizenshipType ne 'a' or
+									((empty formI9Bean.form.foreignPassportNo) or (formI9Bean.form.foreignPassportNo eq 'N/A'))}" />  -->
+
+								<h:panelGroup rendered="#{not ((formI9Bean.citizenshipType ne 'a')
+														or ((empty formI9Bean.form.foreignPassportNo) or formI9Bean.form.foreignPassportNo eq 'N/A')) }">
+									<span class="fd_sm2">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<h:selectOneMenu
+											id="FOREIGN_COUNTRY_OF_ISSUANCE_17"
+											value="#{formI9Bean.form.foreignCountryOfIssuance}"
+											style="width:250px;" styleClass="country #{((formI9Bean.citizenshipType eq 'a') and
+												not empty (formI9Bean.form.formI9AdmissionNo) and
+												(not empty formI9Bean.form.alienRegNumber2) and
+												(empty formI9Bean.form.foreignCountryOfIssuance)) ? 'requiredField' : ''}"
+											disabled="#{not formI9Bean.empEdit or (formI9Bean.citizenshipType ne 'a')
+												or ((empty formI9Bean.form.foreignPassportNo) or formI9Bean.form.foreignPassportNo eq 'N/A')}">
+											<f:selectItems value="#{applicationScopeBean.countryDL}" />
+											<ace:ajax />
+										</h:selectOneMenu>
+										</icecore:setEventPhase>
+									</span>
+								</h:panelGroup>
+							</div>
+							<!-- COUNTRY OF ISSUANCE END -->
+
+						</div>
+						<!-- width 75 prcnt -->
+
+						<div class="rowCont FL">
+							<h:outputText styleClass="LH10" value="&#160;" />
+						</div>
+					</div>
+					<!-- Middle part for Aliens end -->
+
+					<!-- QR CODE BOX -->
+					<div class="FL W24percnt pad5tp">
+						<div class="FL sfFormBorder1 pad12lt rowCont pad20tp" style="height:180px; width:180px;">
+							<h:outputText styleClass="rowCont pad5tp pad40lt txt11" value="QR Code - Section 1" />
+							<h:outputText styleClass="rowCont pad3tp pad30lt txt11" value="Do Not Write In This Space" />
+						</div>
+					</div>
+				</div> <!-- div below the helpText -->
+
+			</div>
+			<!-- div for QR code image End -->
+			</ace:buttonGroup>
+		</div>
+		<!-- Citizenship Radio buttons End -->
+
+	</div>
+</ui:composition>

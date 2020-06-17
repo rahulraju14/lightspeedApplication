@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contLstMedAsstSubrpt" pageWidth="535" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06204397-40f4-4f6a-b097-20a0605cdd2f">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="defFont" isDefault="true" fontName="Arial" fontSize="10" pdfFontName="Times-Roman"/>
+	<parameter name="param" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select c.assistant_Id, user.Last_Name, user.First_Name,
+		case c.primary_phone_index
+		when 1 then c.cell_phone
+		when 2 then c.home_phone
+ 		else c.business_phone
+ 		end as phoneno
+FROM contact c, user
+WHERE user.id = c.user_id  and c.Id=$P{param}]]>
+	</queryString>
+	<field name="assistant_Id" class="java.lang.Integer"/>
+	<field name="phoneno" class="java.lang.String"/>
+	<field name="First_Name" class="java.lang.String"/>
+	<field name="Last_Name" class="java.lang.String"/>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="0921ce5d-94fe-4607-ad3f-b05b40bbeee7" key="textField" x="0" y="18" width="114" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{phoneno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="17ec526d-3603-409e-b7d2-74b2a8fc0510" x="0" y="0" width="143" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{First_Name}+ " " +$F{Last_Name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+	
+	<c:set var="bean" value="#{formActraWorkPermitBean}" />
+	<c:set var="editable" value="#{bean.editMode}"/>
+	<c:set var="form" value="#{bean.form}" />
+	<c:set var="isAppEdit" value="#{(contactFormBean.isApprover) and editable}" />
+
+	<h:panelGroup
+			rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+				or (not empty authBean.pgFields['10.6,view'])}">
+
+		<div class="miniTab pad15lt" style="width:840px;">
+			<div class="scrollPnlTab BKwhite sfFormBorder1" >
+				<div class="pad10rt pad10tp" style="width:820px;margin-left:12px;">
+				
+					<!-- Header image -->
+					<h:graphicImage value="" style="width:815px;" url="../../i/forms/ACTRA_permit_logo.png" alt=""/> 	
+					<!-- <div class="CT pad30tp" style="height:50px">
+						<h:outputText styleClass="B" style="font-size:28px" value="Commercial Work Permit Application"/>
+					</div> -->
+	 
+					
+					<!-- include timecard section -->
+					<div class="rowCont pad5tp">
+						<ui:include src="formActraPermitApplicant.xhtml">
+							<ui:param name="bean" value="#{bean}"/>
+							<ui:param name="editable" value="#{editable}"/>
+							<ui:param name="form" value="#{form}"/>
+						</ui:include>
+					</div>
+					<div class="rowCont pad5tp">
+						<ui:include src="formActraPermitProduction.xhtml">
+							<ui:param name="bean" value="#{bean}"/>
+							<ui:param name="editable" value="#{editable}"/>
+							<ui:param name="form" value="#{form}"/>
+							<ui:param name="isAppEdit" value="#{isAppEdit}" />
+						</ui:include>
+					</div>
+					<div class="rowCont pad5tp">
+						<ui:include src="formActraPermitSignPayment.xhtml">
+							<ui:param name="bean" value="#{bean}"/>
+							<ui:param name="editable" value="#{editable}"/>
+							<ui:param name="form" value="#{form}"/>
+						</ui:include>
+					</div>
+					<div class="rowCont pad5tp">
+						<ui:include src="formActraPermitOfficeSection.xhtml">
+							<ui:param name="bean" value="#{bean}"/>
+							<!-- <ui:param name="editable" value="#{editable}"/> -->
+							<ui:param name="form" value="#{form}"/>
+							<!-- All fields for this section will be disabled (HARD CODED FOR NOW) -->
+							<ui:param name="editable" value="#{false}"/>
+						</ui:include>
+					</div>
+				</div>
+				
+				<div class="rowCont pad-15lt" style="height:10px; width:845px;"/>
+				
+			</div>
+
+			<div class="rowCont pad-15lt" style="height:30px; width:845px;"/>
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad5tp pad15bm" style="width:838px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+</ui:composition>

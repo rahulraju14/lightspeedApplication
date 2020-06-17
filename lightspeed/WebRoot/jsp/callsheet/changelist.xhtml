@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<h:form>
+		<ace:dialog visible="#{callSheetViewBean.showChanges}"
+				header="Call Sheet Change Notifications"
+				closable="false"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<div id="popupCallChangeBdy">
+				<div id="addcontactCont">
+					<div class="popup_main pad15tp B_false">
+						<div class="pad15tp pad20lt W90percnt">
+							<span>
+								Changes were made to this published Call Sheet.
+								<br/><br/>
+								Place a check mark next to the notifications you want
+								automatically distributed:
+							</span>
+						</div>
+
+						<div class="rowCont">
+							<div class="rowCont pad20lt W90percnt">
+
+								<!-- Removed/Deleted -->
+								<h:panelGroup rendered="#{callSheetViewBean.showChangedDeleted}"
+									styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad10tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendToDeleted}"/>
+									</span>
+									<span class="FL pad15tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"               		
+											value="Notify those people removed from the Call Sheet.
+											(#{callSheetViewBean.numChangedDeleted})" />
+									  </span>
+								</h:panelGroup>
+
+								<!-- Added -->
+								<h:panelGroup rendered="#{callSheetViewBean.showChangedAdded}"
+									styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad5tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendToAdded}"/>
+									</span>
+									<span class="FL pad10tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"               		
+											value="Notify those people added to the Call Sheet.
+											(#{callSheetViewBean.numChangedAdded})" />
+									</span>
+								</h:panelGroup>
+
+								<!-- Call Times -->
+								<h:panelGroup rendered="#{callSheetViewBean.showChangedCalltimes}" styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad5tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendCallTimes}"/>
+									</span>
+									<span class="FL pad10tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"               		
+											value="Notify people with changed call times.
+											(#{callSheetViewBean.numChangedCalltimes})" />
+									</span>
+								</h:panelGroup>
+
+								<!-- Locations changed -->
+								<h:panelGroup rendered="#{callSheetViewBean.showChangedLocations}"
+									styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad5tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendLocations}"/>
+									</span>
+									<span class="FL pad10tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"               		
+											value="Notify everyone on the sheet of the location change(s)." />
+									</span>
+								</h:panelGroup>
+
+								<!-- Scenes changed -->
+								<h:panelGroup rendered="#{callSheetViewBean.showChangedScenes}"
+									styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad5tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendScenes}"/>
+									</span>
+									<span class="FL pad10tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"               		
+											value="Notify everyone on the sheet of the scene change(s)." />
+									</span>
+								</h:panelGroup>
+
+								<!-- send call sheet PDF -->
+								<h:panelGroup styleClass="rowCont">
+									<span class="FL W5percnt">&#160;</span>
+									<span class="FL pad5tp W5percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											value="#{callSheetViewBean.sendPdf}"/>
+									</span>
+									<span class="FL pad10tp W80percnt">
+										<h:outputText styleClass="stdTxt LH16"
+											value="Email everyone on the sheet an updated .pdf Call Sheet." />
+									</span>
+								</h:panelGroup>
+
+								<!-- Include Location Reports -->
+								<h:panelGroup styleClass="rowCont">
+									<span class="FL W10percnt">&#160;</span>
+									<span class="FL pad5tp W80percnt">
+										<h:selectBooleanCheckbox styleClass="ckbx"
+											disabled="#{! callSheetViewBean.sendPdf}"
+											value="#{callSheetViewBean.sendLocationReports}"/>
+										<h:outputText styleClass="stdTxt LH16 pad5lt"               		
+											value="Include #{headerViewBean.domainTabTitle}-generated Location Report(s)." />
+									</span>
+								</h:panelGroup>
+
+								<!-- selective padding so inner box is always about the same height -->
+								<h:panelGroup rendered="#{not callSheetViewBean.showChangedDeleted}"
+									styleClass="rowCont pad17tp">&#160;
+								</h:panelGroup>
+								<h:panelGroup rendered="#{not callSheetViewBean.showChangedAdded}"
+									styleClass="rowCont pad17tp">&#160;
+								</h:panelGroup>
+								<h:panelGroup rendered="#{not callSheetViewBean.showChangedCalltimes}"
+									styleClass="rowCont pad17tp">&#160;
+								</h:panelGroup>
+								<h:panelGroup rendered="#{not callSheetViewBean.showChangedLocations}"
+									styleClass="rowCont pad17tp">&#160;
+								</h:panelGroup>
+								<h:panelGroup rendered="#{not callSheetViewBean.showChangedScenes}"
+									styleClass="rowCont pad17tp">&#160;
+								</h:panelGroup>
+
+							</div>
+						</div>
+
+						<div class="rowCont">
+							<div class="pad5tp pad20lt W90percnt">
+								<span>
+									Select OK to continue.
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="popBtnCont2">
+					<h:panelGroup styleClass="FR pad8tp pad30rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton
+								action="#{callSheetViewBean.actionChangesOk}"
+								value="OK" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+
+</ui:composition>

@@ -1,0 +1,351 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<c:set var="bean" value="#{formStateMSW4Bean}" />
+	<c:set var="editable"
+		value="#{contactFormBean.editMode and bean.empEdit}" />
+	<c:set var="form" value="#{bean.form}" />
+
+	<div class="miniTab pad15lt" style="width: 890px; height: 1455px">
+		<div class="BKwhite">
+			<div id="" class="scrollPnlTab"
+				onscroll="setScrollPos(this.scrollTop);">
+				<div class="w4_MS_20">
+					<!-- Employee Personal Info - Step 1 section -->
+
+					<div class="FL" style="margin-top: 80px; margin-left: 352px;">
+						<div class="FL">
+							<ace:textEntry
+								style="margin-left: 8px;height: 10px;width: 311px;"
+								disabled="#{!editable}" styleClass="W220" maxlength="50"
+								id="msW4FullName" value="#{form.fullName}" />
+						</div>
+						<div class="FL">
+							<div class="FL">
+								<div class="FL">
+									<ace:textEntry value="#{form.socialSecurity}"
+										disabled="#{!editable}" styleClass="W120" maxlength="11"
+										id="msW4TINumber"
+										style="height: 10px;width: 140px;margin-left: 42px;">
+										<f:converter converterId="lightspeed.SSNConverter" />
+									</ace:textEntry>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="FL">
+						<div class="FL" style="margin-top: 16px; margin-left: 0px;">
+							<div class="FL">
+								<ace:textEntry value="#{form.address.addrLine1}"
+									disabled="#{!editable}" styleClass="W200" maxlength="60"
+									id="msW4HomeAddr1"
+									style="margin-left: 359px;height: 10px;width: 197px;" />
+							</div>
+
+							<div class="FL" style="margin-top: -7px;">
+								<div class="FL">
+									<ace:textEntry value="#{form.address.city}"
+										disabled="#{!editable}" styleClass="W300" maxlength="30"
+										id="msW4POAddrCity"
+										style="margin-left: 16px;height: 10px;width: 132px;margin-top: 6px;" />
+								</div>
+								<div class="FL">
+									<h:selectOneMenu styleClass="FL" id="msW4AddrState"
+										value="#{form.address.state}"
+										style="margin-left: 16px;height: 19px;width: 41px;border-radius: 4px;margin-top: 5px;"
+										disabled="#{!editable}">
+										<f:selectItems
+											value="#{applicationScopeBean.stateCodeDL['US']}" />
+									</h:selectOneMenu>
+								</div>
+								<div class="FL" style="margin-left: 6px;">
+									<ace:textEntry value="#{form.address.zip}"
+										disabled="#{!editable}" styleClass="W80" maxlength="5"
+										id="msW4AddrZip"
+										style="margin-left: 0;height: 13px;width: 76px;margin-top: 4px;">
+										<f:converter converterId="lightspeed.ZipConverter" />
+									</ace:textEntry>
+								</div>
+							</div>
+							<!-- End of Employee Personal Info - Step 1 section -->
+					<!-- Claim your Personal withholding Exemptions -step 2 section   -->
+							<div class="FL" style="margin-left: 194px; margin-top: 67px;">
+								<ace:buttonGroup id="msMaritalStatus" mutuallyExclusive="true"
+									layout="pageDirection">
+									<h:panelGroup layout="block" styleClass="FL W44 "
+										style="height:25px;width: 102px;margin-left: 194px;">
+										<h:panelGroup styleClass="FL pad5lt pad3tp" layout="block">
+											<ace:radioButton group="msMaritalStatus"
+												labelPosition="right" id="msMaritalStatus0"
+												disabled="#{not editable}" value="#{bean.maritalStatus[0]}"
+												valueChangeListener="#{bean.listenMaritalStatusChange}">
+												<ace:ajax execute="msMaritalStatus" event="activate"
+													render="@all" />
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W57 "
+										style="height:25px;margin-left: 194px;margin-top: 2px;width:98px;clear: left;">
+										<h:panelGroup styleClass="FL pad5lt">
+											<ace:radioButton group="msMaritalStatus"
+												labelPosition="right" id="msMaritalStatus1"
+												disabled="#{not editable}" value="#{bean.maritalStatus[1]}"
+												valueChangeListener="#{bean.listenMaritalStatusChange}">
+												<ace:ajax execute="msMaritalStatus" event="activate"
+													render="@all" />
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W70"
+										style="height: 17px;margin-left: 194px;margin-top: 0px;width: 161px;clear: left;">
+										<h:panelGroup styleClass="FL pad5lt">
+											<ace:radioButton group="msMaritalStatus"
+												labelPosition="right" id="msMaritalStatus2"
+												disabled="#{not editable}" value="#{bean.maritalStatus[2]}"
+												valueChangeListener="#{bean.listenMaritalStatusChange}">
+												<ace:ajax execute="msMaritalStatus" event="activate"
+													render="@all" />
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup layout="block" styleClass="FL W70"
+										style="height: 17px;margin-top: 29px;width: 212px;display: block;margin-left: 194px;clear: left;">
+										<h:panelGroup styleClass="FL pad5lt">
+											<ace:radioButton group="msMaritalStatus"
+												labelPosition="right" id="msMaritalStatus3"
+												disabled="#{not editable}" value="#{bean.maritalStatus[3]}"
+												valueChangeListener="#{bean.listenMaritalStatusChange}">
+												<ace:ajax execute="msMaritalStatus" event="activate"
+													render="@all" />
+											</ace:radioButton>
+										</h:panelGroup>
+									</h:panelGroup>
+								</ace:buttonGroup>
+							</div>
+							<div class="FL" style="margin-top: 44px; width: 200px">
+								<div class="FL" style="margin-left: 2px;">
+									<ace:textEntry value="#{form.personalExemptions}"
+										disabled="#{!editable or not form.exemptStatus1}"
+										maxlength="9" id="msPersonalExemptions"
+										valueChangeListener="#{bean.listenPersonalExemptChange}"
+										style="height: 9px;width: 125px;margin-left: 134px;margin-top: 26px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 7px; margin-left: 2px;">
+									<ace:textEntry value="#{form.spouseExemptions}"
+										id="msSpouseExemptions"
+										disabled="#{!editable or not form.exemptStatus2}"
+										maxlength="9"
+										valueChangeListener="#{bean.listenSpouseExemptChange}"
+										style="height: 9px;width: 125px;margin-left: 134px;margin-top: 4px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 3px; margin-left: 2px;">
+									<ace:textEntry value="#{form.claimedExemptions}"
+										id="msClaimedExemptions"
+										disabled="#{!editable or not form.exemptStatus3}"
+										maxlength="9"
+										valueChangeListener="#{bean.listenClaimedExemptChange}"
+										style="height: 9px;width: 125px;margin-left: 134px;margin-top: 28px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 3px; margin-left: 2px;">
+									<ace:textEntry value="#{form.headOfHouseholdExemptions}"
+										id="msHeadOFHouseHoldExemption"
+										disabled="#{!editable or not form.exemptStatus4}"
+										maxlength="9"
+										valueChangeListener="#{bean.listenHeadHouseExemptChange}"
+										style="height: 9px;width: 125px;margin-left: 135px;margin-top: 54px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 3px; margin-left: 2px;">
+									<ace:textEntry value="#{form.claiming}" id="msNumberClaimed"
+										disabled="#{!editable}" maxlength="3"
+										style="height: 9px;width: 55px;margin-left: -358px;margin-top: 84px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: -23px; margin-left: 4px;">
+									<ace:textEntry value="#{form.qualifiedDependents}"
+										id="msQualifiedDependents" disabled="#{!editable}"
+										maxlength="9"
+										valueChangeListener="#{bean.listenDependentsExemptChange}"
+										style="height: 9px;width: 125px;margin-left: 134px;margin-top: 13px;">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+
+								<div class="FL"
+									style="margin-top: 5px; margin-left: -112px; clear: left;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msOlderHusband"
+											value="#{form.checkBox1}" disabled="#{!editable}" />
+									</div>
+								</div>
+
+								<div class="FL" style="margin-top: 6px; margin-left: -31px;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msOlderWife"
+											value="#{form.checkBox2}" disabled="#{!editable}" />
+									</div>
+								</div>
+								<div class="FL" style="margin-top: 6px; margin-left: 32px;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msOlderSingle"
+											value="#{form.checkBox3}" disabled="#{!editable}" />
+									</div>
+								</div>
+								<div class="FL"
+									style="margin-top: -3px; margin-left: -112px; clear: left;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msBlindHusband"
+											value="#{form.checkBox4}" disabled="#{!editable}" />
+									</div>
+								</div>
+								<div class="FL" style="margin-top: -3px; margin-left: -31px;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msBlindWife"
+											value="#{form.checkBox5}" disabled="#{!editable}" />
+									</div>
+								</div>
+								<div class="FL" style="margin-top: -3px; margin-left: 33px;">
+									<div class="FL">
+										<h:selectBooleanCheckbox styleClass="ckbx" id="msBlindSingle"
+											value="#{form.checkBox6}" disabled="#{!editable}" />
+									</div>
+								</div>
+								<div class="FL" style="margin-top: 10px; margin-left: 3px;">
+									<ace:textEntry value="#{form.blindnessExemption}"
+										id="msBlindnessExemption" disabled="#{!editable}"
+										maxlength="4"
+										valueChangeListener="#{bean.listenBlindnessExemptChange}"
+										style="height: 10px;width: 125px;margin-left: 134px">
+										<f:convertNumber pattern="#,##0" type="number" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+
+								<div class="FL">
+									<ace:textEntry value="#{form.totalExemptions}"
+										disabled="#{true}" id="msTotalAmtExemption"
+										style="margin-left: 134px;height: 11px;width: 125px;margin-top: 40px;">
+										<f:convertNumber pattern="#,##0" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 6px; margin-left: 0;">
+									<ace:textEntry value="#{form.additionalAmount}"
+										disabled="#{!editable}" maxlength="9" id="msAdditionalAmount"
+										style="margin-left: 134px;height: 11px;width: 125px;margin-top: 7px;">
+										<f:convertNumber pattern="#,##0" />
+										<ace:ajax />
+									</ace:textEntry>
+								</div>
+								<div class="FL" style="margin-top: 1px; margin-left: 0;">
+									<h:selectOneMenu id="msExempt" styleClass="FR W85 pad10tp"
+										style="height: 20px;width: 128px;margin-left: 134px;margin-top: 65px;"
+										disabled="#{!editable}" value="#{form.exempt}">
+										<f:selectItems value="#{bean.exemptList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					
+
+					<!-- end of Claim your Personal withholding Exemptions -step 2 section   -->
+
+					<div class="FL" style="margin-top: 71px; margin-left: 608px;" />
+					<!-- Signature Section 4 -->
+					<!-- SIGNATURE VALUE -->
+					<!-- Display the most recent employee signature. -->
+					<div class="FL"
+						style="margin-top: 4px; margin-left: 306px; height: 29px;">
+						<!-- SIGNATURE DISPLAY -->
+						<div class="FL"
+							style="margin-top: -4px; margin-left: -92px; font-size: 10px;width:305px;">
+							<span> <h:outputText escape="false"
+									styleClass="txt12 W200"
+									rendered="#{bean.contactDoc.empSignature ne null}">
+									<h:outputText value="E-signed by" styleClass="U" />
+									<h:outputText value=" #{bean.contactDoc.empSignature.name}"
+										styleClass="U B txtBlue" />
+									<h:outputText
+										value=" #{bean.contactDoc.empSignature.displayTime}" />
+									<br />
+									<h:outputText value="# #{bean.contactDoc.empSignature.uuid}" />
+								</h:outputText>
+							</span>
+							<!-- SIGN AND SUBMIT BUTTON START -->
+							<h:panelGroup styleClass="FL"
+								rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+								<h:panelGroup styleClass="btn_legend"
+									style="margin-top: 15px;margin-left: 10px;">
+									<h:panelGroup
+										rendered="#{(bean.contactDoc.status ne 'PENDING') and (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+										<span class="btnMiniLtHot" />
+										<ace:linkButton value="Sign &amp; Submit"
+											action="#{contactFormBean.actionSubmit}"
+											title="Signature field" styleClass="btnMiniCt" />
+										<span class="btnMiniRtHot" />
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{not (bean.empEdit or
+											(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+											or (bean.contactDoc.status eq 'PENDING')}">
+										<span class="btnMiniLt" />
+										<span> <h:commandLink value="Sign &amp; Submit"
+												onclick="return false;" styleClass="btnMiniDisCt dislink" />
+										</span>
+										<span class="btnMiniRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- SIGN AND SUBMIT BUTTON END -->
+						</div>
+						<!-- SIGNATURE DATE -->
+						<div class="FL txt14"
+							style="margin-left: 150px; margin-top: 7px; font-size: 10px;">
+							<h:outputText value="#{bean.contactDoc.empSignature.date}"
+								rendered="#{bean.contactDoc.empSignature ne null}">
+								<f:convertDateTime pattern="MM/dd/yyyy"
+									timeZone="#{applicationScopeBean.timeZone}" />
+							</h:outputText>
+						</div>
+						<!-- SIGNATURE ROW END -->
+					</div>
+
+				</div>
+			</div>
+			<!-- end scroll div -->
+
+		</div>
+		<div class="rowCont pad-15lt" style="height: 30px; width: 890px;" />
+		<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+			<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm"
+				style="width: 885px; margin-bottom: 15px;">
+				<ui:include src="signatureHistory.xhtml">
+					<ui:param name="bean" value="#{bean}" />
+					<ui:param name="events" value="#{bean.contactDoc.contactDocEvents}" />
+				</ui:include>
+			</div>
+		</h:panelGroup>
+	</div>
+</ui:composition>

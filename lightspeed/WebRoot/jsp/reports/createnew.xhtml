@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Popup for Reports page, to create a new Callsheet, DPR, or ExhibitG -->
+	<h:form>
+		<ace:dialog visible="#{reportBean.showCreateReport}"
+				header="Create New #{reportBean.selectedItem.name}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{reportBean.actionCancelCreate}"/>			
+
+			<div class="popupBdyAN">
+
+				<div class="popCont90 pad15tp">
+					<div>
+						<ui:include src="../common/errorsPopup.xhtml" />
+					</div>
+
+					<span class="infoTxt pad10tp">
+						Please select date for new <h:outputText value=" #{reportBean.selectedItem.name}" />
+					</span>
+					<span class="pad10tp FL pad80lt">
+						<ace:dateTimeEntry tabindex="0"
+								renderAsPopup="false" 
+								value="#{reportBean.newDate}">
+							<f:converter converterId="lightspeed.MultiDateConverter"/>
+						</ace:dateTimeEntry>
+					</span>
+				</div>
+
+				<div class="popBtnCont4">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+									action="#{reportBean.actionCancelCreate}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<span class="FR pad10rt">
+						<span class="btnSecHotLt" />
+						<span>
+						<ace:linkButton value="Create"
+								action="#{reportBean.actionCreateReport}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+
+		</ace:dialog>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="extras" columnCount="2" printOrder="Horizontal" pageWidth="540" pageHeight="500" whenNoDataType="AllSectionsNoDetail" columnWidth="270" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" isIgnorePagination="true" uuid="1ed1083d-81cd-424a-a084-a08410ddadd4">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="dprId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[68]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select extra_time.*, Background_Summary_1, Background_Summary_2
+from extra_time, dpr
+where Extra_time.dpr_id = dpr.id and dpr.id = $P{dprId}
+order by line_number;]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="Description" class="java.lang.String"/>
+	<field name="Non_Union" class="java.lang.String"/>
+	<field name="Count" class="java.lang.Integer"/>
+	<field name="Call_Time" class="java.math.BigDecimal"/>
+	<field name="M1_Out" class="java.math.BigDecimal"/>
+	<field name="M1_In" class="java.math.BigDecimal"/>
+	<field name="Wrap" class="java.math.BigDecimal"/>
+	<field name="Rate" class="java.lang.String"/>
+	<field name="Adjustment" class="java.math.BigDecimal"/>
+	<field name="OT" class="java.math.BigDecimal"/>
+	<field name="MPV" class="java.lang.Integer"/>
+	<field name="Miles" class="java.math.BigDecimal"/>
+	<field name="Misc" class="java.lang.String"/>
+	<field name="DPR_Id" class="java.lang.Integer"/>
+	<field name="Background_Summary_1" class="java.lang.String"/>
+	<field name="Background_Summary_2" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Prevent">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="fb0f2805-35fd-49b3-8968-99ad347fb0d3" key="textField" style="prDefBoxBold" mode="Opaque" x="0" y="0" width="270" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$V{COLUMN_NUMBER}==1 ? "BACKGROUND" : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="37480b1e-5f66-4f76-a9e1-cb322ebd827c" key="staticText-11" style="prDefBoxBold" mode="Opaque" x="0" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3ade2121-3f94-489b-b77f-b0214b0aa00e" key="staticText-3" style="prDefBoxBold" mode="Opaque" x="27" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NonU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c2459a70-a456-42cb-b431-439f3fa8100a" key="staticText-3" style="prDefBoxBold" mode="Opaque" x="54" y="10" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e81ca157-7d1c-441e-9ab9-dfba1dfa2e42" key="staticText-4" style="prDefBoxBold" mode="Opaque" x="90" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="013afec8-6fc2-43d8-b187-bb797311538b" key="staticText-5" style="prDefBoxBold" mode="Opaque" x="117" y="10" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Meal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e81ca157-7d1c-441e-9ab9-dfba1dfa2e42" key="staticText-4" style="prDefBoxBold" mode="Opaque" x="153" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="369d8710-2c38-4e04-afbd-c82042c9cfd0" key="staticText-6" style="prDefBoxBold" mode="Opaque" x="180" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[OT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c202d90c-3423-4f5a-ab2d-2c6e144b0403" key="staticText-7" style="prDefBoxBold" mode="Opaque" x="207" y="10" width="36" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Adj]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="34de5a13-39dc-4638-ad20-8d8a08706675" key="staticText-8" style="prDefBoxBold" mode="Opaque" x="243" y="10" width="27" height="10" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[MPV]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="45d744b0-a5d2-4ae5-af8f-89f3eac30e6b" key="textField" style="prDefBox" x="0" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b8e22755-589e-435f-9f1b-9af529cb8032" style="prDefBox" x="27" y="0" width="27" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Non_Union}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="fb0f2805-35fd-49b3-8968-99ad347fb0d3" key="textField" style="prDefBox" x="54" y="0" width="36" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Rate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="dc5a7edc-b0aa-400d-8225-be067ffe2489" key="textField" style="prDefBox" x="90" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Call_Time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="984559dd-93d5-438d-9c66-4190a1e39619" key="textField" style="prDefBox" x="117" y="0" width="18" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M1_Out}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="984559dd-93d5-438d-9c66-4190a1e39619" key="textField" style="prDefBox" x="135" y="0" width="18" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{M1_In}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="45e348e7-451d-48e2-b72d-3e101754646c" key="textField" style="prDefBox" x="153" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Wrap}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="b505eea6-98b0-4886-b9bd-491d33d5e337" key="textField" style="prDefBox" x="180" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{OT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0" isBlankWhenNull="true">
+				<reportElement uuid="ca2a987d-9ddd-4c24-9f20-6595658a4e55" key="textField" style="prDefBox" x="207" y="0" width="36" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Adjustment}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="cd73f8d6-019c-4647-9f55-9ac431908e63" key="textField" style="prDefBox" x="243" y="0" width="27" height="10"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{MPV}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="10" splitType="Immediate">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b8e22755-589e-435f-9f1b-9af529cb8032" style="prDefBox" x="0" y="0" width="135" height="10"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_NUMBER}==1 ? $F{Background_Summary_1} : $F{Background_Summary_2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b8e22755-589e-435f-9f1b-9af529cb8032" style="prDefBox" x="135" y="0" width="135" height="10"/>
+				<textElement>
+					<paragraph leftIndent="3"/>
+				</textElement>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

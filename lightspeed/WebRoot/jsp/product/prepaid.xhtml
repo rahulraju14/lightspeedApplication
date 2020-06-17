@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Pre-paid Production</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	</c:if>
+	element = document.getElementById('cptable');
+	resizeElement(element, 215, 300);
+}
+function doFocus() {
+	var elem = document.getElementById('prepaid:reseller');
+	if (elem == null) {
+		elem = document.getElementById('reseller');
+	}
+	elem.focus();
+}
+var formname = "prepaid";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+	doFocus();
+});
+</script>
+</c:if>
+
+<h:form id="prepaid">
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="myproductions" />
+</h:outputText>
+
+<div id="main">
+
+	<!-- the following is never output; the rendered clause sets a value in the bean! -->
+	<h:outputText value=" " rendered="#{createProductionBean.prepaid}"/>
+
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+							<h:outputText id="errMsgContFull"
+									styleClass="errMsgContFull pad10tp">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:outputText>
+
+						<span class="FL pad6bm pnlHdrTxt" style="font-size:20px;">
+							<h:outputText value="Production Activation: Pre-Purchased"/>
+						</span>
+
+						<div class="centerFullPg2 MA rowDivider CT" style="min-height:100px;">
+
+							<div id="cptable" class="rowCont pad20tp">
+									<h:panelGroup>
+										<div id="sub_homeMatTab">
+											<div class="sub_homeMat">
+												<div class="homeMatContWrap MA">
+													<div id="homeMatCont">
+														<span class="subSecHdg_homeMat FL"></span>
+														<ace:dataTable styleClass="grid1e"
+															selectionMode="single" singleSort="true"
+															style="width:100%;max-width:100%;"
+															value="#{createProductionBean.productList}" var="item">
+
+															<ui:include src="productcolumns3.xhtml" />
+
+														</ace:dataTable>
+													</div>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup><!-- end -->
+
+									<h:panelGroup styleClass="rowCont pad20tp">
+										<div style="width:50%" class="FL">
+											<h:panelGroup styleClass="FR stdTxt">
+												Please enter the reseller code listed on your receipt
+											</h:panelGroup>
+										</div>
+										<div style="width:50%" class="FL">
+											<span class="FL fd pad10lt">
+												<ace:textEntry id="reseller" style="width:150px;"
+													disabled="#{createProductionBean.showContinue}"
+													maxlength="20"
+													value="#{createProductionBean.resellerCode}">
+													<ace:ajax />
+												</ace:textEntry>
+											</span>
+											<h:outputText rendered="#{not createProductionBean.showContinue}">
+												<span class="FL pad10lt">
+													<span class="btnPriHotLt" />
+													<span>
+														<ace:linkButton value="Activate"
+															action="#{createProductionBean.actionActivate}" styleClass="btnPriHotCt" />
+													</span>
+													<span class="btnPriHotRt" />
+												</span>
+											</h:outputText>
+											<h:outputText rendered="#{createProductionBean.showContinue}">
+												<span class="FL pad10lt">
+													<span class="btnPriDisLt" />
+													<span>
+														<ace:linkButton value="Activate"
+															styleClass="btnPriDisCt" type="text" onclick="return false;" />
+													</span>
+													<span class="btnPriDisRt" />
+												</span>
+											</h:outputText>
+										</div>
+									</h:panelGroup>
+
+									<h:panelGroup styleClass="rowCont pad20tp">
+										<div style="width:50%" class="FL">
+											<h:panelGroup styleClass="FR stdTxt">
+												Enter the new Production's name
+											</h:panelGroup>
+										</div>
+										<div style="width:50%" class="FL">
+											<span class="FL fd pad10lt">
+												<ace:textEntry id="apName" style="width:300px;"
+													disabled="#{not createProductionBean.showContinue}"
+													maxlength="30"
+													value="#{createProductionBean.createProdName}">
+													<ace:ajax />
+												</ace:textEntry>
+											</span>
+										</div>
+									</h:panelGroup>
+
+							</div><!-- end row -->
+
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtnFullPg">
+							<div class="rowBtnBdr"></div>
+							<div class="FL MA rowCont">
+										<h:panelGroup>
+											<span class="FR pad10rt">
+												<span class="btnPriEnbLt" />
+												<span>
+													<ace:linkButton value="Cancel"
+														action="purchase" styleClass="btnPriEnbCt" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:panelGroup>
+										<h:outputText rendered="#{createProductionBean.showContinue}">
+											<span class="FR pad5rt">
+												<span class="btnSecHotLt" />
+												<span>
+													<ace:linkButton value="Continue"
+													action="#{createProductionBean.actionCreateOk}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:outputText>
+										<h:outputText rendered="#{not createProductionBean.showContinue}">
+											<span class="FR pad5rt">
+												<span class="btnPriDisLt" />
+												<span>
+													<ace:linkButton value="Continue"
+														styleClass="btnPriDisCt" type="text" onclick="return false;" />
+												</span>
+												<span class="btnPriDisRt" />
+											</span>
+										</h:outputText>
+
+							</div>
+						</div>
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- end pnlFull -->
+			</div><!-- end pnlCont -->
+		</div><!-- end ctrCont -->
+		<div class="CB"></div><!-- clears float for liquid layout -->
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+</h:body>
+</html>

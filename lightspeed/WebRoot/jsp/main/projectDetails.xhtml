@@ -1,0 +1,655 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Project Details Tab -->
+	<!-- Parameters: -->
+	<!--   aicp: true if Commercial/AICP production -->
+	<!--   showScriptTabs: true if production is using scripts/scheduling features -->
+	<c:set var="isTeamProd" value="#{(headerViewBean.production.payrollPref.payrollService ne null) and 
+							(headerViewBean.production.payrollPref.payrollService.teamPayroll)}" />
+	<c:set var="includeTour" value="#{isTeamProd and headerViewBean.production.payrollPref.includeTouring}" />
+	<!-- Below parameters used if this is a Canadian Talent production -->
+  	<c:set var="canadaUnit" value="#{projectViewBean.project.mainUnit}" />
+  	<c:set var="editMode" value="#{projectViewBean.editMode}" /> 
+
+	<ace:tabPane label="Details" id="detailtab">
+		<div id="projectTopCont" class="rowGradient">
+			<div class="projectSubCont pad3tp">
+				<div class="#{canada ? 'canadaProjectDetails' : 'projectDetailsTopLeft'} FL">
+					<!-- TV & COMMERCIAL - EDIT PROJECT NAME -->
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{projectViewBean.editMode and projectViewBean.styleTVProject
+								and projectViewBean.permEdit}">
+						<span class="fdNm_sm FL pad3tp" style="width:80px;">
+							<h:outputText
+									value="#{aicp ? 'Name:' : 'Title:'}" />
+							<span class="mandatory">*</span>
+						</span>
+						<ace:textEntry id="projectTitle" maxlength="35" styleClass="FL W195"
+								disabled="#{projectViewBean.locked}"
+								value="#{projectViewBean.project.title}" />
+					</h:panelGroup>
+
+					<!-- TV & COMMERCIAL - EDIT PROJECT NUMBER/EPISODE -->
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{projectViewBean.editMode and projectViewBean.styleTVProject
+								and projectViewBean.permEdit}">
+						<span class="fdNm_sm FL pad3tp" style="width:80px;">
+							<h:outputText
+									value="#{aicp ? 'Job Number:' : 'Episode:'}" />
+						</span>
+						<ace:textEntry id="episode" maxlength="#{aicp ? '15' : '6'}"
+								disabled="#{projectViewBean.locked}"
+								styleClass="FL W70" value="#{projectViewBean.project.episode}" />
+					</h:panelGroup>
+
+						<!-- TV & COMMERCIAL - PROJECT STATUS -->
+					<h:panelGroup styleClass="rowCont FL pad5tp"
+						rendered="#{projectViewBean.styleTVProject}">
+						<h:outputText styleClass="fdNm_sm pad2tp" style="width:80px;" value="Status:"/>
+						<h:outputText styleClass="FL pad5tp" value="#{projectViewBean.project.status.label}"
+							rendered="#{(not projectViewBean.editMode) or
+							(projectViewBean.production.status ne 'ACTIVE' and projectViewBean.project.status ne 'ACTIVE')
+							or (not projectViewBean.permManage)}" />
+						<h:selectOneMenu style="width:95px;"
+							id="projstatus" styleClass="FL"
+							rendered="#{projectViewBean.editMode and
+								(projectViewBean.production.status eq 'ACTIVE' or projectViewBean.project.status eq 'ACTIVE')
+								and projectViewBean.permManage}"
+							value="#{projectViewBean.project.status}">
+							<f:selectItem itemLabel="Active"    itemValue="ACTIVE" />
+							<f:selectItem itemLabel="Read Only" itemValue="READ_ONLY" />
+							<f:selectItem itemLabel="Archived"  itemValue="OFFLINE" />
+						</h:selectOneMenu>
+						<h:panelGroup styleClass="FL pad15lt" rendered="#{not projectViewBean.editMode}">
+							<h:graphicImage value="" styleClass="pad10tp" url="../../i/icon_readOnly.gif"
+								rendered="#{projectViewBean.project.status eq 'READ_ONLY'}" alt="" />
+							<h:graphicImage value="" url="../../i/icon_lockArchive.png"
+								rendered="#{projectViewBean.project.status eq 'OFFLINE'}" alt="" />
+						</h:panelGroup>
+					
+							<h:panelGroup styleClass="FL pad5tp" rendered="#{canada}">
+								<h:panelGroup styleClass="pad45lt">
+									<h:outputText styleClass="B" value="Start Date:" />
+									<h:panelGroup rendered="#{not projectViewBean.styleTVProduction}">
+										<h:panelGroup rendered="#{((not projectViewBean.editMode) or (not projectViewBean.permEdit))}">
+											<h:outputText styleClass="pad5lt" value="#{canadaUnit.projectSchedule.startDate}">
+												<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+										</h:panelGroup>
+									</h:panelGroup>
+
+									<h:panelGroup rendered="#{projectViewBean.editMode and projectViewBean.permEdit}" styleClass="pad5lt">
+										<ace:dateTimeEntry id="startDate" tabindex="1" styleClass="cal_date"
+											title="Planned start date"
+											value="#{canadaUnit.projectSchedule.startDate}"
+											renderAsPopup="true">
+											<f:converter converterId="lightspeed.MultiDateConverter" />
+										</ace:dateTimeEntry>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<h:panelGroup styleClass="pad45lt pad5tp">
+									<h:outputText styleClass="B" value="End Date:" />
+									<span class="pad5lt"> 
+										<h:panelGroup rendered="#{projectViewBean.editMode and projectViewBean.permEdit}">
+											<ace:dateTimeEntry id="originalEndDate" tabindex="2" styleClass="cal_date"
+												title="Planned end date"
+												value="#{projectViewBean.project.originalEndDate}"
+												renderAsPopup="true">
+												<f:converter converterId="lightspeed.MultiDateConverter" />
+											</ace:dateTimeEntry>
+										</h:panelGroup> 
+										<h:outputText styleClass="W80"
+											value="#{projectViewBean.project.originalEndDate}"
+											rendered="#{((not projectViewBean.editMode) or (not projectViewBean.permEdit))
+											and (not projectViewBean.styleTVProduction)}">
+											<f:convertDateTime pattern="MM/dd/yyyy"	timeZone="#{applicationScopeBean.timeZone}" />
+										</h:outputText>
+									</span>
+								</h:panelGroup>
+							</h:panelGroup>
+					</h:panelGroup>
+				</div><!-- end Project Details Top Left -->
+
+				<h:panelGroup styleClass="projectDetailsTopRight FR pad5tp"
+					rendered="#{projectViewBean.styleTVProject}">
+					<span class="rowCont FL">
+
+						<!-- TV PROJECT DEFAULT SETTING -->
+						<h:panelGroup rendered="#{! aicp}">
+							<h:panelGroup styleClass="FL pad5lt" rendered="#{projectViewBean.isDefaultProject}">
+								<h:graphicImage value="" styleClass="FL" url="../../i/icon_starActive.png" alt="" />
+								<h:outputText styleClass="FL pad5lt LH26 B" value="Default Project" />
+							</h:panelGroup>
+							<!-- make default option -->
+							<h:panelGroup styleClass="FL rowCont" rendered="#{projectViewBean.styleTVProject and (projectViewBean.element.status eq 'ACTIVE') and
+									(projectViewBean.permEdit) and
+									(not projectViewBean.isDefaultProject) and (not empty authBean.pgFields['2.0,default'])}">
+								<span class="H30 W15">
+									<h:selectBooleanCheckbox id="isDefaultProjectCheckbox"
+										styleClass="FL ckbx"
+										valueChangeListener="#{projectViewBean.actionChangeDefault}"
+										value="#{projectViewBean.isDefaultProject}" >
+										<ace:ajax/>
+									</h:selectBooleanCheckbox>
+								</span>
+								<span class="FL pad2lt B pad3tp W90percnt H30">
+									<h:outputText value="Make default for current Project Members" />
+								</span>
+							</h:panelGroup>
+						</h:panelGroup>
+
+						<!-- COMMERCIAL - WORKERS COMP SETTING -->
+						<h:panelGroup rendered="#{aicp and includeTour and (not empty authBean.pgFields['2.0,default'])}">
+							<h:panelGroup styleClass="FL rowCont">
+								<span>
+									<h:selectBooleanCheckbox id="workersCompCheckbox"
+											styleClass="FL ckbx"
+											disabled="#{projectViewBean.locked or
+													(not (projectViewBean.permEdit and projectViewBean.editMode and (projectViewBean.element.status eq 'ACTIVE')))}"
+											value="#{projectViewBean.workersComp}" >
+									</h:selectBooleanCheckbox>
+								</span>
+								<span class="FL pad2lt B pad5tp">
+									<h:outputText value="Includes Worker's Comp" />
+								</span>
+							</h:panelGroup>
+						</h:panelGroup>
+
+					</span>
+				</h:panelGroup><!-- end Project Details Top Right -->
+
+				<!-- FILM OR TV-PRODUCTION DETAILS - top Left -->
+				<h:panelGroup styleClass="prodDetailsTopLt FL"
+					rendered="#{not projectViewBean.styleTVProject}">
+
+					<!-- PRODUCTION TITLE -->
+					<h:panelGroup styleClass="rowCont FL">
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_title'])}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="#{aicp ?
+										'Production Company:' : 'Production Title:'}" />
+							</span>
+							<span class="fd pad15lt pad5tp">
+								<h:outputText
+									value="#{projectViewBean.production.title}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_title'])}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="#{aicp ? 'Production Company:' : 'Production Title:'}" />
+							</span>
+							<span class="FL mandatory" style="margin-top:8px;">&#160;*&#160;</span>
+							<span class="fd pad5lt">
+								<ace:textEntry id="productionTitle" maxlength="30" styleClass="address"
+									value="#{projectViewBean.production.title}" />
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- PRODUCTION COMPANY -->
+					<h:panelGroup styleClass="rowCont FL pad2tp"
+							rendered="#{not aicp}">
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_name'])}">
+							<span class="fdNm FL" style="margin-top:15px;line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Company:" />
+							</span>
+							<span class="FL pad20lt pad26tp LH13" style="display:block;min-height:19px;max-height:32px;overflow-y:visible;width:60%;">
+								<h:outputText value="#{projectViewBean.production.studio}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_name'])}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Company:" />
+							</span>
+							<span class="FL mandatory" style="margin-top:8px;">&#160;*&#160;</span>
+							<span class="fd pad5lt">
+								<ace:textEntry id="prodStudio" maxlength="60" styleClass="address"
+									value="#{projectViewBean.production.studio}" />
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- PRODUCTION ADDRESS LINE 1 -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm">
+							<h:outputText
+								rendered="#{projectViewBean.editMode}"
+								value="Address:" />
+						</span>
+						<h:panelGroup styleClass="fd" rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+							<h:outputText
+								value="#{projectViewBean.production.address.addrLine1}" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="fd" rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+							<ace:textEntry id="addrLine1" maxlength="100" styleClass="address"
+								value="#{projectViewBean.production.address.addrLine1}" />
+						</h:panelGroup>
+					</div><!-- end address 1 -->
+
+					<!-- PRODUCTION ADDRESS LINE 2 -->
+					<h:panelGroup
+						rendered="#{((not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address']))
+								and (not empty projectViewBean.production.address.addrLine2)}">
+						<div class="rowCont FL">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span class="fd">
+								<h:outputText value="#{projectViewBean.production.address.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+						<div class="rowCont FL pad3tp">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span class="fd">
+								<ace:textEntry id="addrLine2" maxlength="100" styleClass="address"
+									value="#{projectViewBean.production.address.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup><!-- end address 2 -->
+
+					<!-- PRODUCTION ADDRESS: city, state zip "VIEW mode" -->
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+						<span class="fdNm">
+							<!-- keep this place holder -->
+						</span>
+						<span class="fd">
+							<span class="FL">
+								<h:outputText styleClass="pad5rt" rendered="#{not empty projectViewBean.production.address.city}"
+									value="#{projectViewBean.production.address.cityStateZip}" />
+							</span>
+						</span>
+					</h:panelGroup><!-- end city state zip "VIEW mode" -->
+
+					<!-- PRODUCTION ADDRESS: city, state zip "EDIT mode" -->
+					<h:panelGroup
+						rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+						<div class="rowCont FL">
+							<span class="fdNm">
+								<h:outputText value="City:" />
+							</span>
+							<span class="fd pad3tp">
+								<ace:textEntry id="city" maxlength="35" styleClass="city"
+									value="#{projectViewBean.production.address.city}" />
+							</span>
+						</div>
+						<div class="rowCont FL">
+							<span class="fdNm">
+								<h:outputText value="State:" />
+							</span>
+							<span class="fd_state pad3tp">
+								<h:selectOneMenu id="selectStateMenu" styleClass="state"
+									value="#{projectViewBean.production.address.state}">
+									<f:selectItems
+										value="#{applicationScopeBean.stateDL[projectViewBean.production.address.country]}" />
+								</h:selectOneMenu>
+							</span>
+							<span class="fdNm_zip pad3tp">
+								<h:outputText value="Zip:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_zip pad3tp">
+									<ace:textEntry id="zip" maxlength="10" styleClass="zip"
+										value="#{projectViewBean.production.address.zip}" />
+								</span>
+							</h:panelGroup>
+							
+						</div>
+					</h:panelGroup><!-- end city, state zip "EDIT mode" -->
+
+					<!-- PRODUCTION ADDRESS: COUNTRY -->
+					<h:panelGroup
+						rendered="#{((not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address']))
+								and (not empty projectViewBean.production.address.country)
+								and (projectViewBean.production.address.country ne 'US')}">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span class="fd">
+							<h:outputText value="#{projectViewBean.production.address.country}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}"
+						styleClass="rowCont FL pad1tp">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span class="fd">
+							<h:selectOneMenu id="selectCountryMenu" styleClass="country"
+									value="#{projectViewBean.production.address.country}">
+								<f:selectItems value="#{applicationScopeBean.countryDL}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup><!-- end country -->
+
+					<!-- TIME ZONE -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm">
+							<h:outputText value="Timezone:" />
+						</span>
+						<span class="fd pad1tp">
+							<h:panelGroup rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+								<h:outputText value="#{projectViewBean.production.timeZoneName}" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+								<h:selectOneMenu id="selectTimeZoneMenu" value="#{projectViewBean.production.timeZoneStr}">
+									<f:selectItems value="#{timeZoneUtils.timeZoneDL}" />
+								</h:selectOneMenu>
+							</h:panelGroup>
+						</span>
+					</div>
+
+				</h:panelGroup><!-- end top-left production details -->
+
+				<!-- top Rt Production Phone numbers -->
+				<h:panelGroup styleClass="prodDetailsTopRt FL pad10lt"
+					rendered="#{not projectViewBean.styleTVProject}">
+
+					<!-- production office phone -->
+					<div class="rowCont FL">
+						<span class="fdNm_sm">
+							<h:outputText value="Office:" />
+						</span>
+						<span class="fd_sm">
+							<h:panelGroup
+								rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+								<h:outputText value="#{projectViewBean.production.phone}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+								<ace:textEntry id="phone" maxlength="25"
+									value="#{projectViewBean.production.phone}">
+									<f:validator validatorId="lightspeed.phoneNumberValidator" />
+								</ace:textEntry>
+							</h:panelGroup>
+						</span>
+					</div>
+
+					<!-- production fax -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm_sm">
+							<h:outputText value="Fax:" />
+						</span>
+						<span class="fd_sm pad1tp">
+							<h:panelGroup
+								rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+								<h:outputText value="#{projectViewBean.production.fax}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+								<ace:textEntry id="fax" maxlength="25"
+									value="#{projectViewBean.production.fax}">
+									<f:validator validatorId="lightspeed.phoneNumberValidator" />
+								</ace:textEntry>
+							</h:panelGroup>
+						</span>
+					</div>
+
+					<!-- production email sender prefix -->
+					<div class="rowCont FL pad5tp">
+							<span class="fdNm FL" style="line-height:11px;width:55px;">
+								<h:outputText value="Email Prefix:"/>
+							</span>
+						<span class="fd_sm">
+							<h:panelGroup
+								rendered="#{(not projectViewBean.editMode) or (empty authBean.pgFields['2.0,prod_address'])}">
+								<h:outputText value="#{projectViewBean.production.emailSender}"/>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{projectViewBean.editMode and (not empty authBean.pgFields['2.0,prod_address'])}">
+								<ace:textEntry id="emailSender" maxlength="30"
+									value="#{projectViewBean.production.emailSender}"/>
+							</h:panelGroup>
+						</span>
+					</div>
+
+				</h:panelGroup>
+
+			</div><!-- end projectSubCont -->
+		</div><!-- end projectTopCont -->
+
+		<c:if test="${canada ne true}">
+			<div id="projectBtmCont">
+
+				<h:panelGroup rendered="#{projectViewBean.permDetails}">
+
+					<!-- Project Details Btm Left -->
+					<h:panelGroup styleClass="projectDetailsBtmLeft FL"
+							rendered="#{! (aicp and projectViewBean.styleTVProduction)}">
+						<div class="subSecHdg_projSch">Schedule</div>
+						<!-- Project Schedule legend wrapper -->
+						<div class="projectScheduleContWrap MA">
+							<div id="projectScheduleCont" class="FL pad3tp">
+								<div id="#{not projectViewBean.styleTVProject ? 'projectScheduleCont3' : 'projectScheduleCont2'}" class="FL">
+									<ui:repeat styleClass="FL pad10tp"
+											value="#{projectViewBean.project.units}"
+											var="unit" varStatus="listStatus">
+										<h:panelGroup
+											styleClass="FL pad10tp"
+											rendered="#{(listStatus.index eq 0) or (not projectViewBean.styleTVProduction)}">
+											<div class="FL pad10bm">
+												<div style="#{(projectViewBean.project.hasUnits and (not projectViewBean.styleTVProduction)) ? 'border:1px solid #ccc;' : 'border:0px solid #ccc;'}position:relative;width:91%;margin:auto;padding:5px;padding-top:0px;">
+													<span class="subLegendHdr">
+														<h:panelGroup
+															styleClass="FL"
+															rendered="#{projectViewBean.project.hasUnits and (not projectViewBean.styleTVProduction)}">
+															<h:panelGroup
+																rendered="#{listStatus.index gt 0}"
+																styleClass="smUnitIcon">
+																<h:outputText
+																	styleClass="FL NW txtBrtBlue txt12 B pad5lt pad2tp"
+																	value="#{unit.number}" />
+															</h:panelGroup>
+															<h:outputText
+																styleClass="FL #{listStatus.index gt 0 ? 'pad5lt' : ''}"
+																value="#{unit.name}"/>
+														</h:panelGroup>
+													</span>
+
+													<span class="rowCont LH12">
+														<span class="FL B W120 pad45lt RT">
+															Start Date:
+														</span>
+														<h:panelGroup rendered="#{not projectViewBean.styleTVProduction}">
+															<h:panelGroup rendered="#{((not projectViewBean.editMode) or (not projectViewBean.permEdit))}">
+																<h:outputText styleClass="FL pad5lt" value="#{unit.projectSchedule.startDate}">
+																	<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+																</h:outputText>
+															</h:panelGroup>
+															<h:panelGroup rendered="#{projectViewBean.editMode and projectViewBean.permEdit}">
+																<ace:dateTimeEntry  tabindex="0"
+																		styleClass="cal_date" title="Planned completion date"
+																		value="#{unit.projectSchedule.startDate}"
+																		renderAsPopup="true">
+																	<f:converter converterId="lightspeed.MultiDateConverter"/>
+																</ace:dateTimeEntry>
+															</h:panelGroup>
+														</h:panelGroup>
+														<h:outputText rendered="#{projectViewBean.styleTVProduction}" styleClass="FL pad5lt"
+																value="#{projectViewBean.production.startDate}">
+															<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+														</h:outputText>
+													</span>
+
+													<h:panelGroup styleClass="rowCont pad45lt LH20" rendered="#{listStatus.index eq 0}">
+														<span class="FL B W120 RT LH20">
+															Projected End Date:
+														</span>
+														<span class="FL pad5lt">
+															<h:outputText
+																	styleClass="W80" value="#{projectViewBean.project.originalEndDate}"
+																	rendered="#{((not projectViewBean.editMode) or (not projectViewBean.permEdit))
+																		and (not projectViewBean.styleTVProduction)}">
+																<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+															</h:outputText>
+															<ace:dateTimeEntry  tabindex="0"
+																	styleClass="cal_date" title="Planned completion date"
+																	rendered="#{projectViewBean.editMode and projectViewBean.permEdit
+																		and (not projectViewBean.styleTVProduction)}"
+																	value="#{projectViewBean.project.originalEndDate}"
+																	renderAsPopup="true">
+																<f:converter converterId="lightspeed.MultiDateConverter"/>
+															</ace:dateTimeEntry>
+															<h:outputText styleClass="FL" value="N/A"
+																	rendered="#{projectViewBean.styleTVProduction}"/>
+														</span>
+													</h:panelGroup>
+
+													<h:panelGroup rendered="#{showScriptTabs}">
+													<span class="rowCont LH18 pad5bm">
+														<span class="FL B W120 pad45lt RT">
+															Revised End Date:
+														</span>
+														<span class="FL pad5lt">
+															<h:outputText value="#{projectViewBean.lastShootDate[listStatus.index]}"
+																rendered="#{not projectViewBean.styleTVProduction}">
+																<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+															</h:outputText>
+															<h:outputText value="N/A"
+																rendered="#{projectViewBean.styleTVProduction}"/>
+														</span>
+													</span>
+													</h:panelGroup>
+
+												</div>
+											</div>
+										</h:panelGroup>
+									</ui:repeat>
+								</div><!-- end projectScheduleCont2 -->
+
+							</div>
+						</div>
+					</h:panelGroup><!-- end Project Details Btm Left -->
+
+					<!-- Project Details Btm Right -->
+					<div class="projectDetailsBtmRight FR">
+
+						<!-- Project Members legend wrapper -->
+						<h:panelGroup styleClass="subSecHdg_projMem"
+							rendered="#{projectViewBean.styleTVProject}">Project Members</h:panelGroup>
+						<h:panelGroup styleClass="subSecHdg_prodMem"
+							rendered="#{projectViewBean.styleFilm}">Production Members</h:panelGroup>
+						<h:panelGroup styleClass="projectMembersContWrap MA"
+							rendered="#{not projectViewBean.styleTVProduction}">
+							<div id="#{not projectViewBean.styleTVProject ? 'projectMembersCont3' : 'projectMembersCont'}" class="FL">
+								<ui:repeat value="#{projectViewBean.project.units}"
+										var="unit">
+									<div class="FL pad15tp pad10bm">
+										<div style="#{projectViewBean.project.hasUnits ? 'border:1px solid #ccc;' : 'border:0px solid #ccc;'}position:relative;width:91%;margin:auto;padding:5px;padding-top:0px;">
+											<h:panelGroup
+												styleClass="FL subLegendHdr"
+												rendered="#{projectViewBean.project.hasUnits}">
+												<h:panelGroup
+													rendered="#{unit.number gt 1}"
+													styleClass="smUnitIcon">
+													<h:outputText
+														styleClass="FL NW txtBrtBlue txt12 B pad5lt pad2tp"
+														value="#{unit.number}" />
+												</h:panelGroup>
+												<h:outputText
+													styleClass="FL #{unit.number gt 1 ? 'pad5lt' : ''}"
+													value="#{unit.name}" />
+											</h:panelGroup>
+											<span class="rowCont">
+												<span class="rowCont pad40lt">
+													<span class="FL W120 B">Cast Members:</span>
+													<h:outputText styleClass="FL" value="#{projectViewBean.castCount[unit.number]}" />
+												</span>
+												<span class="rowCont pad40lt pad5bm">
+													<span class="FL W120 B">Crew Members:</span>
+													<h:outputText styleClass="FL" value="#{projectViewBean.crewCount[unit.number]}" />
+												</span>
+											</span>
+										</div>
+									</div>
+								</ui:repeat>
+							<!--
+							<h:outputText value="this project has multiple units"
+								rendered="#{projectViewBean.project.hasUnits}"/>
+							<h:outputText value="this project has a single unit"
+								rendered="#{not projectViewBean.project.hasUnits}"/>
+							 -->
+							</div>
+						</h:panelGroup>
+					</div><!-- end Project Details Btm Right -->
+
+				</h:panelGroup>
+
+			</div><!-- end projectBtmCont -->
+		</c:if>
+		<!-- Radio Button -->
+				<h:panelGroup rendered="#{(canada == true) and (editMode == false) and (projectViewBean.project.udaProjectDetail != null) and
+						projectViewBean.styleTVProject and
+						(fFApplicationScopeBean.useFeature('TTCO_SHOW_UDA'))}">
+					<span class="FL pad10lt">
+						<ace:panel>
+							<ace:buttonGroup id="formButtonGroup" mutuallyExclusive="true" rendered="#{(not empty authBean.pgFields['2.0,canada'])}">
+								<h:panelGrid columns="2" width="100%" columnClasses="col200,col100">
+									<ace:radioButton  styleClass="fd_xlg ckbxTxtLbl_B" id="actraform" value="#{projectViewBean.isActraForm}" label="Actra Production Details" labelPosition="right">
+										<ace:ajax execute="@form" event="activate" render="@all"/>
+									</ace:radioButton>
+									<ace:radioButton  styleClass="fd_xlg ckbxTxtLbl_B" id="udaForm" value="#{projectViewBean.isUdaForm}" label="UDA Production Details" labelPosition="right">
+										<ace:ajax execute="@form" event="activate" render="@all"/>
+									</ace:radioButton>
+								</h:panelGrid>
+							</ace:buttonGroup>
+						</ace:panel>
+					</span> 
+				</h:panelGroup>
+		<!--Radio Button End -->
+		<h:panelGroup rendered="#{canada}">
+		<!-- Clear Button Start LS-2070-->
+			<h:panelGroup rendered="#{projectViewBean.editMode}">
+				<span class="FR pad15rt" style="margin-top: 6px;margin-bottom: -11px;"> 
+				<span class="btnSecHotLt"/><span>
+						<ace:linkButton
+							title="Clear all fields of project details form." value="Clear"
+							action="#{projectViewBean.actionClear}" styleClass="btnSecHotCt" />
+				</span> <span class="btnSecHotRt" />
+				</span>
+			</h:panelGroup>
+			<!-- Clear Button End -->
+			<div id="projectBtmCont" >
+				<h:panelGroup styleClass=" FL W98percnt"
+					rendered="#{(! projectViewBean.styleTVProduction) and (not empty authBean.pgFields['2.0,canada'])}">
+					<div class="subSecHdg_projSch" style="width: 81px;">Forms Default</div>
+						<div id="projectScheduleCont" style="overflow: overlay;max-height:#{editMode ? 'calc(100vh - 360px)' : 'calc(100vh - 330px)'};overflow-x: hidden;" class="FL pad10tp">
+							<h:panelGroup rendered="#{projectViewBean.isActraForm}" layout="block" styleClass="pad10lt">
+								<ui:include src="canadaProjectDetails.xhtml" > 
+									<ui:param name="editable" value="#{projectViewBean.editMode}"/>
+									<ui:param name="bean" value="#{projectViewBean}"/>
+									<ui:param name="cpd" value="#{projectViewBean.project.canadaProjectDetail}"/>
+								</ui:include>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{projectViewBean.isUdaForm}" layout="block" styleClass="pad10lt">
+								<ui:include src="udaProjectDetails.xhtml" >
+									<ui:param name="editable" value="#{projectViewBean.editMode}"/>
+									<ui:param name="bean" value="#{projectViewBean}"/>
+									<ui:param name="upd" value="#{projectViewBean.project.udaProjectDetail}"/>
+								</ui:include>
+							</h:panelGroup>
+						</div>
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
+	</ace:tabPane><!--  End Detail Tab   -->
+
+</ui:composition>

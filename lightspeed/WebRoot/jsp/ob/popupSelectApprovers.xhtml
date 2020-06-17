@@ -1,0 +1,231 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+<h:form>
+	<c:set var="bean" value="#{selectContactsBean}"></c:set>
+	<c:set var="group" value="#{selectContactsBean.isApproverGroup}" />
+	<c:set var="prod" value="#{selectContactsBean.isProductionApprover}" />
+	<c:set var="isCanadaProd" value="#{approvalPathsBean.talentProd}" />
+
+	<ace:dialog visible="#{bean.visible}"
+			id="selectApproversPopup"
+			header="#{bean.title}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="#{(group or prod) ? 'popup6W' : 'popupAddElem'}">
+
+	<ace:ajax event="close" execute="@this" listener="#{bean.actionCancel}"/>
+
+	<div class="#{(group or prod) ? 'popupBdy6W' : 'popAddElemBdy'}" style="">
+
+		<div id="errMsgCont" class="CT rowCont" style="width:94%;margin-top:38px;left:1%;">
+			<ui:include src="../common/errorsPopup.xhtml" />
+		</div>
+
+		<div class="#{(group or prod) ? 'popupCont6W' : 'selcontactCont'}">
+			<div class="popup_main">
+				<div class="rowCont padPop10tp">
+					<h:panelGroup rendered="#{group}">
+						<div class="rowCont FL pad60lt">
+							<span class="stdTxt B">
+								<h:outputText escape="false" styleClass="B" value="Group name:" />
+							</span>
+							<span class="CT pad10tp txt12 pad10lt">
+								<ace:textEntry tabindex="1" id="groupName_focus"
+									value="#{approvalPathsBean.approverGroupName}"
+									style="width:60%;" maxlength="100" />
+								<br/>
+							</span>
+						</div>
+						<div class="rowCont FL pad40lt pad5tp" style="margin-left:10%">
+							<h:outputText rendered="#{selectContactsBean.inputError}" styleClass="RED"
+									value="#{selectContactsBean.errorMessage}" />
+							<h:panelGroup rendered="#{! selectContactsBean.inputError}">
+								<br/>
+							</h:panelGroup>
+						</div>
+						<!-- APPROVER METHOD START -->
+						<c:if test="#{not isCanadaProd}">
+						<div class="rowCont padPop15tp FL">
+							<div class="popup_inner" style="width:74%; height:75px;"><!-- legend for Approval Path -->
+								<span class="popup_inner_leg"> Approver Method </span>
+								<div class="pad2tp FL rowCont pad25lt">
+									<h:selectOneRadio id="groupMethod"
+										styleClass="h_radio"
+										layout="pageDirection"
+										disabled="#{not approvalPathsBean.editMode}"
+										value="#{approvalPathsBean.groupApprovalMethod}"
+										style="vertical-align: top;">
+										<span style="vertical-align: top;">
+											<f:selectItem itemLabel="Linear " itemValue="l" />
+										</span>
+										<f:selectItem itemLabel="Pool" itemValue="a" />
+										<ace:ajax />
+									</h:selectOneRadio>
+								</div>
+							</div>
+						</div>
+						</c:if>
+						<!-- APPROVER METHOD END -->
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{prod}">
+					<c:if test="#{not isCanadaProd}">
+						<!-- APPROVER METHOD START -->
+						<div class="rowCont padPop15tp FL">
+							<div class="popup_inner" style="width:74%; height:75px;"><!-- legend for Approval Path -->
+								<span class="popup_inner_leg"> Approver Method </span>
+								<div class="pad2tp FL rowCont pad25lt">
+									<h:selectOneRadio id="prodMethod"
+										styleClass="h_radio pad12rt LH24"
+										layout="pageDirection"
+										disabled="#{not approvalPathsBean.editMode}"
+										value="#{approvalPathsBean.approvalMethod}">
+										<f:selectItem itemLabel="Linear " itemValue="l" />
+										<f:selectItem itemLabel="Pool" itemValue="a" />
+									</h:selectOneRadio>
+								</div> 
+							</div>
+						</div>
+						</c:if>
+						<!-- APPROVER METHOD END -->
+					</h:panelGroup>
+
+
+					<h:panelGroup rendered="#{not (group or prod)}">
+						<div class="pad15lt">
+							<h:outputText escape="false" style="font-weight:normal; font-size:13px"
+								value="Find Approvers from the list below and click on the green &lt;/br&gt; plus
+									sign [+] to add them to your list of Approvers." />
+						</div>
+					</h:panelGroup>
+				</div>
+
+				<div class="rowCont padPop15tp FL"
+					style="#{(group or prod) ? 'width:45%; margin-top:45px;' : 'width:92%; margin-left:15px'}">
+					Available &amp; Staff
+
+					<div class="blueLegendContWrap">
+						<div class="blueLegendCont pad1tp" style="width:100%; background:white; border:1px solid #000;">
+						<ace:dataTable var="item"
+								id="unselectedAppTable"
+								rendered="#{selectContactsBean.visible}"
+								styleClass="bk_sl_grid"
+								scrollable="true" scrollHeight="240"
+								value="#{approvalPathsBean.unselectedMemberItems}"
+								style="width:100%;min-height:240px;">
+							<ace:column style="padding-left:5px;padding-top:3px;">
+								<h:commandLink value=" " 
+									actionListener="#{approvalPathsBean.listenAddApprover}" >
+									<h:graphicImage value="" url="../../i/icon_user_add.png"  alt="" />
+									<f:setPropertyActionListener value="#{item.value}" target="#{selectContactsBean.addId}" />
+								</h:commandLink>
+							</ace:column>
+							<ace:column style="text-align:left; padding-left:10px" styleClass="B_false">
+								<h:outputText value="#{item.label}" />
+							</ace:column>
+						</ace:dataTable>
+						</div>
+					</div>
+				</div>
+
+				<!-- UP/DOWN ARROW START -->
+				<h:panelGroup rendered="#{(group or prod)}" >
+					<span class="FL pad80tp">
+						<h:panelGroup styleClass="FR W5percnt"
+							rendered="#{approvalPathsBean.groupApprovalMethod eq 'l'}"
+							style="margin-right: 12px;">
+							<div style="height:30px; margin-top:45px; margin-left:4px">
+								<h:commandButton value=""
+									styleClass="Btn btnArrowUpCircle" id="groupUp"
+									disabled="#{not approvalPathsBean.editMode}"
+									actionListener="#{approvalPathsBean.actionMoveApproverUp}"/>
+							</div>
+							<div style="height:30px; margin-left:4px">
+								<h:commandButton value=""
+									styleClass="Btn btnArrowDownCircle" id="groupDown"
+									disabled="#{not approvalPathsBean.editMode}"
+									actionListener="#{approvalPathsBean.actionMoveApproverDown}"/>
+							</div>
+						</h:panelGroup>
+					</span>
+				</h:panelGroup>
+				<!-- UP/DOWN ARROW END -->
+
+				<h:panelGroup rendered="#{(group or prod)}">
+					<div class="rowCont padPop15tp FR" style="width:45%;margin-top:45px">
+						<h:outputText rendered="#{group}" value="In Group" />
+						<h:outputText rendered="#{prod}" value="Approver List" />
+						<div class="blueLegendContWrap">
+							<div class="blueLegendCont pad1tp" style="width:100%; background:white; border:1px solid #000;">
+
+							<ace:dataTable id="selectedAppTable"
+									rendered="#{selectContactsBean.visible}"
+									styleClass="bk_sl_grid"
+									rowIndexVar="idx" var="item"
+									scrollable="true" scrollHeight="240"
+									value="#{approvalPathsBean.selectedMemberItems}"
+									style="width:100%;min-height:240px;"
+									selectionMode="single"
+									rowSelectListener="#{approvalPathsBean.listenRowClicked}"
+									stateMap="#{approvalPathsBean.groupStateMap}">
+								<ace:column style="padding-left:5px;padding-top:3px;">
+									<h:commandLink actionListener="#{approvalPathsBean.listenRemoveApprover}">
+										<h:graphicImage value="" url="../../i/icon_user_delete.png" alt=""/>
+										<f:setPropertyActionListener value="#{item.value}" target="#{selectContactsBean.removeId}" />
+									</h:commandLink>
+								</ace:column>
+								<ace:column style="text-align:left; padding-left:10px" styleClass="B_false">
+									<h:outputText value="#{item.label}" />
+								</ace:column>
+							</ace:dataTable>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</div>
+		</div>
+
+		<div class="popBtnCont padPop15tp">
+			<h:panelGroup rendered="#{group or prod}">
+				<span class="FR padPop15rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<ace:linkButton value="Cancel"
+							action="#{selectContactsBean.actionCancel}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+				<span class="FR pad5rt">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Save"
+								action="#{selectContactsBean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not (group or prod)}">
+				<span class="FR pad25rt" style="margin-top:-3px; margin-right:47px">
+					<span class="btnSecHotLt" />
+					<span>
+						<ace:linkButton value="Close"
+								action="#{selectContactsBean.actionOk}" styleClass="btnSecHotCt" />
+					</span>
+					<span class="btnSecHotRt" />
+				</span>
+			</h:panelGroup>
+		</div>
+	</div>
+	</ace:dialog>
+</h:form>
+
+</ui:composition>

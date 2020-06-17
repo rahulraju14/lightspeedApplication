@@ -1,0 +1,383 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ace:dataTable
+		selectionMode="single" 
+		style="width:100%;max-width:100%;"
+		styleClass="grid12 grid12tc  CT"
+		value="#{dprViewBean.dpr.castTimeCards}" var="timeCard">
+
+		<ace:columnGroup type="header">
+			<ace:row>
+				<ace:column rowspan="2" colspan="4">
+					<div class="LT" style="background-color:white;">
+					&#160;&#160;W - Worked  &#160;&#160; R - Rehearsal  &#160;&#160; T - Test  &#160;&#160; F - Finished<br/>
+					&#160;&#160;S - Started  &#160;&#160; H - Hold  &#160;&#160; K - Minor  &#160;&#160; TR - Travel  &#160;&#160; FT - Fitting
+					</div>
+				</ace:column>
+				<ace:column rowspan="1" colspan="4">
+					Work Time
+				</ace:column>
+				<ace:column rowspan="1" colspan="5">
+					Meals
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+					&#160;
+				</ace:column>
+				<ace:column rowspan="1" colspan="4">
+					Travel Time
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+					&#160;
+				</ace:column>
+			</ace:row>
+			<ace:row>
+				<ace:column rowspan="1" colspan="2">
+				Report
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+				Dismiss
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				NDB
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+				1st Meal
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+				2nd Meal
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+					&#160;
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Lv for
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Arrv
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Lv
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Arrv
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Stunt
+				</ace:column>
+			</ace:row>
+			<ace:row>
+				<ace:column rowspan="1" colspan="1">
+				#
+				</ace:column>
+				<ace:column styleClass="LT pad2lt" rowspan="1" colspan="1">
+				Name
+				</ace:column>
+				<ace:column styleClass="LT pad2lt" rowspan="1" colspan="1">
+				Character
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Stat
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				M/Up
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Set
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				M/Up
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Set
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				End
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Out
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				In
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Out
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				In
+				</ace:column>
+				<ace:column rowspan="1" colspan="2">
+				MP
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Loc
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Loc
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Loc
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Hotel
+				</ace:column>
+				<ace:column rowspan="1" colspan="1">
+				Adj
+				</ace:column>
+			</ace:row>
+		</ace:columnGroup>
+
+		<!-- ID # -->
+		<ace:column>
+			<h:outputText value="#{timeCard.castIdStr}" />&#160;
+		</ace:column>
+
+		<!-- CAST NAME -->
+		<ace:column styleClass="LT">
+			<h:outputText value="#{timeCard.contact.displayName}" />
+		</ace:column>
+
+		<!-- CHARACTER -->
+		<ace:column styleClass="LT">
+			<h:outputText value="#{timeCard.role}" />
+		</ace:column>
+
+		<!-- STATUS -->
+		<ace:column styleClass="CT">
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{timeCard.dayType}"/>
+			<ace:textEntry value="#{timeCard.dayType}" styleClass="W40 CT" maxlength="20"
+				rendered="#{dprViewBean.editMode}"/>
+		</ace:column>
+
+		<!-- REPORT: MAKEUP -->
+		<ace:column>
+			<h:outputText value="#{timeCard.reportMakeup}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.reportMakeup}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- REPORT SET -->
+		<ace:column>
+			<h:outputText value="#{timeCard.reportSet}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.reportSet}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- DISMISS: MAKEUP -->
+		<ace:column>
+			<h:outputText value="#{timeCard.dismissMakeup}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.dismissMakeup}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- DISMISS SET -->
+		<ace:column>
+			<h:outputText value="#{timeCard.dismissSet}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.dismissSet}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- NDB END -->
+		<ace:column>
+			<h:outputText value="#{timeCard.ndMealEnd}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.ndMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- 1ST MEAL OUT -->
+		<ace:column>
+			<h:outputText value="#{timeCard.firstMealStart}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.firstMealStart}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- 1ST MEAL IN -->
+		<ace:column>
+			<h:outputText value="#{timeCard.firstMealEnd}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.firstMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- 2ND MEAL OUT -->
+		<ace:column>
+			<h:outputText value="#{timeCard.secondMealStart}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.secondMealStart}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- 2ND MEAL IN -->
+		<ace:column>
+			<h:outputText value="#{timeCard.secondMealEnd}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.secondMealEnd}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- MPVS 1 and 2 -->
+		<ace:column>
+			<h:outputText value="#{timeCard.mpv1}"
+					rendered="#{not dprViewBean.editMode}"/>
+			<ace:textEntry styleClass="W15" maxlength="2"
+					rendered="#{dprViewBean.editMode}"
+					value="#{timeCard.mpv1}">
+			</ace:textEntry>
+		</ace:column>
+		<ace:column>
+			<h:outputText value="#{timeCard.mpv2}"
+					rendered="#{not dprViewBean.editMode}"/>
+			<ace:textEntry styleClass="W15" maxlength="4"
+					rendered="#{dprViewBean.editMode}"
+					value="#{timeCard.mpv2}">
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- LEAVE FOR LOCATION -->
+		<ace:column>
+			<h:outputText value="#{timeCard.leaveForLocation}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.leaveForLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- ARRIVE AT LOCATION -->
+		<ace:column>
+			<h:outputText value="#{timeCard.arriveLocation}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.arriveLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- LEAVE LOCATION -->
+		<ace:column>
+			<h:outputText value="#{timeCard.leaveLocation}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.leaveLocation}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!-- ARRIVE HOTEL/STUDIO -->
+		<ace:column>
+			<h:outputText value="#{timeCard.arriveStudio}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />&#160;
+			</h:outputText>
+			<ace:textEntry styleClass="W40" maxlength="8"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.arriveStudio}">
+				<f:converter converterId="lightspeed.DateTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<!--  -->
+		<ace:column>
+			<h:outputText value="#{timeCard.stuntAdjust}"
+					rendered="#{not dprViewBean.editMode}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</h:outputText>
+			<ace:textEntry styleClass="W30" maxlength="5"
+				rendered="#{dprViewBean.editMode}"
+				value="#{timeCard.stuntAdjust}">
+				<f:convertDateTime pattern="H:mm" timeZone="#{applicationScopeBean.timeZone}" />
+			</ace:textEntry>
+		</ace:column>
+	</ace:dataTable>
+
+	<!-- CAST NOTES -->
+	<div class="rowCont">
+		<div class="DIB W100percnt" style="border: solid 1px #ccc;">
+			<div class="FL W5percnt">
+				<table class="gradGryRowHdr gradTbl2 W100percnt" cellspacing="0">
+					<tr>
+						<td>NOTES
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="FL W95percnt">
+				<table class="gradTbl2 W100percnt" cellspacing="0">
+					<tr>
+						<td>
+							<h:outputText rendered="#{not dprViewBean.editMode}" styleClass="pad3lt"
+									value="#{dprViewBean.dpr.castNotes}" />&#160;
+							<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="W98percnt pad3lt"
+									value="#{dprViewBean.dpr.castNotes}"
+									maxlength="500" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Account code portion of both Start Form and Full Timecard -->
+
+	<!-- Uses params:  -->
+	<!--   "aicp" : true if AICP Start Form / Commercial production -->
+	<!--   "bean" : the web bean whose listenAccount method will be notified of changes;
+									this bean must also have an 'editMode' boolean property -->
+	<!--   "item" : the object whose acct codes will be displayed; may be a StartForm or WeeklyTimecard -->
+	<!--   "appEdit" : for onboarding, same as startFormBean.appEdit; for TCs, same as editHtg -->
+	<!--   "done" : true if document is final (contactDoc.status.finalized) -->
+
+	<!-- ACCOUNT CODE TITLES -->
+	<div class="rowCont FL">
+		<h:panelGroup rendered="#{not aicp}">
+			<div class="fdNm_sm DIB" style="width:19%" >&#160;
+			</div>
+			<h:panelGroup styleClass="LH22 DIB FL" style="width:79%;">
+				<div class="W100percnt" style="	border-collapse:collapse;">
+					<div class="acLoc acHdr">Loc
+					</div>
+					<div class="acPrd acHdr">Prd/Ep
+					</div>
+					<div class="acDtl acHdr">Detail
+					</div>
+					<div class="acSub acHdr">Sub
+					</div>
+					<div class="acSet acHdr">Set
+					</div>
+					<div class="acFr1 acHdr">F1
+					</div>
+					<div class="acFr acHdr">F2
+					</div>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{aicp}">
+			<div class="fdNm_sm DIB" style="width:19%">&#160;
+			</div>
+			<h:panelGroup styleClass="LH22 DIB FL" style="width:79%;">
+				<div class="W100percnt" style="	border-collapse:collapse;">
+					<div class="acPrd acHdr" style="min-width:55px;">Prep/Wrap
+					</div>
+					<div class="acPrd acHdr" style="width: 20%;">Shoot
+					</div>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<!-- <h:panelGroup rendered="#{aicp}"  styleClass="B LH22">
+			Account Codes
+		</h:panelGroup> -->
+	</div>
+
+	<!-- ACCOUNT CODES -->
+	<div class="rowCont FL">
+		<div class="fdNm_sm DIB" style="width:19%">
+			<h:outputText value="Account:" />
+			<span class="mandatory"></span>
+		</div>
+		<h:panelGroup rendered="#{not aicp}">
+			<h:panelGroup rendered="#{not bean.editMode}" styleClass="LH22 DIB FL" style="width:79%;">
+				<div class="W100percnt">
+					<div class="acLoc">
+						<h:outputText value="#{item.accountLoc}&#160;" />
+					</div>
+					<div class="acPrd">
+						<h:outputText value="#{item.accountMajor}&#160;" />
+					</div>
+					<div class="acDtl">
+						<h:outputText value="#{item.accountDtl}&#160;" />
+					</div>
+					<div class="acSub">
+						<h:outputText value="#{item.accountSub}&#160;" />
+					</div>
+					<div class="acSet">
+						<h:outputText value="#{item.accountSet}&#160;" />
+					</div>
+					<div class="acFr1">
+						<h:outputText value="#{item.accountFree}&#160;" />
+					</div>
+					<div class="acFr">
+						<h:outputText value="#{item.accountFree2}&#160;" />
+					</div>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{bean.editMode}" styleClass="LH22 DIB FL" style="width:79%;">
+				<div class="W100percnt" style="border-collapse:collapse;">
+					<div class="acLoc">
+						<ace:textEntry maxlength="3" styleClass="acEditFr2"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountLoc}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+					<div class="acPrd">
+						<ace:textEntry maxlength="6" styleClass="acEdit"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountMajor}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+					<div class="acDtl">
+						<ace:textEntry maxlength="8" styleClass="acEdit"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountDtl}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+					<div class="acSub">
+						<ace:textEntry maxlength="5" styleClass="acEdit"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountSub}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+					<div class="acSet">
+						<ace:textEntry maxlength="5" styleClass="acEdit"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountSet}" />
+					</div>
+					<div class="acFr1">
+						<ace:textEntry maxlength="2" styleClass="acEdit"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountFree}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+					<div class="acFr">
+						<ace:textEntry maxlength="2" styleClass="acEditFr2"
+								valueChangeListener="#{bean.listenAccount}" 
+								disabled="#{done or not appEdit}"
+								value="#{item.accountFree2}" >
+							<ace:ajax/>
+						</ace:textEntry>
+					</div>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<!-- AICP ACCOUNT CODES -->
+		<h:panelGroup rendered="#{aicp}"  styleClass="LH22">
+			<!-- <span class="fdNm_sm">
+				<h:outputText value="Prep/Wrap:" />
+			</span> -->
+			<h:panelGroup rendered="#{bean.editMode}">
+				<ace:textEntry maxlength="7" style="min-width:14%;width:14%;" 
+						valueChangeListener="#{bean.listenAccount}"
+						disabled="#{done or not appEdit}"
+						value="#{item.accountMajor}" >
+						<ace:ajax/>
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not bean.editMode}" style="min-width:14%;width:14%;" styleClass="FL">
+				<h:outputText value="#{item.accountMajor}" />&#160;
+			</h:panelGroup>
+			<!-- <h:outputText value=" Shoot:" styleClass="pad10lt B pad5rt" /> -->
+			<h:panelGroup rendered="#{bean.editMode}">
+				<ace:textEntry maxlength="7" style="min-width:14%;width:14%;"
+						value="#{item.accountDtl}" styleClass="pad7lt"
+						disabled="#{done or not appEdit}" >
+						<ace:ajax/>
+				</ace:textEntry>
+			</h:panelGroup>
+			<h:outputText rendered="#{not bean.editMode}" value="#{item.accountDtl}" styleClass="pad17lt" />
+		</h:panelGroup>
+
+	</div>
+</ui:composition>

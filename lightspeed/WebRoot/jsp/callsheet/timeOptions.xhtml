@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:form>
+		<ace:dialog visible="#{callSheetViewBean.showTimeOptions}"
+				header="#{callSheetViewBean.optionCrewTime ? 'Crew Call Time' : 'Cast \'On Set\' Time'}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+			<ace:ajax event="close" execute="@this" listener="#{callSheetViewBean.actionCancelCopyTimes}"/>			
+
+			<div id="confPopBdy4">
+				<div id="popErrMsgCont" class="CT rowCont FL" style="margin-top:19px;left:1%;">
+					<ui:include src="../common/errorsPopup.xhtml" />
+				</div>
+				<div class="confPopCont4">
+					<div class="popup_main">
+						<span class="pad20lt">
+							<span class="FL" style="font-weight:bold;font-size:12px;margin:10px;">
+								<h:outputText rendered="#{not callSheetViewBean.optionCrewTime}"
+										value="Change all cast 'On Set' times to: " />
+								<h:outputText rendered="#{callSheetViewBean.optionCrewTime}"
+										value="Change all crew call times to: " />
+								<ace:textEntry id="changeTime_focus"
+									maxlength="10" size="10" value="#{callSheetViewBean.optionTime}">
+									<f:convertDateTime
+										timeZone="#{applicationScopeBean.timeZone}" pattern="h:mm a" />
+								</ace:textEntry>
+							</span>
+						</span>
+					</div>
+				</div>
+				<div class="confpopBtnCont pad3tp">
+					<span class="FR pad10rt">
+						<span class="btnPriEnbLt" />
+						<span>
+							<ace:linkButton value="Cancel"
+								action="#{callSheetViewBean.actionCancelCopyTimes}" styleClass="btnPriEnbCt" />
+						</span>
+						<span class="btnPriEnbRt" />
+					</span>
+					<h:panelGroup styleClass="FR pad5rt" rendered="#{not callSheetViewBean.optionCrewTime}">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Change Times"
+								onclick="if(!confirm('Click OK to change ALL cast On-Set times.')){ return false; }"
+								action="#{callSheetViewBean.actionCopyTimes}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FR pad5rt" rendered="#{callSheetViewBean.optionCrewTime}">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="Change Times"
+								onclick="if(!confirm('Click OK to change ALL crew Call times.')){ return false; }"
+								action="#{callSheetViewBean.actionCopyTimes}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</h:panelGroup>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

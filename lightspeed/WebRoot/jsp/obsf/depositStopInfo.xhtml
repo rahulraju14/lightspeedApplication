@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Stop Direct Deposit -->
+
+	<div class="BKwhite" style="width:820px;">
+
+		<div class="rowCont FL pad5tp">
+			<span class="W40percnt pad15lt FL">
+				<h:outputText styleClass="FL txt13" escape="false"
+					value="Request to &lt;strong&gt; STOP &lt;/strong&gt; Direct Deposit." />
+			</span>
+		</div>
+		<div class="rowCont FL pad6tp">
+			<span class="B" style="width:100px;">
+				<h:outputText styleClass="FL I pad15lt"
+					value="My signature below confirms my request to be removed from Direct Deposit and receive my wages by payroll check." />
+				<h:outputText styleClass="FL I pad15lt"
+					value="I understand that once removed from Direct Deposit, my paycheck will be sent to me in the mail at the address on my W-4 form." />
+			</span>
+		</div>
+
+		<!-- EMPLOYEE SIGNATURE START -->
+		<!-- SIGNATURE LABEL -->
+		<div class="W15percnt FL pad15lt pad20tp" style="height: 27px;">
+			<h:outputText styleClass="txt12 fdNm_w" value="Employee Signature:"/>
+		</div>
+
+		<!-- SIGNATURE VALUE -->
+		<div class="W48percnt FL pad10tp pad5lt" style="height: 27px; border-bottom: solid 1px;" >
+			<div class="rowCont">
+				<!-- Sign Button  -->
+				<h:panelGroup rendered="#{(formDepositBean.contactDoc.submitable) or (formDepositBean.contactDoc.status eq 'PENDING')}">
+					<h:panelGroup styleClass="btn_legend_left pad10tp" style="float:left;">
+						<h:panelGroup rendered="#{(formDepositBean.contactDoc.status ne 'PENDING') and (formDepositBean.form.stopDeposit)
+								and (formDepositBean.empEdit or (contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Sign &amp; Submit"
+								action="#{contactFormBean.actionSubmit}"
+								title="Signature field" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{not (formDepositBean.empEdit or
+									(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id))
+									or (formDepositBean.contactDoc.status eq 'PENDING')
+									or (not formDepositBean.form.stopDeposit)}">
+							<span class="btnMiniLt"/>
+							<span>
+								<h:commandLink value="Sign &amp; Submit" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+							</span>
+							<span class="btnMiniRt"/>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				<!-- Sign Button End -->
+				<span>
+					<h:outputText escape="false" styleClass="txt12"
+						rendered="#{(formDepositBean.contactDoc.empSignature ne null) and
+									(formDepositBean.form.stopDeposit)}">
+						<h:outputText value="E-signed by" styleClass="U" />
+						<h:outputText value=" #{formDepositBean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+						<h:outputText value=" #{formDepositBean.contactDoc.empSignature.displayTime}" />
+						<br/>
+						<h:outputText value="# #{formDepositBean.contactDoc.empSignature.uuid}"/>
+					</h:outputText>
+				</span>
+			</div>
+		</div>
+
+		<!-- SIGNATURE DATE -->
+		<div class="W30percnt FL pad10lt pad25tp">
+			<h:outputText styleClass="B txt12" value="Date: "/>
+			<h:outputText escape="false" value="#{formDepositBean.contactDoc.empSignature.date}"
+				rendered="#{(formDepositBean.contactDoc.empSignature ne null) and
+					(formDepositBean.form.stopDeposit)}">
+				<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>
+			</h:outputText>
+		</div>
+		<!-- EMPLOYEE SIGNATURE END -->
+
+	</div>
+</ui:composition>

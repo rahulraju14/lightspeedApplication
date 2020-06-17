@@ -1,0 +1,836 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+	<!-- This is the right-hand area of "Section A" of the ACTRA Contract form,
+		which includes all of the session information, and signatures.
+		
+		Params:
+			bean: the backing bean for the current form (e.g., FormActraContractBean)
+			form: the FormActraContract instance currently displayed
+			isEmployee: the current user is the employee/performer (document owner)
+			isApprover: the current user is a possible approver
+			isEmpEdit: the employee is editing the form
+			isAppEdit: an approver is editing the form
+	-->
+
+	<div style="width:710px;">
+	
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+	
+		<div class="FL">
+			
+			<div class="FR rowCont" style="height:11px;">
+				<h:outputText styleClass="FR" style="font-size:10px" 
+						value="#{bean.addMoreInfo ? 'Page 1 of 2' : ''}" />
+			</div>
+			
+			<!-- Header section -->
+			<div class="FR pad10tp">
+				<h:panelGroup>
+					<h:graphicImage value="" url="../../i/forms/ACTRA-logo.png" alt="" height="36px" />
+				</h:panelGroup>
+			</div>
+			<!-- Begin Agency/Employee Info Section -->
+			<h:panelGrid columns="1" styleClass="txt10 actraPanel">
+				<!-- ROW 1 -->
+				<h:panelGroup layout="block">
+					<h:panelGroup styleClass="FL" style="width:422px;" layout="block">
+						<h:panelGroup styleClass="FL" style="border-style:none solid none none;border-color:#000;border-width:1px;height:44px;" 
+							layout="block">
+							<h:panelGroup styleClass="FL txt11 W120" layout="block">
+								<h:panelGroup styleClass="FL B pad2tp">
+									<h:outputText value="NATIONAL-NUMBER OF" styleClass="txt11"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL B pad5tp">
+									<h:outputText value="COMMERCIALS" styleClass="txt11"/>
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad10lt pad10tp W40" layout="block">
+								<h:outputText value="TV" />
+								<h:panelGroup styleClass="pad4lt">
+									<ace:textEntry id="nationalTv" disabled="#{not isAppEdit}"
+										styleClass="LT txt10 W15" value="#{form.nationalTv}"
+										maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>	
+							<h:panelGroup styleClass="FL pad10tp pad5lt W60" layout="block">
+								<h:outputText value="RADIO" />
+								<h:panelGroup styleClass="pad4lt">
+									<ace:textEntry id="nationalRadio" disabled="#{not isAppEdit}"
+										styleClass="LT txt10 W15" value="#{form.nationalRadio}"
+										maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad20lt W140" layout="block">
+								<h:outputText value="DIGITAL MEDIA-VIDEO" />
+								<h:panelGroup styleClass="pad5lt">
+									<ace:textEntry id="nationalDigitalMediaVideo"
+										disabled="#{not isAppEdit}" styleClass="LT pad2bm txt10 W15"
+										value="#{form.nationalDigitalMediaVideo}" maxlength="15" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="pad2tp pad2bm" layout="block">
+									<h:outputText value="DIGITAL MEDIA-AUDIO" />
+									<h:panelGroup styleClass="pad5lt">
+										<ace:textEntry id="nationalDigitalMediaAudio"
+											disabled="#{not isAppEdit}" styleClass="LT txt10 W15"
+											value="#{form.nationalDigitalMediaAudio}" maxlength="15" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>	
+						
+						<!-- HORIZONTAL RULE -->
+						<hr class="FL" style="height:1px;background:black;border:0;margin-top:-1px;margin-left:-5px;width:398px" />
+						
+						<h:panelGroup styleClass="FL" layout="block"
+							 style="width:395px;border-style:none solid none none;border-color:#000;border-width:1px;margin-top:-5px;height:39px;" >
+							<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+								<h:outputText value="DEMO" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W35 CT" layout="block">
+								<h:outputText styleClass="FL pad-3lt" value="TV" />
+								<h:panelGroup styleClass="FL pad5tp pad3lt">
+									<ace:textEntry id="demoTv" disabled="#{not isAppEdit}"
+										styleClass="LT txt10" style="width:15px;"
+										value="#{form.demoTv}" maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W45 CT" layout="block">
+								<h:outputText value="RADIO" />
+								<h:panelGroup styleClass="FL pad5tp pad10lt">
+									<ace:textEntry id="demoRadio" disabled="#{not isAppEdit}"
+										styleClass="LT txt10" style="width:15px;"
+										value="#{form.demoRadio}" maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>		
+							<h:panelGroup styleClass="FL pad5tp W50 CT" layout="block">
+								<h:outputText value="DIGITAL"/>
+								<h:panelGroup styleClass="FL pad5tp pad10lt">
+									<ace:textEntry id="demoDigital" disabled="#{not isAppEdit}"
+										styleClass="LT txt10" style="width:15px;"
+										value="#{form.demoDigital}" maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp W125 CT" layout="block">
+								<h:outputText value="PRESENTATION DEMO" />
+								<h:panelGroup styleClass="FL pad5tp pad50lt">
+									<ace:textEntry id="demoPresentation"
+										disabled="#{not isAppEdit}" styleClass="LT txt10"
+										style="width:15px;" value="#{form.demoPresentation}"
+										maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>								
+							<h:panelGroup styleClass="FL pad5tp pad10lt W80 CT" layout="block">
+								<h:outputText value="INFOMERCIAL" />
+								<h:panelGroup styleClass="FL pad5tp pad30lt">
+									<ace:textEntry id="demoInfomercial" disabled="#{not isAppEdit}"
+										styleClass="LT pad2lt txt10" style="width:15px;"
+										value="#{form.demoInfomercial}" maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL" layout="block" style="width:275px;">
+						<h:panelGroup styleClass="FL RT W90 pad3lt pad20tp" layout="block">
+							<h:panelGroup styleClass="RT">
+								<h:outputText value="TAGS" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="pad15tp LT" layout="block" style="width:200px">
+								<h:panelGroup styleClass="LT" style="width:200px">
+									<h:outputText value="REGIONAL CHANGES" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup styleClass="pad10tp" layout="block">
+								<h:panelGroup styleClass="RT">
+									<h:outputText value="PSA" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>	
+					
+						<h:panelGroup styleClass="FL CT pad2tp W25 pad15lt" layout="block">
+							<h:panelGroup>
+								<h:outputText value="TV" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad2bm">
+								<ace:textEntry id="tagsTv" disabled="#{not isAppEdit}"
+									styleClass="W15 txt10" value="#{form.tagsTv}" maxlength="11" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad2bm">
+								<ace:textEntry id="regionalChangesTv"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.regionalChangesTv}" maxlength="11" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad2bm">
+								<ace:textEntry id="psaTv" disabled="#{not isAppEdit}"
+									styleClass="W15 txt10" value="#{form.psaTv}" maxlength="15" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						
+						<h:panelGroup styleClass="FL CT pad2tp W45 pad5lt" layout="block">
+							<h:panelGroup>
+								<h:outputText value="RADIO" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad10lt pad5tp pad2bm">
+								<ace:textEntry id="tagsRadio" disabled="#{not isAppEdit}"
+									styleClass="W15 txt10" value="#{form.tagsRadio}" maxlength="11" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad10lt pad2bm">
+								<ace:textEntry id="regionalChangesRadio"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.regionalChangesRadio}" maxlength="11" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad10lt pad2bm">
+								<ace:textEntry id="psaRadio" disabled="#{not isAppEdit}"
+									styleClass="W15 txt10" value="#{form.psaRadio}" maxlength="15" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL CT pad2tp W85 pad5lt" layout="block">
+							<h:panelGroup>
+								<h:outputText value="DIGITAL MEDIA" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL CT W65">
+								<h:panelGroup styleClass="FL pad10lt pad5tp pad2bm">
+									<ace:textEntry id="tagsDigitalMedia"
+										disabled="#{not isAppEdit}" styleClass="W15 txt10"
+										value="#{form.tagsDigitalMedia}" maxlength="11" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad2bm">
+									<ace:textEntry id="regionalChangesDigitalMedia"
+										disabled="#{not isAppEdit}" styleClass="W15 txt10"
+										value="#{form.regionalChangesDigitalMedia}" maxlength="11" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad10lt pad2bm">
+									<ace:textEntry id="psaDigitalMedia" disabled="#{not isAppEdit}"
+										styleClass="W15 txt10" value="#{form.psaDigitalMedia}"
+										maxlength="15" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>	
+					</h:panelGroup>	
+				</h:panelGroup>
+				<!-- ROW 2 -->
+				<h:panelGroup layout="block" style="height: 45px;">
+					<h:panelGroup styleClass="FL" layout="block">
+						<h:panelGroup styleClass="FL pad5tp W70" layout="block">
+							<h:outputText value="SEASONAL"/>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp W35" layout="block">
+						<h:panelGroup styleClass="FL pad5lt">
+							<h:outputText value="TV" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp">
+							<ace:textEntry id="seasonalTv" disabled="#{not isAppEdit}"
+								styleClass="W15 txt10" value="#{form.seasonalTv}" maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+						<h:panelGroup styleClass="FL">
+							<h:outputText value="RADIO"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad3lt">
+							<ace:textEntry id="seasonalRadio" disabled="#{not isAppEdit}"
+								styleClass="W15 txt10" value="#{form.seasonalRadio}"
+								maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp pad20lt W50" layout="block">
+						<h:panelGroup styleClass="CT">
+							<h:outputText value="DEALER" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp">
+							<ace:textEntry id="seasonalDealer" disabled="#{not isAppEdit}"
+								styleClass="W15 txt10" value="#{form.seasonalDealer}"
+								maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp W40" layout="block">
+						<h:panelGroup styleClass="FL pad10lt">
+							<h:outputText value="TV" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp">
+							<ace:textEntry id="seasonalDealerTv" disabled="#{not isAppEdit}"
+								styleClass="W15 txt10" value="#{form.seasonalDealerTv}"
+								maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+						<h:panelGroup styleClass="FL">
+							<h:outputText value="RADIO" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp">
+							<ace:textEntry id="seasonalDealerRadio"
+								disabled="#{not isAppEdit}" styleClass="W15 txt10"
+								value="#{form.seasonalDealerRadio}" maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>	
+					<h:panelGroup styleClass="FL pad50lt pad5tp W90" layout="block">
+						<h:panelGroup styleClass="FL">
+							<h:outputText value="DOUBLE SHOOT" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad15lt">
+							<ace:textEntry id="seasonalDoubleShoot"
+								disabled="#{not isAppEdit}" styleClass="W15 txt10"
+								value="#{form.seasonalDoubleShoot}" maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5tp W80 pad50lt" layout="block">
+						<h:panelGroup styleClass="CT">
+							<h:outputText value="JOINT PROMO" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad15lt">
+							<ace:textEntry id="seasonalJointPromo"
+								disabled="#{not isAppEdit}" styleClass="W15 txt10"
+								value="#{form.seasonalJointPromo}" maxlength="15" />
+						</h:panelGroup>
+					</h:panelGroup>	
+				</h:panelGroup>
+			
+				<!-- ROW 3 -->
+				<h:panelGroup layout="block" style="height: 50px;">
+					<h:panelGroup styleClass="FL pad3tp" layout="block">
+						<h:outputText value="#{msg.Form_ActraContract_Text2}" styleClass="txt11" escape="false"/>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt pad2bm" layout="block">
+						<h:panelGroup styleClass="FL pad12tp W40" layout="block">
+							<h:panelGroup styleClass="FL pad10lt">
+								<h:outputText value="CAT #" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad5lt">
+								<ace:textEntry id="localRegionalCategoryNum"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalCategoryNum}" maxlength="15" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad12tp W40 pad30lt" layout="block">
+							<h:panelGroup styleClass="FL pad8lt">
+								<h:outputText value="TV" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad3lt">
+								<ace:textEntry maxlength="15" id="localRegionalTv"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalTv}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad12tp W40" layout="block">
+							<h:panelGroup styleClass="CT">
+								<h:outputText value="RADIO" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry maxlength="15" id="localRegionalRadio"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalRadio}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad12tp W70" layout="block">
+							<h:panelGroup styleClass="FL pad5lt">
+								<h:outputText value="DIGITAL MEDIA" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad20lt">
+								<ace:textEntry maxlength="15" id="localRegionalDigitalMedia"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalDigitalMedia}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad12tp pad10lt W40" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="DEMO" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp">
+								<ace:textEntry maxlength="15" id="localRegionalDemo"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalDemo}" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad50lt pad2tp W75" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="DIGITAL MEDIA TO TV BROADCAST" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad15lt">
+								<ace:textEntry maxlength="15"
+									id="localRegionalDigitalMediaBroadcast"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalDigitalMediaBroadcast}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad2tp W75 pad15lt" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="TV BROADCAST TO DIGITAL MEDIA" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad15lt">
+								<ace:textEntry maxlength="15"
+									id="localRegionalBroadcastDigitalMedia"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalBroadcastDigitalMedia}" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL pad12tp pad15lt W30" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="OTHER" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad5lt">
+								<ace:textEntry maxlength="15" id="localRegionalOther"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalOther}" />
+							</h:panelGroup>
+						</h:panelGroup>	
+						<h:panelGroup styleClass="FL W130 pad15lt pad2tp" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText escape="false" value="L&amp;R ACTRAonline OPPORTUNITY PILOT PROJECT" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad25lt">
+								<ace:textEntry maxlength="15" id="localRegionalPilotProject"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.localRegionalPilotProject}" />
+							</h:panelGroup>
+						</h:panelGroup>							
+					</h:panelGroup>		
+				</h:panelGroup>
+				
+				<!-- ROW 4 -->
+				<h:panelGroup layout="block" style="height: 55px;">
+					<h:panelGroup styleClass="FL pad3tp" layout="block">
+						<h:outputText value="#{msg.Form_ActraContract_Text3}" styleClass="txt11" escape="false" />
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad2bm" layout="block">
+						<h:panelGroup styleClass="FL pad3lt pad10tp W40" layout="block">
+							<h:outputText value="TV"  />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="7 DAYS" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad3lt pad5tp">
+								<ace:textEntry maxlength="15" id="shortLifeTv7Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeTv7Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad7lt W50" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="14 DAYS" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad3lt">
+								<ace:textEntry maxlength="15" id="shortLifeTv14Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeTv14Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="CT">
+								<h:outputText value="31 DAYS" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad3lt pad5tp">
+								<ace:textEntry maxlength="15" id="shortLifeTv31Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeTv31Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="FL pad5lt">
+								<h:outputText value="45 DAYS" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad5lt">
+								<ace:textEntry maxlength="15" id="shortLifeTv45Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeTv45Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad10tp W100" layout="block"/>
+						<h:panelGroup styleClass="FL pad10tp pad10lt W40" layout="block">
+							<h:outputText value="RADIO"  />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp padlt10 W50" layout="block">
+							<h:panelGroup styleClass="FL pad10lt">
+								<h:outputText value="7 DAYS" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad10lt pad5tp">
+								<ace:textEntry maxlength="15" id="shortLifeRadio7Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeRadio7Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp pad7lt W50" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="14 DAYS" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad3lt">
+								<ace:textEntry maxlength="15" id="shortLifeRadio14Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeRadio14Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="CT">
+								<h:outputText value="31 DAYS" styleClass="txt8" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad3lt pad5tp">
+								<ace:textEntry maxlength="15" id="shortLifeRadio31Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeRadio31Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W50" layout="block">
+							<h:panelGroup styleClass="FL pad5lt">
+								<h:outputText value="45 DAYS" styleClass="txt8"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad5lt">
+								<ace:textEntry maxlength="15" id="shortLifeRadio45Days"
+									disabled="#{not isAppEdit}" styleClass="W15 txt10"
+									value="#{form.shortLifeRadio45Days}" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>					
+				</h:panelGroup>
+				
+				<!-- ROW 5 -->
+				<h:panelGroup layout="block" style="height:50px;">
+					<h:panelGroup styleClass="FL pad5tp pad5lt W10" layout="block"/>
+					<h:panelGroup styleClass="FL pad2bm" layout="block">
+						<h:panelGroup styleClass="FL pad5tp W115" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="TV BROADCAST TO DIGITAL MEDIA" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad30lt">
+								<ace:textEntry maxlength="15" id="tvBroadcastDigitalMedia"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10"
+									style="width:15px;" value="#{form.tvBroadcastDigitalMedia}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>
+						<h:panelGroup styleClass="FL pad5tp W115" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="DIGITAL MEDIA BROADCAST TO TV" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad30lt">
+								<ace:textEntry maxlength="15" id="digitalMediaBroadcastTv"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10"
+									style="width:15px;" value="#{form.digitalMediaBroadcastTv}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+						<h:panelGroup styleClass="FL pad5tp W90" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="DIGITAL MEDIA TO OTHER MEDIA" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad30lt">
+								<ace:textEntry maxlength="15" id="digitalMediaOther"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10"
+									style="width:15px;" value="#{form.digitalMediaOther}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+						<h:panelGroup styleClass="FL pad5tp W80" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="RADIO TO DIGITAL MEDIA" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad15lt">
+								<ace:textEntry maxlength="15" id="radioDigitalMedia"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10"
+									style="width:15px;" value="#{form.radioDigitalMedia}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						
+						<h:panelGroup styleClass="FL pad5tp W30" layout="block"/>						
+						<h:panelGroup styleClass="FL pad5tp W160 pad10lt" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="ACTRAonline OPPORTUNITY PILOT PROJECT" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad30lt">
+								<ace:textEntry maxlength="15" id="actraOnline"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10"
+									style="width:15px;" value="#{form.actraOnline}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+					</h:panelGroup>	
+				</h:panelGroup>	
+				
+				<!-- ROW 6 -->
+				<h:panelGroup layout="block" styleClass="pad-1tp" style="height:42px;margin-bottom:-3px">
+					<h:panelGroup styleClass="FL pad3tp W60" layout="block">
+						<h:outputText value="US USE" />
+					</h:panelGroup>				
+					<h:panelGroup styleClass="FL" layout="block">
+						<h:panelGroup styleClass="FL pad5tp pad2bm W75 CT" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="ARTICLE 2403" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad17lt">
+								<ace:textEntry maxlength="15" id="article2403"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10 W15"
+									value="#{form.article2403}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad10lt pad2bm W75 CT" 
+							style="border-style:none solid none none;border-color:#000;border-width:1px;" layout="block">
+							<h:panelGroup styleClass="FL pad5tp">
+								<h:outputText value="ARTICLE 2404" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad17lt">
+								<ace:textEntry maxlength="15" id="article2404"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10 W15"
+									value="#{form.article2404}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad5tp W160 CT" layout="block">
+							<h:outputText value="USE IN OTHER COUNTRIES" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad5tp W75" layout="block"/>
+						<h:panelGroup styleClass="FL pad5tp pad2bm W70 CT" layout="block">
+							<h:panelGroup styleClass="FL">
+								<h:outputText value="ARTICLE 2405" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad17lt">
+								<ace:textEntry maxlength="15" id="article2405"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10 W15"
+									value="#{form.article2405}" />
+							</h:panelGroup>
+						</h:panelGroup>		
+						<h:panelGroup styleClass="FL pad10lt W75 CT pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad5tp">
+								<h:outputText value="ARTICLE 2406" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad5tp pad17lt">
+								<ace:textEntry maxlength="15" id="article2406"
+									disabled="#{not isAppEdit}" styleClass="LT pad2lt txt10 W15"
+									value="#{form.article2406}" />
+							</h:panelGroup>
+						</h:panelGroup>			
+					</h:panelGroup>	
+				</h:panelGroup>
+				
+				<!-- ROW 7 -->
+				<h:panelGroup layout="block" style="height:43px;margin-bottom:-1px">
+					<h:panelGroup styleClass="FL pad-1tp" 
+						style="width:470px;border-style:none solid none none;border-color:#000;border-width:1px;height: 42px;" layout="block">
+						<h:panelGroup styleClass="FL pad2bm" layout="block">
+							<h:panelGroup styleClass="FL pad3tp">
+								<h:outputText value="COMMERCIALS / NUMBERS / LENGTH" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL pad3tp">
+								<ace:textEntry maxlength="250" id="commercialName"
+									disabled="#{not isAppEdit}" styleClass="LT txt10"
+									style="width:455px;" value="#{form.commercialName}" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt W125 pad2bm" layout="block">
+						<h:panelGroup styleClass="FL pad3tp">
+							<h:outputText value="DOCKET" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad3tp">
+							<ace:textEntry maxlength="50" id="docket"
+								disabled="#{not isAppEdit}" styleClass="LT txt10 W145"
+								value="#{form.docket}" style="width:200px;" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 8 -->
+				<h:panelGroup layout="block" style="height:40px;margin-bottom:-1px">
+					<h:panelGroup styleClass="FL" style="width:470px;" layout="block">
+						<div class="FL" style="border-right: solid 1px;margin-top:-2px;padding-right:3px;height:38px;height: 42px;">
+							<h:panelGroup styleClass="FL pad2bm pad3tp" layout="block" style="width:467px;">
+								<h:panelGroup styleClass="FL pad3tp">
+									<h:outputText value="ADDITIONAL TITLES" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="FL pad3tp">
+									<ace:textEntry maxlength="250" id="additionalTitles"
+										disabled="#{not isAppEdit}" styleClass="LT txt10"
+										style="width:455px;" value="#{form.additionalTitles}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt W210 pad2bm" layout="block">
+						<h:panelGroup styleClass="FL pad4tp">
+							<h:outputText value="DIGITAL MEDIA FEES" />
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL pad3tp">
+							<ace:textEntry maxlength="100" id="digitalMediaFees"
+								disabled="#{not isAppEdit}" style="width:203px;"
+								styleClass="LT txt10 W145" value="#{form.digitalMediaFees}" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+				<!-- ROW 9 -->
+				<h:panelGroup layout="block"  style="height:37px;margin-bottom:-2px;padding-top:1px;">
+					<h:panelGroup styleClass="FL pad5bm" layout="block">
+						<div class="FL" style="border-right: solid 1px;margin-top:-2px;padding-right:3px;height:38px;width:225px;margin-bottom:-7px;">
+							<h:panelGroup styleClass="FL pad5tp" >
+								<h:outputText value="SESSION FEES"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL">
+								<ace:textEntry maxlength="100" id="sessionFees"
+									disabled="#{not isAppEdit}" styleClass="LT txt10"
+									style="width:215px;" value="#{form.sessionFees}" />
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt pad5bm" layout="block">
+						<div class="FL" style="border-right: solid 1px;margin-top:-2px;padding-right:3px;height:38px;width:225px;margin-bottom:-7px;">
+							<h:panelGroup styleClass="FL pad5tp" >
+								<h:outputText value="RESIDUAL FEES"/>
+							</h:panelGroup>
+							<h:panelGroup styleClass="FL rowCont">
+								<ace:textEntry maxlength="100" id="residualFees"
+									disabled="#{not isAppEdit}" styleClass="LT txt10"
+									style="width:215px;" value="#{form.residualFees}" />
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup styleClass="FL pad5lt pad5bm" layout="block" style="width:205px;">
+						<h:panelGroup styleClass="FL pad3tp" >
+							<h:outputText value="OTHER FEES"/>
+						</h:panelGroup>
+						<h:panelGroup styleClass="FL ">
+							<ace:textEntry maxlength="100" id="otherFees"
+								disabled="#{not isAppEdit}" styleClass="LT txt10"
+								style="width:208px;" value="#{form.otherFees}" />
+						</h:panelGroup>
+					</h:panelGroup>						
+				</h:panelGroup>
+			</h:panelGrid>
+			<div class="txt10 sfFormBorder1 pad8tp FL rowCont" style="height:127px;">
+				<!-- ROW 1 -->
+				<h:panelGroup layout="block" style="height:18px;">
+					<h:outputText value="#{msg.Form_ActraContract_Text4}" escape="false" styleClass="FL pad3tp pad5lt"
+						style="font-size:7px;"/> <!-- margin-top: 3px;margin-left: 5px;float: left; -->
+				</h:panelGroup>
+				
+				<!-- HORIZONTAL RULE -->
+				<hr class="FL" style="height:1px;background:black;border:0;margin-top:-4px;margin-right:-3px;width:710px" />
+				
+				<!-- ROW 2 -->
+				<div style="height:56px">
+ 					<div class="rowCont FL pad3lt" style="border-right: solid 1px;width:458px;height:56px; margin-top:-5px;">
+						<!-- SIGNATURE LABEL -->
+						<div class="rowCont FL pad5tp">
+							<h:outputText styleClass="FL" value="PERFORMER/GUARDIAN SIGNATURE"/>
+						</div>
+	
+						<!-- PERFORMER SIGNATURE VALUE (EMPLOYEE/TALENT) -->
+						<div class="rowCont FL pad5tp" style="height: 27px;" >
+							<div class="rowCont">
+								<!-- Sign Button  -->
+								<h:panelGroup rendered="#{(bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')}">
+							
+									<h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;">
+										<h:panelGroup rendered="#{(bean.contactDoc.status ne 'PENDING') and isEmployee}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Sign" id="actionSubmit"
+												action="#{contactFormBean.actionSubmit}"
+												title="Signature field" styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<h:panelGroup rendered="#{(not isEmployee) or (bean.contactDoc.status eq 'PENDING')}">
+											<span class="btnMiniLt"/>
+											<span>
+												<h:commandLink value="Sign" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+											</span>
+											<span class="btnMiniRt"/>
+										</h:panelGroup>
+									</h:panelGroup>
+	
+								</h:panelGroup>
+								<!-- Sign Button End -->
+								<span>
+									<h:outputText escape="false" styleClass="txt12"
+										rendered="#{(bean.contactDoc.empSignature ne null)}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{bean.contactDoc.empSignature.name}" styleClass="U B txtBlue" />
+										<h:outputText value=" #{bean.contactDoc.empSignature.displayTime}" />
+										<br/>
+										<h:outputText value="# #{bean.contactDoc.empSignature.uuid}"/>
+									</h:outputText>
+								</span>
+							</div>
+						</div>
+					</div>
+						
+					<div class="FL pad2bm pad10lt"  style="width:210px;">
+						<div class="FL rowCont">
+							<h:outputText value="DATE" />
+						</div>
+						<h:panelGroup styleClass="FL pad3tp">
+							<ace:textEntry id="empSignatureDate" disabled="#{true}" styleClass="LT txt10" value="#{bean.contactDoc.empSignature.date}" style="width:210px;">
+								<f:convertDateTime pattern="yyyy-MM-dd" timeZone="#{applicationScopeBean.timeZone}"/>
+							</ace:textEntry>
+						</h:panelGroup>					
+					</div>
+				</div>
+				
+				<!-- HORIZONTAL RULE -->
+				<hr class="FL" style="height:1px;background:black;border:0;margin-top:-4px;margin-right:-3px;width:710px" />
+				
+				<!-- ROW 3 -->
+				<div class="FL pad3lt pad-5tp"  style="height:56px;">
+					<div class="rowCont FL" style="border-right: solid 1px; width:458px;height:56px;">
+						<!-- SIGNATURE LABEL -->
+						<div class="rowCont FL pad5tp">
+							<h:outputText styleClass="FL" value="PRODUCER SIGNATURE"/>
+						</div>
+
+						<!-- PRODUCER (APPROVER) SIGNATURE VALUE -->
+						<div class="rowCont FL pad5tp" style="height: 27px;" >
+							<div class="rowCont">
+								<!-- Sign Button  -->
+								<h:panelGroup rendered="#{((bean.contactDoc.submitable) or (bean.contactDoc.status eq 'PENDING')
+										or (bean.contactDoc.status eq 'SUBMITTED')) and (bean.contactDoc.employerSignature eq null)}">
+							
+									<h:panelGroup styleClass="btn_legend_left pad12tp" style="float:left;">
+										<h:panelGroup rendered="#{(isAppEdit) or (contactFormBean.mayApprove)
+												or (isApprover)}">
+											<span class="btnMiniLtHot" />
+											<ace:linkButton value="Sign &amp; Approve" id="actionEmployerSign"
+													action="#{contactFormBean.actionEmployerSign}"
+													title="Signature field" styleClass="btnMiniCt" />
+											<span class="btnMiniRtHot" />
+										</h:panelGroup>
+										<h:panelGroup rendered="#{not ((isAppEdit) or (contactFormBean.mayApprove)
+												or (isApprover))}">
+											<span class="btnMiniLt"/>
+											<span>
+												<h:commandLink value="Sign &amp; Approve" onclick="return false;" styleClass="btnMiniDisCt dislink" />
+											</span>
+											<span class="btnMiniRt"/>
+										</h:panelGroup>
+									</h:panelGroup>
+	
+								</h:panelGroup>
+								<!-- Sign Button End -->
+								<span>
+									<h:outputText escape="false" styleClass="txt12"
+										rendered="#{(bean.contactDoc.employerSignature ne null)}">
+										<h:outputText value="E-signed by" styleClass="U" />
+										<h:outputText value=" #{bean.contactDoc.employerSignature.name}" styleClass="U B txtBlue" />
+										<h:outputText value=" #{bean.contactDoc.employerSignature.displayTime}" />
+										<br/>
+										<h:outputText value="# #{bean.contactDoc.employerSignature.uuid}"/>
+									</h:outputText>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="FL pad2bm pad5tp pad10lt"  style="width:210px;">
+						<div class="FL rowCont">
+							<h:outputText value="DATE" />
+						</div>
+						<h:panelGroup styleClass="FL pad3tp">
+							<ace:textEntry id="empSignDate" disabled="#{true}" styleClass="LT txt10 W145" value="#{bean.contactDoc.employerSignature.date}" style="width: 210px;">
+								<f:convertDateTime pattern="yyyy-MM-dd" timeZone="#{applicationScopeBean.timeZone}"/>
+							</ace:textEntry>
+						</h:panelGroup>					
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

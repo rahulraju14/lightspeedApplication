@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Select Production</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	</c:if>
+	// resize the bottom half (TV/episodic) container
+	element = document.getElementById('episodic');
+	resizeElement(element, 430, 240);
+}
+
+var formname = "purchase";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+
+<h:form id="purchase">
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="myproductions" />
+</h:outputText>
+
+<c:set var="commercial" value="#{not empty productListBean.commProductList}" />
+
+<div id="main" style="min-height: #{commercial ? '750' : '670'}px;">
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+
+			<!-- COMMERCIAL list (only for 'premium' users = staff -->
+			<h:panelGroup rendered="#{commercial}">
+				<div class="panelCont" style="top:11px;">
+	
+					<!-- Begin Lists pnlLt -->
+					<div id="pnlFull" class="MA">
+	
+						<div class="topBdrCont FL">
+							<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+						</div>
+	
+						<div class="FL rowCont ltrtBdr BKwhite">
+	
+							<h:outputText id="errMsgContFull" styleClass="errMsgContFull pad10tp">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:outputText>
+	
+							<span class="FL pad6bm pnlHdrTxt" style="font-size:20px;">
+								<h:outputText value="Commercials"/>
+							</span>
+
+							<h:panelGroup>
+								<span class="FR pad10rt">
+									<span class="btnPriEnbLt" />
+									<span>
+									<ace:linkButton
+										value="Back" action="myproductions"
+										styleClass="btnPriEnbCt" />
+									</span>
+									<span class="btnPriEnbRt" />
+								</span>
+							</h:panelGroup>
+		
+							<div class="centerFullPg2 MA rowDivider CT" style="min-height:100px;">
+								<div id="x">
+									<div class="rowCont pad20tp">
+										<h:panelGroup>
+											<div id="sub_homeMatTab">
+												<div class="sub_homeMat">
+													<div class="homeMatContWrap MA">
+														<div id="homeMatCont" class="FL rowCont gradTbl2">
+															<span class="subSecHdg_homeMat FL">Menu</span>
+															<ace:dataTable styleClass="gradTbl2 thinColHdr"
+																selectionMode=""
+																rowStyleClass="evenRow B"
+																style="width:100%;max-width:100%;"
+																value="#{productListBean.commProductList}" var="item">
+	
+																<ui:include src="productcolumns.xhtml" />
+	
+															</ace:dataTable>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup><!-- end -->
+									</div><!-- end row -->
+								</div>
+							</div><!-- end centerFullTab -->
+						</div><!-- end outer list cont -->
+	
+						<div class="btmBdrCont FL" style="z-index:50;top:-5px;">
+							<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+						</div>
+					</div>
+				</div><!--  end first (optional) pnlCont: Commercials -->
+	
+				<div class="hatch LH14">&#160;
+				</div>
+			</h:panelGroup>
+
+			<!-- FEATURE FILM list -->
+			<div class="panelCont" style="top:11px;">
+				<!-- Begin Lists pnlLt -->
+				<div class="panelFull MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="feature" class="FL rowCont ltrtBdr BKwhite">
+						<span class="FL pad6bm pnlHdrTxt" style="font-size:20px;">
+							<h:outputText value="Feature Film"/>
+						</span>
+
+						<h:panelGroup rendered="#{not commercial}">
+							<span class="FR pad10rt">
+								<span class="btnPriEnbLt" />
+								<span>
+								<ace:linkButton
+									value="Back" action="myproductions"
+									styleClass="btnPriEnbCt" />
+								</span>
+								<span class="btnPriEnbRt" />
+							</span>
+						</h:panelGroup>
+
+						<div class="centerFullPg2 MA rowDivider CT" style="min-height:50px;height:auto;">
+							<div id="y">
+								<div class="rowCont pad20tp" style="z-index:0;">
+									<h:panelGroup>
+										<div id="sub_homeMatTab">
+											<div class="sub_homeMat">
+												<div class="homeMatContWrap MA">
+													<div id="homeMatCont" class="FL rowCont gradTbl2">
+														<span class="subSecHdg_homeMat FL">Menu</span>
+															<ace:dataTable styleClass="gradTbl2 thinColHdr"
+																selectionMode=""
+																rowStyleClass="evenRow B"
+																style="width:100%;max-width:100%;"
+																value="#{productListBean.filmProductList}" var="item">
+
+																<ui:include src="productcolumns.xhtml" />
+
+															</ace:dataTable>
+													</div>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup><!-- end -->
+								</div><!-- end row -->
+
+							</div>
+						</div><!-- end centerFullTab -->
+						<h:outputText
+								styleClass="FR txt11" style="top:-5px;margin-right:100px;"
+								value="* Additional users may be added to the production."/>
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- end pnlFull -->
+
+			</div><!--  end first or second pnlCont: feature film -->
+
+			<div class="hatch LH14">&#160;
+			</div>
+
+			<!-- TV/EPISODIC list -->
+			<div class="panelCont">
+				<!-- Begin Lists pnlLt -->
+				<div class="panelFull MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div id="episodic" class="FL rowCont ltrtBdr BKwhite">
+						<span class="FL pad6bm pnlHdrTxt" style="font-size:20px;">
+							<h:outputText value="TV / Episodic"/>
+						</span>
+						<div class="centerFullPg2 MA rowDivider CT" style="min-height:50px;height:auto;">
+							<div id="y">
+								<div class="rowCont pad20tp" style="z-index:0;">
+									<h:panelGroup>
+										<div id="sub_homeMatTab">
+											<div class="sub_homeMat">
+												<div class="homeMatContWrap MA">
+													<div id="homeMatCont" class="FL rowCont gradTbl2">
+														<span class="subSecHdg_homeMat FL">Menu</span>
+														<ace:dataTable styleClass="gradTbl2 thinColHdr"
+															selectionMode=""
+															rowStyleClass="evenRow B"
+															style="width:100%;max-width:100%;"
+															value="#{productListBean.tvProductList}" var="item">
+
+															<ui:include src="productcolumns.xhtml" />
+
+														</ace:dataTable>
+													</div>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup><!-- end -->
+								</div><!-- end row -->
+
+							</div>
+						</div><!-- end centerFullTab -->
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+				</div><!-- end pnlFull -->
+
+			</div><!--  end last (2nd or 3rd) pnlCont: TV episodic -->
+
+		</div><!-- end ctrCont -->
+		<div class="CB"></div><!-- clears float for liquid layout -->
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+	<ui:include src="../common/releaseNotes.xhtml" />
+
+	<ui:include src="../common/confirmpopupbig.xhtml" />
+
+</h:body>
+</html>

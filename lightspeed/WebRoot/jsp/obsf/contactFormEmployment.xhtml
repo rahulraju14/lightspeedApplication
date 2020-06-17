@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+
+		<!-- Start form blue legend start -->
+		<div class="blueLegendContWrap FL">
+			<div class="blueLegendCont pad8lt" style="width:100%;margin-top:22px;">
+				<span class="legendHdg" style="max-width:160px;">
+					<h:outputText value="#{contactDocumentList.occupationName}"/>
+				</span>
+				<h:panelGroup styleClass="btn_legend pad10rt"
+						rendered="#{not empty authBean.pgFields['10.5,upload_doc']}">
+					<span class="btnMiniLtHot"/>
+						<ace:linkButton value="Add a Signed Doc"
+							actionListener="#{contactFormBean.actionUploadReplacement}"
+							styleClass="btnMiniCt">
+							<f:attribute name="occupation" value="#{contactDocumentList.occupationName}"></f:attribute>
+						</ace:linkButton>
+					<span class="btnMiniRtHot" />
+				</h:panelGroup>
+				<div class="FL W100percnt">
+					<ace:dataTable
+						value="#{contactDocumentList.contactDocument}" var="item"
+						rowIndexVar="idx"
+						scrollable="true"
+						styleClass="bk_sl_grid"
+						scrollHeight="200"
+						selectionMode="single"
+						rowSelectListener="#{contactFormBean.listenRowClicked}"
+						stateMap="#{contactFormBean.stateMap}">
+
+						<!-- the Document chain name -->
+						<ace:column headerText="Name" styleClass="LT" style="width:30%;">
+							 <h:outputText value="#{item.documentChain.normalizedName}"
+									rendered="#{item.formType eq 'OTHER' and item.documentChain.normalizedName ne null}"
+								 title="#{item.document.normalizedName}" style="width:145px;word-wrap:break-word;"
+								 styleClass="FL pad5lt #{item.disableJump ? 'unavailable' : ''}" />
+							<h:outputText value="#{item.formType.name}" rendered="#{item.formType ne 'OTHER'}"
+								title="#{item.document.normalizedName}"
+								 styleClass="pad5lt #{item.disableJump ? 'unavailable' : ''}"/>
+							<h:outputText value="#{item.document.normalizedName}" title="#{item.document.normalizedName}"
+								 rendered="#{(item.documentChain eq null) and (item.formType ne 'SUMMARY') and (item.formType ne 'START')}"
+								  styleClass="pad5lt #{item.disableJump ? 'unavailable' : ''}"/>
+						</ace:column>
+
+						<!-- Project column, only visible to commercial productions -->
+						<ace:column headerText="#{contactFormBean.projectTitle}" styleClass="CT" style="width:20%;" rendered="#{contactFormBean.production.type.aicp}">
+								<h:outputText value="#{item.employment.project.title}"  styleClass="#{item.disableJump ? 'unavailable' : ''}"/>
+						</ace:column>
+
+						<!-- the Status -->
+						<ace:column id="Status"  styleClass="CT" headerText="Status" style="width:10%;">
+							<div class="rowCont" style="display:flex;">
+							<div style="width:35%">
+							<h:panelGroup rendered="#{item.formType ne 'SUMMARY'}">
+								<div class="docIcon#{item.viewStatus}" title="#{item.viewStatus.iconTitle}"
+									style="width:27px;margin-left:53%;">
+									<h:outputText value="&#160;" />
+								</div>
+							</h:panelGroup>
+							</div>
+							<div style="width:30%; margin-left:10px;">
+							<h:panelGroup>
+							<h:commandButton value="" rendered="#{item ne null and
+										(! item.disableJump) and (not empty(item.attachments))}"
+										action="#{contactFormBean.showAttachments}"
+									title="Click here to view attached document(s)"
+									image="../../i/attachment_icon.png">
+								<f:setPropertyActionListener value="com.lightspeedeps.contactDocId" target="#{jumpBean.attribute}"/>
+								<f:setPropertyActionListener value="#{item.id}" target="#{jumpBean.value}"/>
+							</h:commandButton>
+							</h:panelGroup>
+							</div>
+							</div>
+						</ace:column>
+					</ace:dataTable>
+				</div>
+			</div>
+		</div>
+		<!-- Start form blue legend END -->
+</ui:composition>

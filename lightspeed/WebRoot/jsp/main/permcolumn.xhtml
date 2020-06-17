@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Generates one column of permissions output.  Requires two parameters:
+			x   : index of column being generated (0...n)
+			xid : string used for id's so multiple calls with x=0 get different ids -->
+				
+	<div class="pad10tp"></div>
+
+	<!-- VIEW : uses "parts[0]"-->
+		<!-- rollup -->
+	<h:panelGroup styleClass="W100percnt LH20 CT"
+			rendered="#{(not row.parts[0].hide) and (row.parts[0].clusters[x].checkbox.checkValue ne 3)}">
+		<ace:triStateCheckbox styleClass="ckbx" disabled="#{(! permissionBean.editMode)
+					or (row.parts[0].clusters[x].checkbox.checkValue eq 3)}"
+				valueChangeListener="#{row.parts[0].clusters[x].listenCheckBoxChange}"
+				value="#{row.parts[0].clusters[x].checkbox.value}" id="vr_#{x}_#{xid}" >
+			<ace:ajax/>
+		</ace:triStateCheckbox>&#160;  
+	</h:panelGroup>
+		<!-- expansion -->
+	<ui:repeat rendered="#{row.parts[0].expand}" styleClass="expand"
+			value="#{row.parts[0].clusters[x].settings}" var="perm" id="vp_#{x}_#{xid}">
+		<div class="CT">
+			<h:panelGroup styleClass="LH20 CT" rendered="#{(perm.checkbox.checkValue ne 3)}">
+				<ace:triStateCheckbox styleClass="ckbx" disabled="#{(! permissionBean.editMode)
+					or (perm.checkbox.checkValue eq 3)}"
+					valueChangeListener="#{perm.listenCheckBoxChange}"
+					value="#{perm.checkbox.value}" id="vi_#{xid}" >
+					<ace:ajax/>
+				</ace:triStateCheckbox>&#160; 
+			</h:panelGroup>
+		</div>
+	</ui:repeat>
+
+	<div class="pad8tp"></div>
+
+	<!-- EDIT : uses "parts[1]" -->
+		<!-- rollup -->
+	<h:panelGroup styleClass="W100percnt LH20 CT"
+			rendered="#{(not row.parts[1].hide) and (row.parts[1].clusters[x].checkbox.checkValue ne 3)}">
+		<ace:triStateCheckbox styleClass="ckbx" disabled="#{(! permissionBean.editMode)
+					or (row.parts[1].clusters[x].checkbox.checkValue eq 3)}"
+				valueChangeListener="#{row.parts[1].clusters[x].listenCheckBoxChange}"
+				value="#{row.parts[1].clusters[x].checkbox.value}" id="er_#{x}_#{xid}" >
+			<ace:ajax/>
+		</ace:triStateCheckbox>&#160; 
+	</h:panelGroup>
+	<h:panelGroup styleClass="W100percnt LH20" rendered="#{row.parts[1].hide}">
+		&#160;
+	</h:panelGroup>
+		<!-- expansion -->
+	<ui:repeat rendered="#{row.parts[1].expand}" styleClass="expand"
+			value="#{row.parts[1].clusters[x].settings}" var="perm" id="ep_#{x}_#{xid}">
+		<div class="CT">
+			<h:panelGroup styleClass="LH20 CT" rendered="#{(perm.checkbox.checkValue ne 3)}">
+				<ace:triStateCheckbox styleClass="ckbx" disabled="#{(! permissionBean.editMode)
+						or (perm.checkbox.checkValue eq 3)}"
+					valueChangeListener="#{perm.listenCheckBoxChange}"
+					value="#{perm.checkbox.value}" id="ei_#{xid}" >
+					<ace:ajax/>
+				</ace:triStateCheckbox>&#160;  
+			</h:panelGroup>
+		</div>
+	</ui:repeat>
+	<h:panelGroup styleClass="W100percnt LH20" rendered="#{row.parts[0].hide}">
+		&#160;
+	</h:panelGroup>
+
+	<div class="pad10tp"></div>
+</ui:composition>

@@ -1,0 +1,437 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Payroll Start tab of Start Forms page, used only in NON-On-Boarding
+		productions for viewing or editing the StartForm ('Payroll Start')
+		It is included by the sf\starts.xhtml page. -->
+
+	<!-- Note that most of the page is contained in a number of smaller files, e.g.,
+	sfHeader, sfEmployee, sfRates, sfExpenses, which are included here. -->
+	
+	<!-- params expected:
+		aicp: true if this is a commercial production
+	 -->
+
+	<ace:tabPane label="Payroll Start"
+		rendered="#{(headerViewBean.user.id eq startFormBean.contact.user.id)
+						or (not empty authBean.pgFields['10.5,view'])}">
+
+		<c:set var="empEdit" value="#{startFormBean.editMode}" scope="request" />
+		<c:set var="appEdit" value="#{startFormBean.editMode}" scope="request" />
+		<c:set var="edit" value="#{startFormBean.editMode}" scope="request" />
+		<c:set var="done" value="#{false}" scope="request" />
+		<c:set var="isEnhancedLoanOut" value="#{fFApplicationScopeBean.useFeature('TTCO_ENHANCED_LOAN_OUT')}" scope="request" />
+		<c:set var="isAddrUnif" value="#{fFApplicationScopeBean.useFeature('TTCO_ADDR_UNIF_PAYROLL_START')}" scope="request" />
+		<c:set var="isTeamPayroll" value="#{startFormBean.isTeamPayroll}" scope="request" />
+		<c:set var="nonTeamEmp" value="#{empEdit and (not isTeamPayroll) and (not appEdit)}" scope="request" />
+
+		<div id="scrolldiv" class="miniTab scrollPnlTab" onscroll="setScrollPos(this.scrollTop);">
+			<div class="rowCont FL pad10tp" style="width:850px;">
+				<div class="FL pad10lt">
+					<h:outputText styleClass="B" value="Select Existing Start/Position:" />
+					<h:selectOneMenu styleClass="pad5lt" style="width:280px;"
+						disabled="#{startFormBean.editMode}"
+						valueChangeListener="#{startFormBean.listenStartForm}"
+						value="#{startFormBean.startFormId}">
+						<f:selectItems value="#{startFormBean.startFormDL}" />
+						<ace:ajax />
+					</h:selectOneMenu>
+				</div>
+				<div class="FR pad15rt">
+					<!-- NEW button -->
+					<h:panelGroup styleClass="FL" rendered="#{(not startFormBean.editMode)
+						and (not empty authBean.pgFields['9.3,edit'])}">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton styleClass="btnMiniCt" value="New"
+							action="#{startFormBean.actionNewStartForm}" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+					<!-- DELETE button -->
+					<h:panelGroup styleClass="FL pad10lt" rendered="#{(not startFormBean.editMode)
+						and (not empty authBean.pgFields['9.3,edit'])
+						and (not empty startFormBean.form) and (not empty startFormBean.form.id)}">
+						<span class="btnMiniLtHot" />
+						<ace:linkButton styleClass="btnMiniCt" value="Delete"
+							action="#{startFormBean.actionDelete}" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</div>
+			</div>
+			<div class="FL rowCont">
+				<div class="FL pad10tp" style="width:820px;">
+					<div class="FL pad10lt">
+						<!-- CHECK IF START FORMS EXIST -->
+						<h:panelGroup
+							rendered="#{(not empty startFormBean.form) and (not empty startFormBean.form.id)}">
+							<!-- container -->
+							<div class="BKwhite" style="width:100%;">
+								<!-- first block  -->
+								<div class="W25percnt FL">
+									<!-- Production Start Form< -->
+									<div class="rowCont FL pad5lt">
+										<h:outputText value="Payroll Start Form"
+											styleClass="FL B txt17" />
+									</div>
+								</div>
+								<!-- Second -->
+								<div class="W15percnt FL">
+									<!-- FORM TYPE -->
+									<div class="rowCont FL pad5lt">
+										<span><h:outputText value="Type:"
+												styleClass="FL B txt14 pad2tp pad8rt" /> </span>
+										<h:panelGroup>
+											<span class="fd_sm">
+												<h:outputText value="New"	rendered="#{startFormBean.form.formType=='N'}" />
+												<h:outputText	value="Change" rendered="#{startFormBean.form.formType=='C'}" />
+												<h:outputText	value="Re-Hire" rendered="#{startFormBean.form.formType=='R'}" />
+											</span>
+										</h:panelGroup>
+									</div>
+									<!-- FORM TYPE END-->
+								</div>
+
+								<!-- Third -->
+								<div class="W30percnt FL">
+									<!-- CREATED DATE -->
+									<div class="rowCont FL pad5lt">
+										<span class="fdNm"> <h:outputText value="Created:"
+												styleClass="#{(empty startFormBean.form.creationDate) ? 'mandatory' : ''} B txt14 LH10" />
+											<span class="mandatory">*</span>
+										</span> <span class="fd_sm"> <h:outputText
+												rendered="#{not startFormBean.editMode}" styleClass="txt12"
+												value="#{startFormBean.form.creationDate}">
+												<f:convertDateTime pattern="MMMM d, yyyy"
+													timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+										</span> 
+										<span style="width: 100px;"> 
+											<ace:dateTimeEntry
+												rendered="#{startFormBean.editMode}" tabindex="0"
+												value="#{startFormBean.form.creationDate}"
+												title="Start Form creation date" renderAsPopup="true"
+												disabled="#{done or not appEdit}">
+												<f:converter converterId="lightspeed.MultiDateConverter" />
+												<ace:ajax event="dateTextChange"/>
+											</ace:dateTimeEntry>
+										</span>
+									</div>
+									<!-- CREATED DATE END-->
+								</div>
+
+								<!-- fourth -->
+								<div class="W30percnt FL">
+									<!-- DOC ID -->
+									<div class="rowCont">
+										<span class="FR pad5rt"> <h:outputText
+												value="Document ID #:" styleClass="B txt14"></h:outputText>
+											<h:outputText styleClass="fd_sm pad5lt" value="#{startFormBean.form.formNumber}" rendered="true" />
+											<ace:textEntry styleClass="fd_sm2" maxlength="10"
+												value="#{startFormBean.form.formNumber}" rendered="false"
+												disabled="true" >
+												<ace:ajax/>
+											</ace:textEntry>
+										</span>
+									</div>
+									<!-- DOC ID End -->
+								</div>
+								<div class="rowCont FL" style="height:10px;">
+									<hr	style="height:2px;background:black;border:0;margin-right:-1px;margin-top:3px;" />
+								</div>
+								<!-- Top section: production info, dates, batch -->
+								<ui:include src="sfHeader.xhtml">
+									<ui:param name="v30" value="#{true}" />
+								</ui:include>
+
+								<!-- Second section: Loan-Out corporation -->
+								<ui:include src="sfLoanOut.xhtml">
+									<ui:param name="v30" value="#{true}" />
+								</ui:include>
+
+								<div class="rowCont FL" style="height:15px;">
+									<hr
+										style="height:2px;background:black;border:0;margin-right:-1px;margin-top:3px;" />
+								</div>
+
+								<!-- lower left side: (left of tables) - employee demographics, etc. -->
+								<div class="FL">
+									<!--  EMPLOYEE INFORMATION -->
+									<ui:include src="sfEmployee.xhtml">
+										<ui:param name="v30" value="#{true}" />
+									</ui:include>
+
+									<div class="rowCont FL" style="height:10px;">
+										<hr	style="height:2px;background:black;border:0;margin-right:-1px;margin-top:3px;" />
+									</div>
+
+								</div>
+
+								<!-- Rate table for commercial production -->
+								<h:panelGroup rendered="#{aicp}">
+									<ui:include src="sfCommRateTable.xhtml">
+										<ui:param name="v30" value="#{true}" />
+									</ui:include>
+								</h:panelGroup>
+
+								<!-- Rate table for Tours production -->
+								<h:panelGroup
+										rendered="#{headerViewBean.production.type.tours}">
+									<ui:include src="sfToursRateTable.xhtml">
+										<ui:param name="v30" value="#{true}" />
+										<ui:param name="empEdit" value="#{startFormBean.empEdit}" />
+										<ui:param name="appEdit" value="#{startFormBean.appEdit}" />
+										<ui:param name="edit" value="#{startFormBean.editMode}" />
+										<ui:param name="submitted" value="#{false}" />
+									</ui:include>
+								</h:panelGroup>
+
+								<!-- Rate table for the non-commercial productions (TV and Feature) -->
+								<h:panelGroup rendered="#{!(aicp or headerViewBean.production.type.tours)}">
+									<div class="rowCont">
+										<h:outputText styleClass="FL B txt14 pad5lt" value="RATE TABLE:" />
+									</div>
+									<!-- Right side, lower half - Contract terms and rate tables -->
+									<div class="W100percnt FL">
+										<!-- FIRST ROW OF SELECTIONS -->
+										<div class="W53percnt FL pad6tp">
+											<div class="rowCont FL pad40lt">
+												<!-- EMPLOYEE TYPE -->
+												<span class="FL pad2tp"> 
+													<h:outputText styleClass="B" style="width:100px;" value="Employee Type:" />
+												</span> 
+												<h:selectOneRadio id="empltype"
+													styleClass="h_radio"
+													disabled="#{done or not appEdit}"
+													value="#{startFormBean.employeeType}"
+													valueChangeListener="#{startFormBean.listenEmployeeType}"
+													layout="lineDirection">
+													<f:selectItem itemLabel="Hourly" itemValue="H" />
+													<f:selectItem itemLabel="Daily/Exempt" itemValue="D" />
+													<f:selectItem itemLabel="Weekly/Exempt" itemValue="W" />
+													<ace:ajax />
+												</h:selectOneRadio>
+											</div>
+										</div>
+
+										<div class="W20percnt FL pad6tp">
+											<!-- 6th/7th DAY CHECKBOX -->
+											<div class="rowCont FL pad15lt LH18">
+												<h:selectBooleanCheckbox styleClass="ckbx"
+													value="#{startFormBean.form.pay6th7thDay}"
+													disabled="#{(done or not appEdit) or
+												(startFormBean.employeeType ne 'W')}" >
+													<ace:ajax />
+												</h:selectBooleanCheckbox>
+												<span class="ckbxTxtLbl">Pay 6th/7th days</span>
+											</div>
+										</div>
+
+										<div class="W27percnt FL pad8tp">
+											<!-- Default Work Zone STUDIO vs LOCATION -->
+											<div class="FL LH18 pad10lt">
+												<h:outputText value="Default Work Zone:" />
+												<h:selectOneMenu styleClass="txt11 pad5lt"
+													disabled="#{done or not appEdit}"
+													value="#{startFormBean.form.useStudioOrLoc}">
+													<f:selectItems value="#{startFormBean.rateTypeDL}" />
+													<ace:ajax/>
+												</h:selectOneMenu>
+											</div>
+										</div>
+
+										<div class="blueLegendContWrap MA" style="width: 90%;">
+											<div class="blueLegendCont pad20tp FL W70percnt">
+												<div class="legendHdg">Rates/Accounts</div>
+												<div style="min-height:15px;" />
+												<div class="DIB pad10lt pad-5tp">
+													<div class="rowCont FL pad8lt">
+														<!-- EMPLOYEE TYPE -->
+														<span class="FL pad2tp">
+																<h:outputText styleClass="B" style="width:100px;" value="Employee has : "/>
+														</span>
+														<span class="FL pad2tp pad10lt">
+															<h:selectOneRadio id="emplHas30" styleClass="h_radio"
+																value="#{startFormBean.empRates}"
+																valueChangeListener="#{startFormBean.listenEmployeeRates}"
+																disabled="#{done or not appEdit}"
+																layout="lineDirection">
+																<f:selectItem itemLabel="Standard rates" itemValue="S" />
+																<f:selectItem itemLabel="Standard &amp; Prep rates"  itemValue="P" escape="false"/>
+																<c:if test="#{false}">
+																	<f:selectItem itemLabel="Touring rates" itemValue="T" />
+																</c:if>
+																<ace:ajax />
+															</h:selectOneRadio>
+														</span>
+													</div>
+												</div>
+
+												<!-- lower right side: (Pre-production rate table) -->
+												<h:panelGroup styleClass="DIB W100percnt" rendered="#{startFormBean.form.hasPrepRates and
+												(startFormBean.form.prep ne null)}">
+													<ui:include src="sfRates.xhtml">
+														<ui:param name="rates" value="#{startFormBean.form.prep}" />
+														<ui:param name="prep" value="true" />
+														<ui:param name="shoot" value="false" />
+														<ui:param name="v30" value="#{true}" />
+													</ui:include>
+												</h:panelGroup>
+
+												<!-- lower right side: (production rate table) -->
+												<ui:include src="sfRates.xhtml">
+													<ui:param name="rates" value="#{startFormBean.form.prod}" />
+													<ui:param name="prep" value="false" />
+													<ui:param name="shoot" value="#{startFormBean.form.hasPrepRates}" />
+													<ui:param name="v30" value="#{true}" />
+												</ui:include>
+
+												<!-- lower right side: (allowances/expenses table) -->
+												<ui:include src="sfAllowances.xhtml">
+													<ui:param name="v30" value="#{true}" />
+												</ui:include>
+
+											</div>
+										</div>
+										<!-- end rates wrapper -->
+									</div>
+									<!-- end lower right (tables)  -->
+								</h:panelGroup>
+
+								<div class="rowCont FL pad10tp" style="height:15px;">
+									<hr style="height:2px;background:black;border:0;margin-right:-1px;margin-top:3px;" />
+								</div>
+							</div>
+							<!-- end scrolling div -->
+						</h:panelGroup>
+					</div>
+					<!-- end of Start Form-->
+				</div>
+				<div class="FL pad40tp" style="width:15%;">
+					<h:panelGroup styleClass="FL" rendered="#{(not empty startFormBean.form) and (not empty startFormBean.form.id)}">
+						<!-- Referenced with Start-->
+						<div class="FL pad20lt">
+							<!-- DEPARTMENT & POSITION  -->
+							<div class="rowCont pad10tp">
+								<span class="B"><h:outputText value="Referenced with:" />
+								</span>
+							</div>
+							<div class="rowCont">
+								<h:panelGroup styleClass="pad10lt LH16">
+									<div class="fd_sm">
+										<h:outputText
+											value="#{startFormBean.form.employment.department.name} " />
+									</div>
+									<div class="fd_sm">
+										<h:outputText
+											rendered="#{startFormBean.form.employment.role ne null}"
+											value="#{startFormBean.form.employment.role.name}" />
+									</div>
+									<div class="rowCont fd_sm">
+										<h:outputText
+											value="#{startFormBean.form.employment.contact.emailAddress} " />
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+						<!-- Referenced with End-->
+					</h:panelGroup>
+				</div>
+			</div>
+			<!-- TIMECARD OPTIONS -->
+			<h:panelGroup styleClass="rowCnt FL pad35lt" style="width:1000px;" rendered="#{(not empty startFormBean.form) and (not empty startFormBean.form.id)}">
+				<div class="pad5lt FL W90percnt pad5tp">
+					<h:outputText styleClass="B txt14 FL" value="TIMECARD OPTIONS:" />
+				</div>
+				<div class="FL rowCnt pad20lt pad5tp">
+					<!-- Department Start -->
+					<div class="rowCont pad20tp pad10bm FL">
+						<span class="fdNm txt12">
+							<h:outputText	value="Department: " />
+						</span>
+						<h:selectOneMenu styleClass="FL"
+							disabled="true"
+							value="#{startFormBean.form.employment.departmentId}">
+							<f:selectItems value="#{startFormBean.departmentDL}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</div>
+					<!-- Department End -->
+
+					<h:panelGroup rendered="#{not headerViewBean.production.type.tours}">
+						<div class="FL pad5tp">
+							<!-- Start State Worked -->
+							<div class="FL pad10tp" style="width:265px;">
+									When applying
+								<h:outputText styleClass="B U" value="Wage &amp; Overtime" />
+										rules, use rules from the following state:
+								<h:selectOneMenu styleClass="txt11"
+										disabled="#{not startFormBean.editMode}"
+										value="#{startFormBean.wageState}">
+									<f:selectItems value="#{startFormBean.wageRuleStateDL}" />
+									<ace:ajax/>
+								</h:selectOneMenu>
+							</div>
+							<!-- End State Worked -->
+							<!-- Start Bypass Approver -->
+							<div class="FL pad45lt pad10tp" style="width:265px;">
+								<div class="rowCont LH18">
+									<h:selectBooleanCheckbox styleClass="ckbx"
+										value="#{startFormBean.form.employment.skipDeptApprovers}"
+										disabled="#{not startFormBean.editMode}" >
+										<ace:ajax/>
+									</h:selectBooleanCheckbox>
+									<span class="ckbxTxtLbl">When timecard is submitted,</span>
+								</div>
+								<div class="rowCont pad5lt">
+									<h:outputText value="bypass Department Approvers." />
+								</div>
+							</div>
+							<!-- End Bypass Approver -->
+							<!-- Start Batch Selected -->
+							<div class="FL pad10tp" style="width:220px;">
+								Place Timecards for this Occupation into the Following Batch:
+								<!-- BATCH -->
+								<div class="rowCont FL">
+									<span class="fdNm_w" style="width: 65px;">
+										<h:outputText	value="Batch:" />
+									</span>
+									<h:selectOneMenu styleClass="FL"
+										disabled="#{not startFormBean.editMode}"
+										valueChangeListener="#{startFormBean.listenBatchChange}"
+										value="#{startFormBean.batchId}">
+										<f:selectItems value="#{startFormBean.prodBatchList}" />
+										<ace:ajax/>
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<!-- End Batch Selected -->
+						</div>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{(empty startFormBean.form) or (empty startFormBean.form.id)}">
+				<div class="CB"/>
+				<div class="FL rowCnt W50percnt">
+					<div class="rowCont">&#160;</div>
+					<div class="rowCont">&#160;</div>
+					<!-- NO START FORMS EXIST -->
+					<h:panelGroup styleClass="CT">
+						<div class="pad20tp pad20lt B">
+							No Start Forms exist for this employee
+							<h:panelGroup
+									rendered="#{headerViewBean.production.type eq 'TV_COMMERCIALS'}" >
+								in the current project.
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+				</div>
+				<!-- following ref prevents LazyInitializationException -->
+				<h:outputText style="visibility: hidden;"
+						value="#{headerViewBean.production.address.country}" />
+			</h:panelGroup>
+		</div>
+	</ace:tabPane>
+</ui:composition>

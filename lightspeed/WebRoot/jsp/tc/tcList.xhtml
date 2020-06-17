@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- left-side Timecard List for Timecard and My Timecards pages -->
+
+<!-- Uses params:  -->
+<!--   "aicp" : true if AICP Timecard (for Commercial production) -->
+
+	<!-- data list container for Week Details List -->
+	<div id="scriptElemListCont" class="ltrtBdr" style="height: 100%; ">
+		<div class="rowCont FL">
+			<ace:dataTable id="mainlist"
+				selectionMode="single" singleSort="true"
+				style="width:100%;max-width:100%;"
+				styleClass="bk_sl_grid" rowStyleClass="CT"
+				value="#{indivTimecardBean.sortedItemList}" var="timecard"
+				scrollHeight="#{headerViewBean.mobile ? '' : '368'}"
+				scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+				rowSelectListener="#{indivTimecardBean.rowSelected}"
+				stateMap="#{indivTimecardBean.stateMap}">
+
+				<!-- SPACER -->
+				<ace:column style="width:#{aicp ? '3' : '3'}%;">&#160;
+				</ace:column>
+
+				<!-- WEEK-ENDING DATE -->
+				<ace:column style="width:#{aicp ? '17' : '17'}%;" sortBy="#{timecard.endDate}" headerText="W/E Date">
+					<span class="FL">
+						<h:outputText value="#{timecard.endDate}"
+								styleClass="#{timecard.status eq 'VOID' ? 'tcVoid' : ''}" >
+							<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{timezone}" />
+						</h:outputText>
+						<h:outputText rendered="#{timecard.adjusted}" value="-ADJ" styleClass="tcAdj" />
+					</span>
+				</ace:column>
+
+				<!-- PROJECT for COMMERCIAL PRODUCTIONS -->
+				<ace:column style="width:#{aicp ? '20' : '0'}%;" sortBy="#{timecard.startForm.project.title}" headerText="Job Name" rendered="#{aicp}">
+					<span>
+						<h:outputText value="#{timecard.startForm.project.title}" style="" />
+					</span>
+				</ace:column>
+
+				<ace:column style="width:#{aicp ? '10' : '5'}%;" rendered="#{! aicp}">&#160;
+				</ace:column>
+				
+				<ace:column style="width:#{aicp ? '11' : '11'}%;" sortBy="#{timecard.totalHours}" headerText="Hours">
+					<span>
+						<h:outputText styleClass="FR" value="#{timecard.totalHours}" style="margin-right:20%;">
+							<f:convertNumber type="number" pattern="#0.00" />
+						</h:outputText>
+					</span>
+				</ace:column>
+
+				<!-- SPACER -->
+				<ace:column style="width:#{aicp ? '5' : '15'}%;">&#160;
+				</ace:column>
+
+				<ace:column style="width:#{aicp ? '15' : '20'}%;" sortBy="#{timecard.status.label}" headerText="Status">
+					<span class="FL">
+						<h:outputText value="#{timecard.status.label}" />
+					</span>
+				</ace:column>
+
+			</ace:dataTable>
+		 <!-- Data grid contains data -->
+		 <!-- Add legend to show user reference -->
+		</div>
+	</div><!-- end scriptElemListCont -->
+
+</ui:composition>

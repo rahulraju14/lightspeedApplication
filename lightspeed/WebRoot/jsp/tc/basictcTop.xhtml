@@ -1,0 +1,204 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- The top area (between tab header and timecard table) of the Basic Timecard page -->
+	<!-- Added ids for QA automation LS-2923 -->
+	<!-- Uses params:
+			aicp : true if AICP Timecard (for Commercial production); used by included pages
+			"isEnhancedLoanOut": true if the FF4J flag for Enhanced Loan Out supprot is on.
+	-->
+	<c:set var="wtc" value="#{indivTimecardBean.weeklyTimecard}" scope="request" />
+
+	<h:panelGroup styleClass="pad5lt">
+		<table class="LH20" style="width: 100%;">
+			<tr>
+				<td style="width: 19%;">
+					<h:outputText styleClass="B" value="Name:" />
+				</td>
+				<td style="width: 36%;">
+					<h:outputText
+							value="#{wtc.firstName} #{wtc.lastName}" />
+				</td>
+				<td style="width: 20%;">
+					<h:outputText styleClass="pad5lt B" value="Status:" />
+				</td>
+				<td style="width: 25%;">
+					<h:outputText value="#{wtc.status.label}"/>
+				</td>
+			</tr>
+
+			<!-- OCCUPATION / SOCIAL (row 2) -->
+			<tr>
+				<td>
+					<h:outputText styleClass="B" value="Occupation:" />
+				</td>
+				<td>
+					<h:outputText value="#{wtc.occupation}" />
+				</td>
+				<td>
+					<h:outputText styleClass="pad5lt B 
+						#{(isEnhancedLoanOut and indivTimecardBean.teamPayroll) ? 'mandatory' : ''} " 
+						value="Soc Sec #:" />
+					<h:panelGroup rendered="#{isEnhancedLoanOut and indivTimecardBean.teamPayroll}">
+						<span class="mandatory txt10">*</span>
+					</h:panelGroup>
+				</td>
+				<td>
+					<!-- SOCIAL SECURITY FIELD (included) -->
+					<ui:include src="socialSec.xhtml">
+						<ui:param name="bean" value="#{indivTimecardBean}" />
+						<ui:param name="idPrefix" value="#{idPrefix}" />
+					</ui:include>
+				</td>
+			</tr>
+
+			<!-- WORK CITY / STATE / LOAN-OUT (row 3) -->
+			<tr style="#{(isEnhancedLoanOut and indivTimecardBean.teamPayroll) ? '' : 'display:none'}">
+				<td>
+					<h:outputText styleClass="B mandatory txt10" value="Work City &amp; State:" />
+					<span class="mandatory">*</span>
+				</td>
+				<td>
+					<ace:textEntry id="#{idPrefix}TCityWorked" styleClass="FL W70percnt #{(indivTimecardBean.editMode 
+						and (wtc.cityWorked eq null or empty wtc.cityWorked.trim())) ? 'requiredDiv' : ''}" maxlength="50" style="min-width:60%;"
+							value="#{wtc.cityWorked}" 
+							rendered="#{indivTimecardBean.editMode and (wtc.cityWorked eq null or empty wtc.cityWorked.trim())}">
+						<ace:ajax/>
+					</ace:textEntry>
+					<h:outputText styleClass="FL" value="#{wtc.cityWorked},"
+							rendered="#{!indivTimecardBean.editMode or (wtc.cityWorked ne null and not empty wtc.cityWorked.trim())}" />
+					<h:selectOneMenu styleClass="FL pad5lt W25percnt #{(indivTimecardBean.editMode and (wtc.stateWorked eq null or empty wtc.stateWorked.trim())) ? 'requiredDiv' : ''}"
+							value="#{wtc.stateWorked}" id="#{idPrefix}TStateWorked"
+							valueChangeListener="#{indivTimecardBean.listenWorkStateChange}"
+							rendered="#{indivTimecardBean.editMode and (wtc.stateWorked eq null or empty wtc.stateWorked.trim())}">
+						<f:selectItems value="#{indivTimecardBean.countryStateCodeDL}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+					<h:outputText styleClass="FL pad5lt" value="#{wtc.stateWorked}"
+							rendered="#{! indivTimecardBean.editMode or (wtc.stateWorked ne null and not empty wtc.stateWorked.trim())}" />
+				</td>
+				<td>
+					<h:outputText styleClass="pad6lt B" value="Loan-Out Corp:" />
+				</td>
+				<td>
+					<h:outputText value="#{wtc.loanOutCorp}" />
+				</td>
+			</tr>
+			
+			<tr style="#{(not isEnhancedLoanOut or not indivTimecardBean.teamPayroll) ? '' : 'display:none'}">
+				<td>
+					<h:outputText styleClass="B" value="Work City &amp; State:" />
+				</td>
+				<td>
+					<ace:textEntry styleClass="FL W70percnt" maxlength="50" style="min-width:60%;"
+							value="#{wtc.cityWorked}" id="#{idPrefix}CityWorked"
+							rendered="#{indivTimecardBean.editMode}">
+					</ace:textEntry>
+					<h:outputText styleClass="FL" value="#{wtc.cityWorked},"
+							rendered="#{!indivTimecardBean.editMode}" />
+					<h:selectOneMenu styleClass="FL pad5lt W25percnt}"
+							value="#{wtc.stateWorked}" id="#{idPrefix}StateWorked"
+							valueChangeListener="#{indivTimecardBean.listenWorkStateChange}"
+							rendered="#{indivTimecardBean.editMode}">
+						<f:selectItems value="#{indivTimecardBean.countryStateCodeDL}" />
+						<ace:ajax/>
+					</h:selectOneMenu>
+					<h:outputText styleClass="FL pad5lt" value="#{wtc.stateWorked}"
+							rendered="#{! indivTimecardBean.editMode}" />
+				</td>
+				<td>
+					<h:outputText styleClass="pad5lt B" value="Loan-Out Corp:" />
+				</td>
+				<td>
+					<h:outputText value="#{wtc.loanOutCorp}" />
+				</td>
+			</tr>
+			<!-- Work Zip & Country (row 4) LS-2470 -->
+			<c:if test="#{aicp}">
+				<tr>
+					<td>
+						<h:outputText styleClass="B" value="Work Zip &amp; Country:"/>
+					</td>
+					<td>
+						<ace:textEntry styleClass="W30percnt" maxlength="10"
+							value="#{wtc.workZip}" id="#{idPrefix}WorkZip"
+							rendered="#{indivTimecardBean.editMode}" >
+							<ace:ajax render="@all"/>
+						</ace:textEntry>	
+						<h:outputText styleClass="FL" value="#{wtc.workZip}" style="margin-right: 50px;"
+							rendered="#{! indivTimecardBean.editMode}" />
+					<!-- </td>
+					<td> -->
+						<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+							<h:selectOneMenu styleClass="W20percnt"  style="margin-left: 15px;"
+									valueChangeListener="#{indivTimecardBean.listenWorkCountryChange}"
+									value="#{wtc.workCountry}" id="#{idPrefix}WorkCountry"
+									rendered="#{indivTimecardBean.editMode}">
+								<f:selectItems value="#{applicationScopeBean.countryCodeDL}" />
+								<ace:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+							<h:outputText value="#{wtc.workCountry}"
+									rendered="#{! indivTimecardBean.editMode}" />
+						</icecore:setEventPhase>
+					</td>
+					<td colspan="2" style="#{(isEnhancedLoanOut and indivTimecardBean.teamPayroll) ? '' : 'display:none'}">
+						<!-- How employee is going to be paid as individual or loan-out LS-2736 -->
+						<div class="FL B pad2tp pad5lt" >
+							<h:outputText styleClass="mandatory txt10" value="The employee is requesting to get paid as"/>
+							<span class="mandatory">*</span>
+						</div>
+						<div class="">
+							<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+								<h:selectOneMenu styleClass="pad5lt FL #{(indivTimecardBean.editMode and
+												empty wtc.paidAs) ? 'requiredDiv' : ''}" disabled="#{not indivTimecardBean.editMode}" 
+										value="#{wtc.paidAs}" valueChangeListener="#{indivTimecardBean.listenPaidAsChange}"
+										rendered="#{indivTimecardBean.editMode and empty wtc.paidAs}"
+										style="width:90px;" id="#{idPrefix}PaidAs">
+									<f:converter converterId="lightspeed.PaidAsConverter" />
+									<f:selectItems value="#{indivTimecardBean.paidAsDL}" />
+									<ace:ajax/>
+								</h:selectOneMenu>
+							</icecore:setEventPhase>
+							<h:outputText styleClass="pad3lt pad2tp FL" value="#{wtc.paidAs.label}" style="margin-right: 50px;"
+								rendered="#{! indivTimecardBean.editMode or not empty wtc.paidAs}" />
+						</div>
+					</td>
+				</tr>
+				<tr style="#{(isEnhancedLoanOut and indivTimecardBean.teamPayroll) ? '' : 'display:none;'}">
+					<td colspan="2"></td>
+					<td>
+						<!-- Do not highlight this field if paidAs is not a loan out. -->
+						<h:outputText styleClass="B pad8lt #{indivTimecardBean.weeklyTimecard.paidAs.loanOut ? 'mandatory txt10' : ''}" 
+							value="#{indivTimecardBean.weeklyTimecard.paidAs.loanOut? 'Federal ID #: *' : 'Federal ID #:'}" />
+					</td>
+					<td>
+						<h:panelGroup rendered="#{not indivTimecardBean.editMode or not empty wtc.fedCorpId}">
+							<span class="FL fd_sm">
+								<h:outputText value="#{wtc.fedCorpId}" >
+									<f:converter converterId="lightspeed.FedIdConverter" />
+								</h:outputText>
+							</span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{indivTimecardBean.editMode and empty wtc.fedCorpId}">
+							<span class="fd_sm pad10lt">
+								<ace:textEntry maxlength="11" id="#{idPrefix}FedCorpId"
+									styleClass="FL #{(indivTimecardBean.editMode and empty wtc.fedCorpId
+									and (wtc.paidAs ne null and wtc.paidAs.loanOut)) ? 'requiredDiv' : ''}"
+									value="#{wtc.fedCorpId}"
+									style="width:100px;">
+									<f:converter converterId="lightspeed.FedIdConverter" />
+									<ace:ajax/>
+								</ace:textEntry>
+							</span>
+						</h:panelGroup>						
+					</td>					
+				</tr>
+			</c:if>
+		</table>
+	</h:panelGroup>
+</ui:composition>

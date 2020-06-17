@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Timecards mini-tab of Admin / Misc page (NOT Prod Admin) -->
+	<ace:tabPane label="Timecards" id="timecardtab">
+
+	<div id="tcscrolldiv" class="scrollPnlTab">
+
+		<!-- ENABLE PSEUDO-APPROVER MODE -->
+		<div class="rowCont pad15tp">
+			<h:outputText styleClass="pnlHdrTxt" value="Approver Status" />
+			<h:panelGroup styleClass="rowCont pad20lt">
+				<h:selectBooleanCheckbox value="#{authBean.pseudoApprover}"
+						disabled="#{! headerViewBean.production.status.allowsWrite}">
+					<ace:ajax />
+				</h:selectBooleanCheckbox>
+				Enable "pseudo-approver" status to allow Create/Delete/Edit of timecards.
+				<h:panelGroup styleClass="rowCont B pad10tp" rendered="#{! headerViewBean.production.status.allowsWrite}">
+					This setting is not available for read-only Productions.
+				</h:panelGroup>
+			</h:panelGroup>
+		</div>
+
+		<hr class="pad15lt pad15rt pad10tp" style="height:2px;background:black;border:0;" />
+
+		<!-- RUN TIMECARD CREATOR (only on current production) -->
+		<div class="rowCont pad5tp">
+			<h:outputText styleClass="pnlHdrTxt" value="Create Timecards" />
+			<h:panelGroup styleClass="rowCont">
+				<div class="pad5tp pad20lt W40percnt">
+					This creates new (blank) timecards for the specified week-ending date,
+					but ONLY for the current production.  Timecards are created for all
+					employees that have valid (completed) Start Forms with effective
+					dates that include one or more days within the specified week.
+					An Event log entry is created when this completes, showing the
+					number of timecards created.
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			Enter week-ending date (blank for default):
+			<div class="W100percnt FL">
+				<div class="W20percnt FL">
+					<ace:dateTimeEntry styleClass="FL cal_date" value="#{adminTimecardBean.timecardDate}"
+							tabindex="0" renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax />
+					</ace:dateTimeEntry>
+				</div>
+				<div class="W40percnt FL">
+					<div>
+						<h:selectBooleanCheckbox value="#{adminTimecardBean.onlyIfPriorWeek}"
+								disabled="#{adminTimecardBean.ignorePriorWeek}">
+						</h:selectBooleanCheckbox>
+						Only create timecard if prior week's timecard exists
+					</div>
+					<div>
+						<h:selectBooleanCheckbox value="#{adminTimecardBean.ignorePriorWeek}">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+						Ignore prior week's timecard status
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="rowCont pad10tp pad20lt">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Run Timecard Creator"
+					action="#{adminTimecardBean.actionTimecardCreatorOneProd}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</div>
+
+		<hr class="pad15lt pad15rt pad10tp" style="height:2px;background:black;border:0;" />
+
+		<!-- RUN TIMECARD CALCULATOR (only on current production) -->
+		<div class="rowCont pad5tp">
+			<h:outputText styleClass="pnlHdrTxt" value="Calculate HTG" />
+			<h:panelGroup styleClass="rowCont">
+				<div class="pad5tp pad20lt W40percnt">
+					This runs the "All HTG" process for the specified week-ending date,
+					but ONLY for the current production.  All timecards in the production
+					that have hours entered for any day during the week will be calculated.
+					An Event log entry is created when this completes, showing the
+					number of timecards processed.
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			Enter first and last week-ending dates (blank for default):
+			<div style="pad20tp">
+				<ace:dateTimeEntry styleClass="FL cal_date" value="#{adminTimecardBean.calculateStartDate}"
+						tabindex="0" renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<ace:ajax />
+				</ace:dateTimeEntry>
+				<div class="DIB pad50lt">
+					<ace:dateTimeEntry styleClass="cal_date" value="#{adminTimecardBean.calculateEndDate}"
+							tabindex="0" renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax />
+					</ace:dateTimeEntry>
+				</div>
+				<!--
+				<h:selectBooleanCheckbox styleClass="pad50lt" value="#{adminTimecardBean.ignorePriorWeek}">
+					Ignore prior week's timecard status
+				</h:selectBooleanCheckbox>
+				 -->
+			</div>
+		</div>
+
+		<div class="rowCont pad10tp pad20lt">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Run HTG Calculation"
+					action="#{adminTimecardBean.actionTimecardCalculateOneProd}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</div>
+
+		<hr class="pad15lt pad15rt pad10tp" style="height:2px;background:black;border:0;" />
+
+		<!-- DUPLICATE TIMECARDS -->
+		<div class="rowCont pad5tp">
+			<h:outputText styleClass="pnlHdrTxt" value="Duplicate or Retro Timecards" />
+			<h:panelGroup styleClass="rowCont">
+				<div class="pad5tp pad20lt W40percnt">
+					This duplicates all the timecards from one week-ending date
+					to a new week-ending date.  EXISTING TIMECARDS ARE NOT OVERWRITTEN.
+					The data copied includes all employee-entered information,
+					but NOT payroll-entered or generated
+					data, such as Job tables and Pay Breakdown.
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			<h:selectBooleanCheckbox value="#{adminTimecardBean.retro}">
+				<ace:ajax />
+			</h:selectBooleanCheckbox>
+			Generate "Retro" timecards from the existing ones.
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			Enter source week-ending date (blank for default):
+			<ace:dateTimeEntry styleClass="cal_date" value="#{adminTimecardBean.timecardSourceDate}"
+					tabindex="0" renderAsPopup="true">
+				<f:converter converterId="lightspeed.MultiDateConverter"/>
+				<ace:ajax />
+			</ace:dateTimeEntry>
+		</div>
+
+		<h:panelGroup rendered="#{not adminTimecardBean.retro}">
+			<div class="rowCont pad15tp pad20lt">
+				Enter target week-ending date (blank for default):
+				<ace:dateTimeEntry styleClass="cal_date" value="#{adminTimecardBean.timecardTargetDate}"
+						tabindex="0" renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<ace:ajax />
+				</ace:dateTimeEntry>
+			</div>
+
+			<div class="rowCont pad15tp pad20lt">
+				<h:selectBooleanCheckbox value="#{adminTimecardBean.overWrite}">
+				</h:selectBooleanCheckbox>
+				Replace (over-write) existing timecards
+			</div>
+		</h:panelGroup>
+
+		<div class="rowCont pad15tp pad20lt">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="#{adminTimecardBean.retro ? 'Retro' : 'Duplicate'} Timecards"
+					action="#{adminTimecardBean.actionDuplicateTimecards}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</div>
+
+
+		<hr class="pad15lt pad15rt pad10tp" style="height:2px;background:black;border:0;" />
+
+		<!-- DELETE TIMECARDS -->
+		<div class="rowCont pad5tp">
+			<h:outputText styleClass="pnlHdrTxt" value="Delete Timecards" />
+			<h:panelGroup styleClass="rowCont">
+				<div class="pad5tp pad20lt W40percnt">
+					This will delete the specified range of timecards, but ONLY for the current production.
+					The timecards deleted will INCLUDE the first and last week-ending dates specified below.
+				</div>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			<h:panelGroup rendered="#{headerViewBean.production.type.aicp}">
+				<h:selectBooleanCheckbox styleClass="FL" value="#{adminTimecardBean.onlyCurrentProject}">
+					<span class="FL pad2tp pad5lt" style="width:380px">
+						Delete only timecards in the current project.
+						If un-checked, timecards in ALL projects will be deleted in the given range.
+					</span>
+					<ace:ajax />
+				</h:selectBooleanCheckbox>
+			</h:panelGroup>
+		</div>
+
+		<div class="rowCont pad15tp pad20lt">
+			Enter first and last week-ending dates (blank for default):
+			<div style="pad20tp">
+				<ace:dateTimeEntry styleClass="FL" value="#{adminTimecardBean.deleteStartDate}"
+						tabindex="0" renderAsPopup="true">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+					<ace:ajax />
+				</ace:dateTimeEntry>
+				<div class="DIB pad50lt">
+					<ace:dateTimeEntry value="#{adminTimecardBean.deleteEndDate}"
+							tabindex="0" renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+						<ace:ajax />
+					</ace:dateTimeEntry>
+				</div>
+			</div>
+		</div>
+
+		<div class="rowCont pad10tp pad20lt">
+			<span class="btnPriHotLt"/>
+			<ace:linkButton value="Delete Timecards"
+					action="#{adminTimecardBean.actionDeleteTimecards}" styleClass="btnPriHotCt" />
+			<span class="btnPriHotRt"/>
+		</div>
+
+	</div>
+
+	</ace:tabPane>
+
+</ui:composition>

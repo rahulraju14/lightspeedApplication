@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Confirm Reject</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function doFocus() {
+	document.getElementById('submit:password').focus();
+}
+</script>
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+	doFocus();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div class=" ">
+		<h:form id="submit">
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="?com.lightspeedeps.approveBackPage" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT">
+
+				<!-- call "getLoadReject()" to setup page; always returns false. -->
+				<h:outputText style="visibility:hidden;" value="#{mobileApproverBean.loadReject}" />
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle">
+						Reject Timecard
+				</div>
+
+				<div class="prodTitle pad10tp">
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.lastNameFirstName}" />
+				</div>
+				<div class="infoText">
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.occupation}" />
+				</div>
+
+				<div class="pad10tp">
+					<span class="weekEndTextMed">
+						W/E
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.endDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+						<h:outputText rendered="#{mobileApproverBean.weeklyTimecard.adjusted}" value="Adj" styleClass="tcAdj" />
+					</span>
+				</div>
+
+				<div class="infoText pad10tp">
+					Please select the person to whom you<br/>
+					are returning the timecard.
+				</div>
+
+				<div class="pad10tp">
+					<div>
+						<h:selectOneMenu style="width:70%;"
+								value="#{rejectPromptBean.contactId}" >
+							<f:selectItems value="#{rejectPromptBean.approverDL}" />
+							<f:ajax execute="@this" render="@all"/>
+						</h:selectOneMenu>
+					</div>
+				</div>
+
+				<div class="pad10tp">
+					<div class="infoText">
+						<b>Comment:</b> (optional)
+					</div>
+					<span class="LT inBlock" style="width:85%;">
+						<ace:textAreaEntry styleClass="FL stdTxtArea" value="#{rejectPromptBean.comment}"
+								maxlength="1000" style="height:30px;width:100%;"/>
+					</span>
+					<div class="infoText pad5tp">
+						The above comment will appear in the Comments section of the
+						timecard and will be visible by the employee.  Once entered,
+						it may not be deleted.
+					</div>
+				</div>
+
+				<div class="infoText pad10tp">
+					Select Reject to confirm the rejection of the<br/>
+					timecard for &#160;
+					<h:outputText styleClass="B" value="#{mobileApproverBean.weeklyTimecard.lastNameFirstName}" />
+				</div>
+
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="CT pad15tp">
+					<span class="inBlock FL ltMar">
+						<span class="FL btnSecHotLt"></span>
+						<span>
+							<h:commandLink value="Reject"
+								tabindex="4" action="#{rejectPromptBean.actionOk}"
+								styleClass="btnSecHotCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnSecHotRt"></span>
+					</span>
+
+					<span class="inBlock FR rtMar">
+						<span class="FL btnPriEnbLt"></span>
+						<span>
+							<h:commandLink value="Cancel"
+								tabindex="4" action="#{rejectPromptBean.actionCancel}"
+								styleClass="btnPriEnbCt" style="font-size:24px;" />
+						</span>
+						<span class="FL btnPriEnbRt"></span>
+					</span>
+				</div>
+
+				<div class="pad10tp" >&#160;</div>
+			</div>
+
+	</h:form>
+
+	<div class="CB pad20tp"/>
+
+ 	<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

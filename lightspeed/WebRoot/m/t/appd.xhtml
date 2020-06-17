@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Timecards Approved</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3, user-scalable=1" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value=" " />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT pad10tp">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="txtL1 pad40tp">
+						<h:outputText value="E-Signature Successful" />
+				</div>
+				<div class="txtL1 pad20tp">
+						<h:outputText value="Timecard(s) Approved" />
+				</div>
+
+				<div class="txtL2 inCtlRow">
+					<span class="midBtn">
+						For W/E
+						<h:outputText value="#{mobileApproverBean.weekEndDate}" styleClass="pad10lt">
+							<f:convertDateTime pattern="M/d/yyyy" timeZone="#{applicationScopeBean.timeZone}" />
+						</h:outputText>
+					</span>
+				</div>
+
+				<div class="CT pad40tp">
+					<span class="inBlock">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="Approver Dashboard" action="appdashboardm" styleClass="btnPriHotCt" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</span>
+				</div>
+
+			</div>
+
+		<div class="CB pad40tp"/>
+
+	</h:form>
+
+ 	<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

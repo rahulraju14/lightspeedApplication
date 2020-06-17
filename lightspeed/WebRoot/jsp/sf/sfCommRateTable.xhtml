@@ -1,0 +1,260 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<!-- Employee Rate Table, for Start Payroll form (Commercial production) -->
+	
+	<!--  parameters expected:
+		aicp :				true if this is an AICP (Commercial) Start Form 
+		isTeamPayroll:      true if this production is processed by Team
+		done :				true if this form has been 'finalized'
+	-->
+
+	<div class="rowCont">
+		<c:set var="empEdit" value="#{startFormBean.empEdit}" />
+		<c:set var="appEdit" value="#{startFormBean.appEdit or (startFormBean.editMode and v30)}" />
+		<c:set var="edit" value="#{startFormBean.editMode}" />
+		<c:set var="submitted" value="#{startFormBean.contactDoc.submitted and not v30}" />
+		<c:set var="includeTour" value="#{isTeamPayroll and headerViewBean.production.payrollPref.includeTouring}" />
+
+		<!-- Second Block Start -->
+		<div class="W72percnt FL ">
+			<!-- Right side, lower half - Contract terms and rate tables -->
+			<!-- FIRST ROW OF SELECTIONS -->
+			<div class="W75percnt FL pad10tp">
+				<div class="rowCont FL pad30lt">
+					<!-- EMPLOYEE TYPE -->
+					<span class="FL pad2tp" style="width:100px;">
+							<h:outputText styleClass="B" value="Employee Type:"/>
+					</span>
+					<!-- <span class="pad5lt"><ice:radio for="empltype2" index="0" /></span>
+					<span class="pad10lt"><ice:radio for="empltype2" index="1" /></span>
+					<span class="pad10lt"><ice:radio for="empltype2" index="2" /></span> -->
+					<span class="FL pad2tp"  style="width:315px;"> 
+						<h:selectOneRadio id="empltype2" styleClass="h_radio"
+							disabled="#{done or not appEdit}"
+							value="#{startFormBean.employeeType}"
+							valueChangeListener="#{startFormBean.listenEmployeeType}"
+							layout="lineDirection">
+							<f:selectItem itemLabel="Hourly" itemValue="H" />
+							<f:selectItem itemLabel="Daily/Exempt"  itemValue="D" />
+							<f:selectItem itemLabel="Weekly/Exempt" itemValue="W" />
+							<ace:ajax />
+						</h:selectOneRadio>
+					</span>
+				</div>
+			</div>
+
+			<!-- <div class="W25percnt FL pad6tp pad10lt">
+				ALLOW WORKED CHECKBOX
+				<div class="rowCont FL pad5lt LH18">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+							value="#{startFormBean.form.allowWorked}"
+							disabled="#{! startFormBean.editMode}" />
+					<h:outputText rendered="#{startFormBean.form.unionLocalNum eq null}">
+						<span class="ckbxTxtLbl">Employee is Exempt/On-Call and may</span>
+					</h:outputText>
+					<h:outputText rendered="#{startFormBean.form.unionLocalNum eq 'NonU'}">
+						<span class="ckbxTxtLbl">Employee is Exempt and may</span>
+					</h:outputText>
+					<h:outputText rendered="#{startFormBean.form.unionLocalNum ne null and startFormBean.form.unionLocalNum ne 'NonU'}">
+						<span class="ckbxTxtLbl">Employee is On-Call and may</span>
+					</h:outputText>
+				</div>
+				<div class="rowCont pad30lt">
+						<h:outputText escape="false" value="record their time as &quot;Worked&quot;"/>
+				</div>
+			</div> -->
+
+			<div class="W20percnt FL pad8tp">
+				<!-- 6th/7th DAY CHECKBOX -->
+				<div class="rowCont FL pad20lt LH18">
+					<h:selectBooleanCheckbox styleClass="ckbx"
+						value="#{startFormBean.form.pay6th7thDay}"
+						disabled="#{(done or not appEdit) or
+							(startFormBean.employeeType ne 'W')}" >
+						<ace:ajax/>
+					</h:selectBooleanCheckbox>
+					<span class="ckbxTxtLbl">Pay 6th/7th days</span>
+				</div>
+			</div>
+
+			<!-- SECOND ROW OF SELECTIONS
+				SEND SUBMITTED TC TO:
+				<div class="W40percnt FL">
+					<div class="rowCont LH18">
+						<h:selectBooleanCheckbox styleClass="ckbx"
+							value="#{startFormBean.form.underContract}"
+							disabled="#{! startFormBean.editMode}" />
+						<span class="ckbxTxtLbl">When timecard is submitted,</span>
+					</div>
+					<div class="rowCont pad5lt">
+						<h:outputText value="bypass Department Approvers." />
+					</div>
+				</div>
+
+			THIRD ROW OF SELECTIONS
+			<div class="rowCont pad10tp">
+				When applying
+				<h:outputText styleClass="B U" value="Wage &amp; Overtime" />
+				rules, use rules from the following state:
+						<h:selectOneMenu styleClass="txt11" disabled="#{not startFormBean.editMode}"
+								value="#{startFormBean.form.overtimeRule}">
+							<f:selectItems value="#{startFormBean.wageRuleStateDL}" />
+						</h:selectOneMenu>
+
+				</div> -->
+
+			<div class="blueLegendContWrap MA">
+				<div class="blueLegendCont pad20tp pad30lt FL">
+					<div class="legendHdg">Rates/Accounts</div>
+					<!-- Legend Button  -->
+					<div style="min-height:19px;"> <!-- keeps size even if btn is hidden -->
+						<h:panelGroup styleClass="btn_legend" rendered="#{edit and aicp and appEdit and (((startFormBean.employeeType ne 'D') and (startFormBean.employeeType ne 'W')) or (startFormBean.isUnion and startFormBean.union.number ne 'DGA'))}">
+							<span class="btnMiniLtHot" />
+							<ace:linkButton value="Day Rate Calculator"
+								action="#{startFormBean.actionDayRateOpen}" styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+					</div>
+
+					<div class="DIB pad10lt pad-5tp">
+						<div class="rowCont FL pad8lt">
+							<!-- EMPLOYEE TYPE -->
+							<span class="FL pad2tp">
+									<h:outputText styleClass="B" style="width:100px;" value="Employee has : "/>
+							</span>
+							<span class="FL pad2tp pad10lt">
+								<h:selectOneRadio id="emplHasComm" styleClass="h_radio"
+									value="#{startFormBean.empRates}"
+									valueChangeListener="#{startFormBean.listenEmployeeRates}"
+									disabled="#{done or not appEdit}"
+									layout="lineDirection">
+									<f:selectItem itemLabel="Standard rates" itemValue="S" />
+									<f:selectItem itemLabel="Standard &amp; Prep rates"  itemValue="P" escape="false"/>
+									<c:if test="#{includeTour}">
+										<f:selectItem itemLabel="Touring rates" itemValue="T"
+												itemDisabled="#{startFormBean.isUnion}" />
+									</c:if>
+									<ace:ajax />
+								</h:selectOneRadio>
+							</span>
+						</div>
+						<!-- LS-2139 Adding Fields to Payroll Start for NU Time Card for Talent -->
+						<div class="rowCont FL pad8lt">
+							<!-- Other Fees -->
+							<h:panelGroup rendered="#{startFormBean.isEmpDeptCast}">
+								<span class="FL pad7tp">
+								 	<h:outputText styleClass="B" style="width:100px;" value="Other fees : " />
+								</span>
+								<span class="FL pad2tp pad10lt"> 
+									<span style="width: 60px;"> 
+										<h:outputText value="Reuse ($)" />
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm pad6lt"> 
+											<ace:textEntry
+												maxlength="30" style="width:60px;"
+												disabled="#{done or not appEdit}"
+												value="#{startFormBean.form.empReuse}">
+												<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>
+								</span>
+								<span class="FL pad2tp pad10lt"> 
+									<span style="width: 134px;"> 
+										<h:outputText value="Agent commission (%)" />
+									</span> 
+									<h:panelGroup>
+										<span class="fd_sm pad6lt"> 
+											<ace:textEntry
+												maxlength="30" style="width:60px;"
+												disabled="#{(startFormBean.isAgentComm == false) or done or (not appEdit)}"
+												value="#{startFormBean.form.empAgentCommisssion}">
+												<f:convertNumber type="number" pattern="##0.00"/>
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>
+								</span>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{includeTour}">
+								<span class="pad100lt"> 
+									<span>
+										<h:outputText value="Overnight" />
+									</span>
+									<h:panelGroup>
+										<span class="fd_sm pad6lt"> 
+											<ace:textEntry
+												maxlength="30" style="width:60px;"
+												disabled="#{done or not appEdit}"
+												value="#{startFormBean.form.overnight}">
+												<f:convertNumber pattern="###,##0.00" minFractionDigits="2" maxFractionDigits="2"/>
+											</ace:textEntry>
+										</span>
+									</h:panelGroup>
+								</span>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- lower right side: (Pre-production rate table) -->
+					<h:panelGroup styleClass="DIB W100percnt" rendered="#{startFormBean.form.hasPrepRates and
+							(startFormBean.form.prep ne null)}">
+						<ui:include src="sfRates.xhtml">
+							<ui:param name="rates" value="#{startFormBean.form.prep}" />
+							<ui:param name="prep" value="true" />
+							<ui:param name="shoot" value="false" />
+							<ui:param name="v30" value="#{v30}" />
+						</ui:include>
+					</h:panelGroup>
+
+					<!-- lower right side: (production rate table) -->
+					<ui:include src="sfRates.xhtml">
+						<ui:param name="rates" value="#{startFormBean.form.prod}" />
+						<ui:param name="prep" value="false" />
+						<ui:param name="shoot" value="#{startFormBean.form.hasPrepRates}" />
+						<ui:param name="v30" value="#{v30}" />
+					</ui:include>
+					
+					<!-- lower right side: (touring rate table) -->
+					<h:panelGroup rendered="#{startFormBean.empRates eq 'T'}">
+						<ui:include src="sfToursCommRateTable.xhtml">
+							<ui:param name="v30" value="#{false}" />
+							<ui:param name="empEdit" value="#{empEdit}" />
+							<ui:param name="appEdit" value="#{appEdit}" />
+							<ui:param name="edit" value="#{edit}" />
+							<ui:param name="submitted" value="#{submitted}" />
+							<ui:param name="suffix" value="comm" />
+							<ui:param name="isTourProd" value="#{false}" />
+						</ui:include>
+					</h:panelGroup>
+
+					<!-- lower right side: (allowances/expenses table) -->
+					<ui:include src="sfAllowances.xhtml">
+						<ui:param name="v30" value="#{v30}" />
+					</ui:include>
+
+				</div>
+			</div><!-- end rates wrapper -->
+		</div> <!-- Second Block End -->
+
+		<!-- Default Work Zone STUDIO vs LOCATION -->
+		<div class="W25percnt FL ">
+			<div class="rowCont FL pad10tp">
+				<div class="FL LH18 pad30lt">
+					<h:outputText value="Default Work Zone:"/>
+					<h:selectOneMenu styleClass="txt11 pad5lt"  disabled="#{done or not appEdit}"
+							value="#{startFormBean.form.useStudioOrLoc}">
+						<f:selectItems value="#{startFormBean.rateTypeDL}"  />
+						<ace:ajax/>
+					</h:selectOneMenu>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

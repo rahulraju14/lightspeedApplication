@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exhibitSubRept" pageWidth="948" pageHeight="252" orientation="Landscape" columnWidth="948" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="3f6f14de-0ed1-466a-8d8c-517be3ff8219">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="sqlQryTimesheet" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT "
++ " concat(user.first_name, ' ', user.last_name) as display_name, "
++ " tc.role as name, "
++ " case tc.day_type" +
+		" when 'WORK' then 'W' "
+		+ " when 'OTHER_TRAVEL' then 'T'"
+		+ " when 'COMPANY_TRAVEL' then 'T'"
+		+ " when 'HOLIDAY' then 'Y'"
+		+ " when 'OFF' then ' '"
+		+ " when 'START' then 'SW'"
+		+ " when 'START_FINISH' then 'SWF'"
+		+ " when 'START_DROP' then 'SWD'"
+		+ " when 'START_TRAVEL' then 'ST'"
+		+ " when 'DROP' then 'WD'"
+		+ " when 'PICKUP' then 'PW'"
+		+ " when 'PICKUP_DROP' then 'PWD'"
+		+ " when 'PICKUP_FINISH' then 'PWF'"
+		+ " when 'FINISH' then 'WF'"
+		+ " when 'HOLD' then 'H'"
+		+ " when 'NOT_NEEDED' then ' '"
+		+ " else '?'"
++ " end as status,"
++ " tc.* "
++ "FROM time_card tc, contact, user "
++ "WHERE "
++ " contact.id = tc.contact_id and user.id = contact.user_id "
++ "limit 10;"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQryTimesheet}]]>
+	</queryString>
+	<field name="display_name" class="java.lang.String"/>
+	<field name="castid" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="DTYPE" class="java.lang.String"/>
+	<field name="Contact_Id" class="java.lang.Integer"/>
+	<field name="Role" class="java.lang.String"/>
+	<field name="Department_Id" class="java.lang.Integer"/>
+	<field name="Minor" class="java.lang.Boolean"/>
+	<field name="Day_Type" class="java.lang.String"/>
+	<field name="Report_Set" class="java.sql.Timestamp"/>
+	<field name="Dismiss_Set" class="java.sql.Timestamp"/>
+	<field name="First_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="First_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="Second_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Report_Makeup" class="java.sql.Timestamp"/>
+	<field name="Dismiss_Makeup" class="java.sql.Timestamp"/>
+	<field name="ND_Meal_Start" class="java.sql.Timestamp"/>
+	<field name="ND_Meal_End" class="java.sql.Timestamp"/>
+	<field name="Leave_For_Location" class="java.sql.Timestamp"/>
+	<field name="Arrive_Location" class="java.sql.Timestamp"/>
+	<field name="Leave_Location" class="java.sql.Timestamp"/>
+	<field name="Arrive_Studio" class="java.sql.Timestamp"/>
+	<field name="Stunt_Adjust" class="java.sql.Timestamp"/>
+	<field name="Wardrobe_Outfits" class="java.lang.Integer"/>
+	<field name="Mpv1" class="java.lang.String"/>
+	<field name="Forced_Call" class="java.lang.Boolean"/>
+	<field name="Tutoring_Hours" class="java.sql.Timestamp"/>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="9c2ffb49-b2c2-46df-9737-d80160854c5a" key="textField" positionType="Float" x="1" y="0" width="90" height="21" forecolor="#000000"/>
+				<box>
+					<pen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" pdfFontName="Times-Roman"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{display_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="3625c062-b798-4519-877b-95503cf7779a" key="textField" positionType="Float" x="91" y="0" width="17" height="21" forecolor="#000000"/>
+				<box>
+					<pen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( ($F{Minor}.booleanValue()==true) ? "Y" : "" )]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="30960e77-ba4b-48c5-baab-ff987972aec1" key="textField" positionType="Float" x="108" y="0" width="84" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" pdfFontName="Times-Roman"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="482f3388-3cca-4716-b286-910306562828" key="textField" positionType="Float" x="192" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="316f6c2e-e2f5-4d00-9108-45f1e7bb28ba" key="textField" x="225" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Report_Makeup}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="efdd380f-f279-4d73-b3d8-f063acc45de4" key="textField" x="258" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Report_Set}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="636153ee-eef8-4898-86d0-42a54f535ad4" key="textField" x="291" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Dismiss_Set}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="84add746-f600-442f-a775-5a471a168651" key="textField" x="324" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Dismiss_Makeup}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="937aeb7a-e61d-40f1-9de6-c6d1cf439844" key="textField" x="357" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ND_Meal_Start}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="7d6dd280-8517-403b-868b-29987f7776bd" key="textField" x="390" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ND_Meal_End}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="96224604-ecaf-4c8e-a092-07de6268eaf0" key="textField" x="423" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{First_Meal_Start}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="9fdc1494-93fd-4e7c-823d-f9f4f75597e9" key="textField" x="456" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{First_Meal_End}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="123e012d-d2f2-4688-b0d3-f341fc76d650" key="textField" x="489" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Second_Meal_Start}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="176b2f90-0f84-42a0-b924-8459f7bb2b43" key="textField" x="522" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Second_Meal_End}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="49b88059-1fba-47b4-bd4a-e86ca616c788" key="textField" x="555" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Leave_For_Location}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="a1049a0b-11c1-4393-8313-a7398cd6fb5d" key="textField" x="588" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Arrive_Location}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="a46fdf07-b160-415c-b717-9efb4e6e8c4a" key="textField" x="621" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Leave_Location}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a" isBlankWhenNull="true">
+				<reportElement uuid="144bb25c-74c2-4f2e-bf68-80fb05a6c150" key="textField" x="654" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Arrive_Studio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="H:mm" isBlankWhenNull="true">
+				<reportElement uuid="5bcd7e5c-f769-4361-8dc8-5373099f680f" key="textField" x="687" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Stunt_Adjust}]]></textFieldExpression>
+			</textField>
+			<textField pattern="H:mm" isBlankWhenNull="true">
+				<reportElement uuid="f01b79af-e064-4351-8633-6fbc388f5502" key="textField" x="720" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Tutoring_Hours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="fc7aa959-18f7-4501-a079-914ba3a7fcc4" key="textField" x="753" y="0" width="33" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Wardrobe_Outfits}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="67bcef8b-9fc3-4252-9409-dbb592f8286c" key="textField" x="786" y="11" width="33" height="10" forecolor="#000000"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mpv1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="0e397fa5-9512-4343-82c0-001cfe3d6203" key="textField" positionType="Float" x="786" y="0" width="33" height="11" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( ($F{Forced_Call}.booleanValue()==true) ? "Y" : "" )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="056f8a8a-8fb6-40f7-aa23-65eb1c3499e5" key="staticText-39" x="819" y="0" width="129" height="21" forecolor="#000000"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="7" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

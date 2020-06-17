@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Status Section / Report Status -->
+	<h:panelGroup
+		rendered="#{(not empty messageCenterBean.reportStatusList) and (not empty authBean.pgFields['1.0,reports'])}">
+		<div id="sub_homeRptStatTab">
+			<div class="sub_homeRptStat">
+				<div class="homeRptStatContWrap MA">
+					<div id="homeRptStatCont">
+						<span class="subSecHdg_homeRptStat FL">
+							Report Status
+						</span>
+						<ace:dataTable
+							styleClass="bk_sl_grid"
+							style="width:100%;max-width:100%;"
+							value="#{messageCenterBean.reportStatusList}"
+							var="report">
+							<ace:column headerText="Report">
+								<ace:linkButton
+									action="#{jumpBean.actionViewReport}"
+									value="#{report.type.label}">
+									<f:setPropertyActionListener
+										value="com.lightspeedeps.reportType"
+										target="#{jumpBean.attribute}" />
+									<f:setPropertyActionListener
+										value="#{report.type}"
+										target="#{jumpBean.value}" />
+								</ace:linkButton>
+							</ace:column>
+							<ace:column headerText="For Production Day">
+								<span class="rowCont CT">
+									<h:outputText
+										value="#{report.date}">
+										<f:convertDateTime
+											pattern="MM/dd/yy"
+											timeZone="#{applicationScopeBean.timeZone}" />
+									</h:outputText>
+								</span>
+							</ace:column>
+							<ace:column headerText="Status">
+								<span class="rowCont CT">
+									<h:outputText
+										value="Due today"
+										rendered="#{not report.overdue}" />
+									<h:outputText
+										value="Overdue"
+										rendered="#{report.overdue}" />
+								</span>
+							</ace:column>
+						</ace:dataTable>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup><!-- end Status Section / Report Status -->
+
+</ui:composition>

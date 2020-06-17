@@ -1,0 +1,430 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL">
+		<!-- Second page - Header image -->
+		<h:graphicImage value="" style="width:820px; margin-left:-5px; margin-top:15px;"
+			alt="" url="../../i/forms/formI9SecondPageHeader.png">
+		</h:graphicImage>
+		<div style="margin-top:-8%;">
+			<span class="fd_sm2">
+				<ace:textEntry maxlength="35" disabled="true" id="FULL_NAME"
+					style="width:50%;min-width:50%;margin-left:48%;"
+					value="#{formI9Bean.form.fullName}" />
+			</span>
+		</div>
+
+		<!-- common disable setting for most Section 2 fields -->
+		<c:set var="disSec2" value="#{(not formI9Bean.appEdit) or (formI9Bean.contactDoc.submitable)}"/>
+
+		<!-- Main div for two partition -->
+		<div class="rowCont sfFormBorder1" style="height:625px;width:810px;margin-top:44px;">
+
+			<!-- First block List A Start-->
+			<div class="W33percnt FL ">
+				<!-- List-A1 Start -->
+				<!-- A1-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Title:" />
+					 </span>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+							style="width:93%;" disabled="#{disSec2 or not empty formI9Bean.form.BDocTitle
+									or not empty formI9Bean.form.CDocTitle}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							value="#{formI9Bean.form.a1DocTitle}" id="A1_DOC_TITLE">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Document Title field-1 End -->
+
+				<!-- A1-Issuing Authority field Start-->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Issuing Authority:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A1_ISSUING_AUTH" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a1DocTitle}"
+								value="#{formI9Bean.form.a1IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Issuing Authority field End -->
+
+				<!-- A1-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Number:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A1_DOC_NUMBER" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a1DocTitle}"
+								value="#{formI9Bean.form.a1DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A1-Document Number field End -->
+
+				<!-- A1-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w2" style="width:220px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+					</span>
+					<ace:dateTimeEntry id="A1_DOC_EXPIRATION" tabindex="0"
+						styleClass="fd_sm3" style="min-width:80%;"
+						disabled="#{disSec2 or empty formI9Bean.form.a1DocTitle}"
+						value="#{formI9Bean.form.a1DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+						<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+					</ace:dateTimeEntry>
+				</div>
+				<!-- A1-Expiration Date field End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-3px;margin-top:-2px;" />
+				</div>
+				<!-- List-A1 End -->
+
+				<!--List-A2 Start -->
+				<!-- A2-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Title:" />
+					</span>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+							style="width:93%;" disabled="#{disSec2}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							value="#{formI9Bean.form.a2DocTitle}" id="A2_DOC_TITLE">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Document Title field End -->
+
+				<!-- A2-Issuing Authority field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Issuing Authority:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A2_ISSUING_AUTH" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a2DocTitle}"
+								value="#{formI9Bean.form.a2IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Issuing Authority field End -->
+
+				<!-- A2-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Number:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A2_DOC_NUMBER" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a2DocTitle}"
+								value="#{formI9Bean.form.a2DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A2-Document Number field End -->
+
+				<!-- A2-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w2" style="width:220px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+					</span>
+					<ace:dateTimeEntry id="A2_DOC_EXPIRATION"
+						styleClass="fd_sm3" tabindex="0"
+						disabled="#{disSec2 or empty formI9Bean.form.a2DocTitle}"
+						value="#{formI9Bean.form.a2DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+						<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+					</ace:dateTimeEntry>
+				</div>
+				<!-- A2-Expiration Date field End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-3px;margin-top:-2px;" />
+				</div>
+				<!-- List-A2 End -->
+
+				<!-- List-A3 Start -->
+				<!-- A3-Document Title field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Title:" />
+					</span>
+					<h:panelGroup>
+						<h:selectOneMenu styleClass="FL pad8lt"
+								style="width:93%;" disabled="#{disSec2}"
+								valueChangeListener="#{formI9Bean.listenValueChange}"
+								value="#{formI9Bean.form.a3DocTitle}" id="A3_DOC_TITLE">
+							<f:selectItems value="#{formI9Bean.i9DocListA}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Document Title field End -->
+
+				<!-- A3-Issuing Authority field Start 1-->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Issuing Authority:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A3_ISSUING_AUTH" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a3DocTitle}"
+								value="#{formI9Bean.form.a3IssuingAuth}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Issuing Authority field End -->
+
+				<!-- A3-Document Number field Start -->
+				<div class="rowCont" style="height:50px;">
+					<span class="fdNm_w2 pad8lt" style="width:220px;">
+						<h:outputText value="Document Number:" />
+					</span>
+					<h:panelGroup>
+						<span class="fd_sm2 pad8lt">
+							<ace:textEntry style="width:90%;"
+								id="A3_DOC_NUMBER" maxlength="35"
+								disabled="#{disSec2 or empty formI9Bean.form.a3DocTitle}"
+								value="#{formI9Bean.form.a3DocNumber}"
+								valueChangeListener="#{formI9Bean.listenValueChange}" />
+						</span>
+					</h:panelGroup>
+				</div>
+				<!-- A3-Document Number field End -->
+
+				<!-- A3-Expiration Date field Start -->
+				<div class="rowCont pad8lt" style="height:50px;">
+					<span class="fdNm_w2" style="width:220px;">
+						<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+					</span>
+					<ace:dateTimeEntry id="A3_DOC_EXPIRATION"
+						styleClass="fd_sm3" tabindex="0"
+						disabled="#{disSec2 or empty formI9Bean.form.a3DocTitle}"
+						value="#{formI9Bean.form.a3DocExpiration}"
+						valueChangeListener="#{formI9Bean.listenValueChange}"
+						renderAsPopup="true">
+						<f:converter converterId="lightspeed.MultiDateConverter" />
+					<!-- 	<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+					</ace:dateTimeEntry>
+				</div>
+				<!-- A3-Expiration Date field End -->
+				<!-- List A-3 End -->
+			</div>
+			<!-- first block List A End-->
+
+			<!-- Second Grey-line block Start -->
+			<div class="FL sfFormBorder1 pad-1tp BKgrey"
+				style="width:1%; height:625px;"></div>
+			<!-- Second Grey-line block End-->
+
+			<!-- Third block Start-->
+			<div class="W65percnt FL">
+
+				<!-- List B Start -->
+				<div class="W50percnt FL ">
+					<!--Document Title field-List B Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Document Title:" />
+						</span>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad8lt"
+									style="width:93%;" disabled="#{disSec2 or not empty formI9Bean.form.a1DocTitle}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.BDocTitle}" id="B_DOC_TITLE">
+								<f:selectItems value="#{formI9Bean.i9DocListB}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Document Title field-List B  End -->
+
+					<!--Issuing Authority field-List B Start-->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Issuing Authority:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="B_ISSUING_AUTH" maxlength="35"
+									disabled="#{disSec2 or empty formI9Bean.form.BDocTitle}"
+									value="#{formI9Bean.form.BIssuingAuth}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Issuing Authority field-List B End -->
+
+					<!--Document Number field-List B Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Document Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="B_DOC_NUMBER" maxlength="35"
+									disabled="#{disSec2 or empty formI9Bean.form.BDocTitle}"
+									value="#{formI9Bean.form.BDocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Document Number field-List B End -->
+
+					<!--Expiration Date field-List B Start -->
+					<div class="rowCont pad8lt" style="height:50px;">
+						<span class="fdNm_w2" style="width:220px;">
+							<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+						</span>
+						<ace:dateTimeEntry id="B_DOC_EXPIRATION"
+							styleClass="fd_sm3" tabindex="0"
+							disabled="#{disSec2 or empty formI9Bean.form.BDocTitle}"
+							value="#{formI9Bean.form.BDocExpiration}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+							<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+						</ace:dateTimeEntry>
+					</div>
+					<!-- Expiration Date field-List B End -->
+				</div>
+				<!-- List B End -->
+
+				<!-- List C Start -->
+				<div class="W50percnt FL ">
+
+					<!--Document Title field-List C Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Document Title:" />
+						</span>
+						<h:panelGroup>
+							<h:selectOneMenu styleClass="FL pad8lt"
+									style="width:93%;" disabled="#{disSec2 or not empty formI9Bean.form.a1DocTitle}"
+									valueChangeListener="#{formI9Bean.listenValueChange}"
+									value="#{formI9Bean.form.CDocTitle}" id="C_DOC_TITLE">
+								<f:selectItems value="#{formI9Bean.i9DocListC}" />
+								<ace:ajax />
+							</h:selectOneMenu>
+						</h:panelGroup>
+					</div>
+					<!-- Document Title field-List C End -->
+
+					<!--Issuing Authority field-List C Start-->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Issuing Authority:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="C_ISSUING_AUTH" maxlength="35"
+									disabled="#{disSec2 or empty formI9Bean.form.CDocTitle}"
+									value="#{formI9Bean.form.CIssuingAuth}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Issuing Authority field-List C End -->
+
+					<!--Document Number field-List C Start -->
+					<div class="rowCont" style="height:50px;">
+						<span class="fdNm_w2 pad8lt" style="width:220px;">
+							<h:outputText value="Document Number:" />
+						</span>
+						<h:panelGroup>
+							<span class="fd_sm2 pad8lt">
+								<ace:textEntry style="width:90%;"
+									id="C_DOC_NUMBER" maxlength="35"
+									disabled="#{disSec2 or empty formI9Bean.form.CDocTitle}"
+									value="#{formI9Bean.form.CDocNumber}"
+									valueChangeListener="#{formI9Bean.listenValueChange}" />
+							</span>
+						</h:panelGroup>
+					</div>
+					<!-- Document Number field-List C End -->
+
+					<!--Expiration Date field-List C Start -->
+					<div class="rowCont pad8lt" style="height:50px;">
+						<span class="fdNm_w2" style="width:220px;">
+							<h:outputText value="Expiration Date (if any)(mm/dd/yyyy):" />
+						</span>
+						<ace:dateTimeEntry id="C_DOC_EXPIRATION"
+							styleClass="fd_sm3" tabindex="0"
+							disabled="#{disSec2 or empty formI9Bean.form.CDocTitle}"
+							value="#{formI9Bean.form.CDocExpiration}"
+							valueChangeListener="#{formI9Bean.listenValueChange}"
+							renderAsPopup="true">
+							<f:converter converterId="lightspeed.MultiDateConverter" />
+							<!-- <f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{applicationScopeBean.timeZone}"/>  -->
+						</ace:dateTimeEntry>
+					</div>
+					<!-- Expiration Date field-List C End -->
+				</div>
+				<!--  List C End -->
+
+				<div class="rowCont FL" style="height:10px;">
+					<hr style="height:3px;background:black;border:0;margin-right:-6px;margin-top:-2px;" />
+				</div>
+				<!-- image for 3-D Barcode -->
+				<div style="width:34%; margin-top:36%;" class="FR">
+					<h:graphicImage value="" style="width:180px; height:165px;"
+						alt="" url="../../i/forms/i9BarcodeBox.jpg">
+					</h:graphicImage>
+				</div>
+			</div>
+			<!-- Third block End -->
+
+		</div>
+		<!-- Main div for two partition End-->
+
+	</div>
+
+	<!-- formI9 Certification Page-->
+	<ui:include src="formI9Certification.xhtml"></ui:include>
+
+	<div class="FL">
+		<h:graphicImage value="" style="width:820px; margin-left:-5px;"
+			alt="" url="../../i/forms/formI9SecondPageFooter.png">
+		</h:graphicImage>
+	</div>
+
+</ui:composition>

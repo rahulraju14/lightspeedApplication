@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:icecore="http://www.icefaces.org/icefaces/core"	
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:ace="http://www.icefaces.org/icefaces/components">
+   <!--
+      Params:
+      	bean: the backing bean for the current form (e.g., projectViewBean)
+      	editable: the projectViewBean editMode
+      	cpd: projectViewBean.project.canadaProjectDetail
+      -->
+   <div>
+      <div style="width:745px;">
+         <f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+         <div class="FL">
+            <!-- Header section -->
+            <div class="rowCont"></div>
+            <div class="FL rowCont sfFormBorder1" style="width:815px;">
+               <div class="FL BKgrey rowCont">
+                  <div class="FL DIB W49percnt  H24">
+                     <h:outputText styleClass="B FL pad5lt pad4tp" value="PRODUCTEUR / AGENCE /PRODUCER/AGENCY" />
+                  </div>
+               </div>
+            </div>
+            <h:panelGrid columns="1" styleClass="txt11 actraPanel">
+               <!-- Row 1 -->
+               <h:panelGroup layout="block" styleClass="W830 pad5tp pad3bm" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W80 pad5tp">
+                     <h:outputText value="Nom/Name:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaName1" styleClass="pad5lt FL W280" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="producerName" maxlength="150" disabled="#{not editable}" value="#{upd.producerName}" style="width: 84%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+                   <h:panelGroup styleClass="FL B W100 pad5tp">
+                     <h:outputText value="Production No:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="prodNum" styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="producerNum" maxlength="150" disabled="#{not editable}" value="#{upd.prodNumber}" style="width: 84%;"/>
+                     </h:panelGroup>
+                   </h:panelGroup>
+              </h:panelGroup>
+               <!-- Row 2 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Adresse/Address Line:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaAddress" styleClass="pad5lt FL W400" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="prodAddr1" maxlength="200" disabled="#{not editable}" value="#{upd.producerAddress.addrLine1}" style="width: 84%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 3 -->
+               <h:panelGroup layout="block" styleClass="W830 pad5tp pad3bm" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W40 pad5tp">
+                     <h:outputText value="City:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaCity"  styleClass="pad5lt FL W120" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="prodCity" maxlength="50" disabled="#{not editable}" value="#{upd.producerAddress.city}" style="width: 94%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad20lt FL B W70 pad5tp">
+                     <h:outputText value="Province:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaProvince" styleClass="pad5lt FL W90" style="vertical-align:middle;">
+                     <h:panelGroup rendered="#{not editable}" layout="block">
+                        <ace:textEntry disabled="true" value="#{upd.producerAddress.state}" style="width: 95%;"/>
+                     </h:panelGroup>
+                     <h:selectOneMenu id="udaProvinceState" styleClass="state pad2lt pad2tp" value="#{upd.producerAddress.state}"
+							rendered="#{editable}" style="width:75px;">
+							<f:selectItems value="#{bean.agencyStateProvinceList}" />
+					 </h:selectOneMenu>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad20lt FL B W90 pad5tp">
+                     <h:outputText value="Postal Code:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W80" style="vertical-align:middle;">
+                     <h:panelGroup id="udaPostalCode" layout="block">
+                        <ace:textEntry id="prodZip" maxlength="10" disabled="#{not editable}"  value="#{upd.producerAddress.zip}" style="width: 84%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad20lt FL B W70 pad5tp">
+                     <h:outputText value="Country:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W120" style="vertical-align:middle;">
+                     <h:panelGroup id="udaCountry" rendered="#{not editable}" layout="block">
+                        <ace:textEntry disabled="true" styleClass="W70" value="#{upd.producerAddress.country}"/>
+                     </h:panelGroup>
+                     <icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						 <h:selectOneMenu id="updAgencyAddressCountry" styleClass="country pad2lt pad2tp" rendered="#{editable}"
+							style="width: 100px;" valueChangeListener="#{projectViewBean.listenCountryChange}"
+							value="#{upd.producerAddress.country}">
+							<f:selectItems value="#{applicationScopeBean.countryDL}" /> 
+							<ace:ajax/>
+						 </h:selectOneMenu>
+					 </icecore:setEventPhase>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 4 -->
+               <h:panelGroup layout="block" styleClass="W830" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Téléphone/Phone:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup id="udaPhone" styleClass="pad5tp" layout="block">
+                        <ace:textEntry id="prodPhone" maxlength="20" disabled="#{not editable}" value="#{upd.producerPhone}" style="width: 84%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 5 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Courriel/Email:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup id="udaEmail" layout="block">
+                        <ace:textEntry id="prodEmail" maxlength="30" disabled="#{not editable}" value="#{upd.producerEmail}" style="width: 95%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 6 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Nom du responsable/Name of the responsible:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup  id="udaResponsible" layout="block">
+                        <ace:textEntry id="respName" maxlength="150" disabled="#{not editable}" value="#{upd.responsibleName}" style="width: 95%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 7 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="No producteur/producer UDA number:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup id="prodNumber" layout="block">
+                        <ace:textEntry id="prodUdaNum" maxlength="155" disabled="#{not editable}" value="#{upd.producerUDA}" style="width: 95%;"/>
+                     </h:panelGroup>
+                 </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 8 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Annonceur/Advertiser:"/>
+                  </h:panelGroup>
+                  <h:panelGroup styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup  id="udaAdvertiser" layout="block">
+                        <ace:textEntry id="advertiserName" maxlength="150" disabled="#{not editable}" value="#{upd.advertiserName}" style="width: 95%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <!-- Row 9 -->
+               <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W160 pad5tp">
+                     <h:outputText value="Service ou produit/Service or product:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaServiceOrProduct" styleClass="pad5lt FL W300" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="productName" maxlength="150" disabled="#{not editable}" value="#{upd.productName}" style="width: 84%;"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </h:panelGrid>
+            <div class="rowCont"></div>
+            <div class="FL rowCont sfFormBorder1" style="width:815px;border-bottom: 0px !important;">
+               <div class="FL BKgrey rowCont">
+                  <div class="FL DIB W49percnt  H24">
+                     <h:outputText styleClass="B FL pad5lt pad4tp" value="IDENTIFICATION-ANNONCE-INM INM COMMERCIAL" />
+                  </div>
+               </div>
+            </div>
+            <h:panelGrid columns="2" styleClass="txt10 actraPanel">
+               <!-- Row 1 -->
+               <h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+                  <!-- Agency -->
+                  <h:panelGroup styleClass="FL B W100 pad5tp" layout="block">
+                     <h:outputText value="Titre/Title:"/>
+                  </h:panelGroup>
+                  <h:panelGroup  id="udaTitle" styleClass="pad5lt FL W195" layout="block" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="commTitle" maxlength="150" disabled="#{not editable}" value="#{upd.commercialTitle}"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+               <h:panelGroup layout="block" styleClass="W300" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W110 pad5tp" layout="block">
+                     <h:outputText value="Version(s):"/>
+                  </h:panelGroup>
+                  <h:panelGroup  id="udaVersion" styleClass="pad5lt FL W185" layout="block" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="commVersion" maxlength="150" disabled="#{not editable}" value="#{upd.commercialVersion}"/>
+                     </h:panelGroup>
+                  </h:panelGroup>
+               </h:panelGroup>
+            </h:panelGrid>
+            <h:panelGrid columns="1" styleClass="txt10 actraPanel borderBottom" >
+               <!-- Row 2 -->
+                <h:panelGroup layout="block" styleClass="W630" style="height:20px;">
+                  <h:panelGroup styleClass="FL B W100 pad5tp">
+                     <h:outputText value="Description:"/>
+                  </h:panelGroup>
+                  <h:panelGroup id="udaDescription" styleClass="pad5lt FL W425" style="vertical-align:middle;">
+                     <h:panelGroup layout="block">
+                        <ace:textEntry id="commDesc" maxlength="150" disabled="#{not editable}" value="#{upd.commercialDescription}" style="width: 84%;"/>
+                     </h:panelGroup>
+                   </h:panelGroup>
+               </h:panelGroup>
+            </h:panelGrid>
+         </div>
+      </div>
+   </div>
+</ui:composition>

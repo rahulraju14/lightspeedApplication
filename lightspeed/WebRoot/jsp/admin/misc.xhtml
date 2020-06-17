@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Additional Admin Functions</title>
+
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript" type="text/javascript">
+function resize() {
+
+	/* controls size of entire tab area (i.e., everything below title/Edit-button bar).
+	INCREASE first parameter to decrease the size of the area! */
+	element = document.getElementById('adminMisc:miniView');
+	resizeElement(element, 160, 300);
+
+	/* resize Timecards scrolling div */
+	element = document.getElementById('tcscrolldiv');
+	resizeElement(element, 225, 340);
+	
+	<c:if test="#{not headerViewBean.mobile}">
+
+		/* resize list of contacts on Copy Data tab */
+		resizeScrollable('adminMisc:contactList', 600, 100);
+
+		/* resizeScrollable('adminMisc:dood', 370, 200); removed from page */
+
+		/* resizeScrollable('adminMisc:schList', 220, 300); removed from page */
+
+	</c:if>
+
+}
+var formname = "adminMisc";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form id="adminMisc">
+	<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="miscadmin" />
+</h:outputText>
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<!-- <div id="mainCont"> -->
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont FL">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="rowCont">
+							<span class="pnlHdrTxt FL">
+								<h:outputText value="Admin Functions"/>
+							</span>
+
+							<div class="FR pad15rt pad5tp">
+							</div>
+
+						</div>
+
+						<div class="centerFullTb MA">
+
+							<div id="errMsgContFull" class="CT rowCont FL pad12lt pad2tp">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</div>
+
+							<h:panelGrid id="miniView" styleClass="miniPanel FL">
+
+								<ace:tabSet id="tabs" selectedIndex="0" width="100%">
+
+									<ui:include src="timecards.xhtml" />
+
+									<ui:include src="copyContacts.xhtml" />
+
+									<ace:tabPane label="Other" id="other">
+
+										<div class="DIB pad20tp pad20lt">
+											<span class="btnPriHotLt"/>
+											<ace:linkButton value="Force error page"
+															action="#{messageTestBean.causesDeliberateMethodNotFoundException}" styleClass="btnPriHotCt" />
+											<span class="btnPriHotRt"/>
+										</div>
+
+										<div class="DIB pad20tp pad20lt">
+											<span class="btnPriHotLt"/>
+											<ace:linkButton value="Force session expiration"
+															action="#{messageTestBean.actionExpire}" styleClass="btnPriHotCt" />
+											<span class="btnPriHotRt"/>
+										</div>
+
+										<table class="W100percnt pad20tp">
+											<tr style="height:40px;">
+												<td width="5%">&#160; </td>
+												<td>Input 1:&#160; &#160;
+													<ace:textEntry id="input1"
+													size="50" maxlength="100"
+													value="#{messageTestBean.input}">
+													</ace:textEntry>
+												</td>
+												<td>Output 1: &#160;
+													<h:outputText value="#{messageTestBean.output}"/>
+												</td>
+											</tr>
+											<tr style="height:40px;">
+												<td>&#160;</td>
+												<td width="60%">Input 2:&#160; &#160;
+													<ace:textEntry id="input2"
+													size="50" maxlength="200"
+													value="#{messageTestBean.input2}">
+													</ace:textEntry>
+												</td>
+												<td>Output 2: &#160;
+													<h:outputText value="#{messageTestBean.output2}"/>
+												</td>
+											</tr>
+										</table>
+
+									</ace:tabPane>
+
+								</ace:tabSet>
+							</h:panelGrid><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont FL">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+
+</h:form>
+
+	<ui:include src="../tcpopup/htgMessages.xhtml" />
+<ui:include src="../common/releaseNotes.xhtml" />
+
+</h:body>
+</html>

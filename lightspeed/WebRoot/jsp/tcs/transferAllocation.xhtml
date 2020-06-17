@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- Standard confirmation dialog (message + ok/cancel buttons) -->
+	<!-- This is the same as confirmpopup, except that it is 50 pixels taller. -->
+	<h:form>
+		<ace:dialog visible="#{popupBean.visible}"
+				header="#{popupBean.title}"
+				closable="true"
+				draggable="true"
+				modal="true"
+				hideEffect="fade"
+				showEffect="fade"
+				resizable="false">
+				
+
+			<div class="popupBdy5W">
+
+				<div class="popupCont5W">
+
+					<h:panelGroup rendered="#{not empty taxWageAllocationBean.errorMessages}">
+						<div class="MA pad15tp">
+							<ui:repeat value="#{taxWageAllocationBean.errorMessages}" var="errorMessage">
+								<h:outputText styleClass="RED B" value="* #{errorMessage}"/>
+								<br/>
+							</ui:repeat>
+						</div>
+					</h:panelGroup>
+					<div>
+						<h:outputText escape="false" value="#{popupBean.message}"/>
+					</div>
+					
+				</div>				
+				
+				<div class="popBtnCont5">
+					<h:panelGroup rendered="#{not empty popupBean.buttonCancelLabel}">
+						<span class="FR pad5rt">
+							<span class="btnPriEnbLt" />
+							<span>
+								<ace:linkButton value="#{popupBean.buttonCancelLabel}"
+									action="#{popupBean.actionCancel}" styleClass="btnPriEnbCt" />
+							</span>
+							<span class="btnPriEnbRt" />
+						</span>
+					</h:panelGroup>
+					<span class="FR pad5rt">
+						<span class="btnSecHotLt" />
+						<span>
+							<ace:linkButton value="#{popupBean.buttonOkLabel}"
+								onclick="override();"
+								action="#{popupBean.actionOk}" styleClass="btnSecHotCt" />
+						</span>
+						<span class="btnSecHotRt" />
+					</span>
+				</div>
+			</div>
+		</ace:dialog>
+	</h:form>
+</ui:composition>

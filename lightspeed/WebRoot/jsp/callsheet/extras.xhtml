@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- EXTRAS (standins/background) table for Call Sheet -->
+	<div class="FL rowCont rowGradient pad20tp">
+		<div class="tblHdr_bk rowCont">
+			<span class="tblHdr_txt">
+				BACKGROUND / Stand-Ins
+			</span>
+		</div>
+		<div class="FL W50percnt">
+			<ace:dataTable styleClass="gradTbl2 FL"
+				style="width:100%;max-width:100%;"
+				value="#{callSheetViewBean.callsheet.otherCalls}"
+				var="otherCall">
+
+				<ace:column styleClass="CT" style="width:10%;">
+					<f:facet name="header">#</f:facet>
+					<h:outputText rendered="#{not editMode}" value="#{otherCall.count}" />
+					<ace:textEntry rendered="#{editMode}" maxlength="10" value="#{otherCall.count}" />
+				</ace:column>
+
+				<ace:column styleClass="LT" style="width:75%;">
+					<f:facet name="header">Description</f:facet>
+					<h:outputText rendered="#{not editMode}" value="#{otherCall.description}" />
+					<ace:textEntry rendered="#{editMode}" styleClass="W100percnt" maxlength="100" value="#{otherCall.description}" />
+				</ace:column>
+
+				<ace:column styleClass="CT" style="width:15%;">
+					<f:facet name="header">Call</f:facet>
+					<h:outputText rendered="#{not editMode}" value="#{otherCall.time}">
+						<f:converter converterId="lightspeed.DateTimeConverterB"/>
+					</h:outputText>
+					<ace:textEntry rendered="#{editMode}" styleClass="W100percnt" maxlength="10" value="#{otherCall.time}">
+						<f:converter converterId="lightspeed.DateTimeConverterB"/>
+					</ace:textEntry>
+				</ace:column>
+
+			</ace:dataTable>
+		</div>
+	</div>
+
+</ui:composition>

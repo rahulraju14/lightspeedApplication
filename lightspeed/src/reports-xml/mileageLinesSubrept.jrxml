@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mileageLinesSubrept" pageWidth="540" pageHeight="600" whenNoDataType="AllSectionsNoDetail" columnWidth="540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="daae81c6-f287-406a-a028-7c2bda5eb674">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<parameter name="mileage_id" class="java.lang.Integer"/>
+	<parameter name="imagesPath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["../i"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select *, false as fillFlag from mileage_line where mileage_id = $P{mileage_id}  union all (SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, true FROM mileage_line limit 5) order by fillFlag, id;]]>
+	</queryString>
+	<field name="Date" class="java.util.Date"/>
+	<field name="Destination" class="java.lang.String"/>
+	<field name="Odometer_Start" class="java.math.BigDecimal"/>
+	<field name="Odometer_End" class="java.math.BigDecimal"/>
+	<field name="Miles" class="java.math.BigDecimal"/>
+	<field name="Taxable" class="java.lang.Boolean"/>
+	<field name="fillFlag" class="java.lang.Boolean"/>
+	<variable name="totalMiles" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Miles}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="13">
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="0" y="0" width="81" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="81" y="0" width="243" height="13"/>
+				<textElement/>
+				<text><![CDATA[Destination]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="324" y="0" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Start]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="378" y="0" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[End]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="432" y="0" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Miles]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBox" x="486" y="0" width="54" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Taxable]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="8a8d3c56-3c3e-48f5-bc6a-b750e3c22ae4" x="0" y="12" width="540" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13">
+			<printWhenExpression><![CDATA[(! $F{fillFlag}) || $V{REPORT_COUNT} < 6]]></printWhenExpression>
+			<textField pattern="EEE M/d">
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcDefBox" x="0" y="0" width="81" height="13"/>
+				<textElement textAlignment="Center">
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcDefBox" x="81" y="0" width="243" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Destination}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcBoxHours" x="324" y="0" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Odometer_Start}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcBoxHours" x="378" y="0" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Odometer_End}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcBoxHours" x="432" y="0" width="54" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Miles}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center">
+				<reportElement uuid="12b7513f-a006-43c4-a4b2-2403d286f2ad" style="tcBoxHours" x="486" y="0" width="54" height="13"/>
+				<imageExpression><![CDATA[$P{imagesPath} + ($F{Taxable} ? "/check_box.gif" : "/check_box_blank.gif")]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c7e627ae-582f-40e8-b882-bee7f998de7c" style="tcDefBoxBold" x="378" y="0" width="54" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1fe84bc3-8cf6-47c3-9e64-f3d43d82951a" style="tcDefBoxBold" x="432" y="0" width="54" height="13"/>
+				<textElement textAlignment="Right">
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalMiles}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

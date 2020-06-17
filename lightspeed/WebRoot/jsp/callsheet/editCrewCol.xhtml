@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:repeat value="#{deptCalls}" var="deptCall" binding="#{bound}">
+		<ace:column id="column1">
+			<h:outputText rendered="#{deptCall.department ne null}"
+				value="#{deptCall.department.name}"
+				styleClass="B" />
+			<ace:textEntry rendered="#{deptCall.department eq null}"
+				value="#{deptCall.deptName}"
+				maxlength="50" styleClass="B" />
+			<h:commandLink value=" " styleClass="FR pad3tp pad10rt" rendered="#{deptCall.department ne null}"
+					action="#{callSheetViewBean.actionOpenAddCrewCall}">
+				<h:graphicImage value="" url="../../i/icon_plusGry.gif" alt="" /> 
+				<f:setPropertyActionListener value="#{deptCall.department.id}" target="#{callSheetViewBean.addDeptId}" />
+			</h:commandLink>
+
+			<ace:dataTable width="100%" rowStyleClass="evenOddRows"
+				style="width:100%;max-width:100%;" 
+				styleClass="tableStyle" id="crewCalls"
+				value="#{deptCall.crewCalls}" var="crewCall">
+				
+				<ace:column headerText=" " id="c0" style="text-align:left;font-size:11px;width:14px;">
+					<h:commandButton value="" styleClass="deleteXbtn"
+						rendered="#{deptCall.department ne null}"
+						action="#{callSheetViewBean.actionDeleteCrewCall(crewCall)}" title="Remove">
+						<f:setPropertyActionListener value="#{deptCall.department.id}" target="#{callSheetViewBean.addDeptId}"/>
+					</h:commandButton>
+					<h:commandButton value="" styleClass="deleteXbtn"
+						rendered="#{deptCall.department eq null}"
+						action="#{callSheetViewBean.actionDeleteCrewCall(crewCall)}" title="Remove">
+						<f:setPropertyActionListener value="#{deptCall.department}" target="#{callSheetViewBean.addDeptId}"/>
+					</h:commandButton>
+				</ace:column>
+				<ace:column headerText="NO." id="column1" style="text-align:left;font-size:11px;width:25px;">
+					<ace:textEntry value="#{crewCall.count}" required="true"
+							rendered="#{deptCall.department ne null}"
+							maxlength="3" size="2" style="width:22px;">
+						<f:validateLongRange minimum="1" maximum="999" />
+					</ace:textEntry>
+					<ace:textEntry value="#{crewCall.count}"
+							rendered="#{deptCall.department eq null}"
+							maxlength="3" size="2" style="width:22px;">
+						<f:validateLongRange minimum="0" maximum="999" />
+					</ace:textEntry>
+				</ace:column>
+				<ace:column headerText="ROLE" id="column2" style="text-align:left;font-size:11px;width:135px;">
+					<h:outputText rendered="#{deptCall.department ne null}"
+							value="#{crewCall.roleName}" />
+					<ace:textEntry rendered="#{deptCall.department eq null}" 
+							value="#{crewCall.roleName}" size="19" maxlength="50" >
+						<ace:ajax/>
+					</ace:textEntry>
+				</ace:column>
+				<ace:column headerText="NAME" id="column3" style="text-align:left;font-size:11px;">
+					<h:outputText rendered="#{deptCall.department ne null}"
+							value="#{crewCall.name}" />
+					<ace:textEntry rendered="#{deptCall.department eq null}"
+							value="#{crewCall.name}" size="16" maxlength="50" />
+				</ace:column>
+				<ace:column headerText="TIME" id="column4" style="width:47px;">
+					<ace:textEntry value="#{crewCall.time}" style="width:40px;"
+							rendered="#{deptCall.department ne null}">
+						<f:converter converterId="lightspeed.TimeConverterOC" />
+					</ace:textEntry>
+					<ace:textEntry value="#{crewCall.time}" style="width:40px;"
+							rendered="#{deptCall.department eq null}" 
+							valueChangeListener="#{callSheetViewBean.listenCustomRole}">
+						<f:converter converterId="lightspeed.TimeConverterOC" />
+						<ace:ajax/>
+					</ace:textEntry>
+				</ace:column>
+			</ace:dataTable>
+
+			<!-- OPTIONAL CATERING INFORMATION -->
+			<h:panelGroup rendered="#{deptCall.department.id eq 115 or deptCall.department.standardDeptId eq 115}">
+				<ui:include src="../dpr/catering.xhtml">
+					<ui:param name="dept" value="#{deptCall.department}" />
+					<ui:param name="logs" value="#{callSheetViewBean.cateringLogs}" />
+					<ui:param name="editMode" value="true" />
+				</ui:include>
+			</h:panelGroup>
+		</ace:column>
+	</ui:repeat>
+
+</ui:composition>

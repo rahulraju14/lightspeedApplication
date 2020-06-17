@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<title>#{headerViewBean.domainTabTitle} Reset Password</title>
+
+<ui:include src="../common/head.xhtml" />
+
+</h:head>
+<h:body styleClass="loginCont">
+<f:loadBundle basename="com.lightspeedeps.util.app.messageResources" var="msg" />
+
+<div id="pnlLogin" class="BKwhite">
+
+<div class="topBdrCont FL">
+	<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+</div>
+
+	<div class="ltrtBdr rowCont BKwhite">
+
+		<ui:include src="topLogo.xhtml" />
+
+		<div id="resetloginCont" class="pad8tp rowDivider">
+
+<h:form id="loginForm">
+
+			<h:panelGroup styleClass="FL rowCont" rendered="#{(passwordBean.message eq 'InvalidEmail') or (passwordBean.message eq 'NoEmail') or (passwordBean.message eq 'EmailSent')}">
+				<div class="MA W100percnt">
+					<div id="loginErrMsgCont">
+						<div class="loginErrTitleBar">
+							<span class="FL loginErrMsgTxt">
+								<h:panelGroup styleClass="login_error" rendered="#{passwordBean.message eq 'InvalidEmail'}">
+									<h:outputText value="#{msg.Password_EmailInvalid}"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="login_error" rendered="#{passwordBean.message eq 'NoEmail'}">
+									<h:outputText value="#{msg.Password_NoEmail}"/>
+								</h:panelGroup>
+								<h:panelGroup styleClass="login_error" rendered="#{passwordBean.message eq 'EmailSent'}">
+									<h:outputText value="#{msg.Password_EmailSent}"/>
+								</h:panelGroup>
+							</span>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<div class="FL rowCont pad50tp">
+				<div class="MA W330 pad20tp">
+					<span class="FL W100 pad3tp">
+						<h:outputText
+							value="Email address:"
+							styleClass="txt12 B" />
+					</span>
+					<div class="FL bx_output W210">
+						<h:outputText
+							value="#{passwordBean.userName}"/>
+					</div>
+				</div>
+				<div class="MA W330 pad15tp">
+					&#160;
+				</div>
+			</div>
+
+			<div class="FL rowCont pad30tp">
+				<div class="MA W330">
+					<span class="FL W100 pad3tp">
+						&#160;
+					</span>
+					<span class="FL">
+						<span class="btnPriHotLt" />
+						<span>
+							<ace:linkButton id="login" value="Send E-Mail"
+								tabindex="1"
+								action="#{passwordBean.actionSendEmail}"
+								styleClass="btnPriHotCt btnTxt" />
+						</span>
+						<span class="btnPriHotRt" />
+					</span>
+				</div>
+			</div>
+
+			<div class="FL rowCont pad5tp">
+				<div class="MA W330 pad10tp">
+					<span class="FL W100 pad3tp">
+						&#160;
+					</span>
+					<span class="btnPriHotLt" />
+					<span>
+						<ace:linkButton value="Return to Login"
+							tabindex="2"
+							action="login"
+							styleClass="btnPriHotCt btnTxt">
+						</ace:linkButton>
+					</span>
+					<span class="btnPriHotRt" />
+				</div>
+			</div>
+
+			<div class="FL rowCont">
+				<div class="MA W630 pad30tp H70">
+					<div class="loginInfoTxt">Reset Password Request:</div>
+					<div class="loginTxt">
+						<br/>
+						<h:outputText value="#{msg.Password_ResetPrompt1}" />
+						<h:outputText value="#{msg.Password_ResetPrompt2}" />
+					</div>
+				</div>
+			</div>
+
+</h:form>
+
+			<div class="rowBtnLogin pad80tp">
+				<div class="rowBtnBdr"></div>
+				<div class="FL rowCont CT">
+					<ui:include src="../common/footercont.xhtml" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="btmBdrCont FL">
+		<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+	</div>
+<ui:include src="../common/releaseNotes.xhtml" />
+
+</div>
+</h:body>
+</html>

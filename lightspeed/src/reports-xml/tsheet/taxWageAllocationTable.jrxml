@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="taxWageAllocationTable" pageWidth="582" pageHeight="10" whenNoDataType="AllSectionsNoDetail" columnWidth="582" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="24cae6b0-f21d-46c2-8f36-049f5023a023">
+	<property name="ireport.zoom" value="1.7715610000000022"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.util.*"/>
+	<template><![CDATA["styles.jrtx"]]></template>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="reportsTemplate" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="formId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[146]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sqlQry" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["SELECT twr.Calculate_Tax, twr.Wages, " +
+ "twrt.Team_Tax_Area_Code, twrt.State, twrt.State_Code, " +
+ "twrt.City,   " +
+ "case when twrt.special_instructions_editable = true then twr.Special_Instructions else twrt.Special_Instructions end as Special_Instr " +
+ "FROM tax_wage_allocation_row twr, tax_wage_allocation_row_template twrt where twr.Form_Id=" +
+ $P{formId} + " and twrt.id = twr.Template_Id"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[$P!{sqlQry}]]>
+	</queryString>
+	<field name="State" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="City" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="State_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Team_Tax_Area_Code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Wages" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Calculate_Tax" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Special_Instr" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="9" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault7" x="3" y="0" width="105" height="9" uuid="525f47ce-91fa-416a-a268-57ac964b0097"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{State}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="twDefBoldItalic" x="14" y="0" width="80" height="9" uuid="24c2c33b-2815-4fd5-be81-b41cf3d70f08"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{City}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault7" x="105" y="0" width="70" height="9" uuid="7a48fbff-028d-4141-9864-3cd48a8ade4a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Team_Tax_Area_Code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault7" x="338" y="0" width="244" height="9" uuid="cdb7e215-e624-41b3-b87f-71dda498569e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Special_Instr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tcDefault7" x="177" y="0" width="25" height="9" uuid="0669d507-03c1-4a36-85f2-1de9698a661c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{City} == null || $F{City}.isEmpty()) ? $F{State_Code} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tcDefault7" x="202" y="0" width="60" height="9" uuid="5e810544-e5ed-4302-bf42-93b6ec5ebead"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Wages}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tcDefault7" stretchType="RelativeToTallestObject" mode="Transparent" x="266" y="0" width="74" height="8" uuid="b161e3e2-3437-4397-894b-1981b13999aa">
+					<printWhenExpression><![CDATA[($F{Calculate_Tax}.isEmpty() || $F{State_Code}.equalsIgnoreCase("Canada") || $F{Calculate_Tax}.equalsIgnoreCase("NON-TAXING STATE") || $F{Calculate_Tax}.equalsIgnoreCase("CALCULATE") || $F{Calculate_Tax}.equalsIgnoreCase("N/A") || ((!$F{State_Code}.equalsIgnoreCase("NY") && (new BigDecimal(Double.parseDouble($F{Calculate_Tax}.toString().replaceAll(",",""))).divide($F{Wages}, 4, RoundingMode.HALF_UP).doubleValue() >= 0.05)) || ($F{State_Code}.equalsIgnoreCase("NY") && (new BigDecimal(Double.parseDouble($F{Calculate_Tax}.toString().replaceAll(",",""))).divide($F{Wages}, 4, RoundingMode.HALF_UP).doubleValue() >= 0.09))))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Calculate_Tax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="tax_wage_warning" stretchType="RelativeToTallestObject" mode="Opaque" x="266" y="0" width="74" height="8" uuid="b161e3e2-3437-4397-894b-1981b13999aa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[(!$F{Calculate_Tax}.isEmpty() && !$F{Calculate_Tax}.equalsIgnoreCase("NON-TAXING STATE") && !$F{Calculate_Tax}.equalsIgnoreCase("CALCULATE") && !$F{Calculate_Tax}.equalsIgnoreCase("N/A") && ((!$F{State_Code}.equalsIgnoreCase("NY") && !$F{State_Code}.equalsIgnoreCase("Canada") && (new BigDecimal(Double.parseDouble($F{Calculate_Tax}.toString().replaceAll(",",""))).divide($F{Wages}, 4, RoundingMode.HALF_UP).doubleValue() < 0.05)) || ($F{State_Code}.equalsIgnoreCase("NY") && (new BigDecimal(Double.parseDouble($F{Calculate_Tax}.toString().replaceAll(",",""))).divide($F{Wages}, 4, RoundingMode.HALF_UP).doubleValue() < 0.09))))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Calculate_Tax}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+	
+		<ace:columnGroup type="header">
+			<ace:row>
+				<ace:column headerText="#" style="width:7%;" styleClass="CT"/>
+				<ace:column headerText="NonU" style="width:10%;" styleClass="CT"/>
+				<ace:column headerText="Rate" style="width:13%;" styleClass="CT"/>
+				<ace:column headerText="In" style="width:10%;" styleClass="CT"/>
+				<ace:column headerText="Meal" colspan="2" style="width:20%;" styleClass="CT"/>
+				<ace:column headerText="Out" style="width:10%;" styleClass="CT"/>
+				<ace:column headerText="OT" style="width:10%;" styleClass="CT"/>
+				<ace:column headerText="Adj" style="width:13%;" styleClass="CT"/>
+				<ace:column headerText="MPV" style="width:7%;" styleClass="CT"/>
+			</ace:row>
+		</ace:columnGroup>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.count}" />
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.count}" />
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value=" #{extraTime.nonUnion}"/>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.nonUnion}"/>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value=" #{extraTime.rate}"/>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.rate}"/>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.callTime}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.callTime}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.m1Out}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.m1Out}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.m1In}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.m1In}">
+				<f:converter converterId="lightspeed.DecimalTimeConverterDown" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.wrap}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.wrap}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.ot}">
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.ot}" >
+				<f:converter converterId="lightspeed.DecimalTimeConverter" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.adjustment}">
+				<f:convertNumber type="number" pattern="##.#" />
+			</h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.adjustment}">
+				<f:convertNumber type="number" pattern="##.#" />
+			</ace:textEntry>
+		</ace:column>
+
+		<ace:column>
+			<h:outputText rendered="#{not dprViewBean.editMode}" value="#{extraTime.mpv}"></h:outputText>
+			<ace:textEntry rendered="#{dprViewBean.editMode}" styleClass="tcEdHr" value="#{extraTime.mpv}" />
+		</ace:column>
+
+</ui:composition>

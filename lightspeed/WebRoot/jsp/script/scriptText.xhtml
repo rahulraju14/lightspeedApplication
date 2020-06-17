@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- Script text display, used on Breakdown page and Script Revisions page -->
+
+<!-- params:
+		bean: The backing bean 
+		rows: The number of rows (maximum) to display.
+	-->
+
+	<!-- 1-letter ids are assigned to shorten all embedded Icefaces generated ids -->
+
+	<ui:repeat rows="#{rows}" id="p"
+			rendered="#{not empty bean.lineList}"
+			value="#{bean.lineList}" var="textElement"
+			styleClass="sd">
+
+		<div class="sd">
+			<h:panelGroup id="a" styleClass="DIB #{textElement.cssClass}"
+				rendered="#{textElement.type ne 'BLANK' and textElement.type ne 'DIALOGUE'}">
+				<h:outputText escape="false" value="#{textElement.text}" />
+			</h:panelGroup>
+			<h:panelGroup id="b" styleClass="DIB #{textElement.cssClass}"
+				rendered="#{(textElement.type eq 'DIALOGUE') and (textElement.highLight eq 0)}">
+				<h:outputText escape="false" value="#{textElement.text}" />
+			</h:panelGroup>
+			<h:panelGroup id="c" styleClass="DIB #{textElement.cssClass}"
+				rendered="#{(textElement.type eq 'DIALOGUE') and (textElement.highLight eq 2)}">
+				<h:outputText id="d" escape="false" styleClass="ST_HIGH_2"
+					value="#{textElement.text}" />
+			</h:panelGroup>
+			<h:panelGroup id="e" styleClass="DIB #{textElement.cssClass}"
+				rendered="#{(textElement.type eq 'DIALOGUE') and (textElement.highLight eq 1)}">
+				<h:outputText id="f" escape="false" styleClass="ST_HIGH"
+					value="#{textElement.text}" />
+			</h:panelGroup>
+			<h:panelGroup id="g" styleClass="DIB #{textElement.cssClass}"
+				rendered="#{textElement.type eq 'BLANK'}">
+			&#160;
+			</h:panelGroup>
+		</div>
+
+	</ui:repeat>
+
+	<h:panelGroup styleClass="ST_ACTION DIB" rendered="#{empty bean.lineList}">
+		<div class="I pad20tp txt14">
+			(Script text is not available.)
+		</div>
+	</h:panelGroup>
+
+</ui:composition>

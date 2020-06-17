@@ -1,0 +1,224 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- Change List mini-tab on Admin & Prod Admin / Changes pages -->
+	<ace:tabPane label="Change list">
+
+		<h:panelGroup styleClass="FL pad10tp W90percnt">
+			<div class="FL W20percnt">
+				<span class="FL B pad5lt pad10rt pad3tp">From:</span>
+				<span class="FL">
+					<ace:dateTimeEntry
+							value="#{changeBean.startDate}" tabindex="0"
+							renderAsPopup="true" title="Start of date range to display"
+							style="position:relative;z-index:1000;" >
+						<f:converter converterId="lightspeed.MultiDateConverter"/>
+					</ace:dateTimeEntry>
+				</span>
+				<br/>
+				<div class="FL pad40lt pad20tp">
+					<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+						<h:selectBooleanCheckbox styleClass="FL ckbx"
+								value="#{changeBean.showAllProductions}"
+								tabindex="99"
+								valueChangeListener="#{changeBean.listenShowAll}">
+							<ace:ajax />
+						</h:selectBooleanCheckbox>
+					</icecore:setEventPhase>
+					<span class="FL ckbxTxtLbl">Include All Productions</span>
+				</div>
+			</div>
+
+			<div class="FL W20percnt">
+				<span class="FL B pad5lt pad10rt pad3tp">To:</span>
+				<ace:dateTimeEntry tabindex="0"
+						value="#{changeBean.endDate}" title="End of date range to display"
+						renderAsPopup="true" style="margin-left: 10px;z-index:1000;">
+					<f:converter converterId="lightspeed.MultiDateConverter"/>
+				</ace:dateTimeEntry>
+			</div>
+
+			<div class="FL W10percnt">
+				<span class="pad20lt FL">
+					<span class="btnMiniLt" />
+					<span>
+						<ace:linkButton value="Refresh"
+							action="#{changeBean.actionSearch}"
+							styleClass="btnMiniCt">
+						</ace:linkButton>
+					</span>
+					<span class="btnMiniRt" />
+				</span>
+			</div>
+
+			<div class="FL W50percnt">
+			<ace:buttonGroup id="chgTypes">
+				<div class="FL W30percnt">
+				<span class="pad10lt FL" style="text-align:left;">
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[0]}" 
+							label="#{changeBean.changeTypes[0].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[1]}"  
+							label="#{changeBean.changeTypes[1].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[2]}"  
+							label="#{changeBean.changeTypes[2].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[3]}" 
+							label="#{changeBean.changeTypes[3].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+				</span>
+				</div>
+				<div class="FL W30percnt">
+				<span class="pad10lt FL" style="text-align:left;">
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[4]}" 
+							label="#{changeBean.changeTypes[4].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[5]}" 
+							label="#{changeBean.changeTypes[5].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[6]}" 
+							label="#{changeBean.changeTypes[6].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[7]}" 
+							label="#{changeBean.changeTypes[7].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+				</span>
+				</div>
+				<div class="FL W30percnt">
+				<span class="pad10lt FL" style="text-align:left;">
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[8]}" 
+							label="#{changeBean.changeTypes[8].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[9]}" 
+							label="#{changeBean.changeTypes[9].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+					<br/>
+					<ace:checkboxButton value="#{changeBean.changeTypeCbs[10]}" 
+							label="#{changeBean.changeTypes[10].label}" labelPosition="right">
+						<ace:ajax execute="chgTypes" event="activate" render="@form"/>
+					</ace:checkboxButton>
+				</span>
+				</div>
+			</ace:buttonGroup>
+			</div>
+		</h:panelGroup>
+
+		<div class="rowCont CT pad10tp">
+			<ace:dataTable styleClass="bk_sl_grid" id="changeTable"
+					selectionMode="single" singleSort="true"
+					value="#{changeBean.changeList}"
+					var="change" rows="100"
+					style="width:98%;max-width:100%;"
+					scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+					scrollHeight="#{headerViewBean.mobile ? '' : '200'}"
+					paginator="true"
+					paginatorAlwaysVisible="false"
+					paginatorPosition="top" pagesToSkip="5" pageCount="5"
+					paginatorTemplate=
+	"{FirstPageLink} {FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward} {LastPageLink} {CurrentPageReport}">
+
+				<ace:column styleClass="W4percnt" sortBy="#{change.id}">
+					<f:facet name="header">
+						<h:outputText value="ID" />
+					</f:facet>
+					<h:outputText value="#{change.id}"/>
+				</ace:column>
+
+				<ace:column styleClass="W8percnt" sortBy="#{change.startTime}">
+					<f:facet name="header">
+						<h:outputText value="Time" />
+					</f:facet>
+					<h:outputText value="#{change.startTime}">
+						<f:convertDateTime pattern="M/d HH:mm:ss" timeZone="#{applicationScopeBean.timeZone}"/>
+					</h:outputText>
+				</ace:column>
+
+				<ace:column styleClass="W8percnt" sortBy="#{change.type.label}"
+						filterBy="#{change.type.label}" filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="Type" />
+					</f:facet>
+					<ace:linkButton value="#{change.type==null ? ' ' : change.type.label}"
+							actionListener="#{changeBean.actionChangeView}">
+						<f:attribute name="currentRow" value="#{change}" />
+					</ace:linkButton>
+				</ace:column>
+
+				<ace:column styleClass="W10percnt" sortBy="#{change.action.label}" style="min-width:80px"
+						filterBy="#{change.action.label}" filterOptions="#{changeBean.actionTypeDL}">
+					<f:facet name="header">
+						<h:outputText value="Action" />
+					</f:facet>
+					<h:outputText value="#{change.action}" />&#160;
+				</ace:column>
+
+				<ace:column styleClass="W16percnt" sortBy="#{change.userName}"
+						filterBy="#{change.userName}" filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="User" />
+					</f:facet>
+					<ace:linkButton value="#{change.userName==null ? ' ' : change.userName}" action="adminusers"
+							title="Jump to User entry">
+						<f:setPropertyActionListener value="com.lightspeedeps.userListId" target="#{jumpBean.attribute}"/>
+						<f:setPropertyActionListener value="#{productionAdminBean.owner.id}" target="#{jumpBean.value}"/>
+					</ace:linkButton>&#160;
+				</ace:column>
+
+				<ace:column styleClass="W10percnt" sortBy="#{change.production.title}"
+						filterBy="#{change.production.title}" filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="Production" />
+					</f:facet>
+					<ace:linkButton value="#{change.production.title==null ? ' ' : change.production.title}"
+							action="adminproductions"
+							title="Jump to Production entry">
+						<f:setPropertyActionListener value="com.lightspeedeps.ProductionViewKey" target="#{jumpBean.attribute}"/>
+						<f:setPropertyActionListener value="#{change.production.prodId}" target="#{jumpBean.value}"/>
+					</ace:linkButton>
+					&#160;
+				</ace:column>
+
+				<ace:column styleClass="W12percnt" sortBy="#{change.project.title}"
+						filterBy="#{change.project.title}" filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="Project" />
+					</f:facet>
+					<h:outputText value="#{change.project.title}" />&#160;
+				</ace:column>
+
+				<ace:column styleClass="W32percnt" style="max-width:450px;"
+						filterBy="#{change.description}" filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="Description" />
+					</f:facet>
+					<h:outputText escape="false" value="#{change.description} " />&#160;
+				</ace:column>
+
+			</ace:dataTable>
+		</div>
+	</ace:tabPane>
+
+</ui:composition>

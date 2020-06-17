@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div class="B pad10bm pad3lt">
+		Media Usage:
+	</div>
+
+	<div class="FL pad5tp W77percnt">
+		<div class="FL B RT " style="margin-top:53px;">
+				<div class="LH25 grid11">Previous&#160;</div>
+				<div class="LH25 grid11">Today&#160;</div>
+				<div class="LH25 grid11">To Date&#160;</div>
+		</div>
+		<ui:repeat value="#{dprViewBean.filmStockList}" var="filmStock">
+
+			<div id="dprMatTbl" class="FL pad3rt pad5bm">
+				<h:panelGrid columns="4" styleClass="FL grid11">
+
+					<ace:columnGroup type="header">
+						<ace:row>
+							<ace:column headerText="#{filmStock.material.type}" colspan="4"/>
+						</ace:row>
+					</ace:columnGroup>
+					<ace:column>
+						<div class="FL rowCont grid11_Hdr">
+							<div class="pad6tp">
+								<h:outputText value="Print" />
+							</div>
+						</div>
+					</ace:column>
+					<ace:column>
+						<div class="FL rowCont grid11_Hdr">
+							<div class="pad6tp">
+								<h:outputText value="No Good" />
+							</div>
+						</div>
+					</ace:column>
+					<ace:column>
+						<div class="FL rowCont grid11_Hdr">
+							<div class="pad6tp">
+								<h:outputText value="Waste" />
+							</div>
+						</div>
+					</ace:column>
+					<ace:column>
+						<div class="FL rowCont grid11_Hdr">
+							<div class="pad6tp">
+								<h:outputText value="Total" />
+							</div>
+						</div>
+					</ace:column>
+
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedPrior.print}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedPrior.noGood}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedPrior.waste}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedPrior.gross}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedToday.print}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedToday.noGood}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedToday.waste}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedToday.gross}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedTotal.print}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedTotal.noGood}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedTotal.waste}" /></div>
+					</ace:column>
+					<ace:column>
+						<div class="rowCont"><h:outputText styleClass="FR pad3rt" value="#{filmStock.usedTotal.gross}" /></div>
+					</ace:column>
+				</h:panelGrid>
+				<span class="txt5">&#160;</span>
+			</div>
+		</ui:repeat>
+	</div>
+
+	<div class="FL pad5tp W20percnt">
+		<ace:dataTable styleClass="bk_sl_grid"
+			selectionMode="single" 	
+			style="width:100%;max-width:100%;"
+			value="#{dprViewBean.filmStockList}" var="filmStock">
+			<ace:column styleClass="VAmid"
+					style="background-image:url(../../i/bk_dataHdrGry1x26.gif);width:80px;">
+					<div class="pad3lt">
+						<h:outputText value="#{filmStock.material.type}" />
+					</div>
+			</ace:column>
+			<ace:column headerText="Start" styleClass="VAmid" style="width:65px;">
+				<h:outputText styleClass="FR pad3rt" value="#{filmStock.inventoryPrior}" />
+			</ace:column>
+			<ace:column headerText="Rcvd" styleClass="VAmid" style="width:65px;">
+				<h:outputText styleClass="FR pad3rt" value="#{filmStock.inventoryReceived}" />
+			</ace:column>
+			<ace:column headerText="Used" styleClass="VAmid" style="width:65px;">
+				<h:outputText styleClass="FR pad3rt" value="#{filmStock.inventoryUsedToday}" />
+			</ace:column>
+			<ace:column headerText="Total" styleClass="VAmid" style="width:65px;">
+				<h:outputText styleClass="FR pad3rt" value="#{filmStock.inventoryTotal}" />
+			</ace:column>
+		</ace:dataTable>
+	</div>
+</ui:composition>

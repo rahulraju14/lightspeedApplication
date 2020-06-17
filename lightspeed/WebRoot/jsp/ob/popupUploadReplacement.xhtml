@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!--The controls for the "Upload Replacement Document" feature.
+	This is embedded within the popupUpload.xhtml dialog when appropriate. -->
+
+		<div class="CT pad10tp txt13">
+			<br/>
+			<div class="FL" style="text-align:justify;">
+				<h:outputText style="font-weight:normal;" escape="false"
+					value="Use the controls below to select and upload a .pdf scan or image of a paper &lt;/br&gt;
+					document that has been &lt;strong&gt;completed and signed. &lt;/strong&gt; The uploaded document will
+					 &lt;/br&gt; be added to the employee's list of Start Forms and
+					will be marked as &quot;Final&quot;.&lt;/br&gt; &lt;/br&gt;
+					Only upload documents that meet the following criteria: &lt;/br&gt; &lt;/br&gt;
+					&#160;-The document was filled out on paper by the employee.&lt;/br&gt;
+					&#160;-The document has been fully completed and signed by all applicable people.&lt;/br&gt;
+					&#160;-The document is one of the currently used Start Forms such as an I9 or W4.&lt;/br&gt;
+					&lt;/br&gt; &lt;/br&gt; Please select the type of document you are going to upload:"/>
+				<br/>
+				<h:selectOneMenu style="width:275px; margin-top:5px;"
+					value="#{bean.selectedObject}">
+					<f:selectItems value="#{bean.documentTypeList}" />
+					<ace:ajax />
+				</h:selectOneMenu>
+			</div>
+		</div>
+
+		<br /><br />
+		<div class="FL">
+			<div class="infoTxt FL pad20tp" style="margin-left:-30px;">
+				<h:panelGroup rendered="#{! bean.uploaded}">
+					<div style="height:45px;" class="pad20tp">
+						<ace:fileEntry id="uploadReplacementFileComponent" label="Upload File"
+								fileEntryListener="#{bean.listenUploadFile}"
+								relativePath="upload"
+								maxFileSize="6291456"
+								required="false"
+								useOriginalFilename="true"
+								requiredMessage="Please select a file before clicking the ''Upload File'' button.">
+						</ace:fileEntry>
+					</div>
+					<h:commandButton value="Upload File" styleClass="btn"/>
+				</h:panelGroup>
+			</div>
+			<div class="FL pad5tp">
+				<h:outputText rendered="#{bean.inputError}" styleClass="RED"
+						value="#{bean.errorMessage}" />
+				<h:panelGroup rendered="#{! bean.inputError}">
+					<br/>
+				</h:panelGroup>
+			</div>
+
+			<h:panelGroup rendered="#{bean.uploaded}">
+
+				<div>
+				<br /><br />
+					<h:outputText style="font-weight:normal;" value="File Uploaded:"/>
+					<h:outputText styleClass="pad5lt" value="#{bean.uploadedFileName}"/>
+				</div>
+
+				<div class="FL pad5tp">
+					<div class="FL pad10tp">
+					<h:outputText style="font-weight:normal" escape="false"
+						value="click &lt;strong&gt; Add &lt;/strong&gt; to add this document to the employee's list of Start Forms."/>
+					</div>
+
+				</div>
+			</h:panelGroup>
+		</div>
+
+</ui:composition>

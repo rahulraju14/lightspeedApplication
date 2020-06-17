@@ -1,0 +1,323 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<!-- DETAILS mini-tab of the Prod Admin / Productions page -->
+
+	<ace:tabPane label="Details" id="poitab">
+
+		<div id="projectTopCont" class="rowGradient">
+
+			<div class="projectSubCont pad3tp">
+
+				<!-- production Details top Left -->
+				<h:panelGroup styleClass="prodDetailsTopLt FL">
+
+					<!-- production title -->
+					<h:panelGroup styleClass="rowCont FL">
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{not productionAdminBean.editMode}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Title:" />
+							</span>
+							<span class="pad15lt pad5tp">
+								<h:outputText
+									value="#{productionAdminBean.element.title}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{productionAdminBean.editMode}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Title:" />
+							</span>
+							<span class="FL mandatory" style="margin-top:8px;">&#160;*&#160;</span>
+							<span class="pad5lt">
+								<ace:textEntry maxlength="30" styleClass="address"
+									value="#{productionAdminBean.element.title}" />
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- production company name -->
+					<h:panelGroup styleClass="rowCont FL pad2tp">
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{not productionAdminBean.editMode}">
+							<span class="fdNm FL" style="margin-top:15px;line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Company:" />
+							</span>
+							<span class="FL pad20lt pad26tp LH13" style="display:block;min-height:19px;max-height:32px;overflow-y:visible;width:60%;">
+								<h:outputText
+									value="#{productionAdminBean.element.studio}" />
+							</span>
+						</h:panelGroup>
+						<h:panelGroup styleClass="rowCont FL"
+							rendered="#{productionAdminBean.editMode}">
+							<span class="fdNm FL" style="line-height:11px;text-align:right;width:60px;">
+								<h:outputText value="Production Company:" />
+							</span>
+							<span class="FL mandatory" style="margin-top:8px;">&#160;*&#160;</span>
+							<span class="pad5lt">
+								<ace:textEntry maxlength="60" styleClass="address"
+									value="#{productionAdminBean.element.studio}" />
+							</span>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- production address1 -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm">
+							<h:outputText
+								rendered="#{productionAdminBean.editMode}"
+								value="Address:" />
+						</span>
+						<h:panelGroup
+							rendered="#{not productionAdminBean.editMode}">
+							<h:outputText
+								value="#{productionAdminBean.element.address.addrLine1}" />
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{productionAdminBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+							<ace:textEntry maxlength="100" styleClass="address"
+								value="#{productionAdminBean.element.address.addrLine1}" />
+						</h:panelGroup>
+					</div><!-- end address 1 -->
+
+					<!-- production address 2 -->
+					<h:panelGroup
+						rendered="#{not productionAdminBean.editMode and (not empty productionAdminBean.element.address.addrLine2)}">
+						<div class="rowCont FL">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span>
+								<h:outputText
+									value="#{productionAdminBean.element.address.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{productionAdminBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<div class="rowCont FL pad3tp">
+							<span class="fdNm">
+								<!-- address 2 keep this title place holder -->
+							</span>
+							<span>
+								<ace:textEntry maxlength="100" styleClass="address"
+									value="#{productionAdminBean.element.address.addrLine2}" />
+							</span>
+						</div>
+					</h:panelGroup><!-- end address 2 -->
+
+					<!-- city, state zip "VIEW mode" -->
+					<h:panelGroup styleClass="rowCont FL"
+						rendered="#{not productionAdminBean.editMode}">
+						<span class="fdNm">
+							<!-- keep this place holder -->
+						</span>
+						<span>
+							<span class="FL">
+								<h:outputText styleClass="pad5rt" rendered="#{not empty productionAdminBean.element.address.city}"
+									value="#{productionAdminBean.element.address.city}," />
+							</span>
+							<span class=" FL pad5rt">
+								<h:outputText
+									value="#{productionAdminBean.element.address.state}" />
+							</span>
+							<span class="FL">
+								<h:outputText
+									value="#{productionAdminBean.element.address.zip}" />
+							</span>
+						</span>
+					</h:panelGroup><!-- end city state zip "VIEW mode" -->
+
+					<!-- city, state zip "EDIT mode" -->
+					<h:panelGroup
+						rendered="#{productionAdminBean.editMode and (not empty authBean.pgFields['0.1,account'])}">
+						<div class="rowCont FL">
+							<span class="fdNm">
+							<h:outputText value="City:" />
+							</span>
+							<span class="pad3tp">
+								<ace:textEntry maxlength="35" styleClass="city"
+								value="#{productionAdminBean.element.address.city}" />
+							</span>
+						</div>
+						<div class="rowCont FL">
+							<span class="fdNm">
+								<h:outputText value="State:" />
+							</span>
+							<span class="fd_state pad3tp">
+								<h:selectOneMenu styleClass="state"
+									value="#{productionAdminBean.element.address.state}">
+								<f:selectItems
+									value="#{applicationScopeBean.stateDL[productionAdminBean.element.address.country]}" />
+								</h:selectOneMenu>
+							</span>
+							<span class="fdNm_zip pad3tp">
+								<h:outputText value="Zip:" />
+							</span>
+							<h:panelGroup>
+								<span class="fd_zip pad3tp">
+									<ace:textEntry maxlength="10" styleClass="zip"
+									value="#{productionAdminBean.element.address.zip}" />
+								</span>
+							</h:panelGroup>
+						</div>
+					</h:panelGroup><!-- end city, state zip "EDIT mode" -->
+
+					<!-- country -->
+					<h:panelGroup
+						rendered="#{not productionAdminBean.editMode and (not empty productionAdminBean.element.address.country) and (productionAdminBean.element.address.country ne 'US')}">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span>
+							<h:outputText
+							value="#{productionAdminBean.element.address.country}" />
+						</span>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{productionAdminBean.editMode and (not empty authBean.pgFields['0.1,account'])}"
+						styleClass="rowCont FL pad1tp">
+						<span class="fdNm">
+							<h:outputText value="Country:" />
+						</span>
+						<span>
+							<h:selectOneMenu styleClass="country"
+								value="#{productionAdminBean.element.address.country}">
+								<f:selectItems
+									value="#{applicationScopeBean.countryDL}" />
+									<ace:ajax />
+							</h:selectOneMenu>
+						</span>
+					</h:panelGroup><!-- end country -->
+
+				</h:panelGroup><!-- end top-right production address -->
+
+				<!-- top Rt Production Contact / Phone numbers -->
+				<h:panelGroup styleClass="prodDetailsTopRt FL pad10lt">
+
+					<div class="rowCont FL">
+						<span class="fdNm_sm">
+							<h:outputText value="Contact:" />
+						</span>
+						<span>
+							<h:panelGroup
+								rendered="#{not productionAdminBean.editMode}">
+								<h:outputText
+									value="#{productionAdminBean.element.contactName}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{productionAdminBean.editMode}">
+								<ace:textEntry maxlength="50"
+									value="#{productionAdminBean.element.contactName}"/>
+							</h:panelGroup>
+						</span>
+					</div>
+
+					<!-- production office phone -->
+					<div class="rowCont FL">
+						<span class="fdNm_sm">
+							<h:outputText value="Office:" />
+						</span>
+						<span>
+							<h:panelGroup
+								rendered="#{not productionAdminBean.editMode}">
+								<h:outputText
+									value="#{productionAdminBean.element.phone}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{productionAdminBean.editMode}">
+								<ace:textEntry
+									maxlength="25"
+									value="#{productionAdminBean.element.phone}">
+									<f:validator validatorId="lightspeed.phoneNumberValidator" />
+								</ace:textEntry>
+							</h:panelGroup>
+						</span>
+					</div>
+
+					<!-- production fax -->
+					<div class="rowCont FL pad2tp">
+						<span class="fdNm_sm">
+							<h:outputText value="Fax:" />
+						</span>
+						<span>
+							<h:panelGroup
+								rendered="#{not productionAdminBean.editMode}">
+								<h:outputText
+									value="#{productionAdminBean.element.fax}" />
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{productionAdminBean.editMode}">
+								<ace:textEntry
+									maxlength="25"
+									value="#{productionAdminBean.element.fax}">
+									<f:validator validatorId="lightspeed.phoneNumberValidator" />
+								</ace:textEntry>
+							</h:panelGroup>
+						</span>
+					</div>
+
+					<!-- production email sender prefix -->
+					<div class="rowCont FL pad5tp">
+							<span class="fdNm FL" style="line-height:11px;width:60px;">
+								<h:outputText value="Email Prefix:" />
+							</span>
+						<span>
+							<h:panelGroup
+								rendered="#{not productionAdminBean.editMode}">
+								<h:outputText
+									value="#{productionAdminBean.element.emailSender}"/>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{productionAdminBean.editMode}">
+								<ace:textEntry
+									maxlength="30"
+									value="#{productionAdminBean.element.emailSender}"/>
+							</h:panelGroup>
+						</span>
+					</div>
+
+				</h:panelGroup>
+
+			</div><!-- end projectSubCont -->
+		</div><!-- end projectTopCont -->
+
+		<div class="CB"></div>
+
+		<div class="projectSubCont pad3tp">
+			<div class="W98percnt" style="z-index: 100">
+				<span class="fdNm_w2 pad5tp FL">Custom Text 1:
+				</span>
+				<h:panelGroup styleClass="rowCont"
+					rendered="#{productionAdminBean.editMode}">
+						<ace:textAreaEntry maxlength="500" styleClass="FL W100percnt H50"
+							value="#{productionAdminBean.element.customText1}" />
+				</h:panelGroup>
+				<h:panelGroup styleClass="rowCont"
+						rendered="#{(not productionAdminBean.editMode)}">
+					<h:outputText styleClass="FL W90percnt" value="#{productionAdminBean.element.customText1}"/>
+				</h:panelGroup>
+
+				<span class="fdNm_w2 pad5tp FL">Custom Text 2:
+				</span>
+				<h:panelGroup styleClass="rowCont"
+					rendered="#{productionAdminBean.editMode}">
+						<ace:textAreaEntry maxlength="500" styleClass="FL W100percnt H50"
+							value="#{productionAdminBean.element.customText2}" />
+				</h:panelGroup>
+				<h:panelGroup styleClass="rowCont"
+						rendered="#{(not productionAdminBean.editMode)}">
+					<h:outputText styleClass="FL W90percnt" value="#{productionAdminBean.element.customText2}"/>
+				</h:panelGroup>
+			</div>
+
+		</div>
+
+	</ace:tabPane><!--  End Detail Tab   -->
+
+</ui:composition>

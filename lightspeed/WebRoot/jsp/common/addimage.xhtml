@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!--
+This is the dialog box for uploading image files.  It is used by
+several pages, including the Images mini-tabs for My Account, Cast & Crew,
+Script Elements, Production Elements, and POI; and the Full Timecard / Add Attachment
+facility.
+ -->
+<h:form enctype="multipart/form-data">
+	<!-- multipart spec is needed due to fileEntry embedded within dialog -->
+	<c:set var="bean" value="#{imageAddBean}" />
+
+	<ace:dialog visible="#{bean.showNewImage}"
+			header="#{bean.forMap ? 'Add or Replace Map' : 'Add New Image'}"
+			closable="true"
+			draggable="true"
+			modal="true"
+			hideEffect="fade"
+			showEffect="fade"
+			resizable="false"
+			styleClass="popup">
+
+		<ace:ajax event="close" execute="@this" listener="#{bean.actionClose}"/>
+
+		<div id="popBdy">
+
+			<h:panelGroup rendered="#{(! empty bean.errorMessage) or
+					((facesContext.maximumSeverity ne null) and (facesContext.maximumSeverity.ordinal ne 0))}">
+				<div id="popErrMsgCont" class="popErrMsgCont">
+					<div style="margin-top:12px;">
+						<div class="popErrTitleBar">
+							<h:outputText value="Error" />
+						</div>
+
+						<h:panelGroup rendered="#{empty bean.errorMessage}">
+							<h:messages errorClass="RED" infoClass="" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{! empty bean.errorMessage}">
+							<ul><li>
+								<h:outputText styleClass="popErrMsgCont"
+									value="#{bean.errorMessage}" />
+							</li></ul>
+							<!-- this prevents JSF from displaying the default error msg: -->
+							<h:messages style="display:none;" />
+						</h:panelGroup>
+						<ace:linkButton styleClass="errorCloseIcon" title="Close error message" value="X"
+								onclick="hidePopErrors();return false;" type="text">
+						</ace:linkButton>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<div class="popup_main MA pad10tp">
+				<br /><br /><br />
+				<div class="infoTxt FL pad10tp">
+					<h:outputText escape="false" value="#{bean.message}" />
+				</div>
+				<br /><br />
+				<div class="infoTxt FL pad20tp">
+					<div style="height:45px;">
+						<ace:fileEntry id="load_image" label="Upload image"
+							fileEntryListener="#{bean.listenUpload}"
+							relativePath="upload"
+							maxFileSize="6291456"
+							messagePersistence="false"
+							required="false"
+							requiredMessage="Please select a file before clicking the ''Upload Image'' button."
+							useOriginalFilename="true" >
+						</ace:fileEntry>
+					</div>
+					<h:commandButton value="Upload Image" styleClass="btn pad5tp" />
+				</div>
+			</div>
+
+			<div class="popBtnCont" style="position:relative;top:80px;">
+				<span class="FR pad10rt">
+					<span class="btnPriEnbLt" />
+					<span>
+						<h:commandLink value="Cancel" immediate="true"
+							action="#{bean.actionCancelNewImage}" styleClass="btnPriEnbCt" />
+					</span>
+					<span class="btnPriEnbRt" />
+				</span>
+			</div>
+		</div>
+
+	</ace:dialog>
+</h:form>
+</ui:composition>

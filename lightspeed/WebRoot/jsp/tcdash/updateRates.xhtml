@@ -1,0 +1,236 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- 
+ *** NOTE *** This page is not currently used.  We will NOT
+ 			convert it to ICEfaces v4 at this time **********
+
+-->
+	<!-- Update Rates tab of Dashboard page -->
+
+	<ace:tabPane label="Update Rates" style="overflow-x:hidden !important;"
+			rendered="#{not empty authBean.pgFields['2.0,write_any']}">
+
+		<div id="scrolltop" class="scrollPnlTab" style="margin-top:-12px;"><!-- top half of page; scrollable -->
+			<!-- Legend wrapper -->
+			<div class="blueLegendContWrap pad25tp">
+				<div class="blueLegendCont"> <!-- Blue content -->
+					<span class="legendHdg" ><!-- blue legend header goes here if needed --></span>
+
+					<h:panelGroup rendered="#{headerViewBean.production.status.allowsWrite}">
+						<!-- left-side legend buttons
+						<h:panelGroup styleClass="btn_legend_left pad10rt">
+							<span class="btnMiniLtHot" />
+								<ace:linkButton value="Approve"
+									action="#{startFormListBean.actionApprove}"
+									title="Approve the timecards that are checked."
+									styleClass="btnMiniCt" />
+							<span class="btnMiniRtHot" />
+						</h:panelGroup>
+						-->
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Refresh"
+								action="#{updateRatesBean.actionRefresh}"
+								title="Refresh the list of timecards."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Fill Rates"
+								action="#{updateRatesBean.actionFillRates}"
+								title="Fill the new rates."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="btn_legend">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Commit Rates"
+								action="#{updateRatesBean.actionCommitRates}"
+								title="Commit the new rates."
+								styleClass="btnMiniCt" />
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+
+					<div class="FL rowCont">
+						<ace:dataTable id="sftable2" styleClass="bk_sl_grid"
+							value="#{updateRatesBean.itemList}"
+							var="emp"
+							scrollable="#{headerViewBean.mobile ? 'false' : 'true'}"
+							scrollHeight="#{headerViewBean.mobile ? '' : '305'}"
+							singleSort="true" selectionMode="single">
+							<!-- ORDER: status, account, free, name, dept, union, occup., occ code, rate, guar., start, type, terms -->
+
+							<!-- STATUS ICON -->
+
+							<ace:column styleClass="CT" headerText="Status">
+
+								<h:commandButton action="#{jumpBean.actionJump}"
+										title="#{emp.startForm.hasRequiredFields
+											? 'Form complete -- all required fields have data.'
+											: 'Form incomplete -- required field(s) missing!'}"
+										rendered="#{(emp.startForm ne null)}"
+										image="#{emp.startForm.hasRequiredFields
+											? '../../i/icon_tc_10_appr.png'
+											: '../../i/icon_tc_09_resub_ready.png'}">
+									<f:setPropertyActionListener value="#{(headerViewBean.production.allowOnboarding ? 'payrollStart' : 'tcstarts')}"
+											target="#{jumpBean.jumpTo}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.contactid" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{emp.contact.id}" target="#{jumpBean.value}"/>
+									<!-- Next two entries are for Onboarding environment -->
+									<f:setPropertyActionListener value="com.lightspeedeps.employmentId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{emp.id}" target="#{jumpBean.value}"/>
+									<!-- Next two entries are for NON-onboarding environment -->
+									<f:setPropertyActionListener value="com.lightspeedeps.StartFormId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="#{emp.startForm.id}" target="#{jumpBean.value}"/>
+									<f:setPropertyActionListener value="com.lightspeedeps.contactDocumentId" target="#{jumpBean.attribute}"/>
+									<f:setPropertyActionListener value="0" target="#{jumpBean.value}"/>
+								</h:commandButton>
+
+							</ace:column>
+
+							<!-- JOB NUMBER (AICP) -->
+							<ace:column rendered="#{aicp}" styleClass="CT" headerText="Job #" sortBy="#{emp.startForm.jobNumber}">
+								<h:outputText rendered="#{emp.startForm ne null}" styleClass="CT" value="#{emp.startForm.jobNumber}" />
+								<h:outputText rendered="#{emp.startForm eq null}" styleClass="CT" value=" " />
+							</ace:column>
+
+							<!-- JOB NAME (AICP) -->
+							<ace:column rendered="#{aicp}" headerText="Job Name" styleClass="CT" sortBy="#{emp.startForm.jobName}">
+								<h:outputText rendered="#{emp.startForm ne null}" styleClass="CT" value="#{emp.startForm.jobName}" />
+								<h:outputText rendered="#{emp.startForm eq null}" styleClass="CT" value=" " />
+							</ace:column>
+
+							<!-- ACCOUNT CODES -->
+							<ace:column rendered="#{! aicp}" styleClass="CT" headerText="Account Code">
+								<div class="W100percnt">
+									<div class="acSl acPrdT"><h:outputText value="#{emp.account.major}&#160;"/></div>
+									<div class="acSl acDtlT"><h:outputText value="#{emp.account.dtl}&#160;"/></div>
+									<div class="acSl acSubT"><h:outputText value="#{emp.account.sub}&#160;"/></div>
+									<div class="acSl acSetT"><h:outputText value="#{emp.account.set}&#160;"/></div>
+								</div>
+							</ace:column>
+
+							<!-- FREE 1 -->
+							<ace:column rendered="#{! aicp}" styleClass="CT"  headerText="Free" sortBy="#{emp.account.free}">
+								<div class="acSl acFrT"><h:outputText value="#{emp.account.free}"/></div>
+							</ace:column>
+
+							<!-- FREE 2 -->
+							<ace:column rendered="#{! aicp}" styleClass="CT"  headerText="Free" sortBy="#{emp.account.free2}">
+								<div class="acSl acFrT"><h:outputText value="#{emp.account.free2}"/></div>
+							</ace:column>
+
+							<!-- NAME -->
+							<ace:column headerText="Name" styleClass="CT" sortBy="#{emp.contact.user.firstName}">
+								<h:outputText styleClass="pad5lt" value="#{emp.contact.user.lastName}" />,&#160;
+								<h:outputText styleClass=" " value="#{emp.contact.user.firstName}" />
+							</ace:column>
+
+							<!-- DEPARTMENT -->
+							<ace:column headerText="Department" styleClass="CT" sortBy="#{emp.department.name}">
+								<h:outputText styleClass="FL pad5lt" value="#{emp.department.name}" />
+							</ace:column>
+
+							<!-- UNION -->
+							<ace:column styleClass="CT" headerText="Union" sortBy="#{emp.startForm.unionLocalNum}">
+								<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.unionLocalNum}" />
+								<h:outputText rendered="#{emp.startForm eq null}" value= " " />
+							</ace:column>
+
+							<!-- OCCUPATION -->
+							<ace:column headerText="Occupation" styleClass="CT" sortBy="#{emp.occupation}">
+								<h:outputText styleClass="FL pad5lt" value="#{emp.occupation}" />
+							</ace:column>
+
+							<!-- OCCUPATION CODE -->
+							<ace:column styleClass="CT" headerText="Occ.Code" sortBy="#{emp.startForm.occupationCode}">
+								<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.occupationCode}" />
+								<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+							</ace:column>
+
+							<!-- PROD BATCH
+							<ace:column>
+								<f:facet name="header">
+									<div class="CT">
+										<ice:commandSortHeader columnName="batch" arrow="true">
+											<h:outputText styleClass="gradNoBkSort" value="Batch" />
+										</ice:commandSortHeader>
+									</div>
+								</f:facet>
+								<h:outputText styleClass="FL pad5lt" value="#{emp.productionBatch.name}" />
+							</ace:column>
+							-->
+
+							<!-- RATE -->
+							<ace:column headerText="Rate" styleClass="CT" sortBy="#{startForm.rate}" >
+								<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.rate}" />
+								<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+							</ace:column>
+
+							<!-- New RATE -->
+							<ace:column headerText="New Rate" styleClass="CT" sortBy="#{emp.startForm.newRate}">
+								<ace:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{emp.startForm.newRate}"/>
+									</f:facet>
+									<f:facet name="input">
+										<ace:textEntry value="#{emp.startForm.newRate}"/>
+									</f:facet>
+								</ace:cellEditor>
+							</ace:column>
+
+							<!-- GUARANTEED HOURS -->
+							<ace:column headerText="Guar." styleClass="CT" sortBy="#{emp.startForm.guarHours}">
+								<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.guarHours}" >
+									<f:convertNumber type="number" pattern="##0.##" />
+								</h:outputText>
+							</ace:column>
+
+							<!-- START DATE -->
+							<ace:column headerText="Start&#160;Date" styleClass="CT">
+								<h:outputText value="#{emp.startForm.effectiveStartDate}"
+										rendered="#{emp.startForm.effectiveStartDate ne null}">
+									<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+								<h:outputText value="#{emp.startForm.workStartDate}"
+										rendered="#{(emp.startForm.effectiveStartDate eq null) and (emp.startForm ne null)}">
+									<f:convertDateTime pattern=" MM/dd/yy" timeZone="#{applicationScopeBean.timeZone}" />
+								</h:outputText>
+								<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+							</ace:column>
+
+							<!-- EMPLOYEE TYPE (WEEKLY/HOURLY) -->
+							<ace:column headerText="Emp.Type" styleClass="CT" sortBy="#{emp.startForm.rateType.label}">
+								<h:outputText rendered="#{emp.startForm ne null}" value="#{emp.startForm.rateType.label}"/>
+								<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+							</ace:column>
+
+							<!-- TERMS (STUDIO/LOC) -->
+							<ace:column headerText="Terms" styleClass="CT">
+								<h:panelGroup rendered="#{emp.startForm ne null}">
+									<h:outputText rendered="#{emp.startForm.useStudioOrLoc eq 'S'}" value="Studio"/>
+									<h:outputText rendered="#{emp.startForm.useStudioOrLoc eq 'L'}" value="Distant"/>
+								</h:panelGroup>
+								<h:outputText rendered="#{emp.startForm eq null}" value=" " />
+							</ace:column>
+
+							<ace:column headerText="Options" id="options">
+								<ace:rowEditor id="editor" startTitle="Edit New Rate" submitTitle="Save New Rate" cancelTitle="Cancel Editing"/>
+							</ace:column>
+
+						</ace:dataTable>
+					</div><!-- end of dataTable wrapper -->
+				</div><!-- end of blue content -->
+			</div><!-- end of blue wrapper -->
+		</div><!-- end scrolltop div -->
+	</ace:tabPane>
+</ui:composition>

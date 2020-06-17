@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<div class="FL rowCont pad10tp stepBorder">
+		<h:commandButton id="step1" value=""
+			styleClass="FL pad3lt pad2tp #{approvalPathsBean.showStep1 ? 'stepCloseIcon' : 'stepOpenIcon'}" tabindex="-1"
+			actionListener="#{approvalPathsBean.listenShowStep}"
+			title="Click to view or close the Step.">
+		</h:commandButton>
+		<div class="FL pad10lt pad5tp">
+			<h:outputText styleClass="stepNum" value="Step 1: "/>
+			<h:outputText styleClass="stepHdr" value="Select or create an Approval Path."/>
+		</div>
+	</div>
+
+	<h:panelGroup rendered="#{approvalPathsBean.showStep1}">
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 'f'}">
+			<!-- <div class="rowCont FL pad10lt pad10tp">
+				<h:outputText styleClass="stepNum" value="Step 1: "/>
+				<h:outputText styleClass="stepHdr" value="Select or create an Approval Path."/>
+			</div> -->
+
+			<div class="rowCont FL pad15tp">
+				<h:outputText styleClass="apText pad10lt" escape="false" value="An Approval Path specifies the people and actions involved in
+					completing and approving a StartForm. Each Approval Path is given a name."/>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{approvalPathsBean.viewType eq 's'}">
+			<div class="rowCont FL" style="margin-top:-10px"></div>
+		</h:panelGroup>
+
+		<div class="rowCont FL">
+			<!-- Start approval path part  -->
+			<div class="blueLegendContWrap"><!-- legend for Approval Path -->
+				<div class="blueLegendCont pad25tp"
+					style="width:35%; height:50px;"> <!-- Blue content -->
+
+					<div class="legendHdg">Approval Path</div>
+
+					<!-- Approval path name list  -->
+					<icecore:setEventPhase events="ValueChangeEvent"
+						phase="INVOKE_APPLICATION">
+						<h:selectOneMenu styleClass="W70percnt"
+							style="margin-left:-75px; margin-top:17px;" immediate="true"
+							disabled="#{approvalPathsBean.editMode}"
+							valueChangeListener="#{approvalPathsBean.listenApprovalPathChange}"
+							value="#{approvalPathsBean.selectedApprovalPathId}">
+							<f:selectItems value="#{approvalPathsBean.approvalPathNameList}" />
+							<ace:ajax />
+						</h:selectOneMenu>
+					</icecore:setEventPhase>
+
+					<!--  Render condition for edit mode start -->
+					<div style="margin-left:-6px; margin-top:-38px;">
+						<h:panelGroup rendered="#{not approvalPathsBean.editMode}">
+							<!-- Delete button -->
+							<h:panelGroup styleClass="btn_legend pad10rt" rendered="#{not empty approvalPathsBean.selectedApprovalPathId}">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Delete"
+										action="#{approvalPathsBean.actionDeleteApprovalPath}"
+										styleClass="btnMiniCt" title="Delete the Approval Path." />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<!-- Rename button -->
+							<h:panelGroup styleClass="btn_legend pad10rt" rendered="#{not empty approvalPathsBean.selectedApprovalPathId}">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="Rename"
+										action="#{approvalPathsBean.actionRenameApprovalPath}"
+										styleClass="btnMiniCt" title="Delete the Approval Path." />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+
+							<!-- New Button  -->
+							<h:panelGroup styleClass="btn_legend pad10rt">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="New"
+										action="#{approvalPathsBean.actionCreateApprovalPath}"
+										title="Create a new Approval Path."
+										styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+							<!-- legend buttons end -->
+						</h:panelGroup><!--  Render condition for edit mode end -->
+					</div>
+				</div> <!-- blueLegendCont  -->
+			</div><!--  end of approval path part -->
+
+			<div class="FL pad10lt pad20tp">
+				<h:outputText styleClass="apText pad12lt" escape="false" value="Once you have selected an Approval &lt;/br&gt; &#160;
+					&#160; Path, click the Edit button:"/>
+			</div>
+
+			<!-- ENABLED EDIT BUTTON (APPROVAL PATH)-->
+			<h:panelGroup rendered="#{(! approvalPathsBean.editMode)
+							and (approvalPathsBean.selectedApprovalPathId ne null)}">
+					<span class="FL pad5rt pad25tp pad25lt">
+						<span class="btnPriHotLt"/>
+						<span>
+						<ace:linkButton value="Edit" action="#{approvalPathsBean.actionEdit}" styleClass="btnPriHotCt"/>
+						</span>
+						<span class="btnPriHotRt"/>
+					</span>
+			</h:panelGroup>
+
+			<!-- DISABLED EDIT BUTTON (APPROVAL PATH)-->
+			<h:panelGroup rendered="#{(approvalPathsBean.editMode)}">
+				<span class="FL pad5rt pad25tp pad25lt">
+					<span class="btnPriDisLt" />
+					<span>
+					<ace:linkButton value="Edit" styleClass="btnPriDisCt" onclick="return false;"/>
+					</span>
+					<span class="btnPriDisRt" />
+				</span>
+			</h:panelGroup>
+		</div>
+	</h:panelGroup>
+</ui:composition>

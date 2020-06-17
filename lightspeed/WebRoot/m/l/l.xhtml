@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+	<title>#{headerViewBean.domainTabTitle} Login</title>
+
+	<!-- Include CSS file from resources folder -->
+	<h:outputStylesheet name="loginpage.uc.css?v=#{applicationScopeBean.version}" />
+
+	<!-- Include standard (compressed) JS file from resources folder -->
+	<h:outputScript name="script.js?v=#{applicationScopeBean.version}" />
+
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes" />
+
+<script language="javascript" type="text/javascript">
+function resize() {
+	// no resize action required on this page
+}
+function doFocus() {
+	var u = document.getElementById('loginForm:userName');
+	var p = document.getElementById('loginForm:password');
+
+	if (u.value != "") { /* this puts cursor in password field if username is filled in already */
+		p.select();
+		p.focus();
+	} else {
+		u.select();
+		u.focus();
+	}
+	if (inIframe()) {
+		try {
+			if (p != null) {
+				p.style.visibility = 'hidden';
+			}
+		}
+		catch(e) {
+		}
+	}
+}
+function inIframe () {
+	try {
+		return window.self !== window.top;
+	} catch (e) {
+		return true;
+	}
+}
+</script>
+
+</h:head>
+<h:body onkeyup="if(event.keyCode==13){lSubmit(event,'loginForm:login');};"><!-- Enter key submits -->
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	doFocus();
+});
+</script>
+
+	<c:set var="ttc" value="#{headerViewBean.TTCOnline or headerViewBean.TTCProd}" scope="request" />
+	<c:set var="appName" value="#{ttc ? 'TTC Online' : 'LightSpeed'}" scope="request" />
+	
+	<div id="login-view">
+
+		<div class="content-area">
+
+			<div class="logo1">
+				<h:panelGroup rendered="#{ttc}">
+					<img src="../../i/ttc_logo.png" alt="TTC Online" width="225px" height="auto" class="image" />
+				</h:panelGroup>
+				<h:panelGroup rendered="#{not ttc}">
+					<img src="../../i/ls_logo.png" alt="LightSpeed eps" width="225px" height="auto" class="image" />
+				</h:panelGroup>
+			</div>
+
+			<div class="clear"></div>
+
+			<div class="circle">
+				<img src="i/circle.png" width="100%" height="auto" />
+			</div>
+
+			<div class="content">
+				<div class="login">
+					<h3 class="h3">SIGN IN</h3>
+					<div class="pointer"></div>
+
+					<div>
+						<h:form id="loginForm">
+
+							<h:panelGroup rendered="#{not empty loginBean.infoMessageText}">
+								<h:outputText styleClass="B txt16" value="#{loginBean.infoMessageText}"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not empty loginBean.message}">
+								<div class="errmsg">
+									<h:outputText value="#{loginBean.messageText}" />
+								</div>
+							</h:panelGroup>
+
+							<h:inputText styleClass="usernm" id="userName" a:placeholder="Email"
+									value="#{loginBean.userName}" tabindex="1" maxlength="100">
+							</h:inputText>
+
+							<h:inputSecret id="password" styleClass="pwd"
+									value="#{loginBean.password}" a:placeholder="Password"
+									required="false" tabindex="2" redisplay="true" maxlength="20">
+							</h:inputSecret>
+
+							<div class="cbx-wrapper">
+								<h:selectBooleanCheckbox id="remember"
+										value="#{loginBean.remember}" tabindex="3" />
+								<label class="cbx-label" for="remember">
+									<span class="cbx-tick" />
+									Remember me
+								</label>
+							</div>
+
+							<div class="login_btn">
+								<ace:linkButton id="login" tabindex="4" value="Sign In" styleClass="login_btn"
+										action="#{loginBean.checkLogin}" />
+							</div>
+
+							<div class="signup_btn">
+								<ace:linkButton id="newaccount" tabindex="5" value="Create Account" styleClass="signup_btn"
+										action="#{loginBean.actionNewAccount}" />
+							</div>
+
+							<div style="margin-top: 1.4em;">
+								<h:commandLink value="Forgot Password ?" id="forgotPsswordLink"
+										tabindex="6" action="#{loginBean.actionGotoReset}" styleClass="new-for-ttc" />
+							</div>
+
+							<div class="explain">
+								<h:outputText value="Log-in using your #{appName} credentials. If you do not have a #{appName} account, please click on the " />
+								<h:commandLink value="Create Account" tabindex="7" id="signupBtnLink"
+										style="color: #3686ff" action="#{loginBean.actionNewAccount}">
+								</h:commandLink>
+								button.
+							</div>
+
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<h:panelGroup id="banner" rendered="#{fFApplicationScopeBean.useFeature('TTCO_SHOW_BANNER_MESSAGE')}">
+			<div class="banner">
+				<h4 class="banner-header">IMPORTANT UPDATES:</h4>
+				<h:outputText class="banner-text" value="#{fFApplicationScopeBean.getFeatureDesc('TTCO_SHOW_BANNER_MESSAGE')}"/>
+			</div>
+		</h:panelGroup>
+
+		<div id="footer">
+			<div class="footer1">
+				<span>© 
+				<h:outputText value = "#{applicationScopeBean.today}">
+					<f:convertDateTime pattern = "yyyy" />
+				</h:outputText>
+				The Team Companies,LLC. All Rights Reserved.</span>
+				<span class="spacer">|</span>
+				<a class="footer_link" href="https://privacy.theteamcompanies.com/terms-of-use" target="_blank">Terms Of Use</a>
+				<span class="spacer">|</span><a class="footer_link" href="https://privacy.theteamcompanies.com" target="_blank">Privacy Policy</a>
+				<span class="spacer">|</span><span class="spacer footer_link">Support</span>
+			</div>
+		</div>
+
+	</div>
+</h:body>
+</html>

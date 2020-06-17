@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+  <!-- Load Postal Information Tab -->
+  <ace:tabPane label="Load Postal Info" id="postaltab">
+
+    <table class="MA W98percnt">
+      <tr>
+        <td style="font-size:12px;">
+      		<table class="W100percnt">
+          	<tr>
+          		<td class="W20percnt">&#160;
+          		</td>
+            	<td>
+            		<ace:messages style="color:red;"/>
+            	</td>
+          	</tr>
+		        <tr>
+		        	<td>
+		        	</td>
+		          <td>
+		          	<h:outputText rendered="#{loadPostalBean.importOk}"
+		          			style="font-weight:bold;" value="Location file loaded successfully."/>
+			       	</td>
+		        </tr>
+		 				<tr>
+		  				<td>
+		  				</td>
+							<td>
+								<h:outputText
+										value="Browse to select file for loading; click Load File to begin data loading."/>
+							</td>
+		  			</tr>
+	          <tr>
+	            <td colspan="2">&#160;
+	            </td>
+	          </tr>
+	          <tr>
+							<td>
+							</td>
+							<td>
+								<ace:fileEntry id="import_file" label="Load File"
+									fileEntryListener="#{loadPostalBean.listenFileEntry}"
+									styleClass=" "
+									maxFileSize="5120000"
+									maxFileSizeMessage="The postal zipcode file may not be larger than 5MB"
+									relativePath="upload"
+									useOriginalFilename="true" >
+								</ace:fileEntry>
+								<h:commandButton value="Load file" styleClass="btn pad5tp" />
+							</td>
+		  			</tr>
+					  <tr>
+							<td colspan="2">&#160;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+    </table>
+
+	</ace:tabPane>
+</ui:composition>

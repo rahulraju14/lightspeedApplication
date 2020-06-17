@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!--Global settings tab of Payroll Preferences page (screen number 9.9) -->
+
+<!-- Uses params:  -->
+<!--   "aicp" (true for commercial productions) -->
+	<f:loadBundle basename="com.lightspeedeps.util.app.messageResources"
+		var="msg" />
+	<ace:tabPane label="Globals" style="overflow-x:hidden !important;"
+			rendered="#{(not empty authBean.pgFields['9.9,view']) and (not headerViewBean.production.type.tours)}">
+
+		<div id="gscrolldiv" class="scrollPnlTab">
+
+		<div class="W98percnt MA pad20tp">
+
+			<div class="FL W10percnt">&#160;<!-- spacing -->
+			</div>
+
+			<!-- GLOBAL TIMECARD SECTION -->
+			<div class="FL W75percnt">
+
+				<div class="rowCont B">
+					<h:outputText styleClass="B pad5rt" value="#{msg.Payroll_Globals_UpdateAllTimecards}" />
+				</div>
+				<!-- Time Card legend wrapper -->
+				<div class="blueLegendContWrap MA pad10tp">
+					<div class="blueLegendCont FL" style="margin-top:12px;"><!-- Blue content -->
+						<div class="legendHdg"><h:outputText value="#{msg.Payroll_Globals_TimecardGlobals}" /></div>
+						<div style="min-height:19px;"><!-- keeps size even if btn is hidden -->
+							<h:panelGroup styleClass="btn_legend" rendered="#{(not payrollGlobalsBean.editMode) and (not empty authBean.pgFields['9.9,edit'])}">
+								<span class="btnMiniLtHot" />
+									<ace:linkButton value="#{msg.Payroll_Globals_UpdateTimecards}"
+										action="#{payrollGlobalsBean.actionUpdate}" styleClass="btnMiniCt" />
+								<span class="btnMiniRtHot" />
+							</h:panelGroup>
+						</div>
+
+						<div class="rowCont">
+							<!-- WEEK/ENDING FILTER -->
+							<h:panelGroup styleClass="FL W25percnt">
+								<h:outputText styleClass="B pad10lt" value="#{msg.Generic_ForWeekEnding}" />
+								<span class="pad2tp">
+									<h:selectOneMenu immediate="true" styleClass="pad8lt" disabled="#{(payrollGlobalsBean.editMode)}"
+											value="#{payrollGlobalsBean.weekEndDate}" style="width:100px;"
+											valueChangeListener="#{payrollGlobalsBean.listenWeekEndChange}">
+											<f:convertDateTime timeZone="#{applicationScopeBean.timeZone}" pattern="MM/dd/yyyy" />
+											<f:selectItems value="#{payrollGlobalsBean.endDateList}"/>
+											<ace:ajax />
+									</h:selectOneMenu>
+								</span>
+							</h:panelGroup>
+							<!-- PROD/EPISODE# -->
+							<h:panelGroup styleClass="FL W70percnt" rendered="#{! aicp}">
+								<span class="">
+									<h:panelGrid columnClasses="W20percnt,W10percnt,W10percnt,W10percnt,W10percnt,W10percnt,W10percnt,W10percnt,W10percnt" columns="9" >
+										<h:outputText styleClass="B pad5rt" value="#{msg.Payroll_Globals_EpisodeCoding}" />
+										<!-- Job 1 -->
+										<h:outputText styleClass="B pad5rt"  value="#{msg.Payroll_Globals_Job1EpiCode}" />
+
+										<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+											styleClass=" " value="#{payrollGlobalsBean.weeklyTimecard.accountMajor}" />
+										<h:inputText maxlength="6" size="6"
+											value="#{payrollGlobalsBean.weeklyTimecard.accountMajor}"
+											rendered="#{payrollGlobalsBean.editMode}" />
+
+										<!-- Job 2 -->
+										<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job2EpiCode}" />
+										<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+											styleClass="W10" value="#{payrollGlobalsBean.weeklyTimecard.accountFree}" />
+										<h:inputText maxlength="6" size="6"
+											value="#{payrollGlobalsBean.weeklyTimecard.accountFree}"
+											rendered="#{payrollGlobalsBean.editMode}" />
+										<!-- Job 3 -->
+										<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job3EpiCode}" />
+										<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+											styleClass=" " value="#{payrollGlobalsBean.weeklyTimecard.accountFree2}" />
+										<h:inputText maxlength="6" size="6"
+											value="#{payrollGlobalsBean.weeklyTimecard.accountFree2}"
+											rendered="#{payrollGlobalsBean.editMode}" />
+										<!-- Job 4 -->
+										<h:outputText styleClass="B pad5lt pad5rt" value="#{msg.Payroll_Globals_Job4EpiCode}" />
+										<h:outputText rendered="#{! payrollGlobalsBean.editMode}"
+											styleClass=" " value="#{payrollGlobalsBean.weeklyTimecard.accountSub}" />
+										<h:inputText maxlength="6" size="6"
+											value="#{payrollGlobalsBean.weeklyTimecard.accountSub}"
+											rendered="#{payrollGlobalsBean.editMode}" />
+									</h:panelGrid>
+
+								</span>
+							</h:panelGroup>
+						</div>
+						<div class="FL rowCont gradTbl2 pad10tp">
+
+							<!-- Daily timecard section --> <!-- id="cday" removed - OK? TODO -->
+							<ace:dataTable styleClass="gradTbl2 txt11 CT"
+									rowStyleClass="txt12 CT"
+									value="#{payrollGlobalsBean.weeklyTimecard.dailyTimes}"
+									var="dailyTime" style="width:100%;max-width:100%;overflow-x:hidden;">
+
+								<!-- ** Include all daily columns ** -->
+								<ui:include src="globalDaily.xhtml">
+									<ui:param name="aicp" value="#{aicp}" />
+								</ui:include>
+
+							</ace:dataTable>
+
+						</div><!-- End gradient table wrapper -->
+					</div><!-- End of Blue content -->
+					<div>&#160;</div>
+				</div><!-- End of class="blueLegendContWrap" -->
+
+				<h:panelGroup styleClass="pad5lt rowCont" rendered="#{!aicp}">
+					<h:outputText value="#{msg.Payroll_Globals_EpiCodeNote} " styleClass="B"/>
+					<h:outputText value="#{msg.Payroll_GlobalsEpiCodeNote1} #{msg.Payroll_GlobalsEpiCodeNote2}
+						#{msg.Payroll_GlobalsEpiCodeNote3} #{msg.Payroll_GlobalsEpiCodeNote4}"  />
+				</h:panelGroup>
+			</div>
+
+			<div class="FL W10percnt">&#160;<!-- spacing -->
+			</div>
+
+		</div>
+
+		</div><!-- end scrollable div -->
+
+	</ace:tabPane><!-- end of mini-tab -->
+</ui:composition>

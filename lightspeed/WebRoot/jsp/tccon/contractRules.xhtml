@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- CONTRACT RULES mini-tab on Payroll / Contracts tab -->
+
+<ace:tabPane label="Contract Rules" style="overflow-x:hidden !important;">
+	<h:outputText style="visibility:hidden;" value="#{contractRulesBean.setUp}"/>
+
+	<div id="scrolltop" class="scrollPnlTab" >
+
+		<div class="blueLegendContWrap MA">
+			<div class="blueLegendCont pad10tp">
+
+			<span class="legendHdg">Contract Rules</span>
+
+				<div class="gradTbl2">
+
+					<ace:dataTable id="contractRulesTable"
+						value="#{contractRulesBean.contractRuleList}" var="rule"
+						scrollable="true"
+						rows="100" rowStyleClass="CT"
+						scrollHeight="340"
+						styleClass="gradTbl2"
+						style="width:100%;max-width:100%;overflow-x:hidden;"
+						paginator="true"
+						paginatorPosition="top"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks}
+									{NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+						rowsPerPageTemplate="50,100,all">
+
+						<!-- Rule key -->
+						<ace:column headerText="Id/Key" styleClass="W5percnt">
+							<h:outputText value="#{rule.id}" />
+						</ace:column>
+
+						<!-- Production Id -->
+						<ace:column headerText="Prod Id" styleClass="W4percnt" filterBy="#{rule.productionId}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.productionId}" />
+						</ace:column>
+
+						<!-- Agreement -->
+						<ace:column headerText="Agreement" styleClass="W4percnt" filterBy="#{rule.agreement}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.agreement}" />
+						</ace:column>
+
+						<!-- Union key -->
+						<ace:column headerText="Union" styleClass="W4percnt" filterBy="#{rule.unionKey}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.unionKey}" />
+						</ace:column>
+
+						<!-- SIDE LETTER -->
+						<ace:column headerText="SideLtr" styleClass="W4percnt" filterBy="#{rule.sideLetter}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.sideLetter}" />
+						</ace:column>
+
+						<!-- Occ code -->
+						<ace:column headerText="OccCode" styleClass="W4percnt" filterBy="#{rule.occCode}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.occCode}" />
+						</ace:column>
+
+						<!-- Schedule -->
+						<ace:column headerText="Sched." styleClass="W3percnt" filterBy="#{rule.schedule}">
+							<h:outputText value="#{rule.schedule}" />
+						</ace:column>
+
+						<!-- ZONE -->
+						<ace:column headerText="Zone" styleClass="W5percnt" filterBy="#{rule.workZone.shortLabel}">
+							<h:outputText value="#{rule.workZone.shortLabel}" />
+						</ace:column>
+
+						<!-- ON/OFF Production-->
+						<ace:column headerText="On/Off" styleClass="W2percnt" filterBy="#{rule.onProduction.label}" >
+							<h:outputText value="#{rule.onProduction.shortLabel}" />
+						</ace:column>
+
+						<!-- TV/FEATURE-->
+						<ace:column headerText="TV/F" styleClass="W3percnt" filterBy="#{rule.medium}">
+							<h:outputText value="#{rule.medium}" />
+						</ace:column>
+
+						<!-- DayType-->
+					   <ace:column id="DayType" headerText="Day Type" styleClass="W5percnt" filterBy="#{rule.dayType.shortLabel}">
+							<h:outputText value="#{rule.dayType.shortLabel}" />
+						</ace:column>
+
+						<!-- Day Number-->
+						<ace:column id="DayNumber" headerText="Day#" styleClass="W5percnt" filterBy="#{rule.dayNumber}">
+							<h:outputText value="#{rule.dayNumber}" />
+						</ace:column>
+
+						<!-- Extra Filters-->
+						<ace:column id="ExtraFilters" headerText="Extra Filters" styleClass="W10percnt" filterBy="#{rule.extraFilters}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.extraFilters}" />
+						</ace:column>
+
+						<!-- Rule Type-->
+						<ace:column id="RuleType" headerText="Type" styleClass="W5percnt" filterBy="#{rule.ruleType.brief}">
+							<h:outputText styleClass=" " value="#{rule.ruleType.brief}" />
+						</ace:column>
+
+						<!-- Use Rule Key-->
+						<ace:column id="UseRuleKey" headerText="Use Rule" styleClass="W10percnt" filterBy="#{rule.useRuleKey}"
+								filterMatchMode="contains">
+							<h:outputText value="#{rule.useRuleKey}" />
+						</ace:column>
+
+						<!-- Priority-->
+						<ace:column id="Priority" headerText="Pri" styleClass="W5percnt">
+							<h:outputText value="#{rule.priority}" />
+						</ace:column>
+
+						<!-- Description-->
+						<ace:column id="Description" headerText="Description" styleClass="W25percnt LT">
+							<h:outputText value="#{rule.description}" />
+						</ace:column>
+					</ace:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</ace:tabPane>
+</ui:composition>

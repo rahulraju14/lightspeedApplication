@@ -1,0 +1,1266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+	<!-- All the beans that are identical across all instances, and
+			are also used by batch (Quartz) processes. -->
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="${com.lightspeedeps.hibernate.PUname}"/><!-- see web.xml -->
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+			</props>
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.lightspeedeps.model.Address</value>
+				<value>com.lightspeedeps.model.Agent</value>
+				<value>com.lightspeedeps.model.Agreement</value>
+				<value>com.lightspeedeps.model.ApprovalAnchor</value>
+				<value>com.lightspeedeps.model.ApprovalPath</value>
+				<value>com.lightspeedeps.model.ApprovalPathAnchor</value>
+				<value>com.lightspeedeps.model.Approver</value>
+				<value>com.lightspeedeps.model.ApproverGroup</value>
+				<value>com.lightspeedeps.model.ApproverAudit</value>
+				<value>com.lightspeedeps.model.Attachment</value>
+				<value>com.lightspeedeps.model.AuditEvent</value>
+				<value>com.lightspeedeps.model.BoxRental</value>
+				<value>com.lightspeedeps.model.CallBackRule</value>
+				<value>com.lightspeedeps.model.CallNote</value>
+				<value>com.lightspeedeps.model.Callsheet</value>
+				<value>com.lightspeedeps.model.CanadaProjectDetail</value>
+				<value>com.lightspeedeps.model.CastCall</value>
+				<value>com.lightspeedeps.model.CateringLog</value>
+				<value>com.lightspeedeps.model.Change</value>
+				<value>com.lightspeedeps.model.CheckoutNotification</value>
+				<value>com.lightspeedeps.model.CheckoutOrder</value>
+				<value>com.lightspeedeps.model.ColorName</value>
+				<value>com.lightspeedeps.model.Commercial</value>
+				<value>com.lightspeedeps.model.Contact</value>
+				<value>com.lightspeedeps.model.ContactDocEvent</value>
+				<value>com.lightspeedeps.model.ContactDocument</value>
+				<value>com.lightspeedeps.model.ContactImport</value>
+				<value>com.lightspeedeps.model.Contract</value>
+				<value>com.lightspeedeps.model.ContractMapping</value>
+				<value>com.lightspeedeps.model.ContractRate</value>
+				<value>com.lightspeedeps.model.ContractRule</value>
+				<value>com.lightspeedeps.model.Country</value>
+				<value>com.lightspeedeps.model.Coupon</value>
+				<value>com.lightspeedeps.model.CouponType</value>
+				<value>com.lightspeedeps.model.CrewCall</value>
+				<value>com.lightspeedeps.model.DailyHotCost</value>
+				<value>com.lightspeedeps.model.DailyTime</value>
+				<value>com.lightspeedeps.model.DateEvent</value>
+				<value>com.lightspeedeps.model.DateRange</value>
+				<value>com.lightspeedeps.model.Department</value>
+				<value>com.lightspeedeps.model.DeptCall</value>
+				<value>com.lightspeedeps.model.DocChangeEvent</value>
+				<value>com.lightspeedeps.model.Document</value>
+				<value>com.lightspeedeps.model.DocumentChain</value>
+				<value>com.lightspeedeps.model.DoodReport</value>
+				<value>com.lightspeedeps.model.Dpr</value>
+				<value>com.lightspeedeps.model.DprDays</value>
+				<value>com.lightspeedeps.model.DprEpisode</value>
+				<value>com.lightspeedeps.model.DprScene</value>
+				<value>com.lightspeedeps.model.Employment</value>
+				<value>com.lightspeedeps.model.Event</value>
+				<value>com.lightspeedeps.model.ExhibitG</value>
+				<value>com.lightspeedeps.model.ExtraTime</value>
+				<value>com.lightspeedeps.model.FilmMeasure</value>
+				<value>com.lightspeedeps.model.FilmStock</value>
+				<value>com.lightspeedeps.model.Folder</value>
+				<value>com.lightspeedeps.model.FormA1Contract</value>
+				<value>com.lightspeedeps.model.FormA2Contract</value>
+				<value>com.lightspeedeps.model.FormA4</value>
+				<value>com.lightspeedeps.model.FormActraContract</value>
+				<value>com.lightspeedeps.model.FormActraIntent</value>
+				<value>com.lightspeedeps.model.FormActraWorkPermit</value>
+				<value>com.lightspeedeps.model.FormDeposit</value>
+				<value>com.lightspeedeps.model.FormField</value>
+				<value>com.lightspeedeps.model.FormG4</value>
+				<value>com.lightspeedeps.model.FormI9</value>
+				<value>com.lightspeedeps.model.FormILW4</value>
+				<value>com.lightspeedeps.model.FormIndem</value>
+				<value>com.lightspeedeps.model.FormL4</value>
+				<value>com.lightspeedeps.model.FormModelRelease</value>
+				<value>com.lightspeedeps.model.FormMTA</value>
+				<value>com.lightspeedeps.model.FormUDAContract</value>
+				<value>com.lightspeedeps.model.FormW4</value>
+				<value>com.lightspeedeps.model.FormW9</value>
+				<value>com.lightspeedeps.model.FormWTPA</value>
+				<value>com.lightspeedeps.model.GoldenRule</value>
+				<value>com.lightspeedeps.model.GsOccCodeCrossRef</value>
+				<value>com.lightspeedeps.model.GuaranteeRule</value>
+				<value>com.lightspeedeps.model.HolidayListRule</value>
+				<value>com.lightspeedeps.model.HolidayRule</value>
+				<value>com.lightspeedeps.model.HotCostsInput</value>
+				<value>com.lightspeedeps.model.Image</value>
+				<value>com.lightspeedeps.model.Material</value>
+				<value>com.lightspeedeps.model.Message</value>
+				<value>com.lightspeedeps.model.MessageInstance</value>
+				<value>com.lightspeedeps.model.Mileage</value>
+				<value>com.lightspeedeps.model.MileageLine</value>
+				<value>com.lightspeedeps.model.MpvRule</value>
+				<value>com.lightspeedeps.model.Note</value>
+				<value>com.lightspeedeps.model.Notification</value>
+				<value>com.lightspeedeps.model.NtPremiumRule</value>
+				<value>com.lightspeedeps.model.Occupation</value>
+				<value>com.lightspeedeps.model.Office</value>
+				<value>com.lightspeedeps.model.OnCallRule</value>
+				<value>com.lightspeedeps.model.OvertimeRule</value>
+				<value>com.lightspeedeps.model.OtherCall</value>
+				<value>com.lightspeedeps.model.Packet</value>
+				<value>com.lightspeedeps.model.Page</value>
+				<value>com.lightspeedeps.model.PageFieldAccess</value>
+				<value>com.lightspeedeps.model.PayBreakdown</value>
+				<value>com.lightspeedeps.model.PayBreakdownDaily</value>
+				<value>com.lightspeedeps.model.PayExpense</value>
+				<value>com.lightspeedeps.model.PayJob</value>
+				<value>com.lightspeedeps.model.PayJobDaily</value>
+				<value>com.lightspeedeps.model.PayRate</value>
+				<value>com.lightspeedeps.model.PayrollPreference</value>
+				<value>com.lightspeedeps.model.PayrollService</value>
+				<value>com.lightspeedeps.model.PointOfInterest</value>
+				<value>com.lightspeedeps.model.PostalLocation</value>
+				<value>com.lightspeedeps.model.Product</value>
+				<value>com.lightspeedeps.model.Production</value>
+				<value>com.lightspeedeps.model.ProductionBatch</value>
+				<value>com.lightspeedeps.model.Project</value>
+				<value>com.lightspeedeps.model.ProjectMember</value>
+				<value>com.lightspeedeps.model.ProjectSchedule</value>
+				<value>com.lightspeedeps.model.RealLink</value>
+				<value>com.lightspeedeps.model.RealWorldElement</value>
+				<value>com.lightspeedeps.model.Recording</value>
+				<value>com.lightspeedeps.model.ReportRequirement</value>
+				<value>com.lightspeedeps.model.ReportTime</value>
+				<value>com.lightspeedeps.model.RestRule</value>
+				<value>com.lightspeedeps.model.Role</value>
+				<value>com.lightspeedeps.model.RoleGroup</value>
+				<value>com.lightspeedeps.model.Scene</value>
+				<value>com.lightspeedeps.model.SceneCall</value>
+				<value>com.lightspeedeps.model.Script</value>
+				<value>com.lightspeedeps.model.ScriptElement</value>
+				<value>com.lightspeedeps.model.ScriptMeasure</value>
+				<value>com.lightspeedeps.model.ScriptReport</value>
+				<value>com.lightspeedeps.model.SelectionItem</value>
+				<value>com.lightspeedeps.model.SideLetter</value>
+				<value>com.lightspeedeps.model.SignatureBox</value>
+				<value>com.lightspeedeps.model.SpecialRule</value>
+				<value>com.lightspeedeps.model.StartForm</value>
+				<value>com.lightspeedeps.model.StartRateSet</value>
+				<value>com.lightspeedeps.model.State</value>
+				<value>com.lightspeedeps.model.Strip</value>
+				<value>com.lightspeedeps.model.Stripboard</value>
+				<value>com.lightspeedeps.model.StripboardReport</value>
+				<value>com.lightspeedeps.model.StripColor</value>
+				<value>com.lightspeedeps.model.Student</value>
+				<value>com.lightspeedeps.model.Subjects</value>
+				<value>com.lightspeedeps.model.Talent</value>
+				<value>com.lightspeedeps.model.TalentCategory</value>
+				<value>com.lightspeedeps.model.TaxWageAllocationForm</value>
+				<value>com.lightspeedeps.model.TaxWageAllocationRow</value>
+				<value>com.lightspeedeps.model.TaxWageAllocationRowTemplate</value>
+				<value>com.lightspeedeps.model.TextElement</value>
+				<value>com.lightspeedeps.model.TimecardChangeEvent</value>
+				<value>com.lightspeedeps.model.TimecardEvent</value>
+				<value>com.lightspeedeps.model.Timesheet</value>
+				<value>com.lightspeedeps.model.TimesheetDay</value>
+				<value>com.lightspeedeps.model.TimesheetEvent</value>
+				<value>com.lightspeedeps.model.UdaProjectDetail</value>
+				<value>com.lightspeedeps.model.Unions</value>
+				<value>com.lightspeedeps.model.Unit</value>
+				<value>com.lightspeedeps.model.UnitStripboard</value>
+				<value>com.lightspeedeps.model.User</value>
+				<value>com.lightspeedeps.model.VehicleLog</value>
+				<value>com.lightspeedeps.model.WeeklyBatch</value>
+				<value>com.lightspeedeps.model.WeeklyHotCosts</value>
+				<value>com.lightspeedeps.model.WeeklyRule</value>
+				<value>com.lightspeedeps.model.WeeklyTimecard</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--
+		Activates various annotations to be detected in bean classes:
+		Spring's @Required and @Autowired, as well as JSR 250's @Resource.
+		DH:  used in some Script-related classes
+	-->
+	<context:component-scan base-package="com.lightspeedeps" />
+
+	<!--
+		Instruct Spring to perform declarative transaction management
+		automatically on annotated classes.
+	-->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+	<!-- All the DAO beans -->
+
+	<bean id="AddressDAO" class="com.lightspeedeps.dao.AddressDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="AgentDAO" class="com.lightspeedeps.dao.AgentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="AgreementDAO" class="com.lightspeedeps.dao.AgreementDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApprovalAnchorDAO" class="com.lightspeedeps.dao.ApprovalAnchorDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApprovalPathDAO" class="com.lightspeedeps.dao.ApprovalPathDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApprovalPathAnchorDAO" class="com.lightspeedeps.dao.ApprovalPathAnchorDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApproverAuditDAO" class="com.lightspeedeps.dao.ApproverAuditDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApproverDAO" class="com.lightspeedeps.dao.ApproverDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ApproverGroupDAO" class="com.lightspeedeps.dao.ApproverGroupDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="AttachmentDAO" class="com.lightspeedeps.dao.AttachmentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="AuditEventDAO"
+		class="com.lightspeedeps.dao.AuditEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="BoxRentalDAO" class="com.lightspeedeps.dao.BoxRentalDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CallBackRuleDAO" class="com.lightspeedeps.dao.CallBackRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CallNoteDAO" class="com.lightspeedeps.dao.CallNoteDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CallsheetDAO" class="com.lightspeedeps.dao.CallsheetDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CanadaProjectDetailDAO" class="com.lightspeedeps.dao.CanadaProjectDetailDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CastCallDAO" class="com.lightspeedeps.dao.CastCallDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CateringLogDAO" class="com.lightspeedeps.dao.CateringLogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ChangeDAO" class="com.lightspeedeps.dao.ChangeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CheckoutNotificationDAO" class="com.lightspeedeps.dao.CheckoutNotificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CheckoutOrderDAO" class="com.lightspeedeps.dao.CheckoutOrderDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ColorNameDAO" class="com.lightspeedeps.dao.ColorNameDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CommercialDAO" class="com.lightspeedeps.dao.CommercialDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContactDAO" class="com.lightspeedeps.dao.ContactDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContactDocEventDAO" class="com.lightspeedeps.dao.ContactDocEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContactDocumentDAO" class="com.lightspeedeps.dao.ContactDocumentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContactImportDAO" class="com.lightspeedeps.dao.ContactImportDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContractDAO" class="com.lightspeedeps.dao.ContractDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContractMappingDAO" class="com.lightspeedeps.dao.ContractMappingDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContractRateDAO" class="com.lightspeedeps.dao.ContractRateDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ContractRuleDAO" class="com.lightspeedeps.dao.ContractRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CountryDAO" class="com.lightspeedeps.dao.CountryDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CouponDAO" class="com.lightspeedeps.dao.CouponDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CouponTypeDAO" class="com.lightspeedeps.dao.CouponTypeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="CrewCallDAO" class="com.lightspeedeps.dao.CrewCallDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DailyHotCostDAO"
+		class="com.lightspeedeps.dao.DailyHotCostDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DailyTimeDAO" class="com.lightspeedeps.dao.DailyTimeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DateEventDAO" class="com.lightspeedeps.dao.DateEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DateRangeDAO" class="com.lightspeedeps.dao.DateRangeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DepartmentDAO" class="com.lightspeedeps.dao.DepartmentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DeptCallDAO" class="com.lightspeedeps.dao.DeptCallDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DocChangeEventDAO" class="com.lightspeedeps.dao.DocChangeEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DocumentDAO" class="com.lightspeedeps.dao.DocumentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DocumentChainDAO" class="com.lightspeedeps.dao.DocumentChainDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DoodReportDAO" class="com.lightspeedeps.dao.DoodReportDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DprDAO" class="com.lightspeedeps.dao.DprDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DprDaysDAO" class="com.lightspeedeps.dao.DprDaysDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DprEpisodeDAO" class="com.lightspeedeps.dao.DprEpisodeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="DprSceneDAO" class="com.lightspeedeps.dao.DprSceneDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="EmploymentDAO" class="com.lightspeedeps.dao.EmploymentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="EventDAO" class="com.lightspeedeps.dao.EventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ExhibitGDAO" class="com.lightspeedeps.dao.ExhibitGDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ExtraTimeDAO" class="com.lightspeedeps.dao.ExtraTimeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FilmMeasureDAO" class="com.lightspeedeps.dao.FilmMeasureDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FilmStockDAO" class="com.lightspeedeps.dao.FilmStockDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FolderDAO" class="com.lightspeedeps.dao.FolderDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormA1ContractDAO" class="com.lightspeedeps.dao.FormA1ContractDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormA2ContractDAO" class="com.lightspeedeps.dao.FormA2ContractDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormA4DAO" class="com.lightspeedeps.dao.FormA4DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormActraContractDAO" class="com.lightspeedeps.dao.FormActraContractDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean> 
+
+	<bean id="FormActraIntentDAO" class="com.lightspeedeps.dao.FormActraIntentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean> 
+
+	<bean id="FormActraWorkPermitDAO" class="com.lightspeedeps.dao.FormActraWorkPermitDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean> 
+
+	<bean id="FormDepositDAO" class="com.lightspeedeps.dao.FormDepositDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormFieldDAO" class="com.lightspeedeps.dao.FormFieldDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormG4DAO" class="com.lightspeedeps.dao.FormG4DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormI9DAO" class="com.lightspeedeps.dao.FormI9DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormILW4DAO" class="com.lightspeedeps.dao.FormILW4DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormIndemDAO" class="com.lightspeedeps.dao.FormIndemDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormL4DAO" class="com.lightspeedeps.dao.FormL4DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormModelReleaseDAO" class="com.lightspeedeps.dao.FormModelReleaseDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormMtaDAO" class="com.lightspeedeps.dao.FormMtaDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormUDAContractDAO" class="com.lightspeedeps.dao.FormUDAContractDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormW4DAO" class="com.lightspeedeps.dao.FormW4DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormW9DAO" class="com.lightspeedeps.dao.FormW9DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="FormWtpaDAO" class="com.lightspeedeps.dao.FormWtpaDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="GoldenRuleDAO" class="com.lightspeedeps.dao.GoldenRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="GsOccCodeCrossRefDAO" class="com.lightspeedeps.dao.GsOccCodeCrossRefDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="GuaranteeRuleDAO" class="com.lightspeedeps.dao.GuaranteeRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="HolidayListRuleDAO" class="com.lightspeedeps.dao.HolidayListRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="HolidayRuleDAO" class="com.lightspeedeps.dao.HolidayRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="HotCostsInputDAO"
+		class="com.lightspeedeps.dao.HotCostsInputDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ImageDAO" class="com.lightspeedeps.dao.ImageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MaterialDAO" class="com.lightspeedeps.dao.MaterialDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MessageDAO" class="com.lightspeedeps.dao.MessageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MessageInstanceDAO" class="com.lightspeedeps.dao.MessageInstanceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MileageDAO" class="com.lightspeedeps.dao.MileageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MileageLineDAO" class="com.lightspeedeps.dao.MileageLineDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="MpvRuleDAO" class="com.lightspeedeps.dao.MpvRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="NoteDAO" class="com.lightspeedeps.dao.NoteDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="NotificationDAO" class="com.lightspeedeps.dao.NotificationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="NtPremiumRuleDAO" class="com.lightspeedeps.dao.NtPremiumRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="OccupationDAO" class="com.lightspeedeps.dao.OccupationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="OfficeDAO" class="com.lightspeedeps.dao.OfficeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="OnCallRuleDAO" class="com.lightspeedeps.dao.OnCallRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="OtherCallDAO" class="com.lightspeedeps.dao.OtherCallDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="OvertimeRuleDAO" class="com.lightspeedeps.dao.OvertimeRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PacketDAO" class="com.lightspeedeps.dao.PacketDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PageDAO" class="com.lightspeedeps.dao.PageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PageFieldAccessDAO" class="com.lightspeedeps.dao.PageFieldAccessDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayBreakdownDAO" class="com.lightspeedeps.dao.PayBreakdownDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayBreakdownDailyDAO" class="com.lightspeedeps.dao.PayBreakdownDailyDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayExpenseDAO" class="com.lightspeedeps.dao.PayExpenseDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayJobDAO" class="com.lightspeedeps.dao.PayJobDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayJobDailyDAO" class="com.lightspeedeps.dao.PayJobDailyDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayRateDAO" class="com.lightspeedeps.dao.PayRateDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayrollPreferenceDAO" class="com.lightspeedeps.dao.PayrollPreferenceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PayrollServiceDAO" class="com.lightspeedeps.dao.PayrollServiceDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PointOfInterestDAO" class="com.lightspeedeps.dao.PointOfInterestDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="PostalLocationDAO" class="com.lightspeedeps.dao.PostalLocationDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProductDAO" class="com.lightspeedeps.dao.ProductDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProductionDAO" class="com.lightspeedeps.dao.ProductionDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProductionBatchDAO" class="com.lightspeedeps.dao.ProductionBatchDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProjectDAO" class="com.lightspeedeps.dao.ProjectDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProjectMemberDAO" class="com.lightspeedeps.dao.ProjectMemberDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ProjectScheduleDAO" class="com.lightspeedeps.dao.ProjectScheduleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="RealLinkDAO" class="com.lightspeedeps.dao.RealLinkDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="RealWorldElementDAO" class="com.lightspeedeps.dao.RealWorldElementDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="RecordingDAO" class="com.lightspeedeps.dao.RecordingDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ReportRequirementDAO" class="com.lightspeedeps.dao.ReportRequirementDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ReportTimeDAO" class="com.lightspeedeps.dao.ReportTimeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="RestRuleDAO" class="com.lightspeedeps.dao.RestRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="RoleDAO" class="com.lightspeedeps.dao.RoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="RoleGroupDAO" class="com.lightspeedeps.dao.RoleGroupDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SceneCallDAO" class="com.lightspeedeps.dao.SceneCallDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SceneDAO" class="com.lightspeedeps.dao.SceneDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ScriptDAO" class="com.lightspeedeps.dao.ScriptDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ScriptElementDAO" class="com.lightspeedeps.dao.ScriptElementDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ScriptMeasureDAO" class="com.lightspeedeps.dao.ScriptMeasureDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="ScriptReportDAO" class="com.lightspeedeps.dao.ScriptReportDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SelectionItemDAO" class="com.lightspeedeps.dao.SelectionItemDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SideLetterDAO"
+		class="com.lightspeedeps.dao.SideLetterDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SignatureBoxDAO" class="com.lightspeedeps.dao.SignatureBoxDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="SpecialRuleDAO" class="com.lightspeedeps.dao.SpecialRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StartFormDAO" class="com.lightspeedeps.dao.StartFormDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StartRateSetDAO" class="com.lightspeedeps.dao.StartRateSetDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StateDAO" class="com.lightspeedeps.dao.StateDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StripboardDAO" class="com.lightspeedeps.dao.StripboardDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StripboardReportDAO" class="com.lightspeedeps.dao.StripboardReportDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StripColorDAO" class="com.lightspeedeps.dao.StripColorDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="StripDAO" class="com.lightspeedeps.dao.StripDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- Added StudentDAO class -->
+	<bean id="StudentDAO" class="com.lightspeedeps.dao.StudentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<!-- Added SubjectsDAO class -->
+	<bean id="SubjectsDAO" class="com.lightspeedeps.dao.SubjectsDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+		
+
+	<bean id="TalentDAO" class="com.lightspeedeps.dao.TalentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TalentCategoryDAO" class="com.lightspeedeps.dao.TalentCategoryDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TaxWageAllocationFormDAO"
+		class="com.lightspeedeps.dao.TaxWageAllocationFormDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TaxWageAllocationRowDAO"
+		class="com.lightspeedeps.dao.TaxWageAllocationRowDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TaxWageAllocationRowTemplateDAO"
+		class="com.lightspeedeps.dao.TaxWageAllocationRowTemplateDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TextElementDAO" class="com.lightspeedeps.dao.TextElementDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TimecardChangeEventDAO" class="com.lightspeedeps.dao.TimecardChangeEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TimecardEventDAO" class="com.lightspeedeps.dao.TimecardEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TimesheetDAO" class="com.lightspeedeps.dao.TimesheetDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TimesheetDayDAO" class="com.lightspeedeps.dao.TimesheetDayDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="TimesheetEventDAO" class="com.lightspeedeps.dao.TimesheetEventDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="UdaProjectDetailDAO" class="com.lightspeedeps.dao.UdaProjectDetailDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="UnionsDAO" class="com.lightspeedeps.dao.UnionsDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="UnitDAO" class="com.lightspeedeps.dao.UnitDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="UnitStripboardDAO" class="com.lightspeedeps.dao.UnitStripboardDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="UserDAO" class="com.lightspeedeps.dao.UserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="VehicleLogDAO" class="com.lightspeedeps.dao.VehicleLogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="WeeklyBatchDAO" class="com.lightspeedeps.dao.WeeklyBatchDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="WeeklyHotCostsDAO"
+		class="com.lightspeedeps.dao.WeeklyHotCostsDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="WeeklyRuleDAO" class="com.lightspeedeps.dao.WeeklyRuleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="WeeklyTimecardDAO" class="com.lightspeedeps.dao.WeeklyTimecardDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+<!-- End of DAO beans -->
+
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<!-- this allows ${name} parameter values to be resolved against web.xml context parameters -->
+	</bean>
+
+	<bean id="strongEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<!-- Don't specify algorithm for offline version -->
+		<property name="algorithm">
+			<value>PBEWITHSHAAND256BITAES-CBC-BC</value>
+		</property>
+		<property name="password">
+			<value>tlr9ls!oee57(2,bgmiwe.pd4*63uv^8xozcq?p/m5
+			</value>
+			<!-- NOTE! The password includes the new-line and 3 tabs!! -->
+		</property>
+		<property name="keyObtentionIterations">
+			<value>999</value><!-- default is 1,000 -->
+		</property>
+		<property name="providerName">
+			<value>BC</value>
+		</property>
+	</bean>
+
+	<bean id="hibernateStringEncryptor" class="org.jasypt.hibernate3.encryptor.HibernatePBEStringEncryptor">
+		<property name="registeredName">
+			<value>hibernateStringEncryptor</value>
+		</property>
+		<property name="encryptor">
+			<ref bean="strongEncryptor" />
+		</property>
+	</bean>
+
+	<bean id="AuthBean" class="com.lightspeedeps.web.login.AuthorizationBean">
+		<description>Utility bean for checking permissions</description>
+	</bean>
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="5" />
+		<property name="queueCapacity" value="1000" />
+	</bean>
+
+	<bean id="NotificationBean" class="com.lightspeedeps.message.DoNotification">
+		<description>Bean for sending notification messages</description>
+	</bean>
+
+	<bean id="ExecuteReport" class="com.lightspeedeps.batch.ExecuteReport">
+		<description>Bean for scheduling and running asynchronous report generation</description>
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="taskExecutor" ref="taskExecutor" />
+	</bean>
+
+</beans>

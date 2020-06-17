@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<h:panelGroup label="Form I-9"
+		rendered="#{(contactFormBean.vContact.id eq contactFormBean.contactDocument.contact.id)
+						or  (not empty authBean.pgFields['10.6,view'])}">
+		<div class="miniTab pad12lt" style="width:845px;">
+			<!-- scrolling container -->
+			<div class="scrollPnlTab BKwhite sfFormBorder1">
+				<div class="pad10lt pad10rt" style="width:820px;">
+
+					<!-- I9 Instructions (Page 1 to 6)-->
+					<!-- <h:graphicImage value="" style="width:820px; margin-top:25px;" url="../../i/forms/1_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/2_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/3_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/4_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/5_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/6_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px; margin-top:-10px;" url="../../i/forms/7_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/8_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/9_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/10_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/11_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px;" url="../../i/forms/12_formi9_inst.png"/> -->
+
+					<!-- Header image -->
+					<h:graphicImage alt="" value="" style="width:820px; margin-top:-10px;" url="../../i/forms/i9Header_without_logo.png"/>
+
+					<!-- Employee Information  -->
+					<div class="sfFormBorder1 pad8tp pad5lt" style="height:204px;width:810px;">
+						<!-- Section 1 Start  -->
+						<div class="FL BKgrey rowCont" style="height:40px;">
+							<!-- <div class="rowCont FL"> <h:outputText styleClass="LH3" value="&#160;" /> </div> -->
+							<span class="FL pad5tp">
+								<h:outputText styleClass="pad5lt txt15" escape="false"
+									value=" &lt;strong&gt; Section 1. Employee Information and Attestation &lt;/strong&gt;
+											&lt;em&gt;(Employees must complete and sign Section 1 of Form I-9 no later &lt;/br&gt; &#160;
+											than the  &lt;strong&gt; first day of employment &lt;/strong&gt;,
+											but not before accepting a job offer.)&lt;/em&gt;" />
+							</span>
+						</div>
+						<!-- Section 1 End -->
+
+						<!-- Section one table [Employee details] -->
+						<ui:include src="formI9Sec1.xhtml"></ui:include>
+
+						<!-- Middle section [Attest] -->
+						<ui:include src="formI9Attest.xhtml"></ui:include>
+
+						<!-- Signature and Preparer's Section -->
+						<ui:include src="formI9Signature.xhtml"></ui:include>
+
+						<!-- Second Page-->
+						<ui:include src="formI9SecondPage.xhtml"></ui:include>
+
+					</div><!-- Section 1 End  -->
+
+					<!-- I9 Instructions(Page 9) -->
+					<!-- <h:graphicImage value="" style="width:820px; margin-top:40px;" url="../../i/forms/13_formi9_inst.png"/>
+					<h:graphicImage value="" style="width:820px; margin-top:-7px;" url="../../i/forms/14_formi9_inst.png"/> -->
+
+				</div>
+			</div><!-- scrolling container End-->
+
+			<h:panelGroup rendered="#{! contactFormBean.isPreviewDocument}">
+				<div class="FL BKwhite sfFormBorder1 pad30tp pad15bm" style="width:840px;margin-bottom:15px;">
+					<ui:include src="signatureHistory.xhtml">
+						<ui:param name="bean" value="#{formI9Bean}" />
+						<ui:param name="events" value="#{formI9Bean.contactDoc.contactDocEvents}" />
+					</ui:include>
+				</div>
+			</h:panelGroup>
+
+		</div> <!-- mini tab -->
+	</h:panelGroup>
+
+
+</ui:composition>

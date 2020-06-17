@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Timecard Review</title>
+
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0" />
+
+<ui:include src="../common/global.xhtml" />
+
+</h:head>
+<h:body onunload="">
+
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded();
+});
+</script>
+<ui:include src="../common/iosfix.xhtml" />
+
+	<div>
+		<h:form>
+		<!-- set the JSF navigation value for the Back button -->
+		<h:inputHidden binding="#{headerViewBean.backAction}" value="appdashboardm" />
+
+		<ui:include src="../common/header.xhtml" />
+
+			<div class="CT">
+
+				<ui:include src="../common/welcome.xhtml" />
+
+				<div class="prodTitle">
+						<h:outputText value="#{mobileTimecardBean.prodOrProjectTitle}" />
+				</div>
+
+				<div class="pageTitle" style="margin-top: 5px;">
+						Timecard Review
+				</div>
+
+				<a id="default" /><!-- default scroll-to-top position -->
+
+				<div class="txtL2 inCtlRow">
+					<h:panelGroup styleClass="inBlock FL" rendered="#{mobileApproverBean.hasPrevTimecard}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriHotCt"
+							action="#{mobileApproverBean.actionPreviousTimecard}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FL" rendered="#{! mobileApproverBean.hasPrevTimecard}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&lt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+					<span class="midBtn weekEndText">
+						<span class="prodTitle DB">
+								<h:outputText value="#{ mobileApproverBean.weeklyTimecard.lastNameFirstName}" />
+						</span>
+						<span class="infoText DB">
+								<h:outputText value="#{mobileApproverBean.weeklyTimecard.occupation}" />
+						</span>
+					</span>
+
+					<h:panelGroup styleClass="inBlock FR" rendered="#{mobileApproverBean.hasNextTimecard}">
+						<span class="FL btnPriHotLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriHotCt"
+							action="#{mobileApproverBean.actionNextTimecard}" />
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+					<h:panelGroup styleClass="inBlock FR" rendered="#{! mobileApproverBean.hasNextTimecard}">
+						<span class="FL btnPriDisLt"></span>
+						<h:commandLink value="&gt;" styleClass="btnPriDisCt" type="text" />
+						<span class="FL btnPriDisRt"></span>
+					</h:panelGroup>
+
+				</div>
+
+				<div class="statusBanner">
+					<div class="FL inBlock" style="width:35%;">
+						<h:outputText value="Status:" />
+						<h:outputText value="#{mobileApproverBean.weeklyTimecard.status.label}" />
+					</div>
+					<div class="inBlock" style="width: 60%;">
+						<h:outputText value="Waiting for:" rendered="#{mobileApproverBean.weeklyTimecard.status ne 'OPEN' and
+								mobileApproverBean.weeklyTimecard.status ne 'APPROVED'}"/>
+						<h:outputText styleClass="pad5lt" value="#{mobileApproverBean.approverName}" />
+					</div>
+				</div>
+
+				<div class="CB pad10tp"></div>
+
+				<!-- List of days plus hours & other columns -->
+				<div class="MA" style="min-width:560px;width:98%">
+
+					<ace:dataTable value="#{mobileApproverBean.weeklyTimecard.dailyTimes}" var="daytime"
+							style="width:100%;max-width:100%;"
+							styleClass="tblRev">
+							<!-- 
+							columnWidths="30%,6%,6.5%,13%,13%,7%,6.5%,6%,6%,6%">
+							 -->
+
+						<ace:column headerText="">
+								<div>
+									<span class="FL btnPriHotSmLt"></span>
+									<span>
+										<h:commandLink action="hoursm" styleClass="btnPriHotSmCt mBtnRev">
+											<h:outputText value="#{daytime.date}">
+												<f:convertDateTime pattern="EEE M/d" timeZone="#{applicationScopeBean.timeZone}" />
+											</h:outputText>
+											<f:setPropertyActionListener value="com.lightspeedeps.mtcDate" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="#{daytime.date}" target="#{jumpBean.value}"/>
+											<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="tcreviewm" target="#{jumpBean.value}"/>
+										</h:commandLink>
+									</span>
+									<span class="FL btnPriHotSmRt"></span>
+								</div>
+								<div class="pad5tp">
+									<h:outputText value="#{daytime.dayType.shortLabel}" />
+								</div>
+						</ace:column>
+						<ace:column>
+							<f:facet name="header">
+								<h:panelGroup rendered="#{not mobileApproverBean.weeklyTimecard.allowWorked}">
+									<span>NDB/<br/>NDM</span>
+								</h:panelGroup>
+								<h:outputText value="Wrk'd" rendered="#{mobileApproverBean.weeklyTimecard.allowWorked}" />
+							</f:facet>
+							<h:panelGroup rendered="#{not mobileApproverBean.weeklyTimecard.allowWorked}">
+							 	<div class="ndmDiv">
+									<h:selectBooleanCheckbox value="#{daytime.nonDeductMeal}" styleClass="ndm1"
+											disabled="true" />
+									<div class="ndmSlash1" />
+								</div>
+								<div class="ndmDiv">
+									<div class="ndmSlash2" />
+									<h:selectBooleanCheckbox value="#{daytime.nonDeductMeal2}" styleClass="ndm2"
+											disabled="true" />
+								</div>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{mobileApproverBean.weeklyTimecard.allowWorked}">
+								<h:selectBooleanCheckbox value="#{daytime.worked}" disabled="true"
+										styleClass="W80percnt"/>
+							</h:panelGroup>
+						</ace:column>
+						<ace:column headerText="Call">
+						 	<h:outputText value="#{daytime.callTime}">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+							<h:outputText value="W" rendered="#{daytime.worked}" />
+						</ace:column>
+						<ace:column headerText="Meal 1">
+						 	<h:outputText value="#{daytime.m1Out}" style="padding-right:7%;">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+						 	<h:outputText value="#{daytime.m1In}">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+							<h:outputText value="O" rendered="#{daytime.worked}" style="padding-right:30%;" />
+							<h:outputText value="R" rendered="#{daytime.worked}" />
+						</ace:column>
+						<ace:column headerText="Meal 2">
+						 	<h:outputText value="#{daytime.m2Out}" style="padding-right:7%;">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+						 	<h:outputText value="#{daytime.m2In}">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+							<h:outputText value="K" rendered="#{daytime.worked}" style="padding-right:30%;" />
+							<h:outputText value="E" rendered="#{daytime.worked}" />
+						</ace:column>
+						<ace:column headerText="Wrap">
+						 	<h:outputText value="#{daytime.wrap}">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+							<h:outputText value="D" rendered="#{daytime.worked}" />
+						</ace:column>
+						<ace:column headerText="Hrs">
+							<f:facet name="footer">
+								<h:outputText styleClass="total" value="#{mobileApproverBean.weeklyTimecard.totalHours}">
+							 		<f:convertNumber pattern="#0.0#"/>
+							 	</h:outputText>
+							</f:facet>
+						 	<h:outputText value="#{daytime.hours}" styleClass="B">
+						 		<f:convertNumber pattern="#0.0#"/>
+						 	</h:outputText>
+						</ace:column>
+						<ace:column headerText="MPV">
+							<f:facet name="footer">
+								<h:outputText styleClass="total" value="#{mobileApproverBean.weeklyTimecard.totalMpvUser}" />
+							</f:facet>
+						 	<h:outputText value="#{daytime.mpvUser}" />
+						</ace:column>
+						<ace:column>
+							<f:facet name="header"><span>Re-<br/>Rate</span></f:facet>
+							<h:selectBooleanCheckbox value="#{daytime.reRate}" disabled="true" />
+						</ace:column>
+						<ace:column headerText="Set">
+						 	<h:outputText value="#{daytime.accountSet}" />
+						</ace:column>
+
+					</ace:dataTable>
+
+					<div class="tblRev">
+						 	<span class="pad5lt B">
+							 	Comments:
+						 	</span>
+							<br/>
+						 	<h:outputText styleClass="FL pad10lt pad5tp pad10bm" escape="false"
+							 			value="#{mobileApproverBean.weeklyTimecard.comments}" />
+					</div>
+
+					<div class="tblRev">
+						<div class="FL" style="width:50%;">
+						 	<span class="pad5lt B">
+							 	Box Rental:
+						 	</span>
+						 	<br/>
+						 	<span>
+								<h:panelGroup styleClass="inBlock pad5tp"
+										rendered="#{mobileApproverBean.weeklyTimecard.boxRental eq null}" >
+									No box rental submitted.
+								</h:panelGroup>
+								<h:outputText styleClass="FL pad20lt B pad5tp"
+										value="#{mobileApproverBean.weeklyTimecard.boxRental.amount}" >
+									<f:convertNumber type="number" pattern="#,##0.00" />
+								</h:outputText>
+
+								<h:panelGroup styleClass="FR inBlock pad5tp pad10rt pad10bm"
+										rendered="#{mobileApproverBean.weeklyTimecard.boxRental ne null}">
+									<span class="FL btnPriHotLt"></span>
+									<span>
+										<h:commandLink value="" action="boxrentalm"
+												styleClass="btnPriHotCt" style="width:90px;">
+											<span class="btnLbl2lines">View Box<br/>Rental Form</span>
+											<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+											<f:setPropertyActionListener value="tcreviewm" target="#{jumpBean.value}"/>
+										</h:commandLink>
+									</span>
+									<span class="FL btnPriHotRt"></span>
+								</h:panelGroup>
+						 	</span>
+						</div>
+						<div class="FR" style="width:49%;border-left:solid 1px #a3a3a3;">
+						 	<span class="pad5lt B">
+							 	Mileage:
+						 	</span>
+
+							<h:panelGroup rendered="#{mobileApproverBean.weeklyTimecard.mileage ne null}">
+								<div class="inBlock FR B pad20rt" style="margin-bottom: -5px;">
+									<span class="inBlock pad15rt">
+										<h:outputText value="Miles" />
+									</span>
+									<span class="inBlock">
+										<h:outputText value="Tax" />
+									</span>
+								</div>
+								<div class="CB"></div>
+								<!-- List of existing mileage entries -->
+								<ui:repeat value="#{mobileApproverBean.weeklyTimecard.mileage.mileageLines}" var="line">
+									<div class="CT MA pad6tp" style="width:98%;">
+										<span class="inBlock FL ltMar" style="width:50%;">
+											<span class="FL btnPriHotSmLt"></span>
+											<span>
+												<h:commandLink action="mileagem" styleClass="btnPriHotSmCt"
+														title="View the details for this line item">
+													<h:outputText value="#{line.date}" />
+													<f:setPropertyActionListener value="com.lightspeedeps.mtcMileageId" target="#{jumpBean.attribute}"/>
+													<f:setPropertyActionListener value="#{line.id}" target="#{jumpBean.value}"/>
+													<f:setPropertyActionListener value="com.lightspeedeps.hoursBackPage" target="#{jumpBean.attribute}"/>
+													<f:setPropertyActionListener value="tcreviewm" target="#{jumpBean.value}"/>
+												</h:commandLink>
+											</span>
+											<span class="FL btnPriHotSmRt"></span>
+										</span>
+										<span class="FR" style="width:50px;">
+											<h:selectBooleanCheckbox styleClass="ckbx" value="#{line.taxable}" disabled="true" />
+										</span>
+									 	<h:outputText value="#{line.miles}" styleClass="B FR pad2tp pad7rt">&#160;
+											<f:convertNumber type="number" pattern="#,##0.0" />
+									 	</h:outputText>
+									</div>
+									<div class="CB" />
+								</ui:repeat>
+							</h:panelGroup><!-- mileage table area -->
+
+							<div class="CT MA pad6tp" style="width:98%;">
+								<h:panelGroup styleClass="inBlock FL ltMar"
+										rendered="#{mobileApproverBean.weeklyTimecard.submitable and headerViewBean.production.writable}">
+									<span class="FL btnPriHotSmLt"></span>
+									<span>
+										<h:commandLink value="Add New Entry" title="Add another mileage form line item"
+												action="#{mobileApproverBean.actionAddMileage}" styleClass="btnPriHotSmCt" />
+									</span>
+									<span class="FL btnPriHotSmRt"></span>
+								</h:panelGroup>
+							</div>
+							<div class="CB" />
+
+						 	<br/>
+						 	<div class="pad15lt pad5tp inBlock pad10bm">
+						 		<span class="inBlock" style="width:60px;">
+								 	Allowable:
+						 		</span>
+							 		<h:outputText styleClass="B inBlock" style="width:45px;text-align:right;"
+							 				value="#{mobileApproverBean.weeklyTimecard.mileage.nonTaxableMiles}">
+										<f:convertNumber type="number" pattern="#,##0.0" />
+							 		</h:outputText>
+							 	<br/>
+							 	<div class="pad5tp inBlock">
+							 		<span class="inBlock" style="width:60px;">
+									 	Taxable:
+							 		</span>
+							 		<h:outputText styleClass="B inBlock" style="width:45px;text-align:right;"
+							 				value="#{mobileApproverBean.weeklyTimecard.mileage.taxableMiles}">
+										<f:convertNumber type="number" pattern="#,##0.0" />
+							 		</h:outputText>
+							 	</div>
+						 	</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="CB"/>
+				<ui:include src="../common/errors.xhtml" />
+
+				<div class="twoBtnRow" style="width:95%;">
+
+					<h:panelGroup styleClass="inBlock FL"
+							rendered="#{mobileApproverBean.status.ready and headerViewBean.production.writable}">
+						<span class="FL btnSecHotLt"></span>
+						<span>
+								<h:commandLink value="" action="#{mobileApproverBean.actionApproveNow}"
+										styleClass="btnSecHotCt" style="width:90px;">
+									<span class="btnLbl2lines">Approve &amp;<br/>Sign Now</span>
+								</h:commandLink>
+						</span>
+						<span class="FL btnSecHotRt"></span>
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="inBlock CT"
+							rendered="#{mobileApproverBean.status.ready and headerViewBean.production.writable}"
+							style="margin-right:4%;">
+						<span class="prodTitle">
+							<h:selectBooleanCheckbox value="#{mobileApproverBean.weeklyTimecard.markedForApproval}"
+									valueChangeListener="#{mobileApproverBean.listenMarkApproval}">
+								<ace:ajax />
+							</h:selectBooleanCheckbox>
+							Mark for Approval
+						</span>
+					</h:panelGroup>
+					&#160;
+
+					<h:panelGroup styleClass="inBlock FR"
+							rendered="#{mobileApproverBean.status.ready and headerViewBean.production.writable}">
+						<span class="FL btnPriEnbLt"></span>
+						<span>
+								<h:commandLink value="" action="#{mobileApproverBean.actionReject}"
+										styleClass="btnPriEnbCt" style="width:80px;">
+									<span class="btnPriEnbCt">Reject</span>
+								</h:commandLink>
+						</span>
+						<span class="FL btnPriEnbRt"></span>
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="inBlock FR"
+							rendered="#{mobileApproverBean.weeklyTimecard.submitable and headerViewBean.production.writable}">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+								<h:commandLink value="Submit" action="#{mobileTimecardBean.actionReviewSubmit}"
+										styleClass="btnPriHotCt" style="width:100px;" />
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</h:panelGroup>
+
+				</div>
+
+				<div class="CB"/>
+
+				<div class="pad15tp">
+					<span class="inBlock CT">
+						<span class="FL btnPriHotLt"></span>
+						<span>
+							<h:commandLink value="" action="appdashboardm"
+									styleClass="btnPriHotCt" style="width:90px;">
+								<span class="btnLbl2lines">Approver<br/>Dashboard</span>
+							</h:commandLink>
+						</span>
+						<span class="FL btnPriHotRt"></span>
+					</span>
+				</div>
+
+			</div>
+
+		</h:form>
+
+		<ui:include src="../common/footer.xhtml" />
+
+	</div>
+
+</h:body>
+</html>

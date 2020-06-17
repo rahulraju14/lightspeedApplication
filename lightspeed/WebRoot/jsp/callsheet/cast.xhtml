@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<div class="rowCont FL rowGradient pad20tp">
+		<ace:dataTable styleClass="gradTbl3"
+			style="width:100%;max-width:100%;"
+			rowStyleClass="grdUp26Gry"
+			value="#{callSheetViewBean.callsheet.castCalls}"
+			var="castCall">
+
+			<ace:column styleClass="CT" style="width:4%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<ace:linkButton value="#{castCall.actorIdStr}"
+					 		rendered="#{(not callSheetViewBean.production.type.crossProject) and
+					 				(not empty authBean.pgFields['6.2,link_castid'])}"
+							action="#{jumpBean.actionViewElementByCastId}">
+						<f:setPropertyActionListener value="#{castCall.actorIdStr}"
+							target="#{jumpBean.value}" />
+					</ace:linkButton>
+					<h:outputText value="#{castCall.actorIdStr}"
+					 		rendered="#{(callSheetViewBean.production.type.crossProject) or
+					 				(empty authBean.pgFields['6.2,link_castid'])}"/>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.actorIdStr}" style="width:100%;min-width:60px;" maxlength="7" />
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="LT" headerText="Name" style="width:20%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.name}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.name}" style="width:100%;min-width:190px;" maxlength="50"/>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="LT" headerText="Character" style="width:20%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.characterName}" />&#160;
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.characterName}" style="width:100%;min-width:190px;" maxlength="100"/>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="CT" headerText="#{callSheetViewBean.production.type.crossProject ? 'Status*' : 'Status' }"
+				 style="width:7%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.status}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.status}" styleClass="W100percnt CT" maxlength="30"/>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="CT" headerText="PU/Lv/Rpt" style="width:7%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.pickup}" rendered="#{castCall.pickup ne null}">
+						<f:converter converterId="lightspeed.DateTimeConverter"/>
+					</h:outputText>
+					<h:outputText value="H" rendered="#{castCall.pickup eq null}" />&#160;
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.pickup}" styleClass="W100percnt CT">
+						<f:converter converterId="lightspeed.TimeConverterHold"/>
+					</ace:textEntry>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="CT" headerText="MkUp" style="width:7%;">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.makeup}">
+						<f:converter converterId="lightspeed.DateTimeConverter" />
+					</h:outputText>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.makeup}" styleClass="W100percnt CT">
+						<f:converter converterId="lightspeed.DateTimeConverter"/>
+					</ace:textEntry>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="CT" headerText="OnSet" style="width:7%">
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.onSet}">
+						<f:converter converterId="lightspeed.DateTimeConverter" />
+					</h:outputText>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.onSet}" styleClass="W100percnt CT">
+						<f:converter converterId="lightspeed.DateTimeConverter" />
+					</ace:textEntry>
+				</h:panelGroup>
+			</ace:column>
+
+			<ace:column styleClass="LT" style="width:28%;">
+				<f:facet name="header">
+					<h:outputText value="Remarks" />
+					<h:panelGroup rendered="#{editMode}"  styleClass="FR pad5rt">
+						<span class="btnMiniLtHot" />
+							<ace:linkButton value="Refresh"
+								title="Refresh the list of cast members."
+								action="#{callSheetViewBean.actionRefreshCast}"
+								styleClass="btnMiniCt">
+							</ace:linkButton>
+						<span class="btnMiniRtHot" />
+					</h:panelGroup>
+				</f:facet>
+
+				<h:panelGroup rendered="#{not editMode}">
+					<h:outputText value="#{castCall.note}" />
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{editMode}">
+					<ace:textEntry value="#{castCall.note}" style="width:100%;min-width:190px;" maxlength="1000"/>
+				</h:panelGroup>
+			</ace:column>
+
+		</ace:dataTable>
+		<h:panelGroup rendered="#{callSheetViewBean.production.type.crossProject}">
+			<div class="rowCont">
+				* - Status values are for the following episodes:
+				<h:outputText value="#{callSheetViewBean.callsheet.episodeList}" />
+			</div>
+		</h:panelGroup>
+	</div>
+</ui:composition>

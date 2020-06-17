@@ -1,0 +1,474 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core">
+
+	<!-- This comprises the bulk of the Full Timecard page, for both
+			in-production use and under the My Timecard tab. -->
+	<!-- params:
+			mytc - boolean - true indicates this is the My Timecards page
+			aicp : true if AICP Timecard (for Commercial production); used by included pages
+	 -->
+	<!-- Added ids for QA automation LS-2923 -->
+
+	<div id="main">
+		<c:set var="projectActive" value="#{(! aicp) or (fullTimecardBean.weeklyTimecard.startForm.project.status eq 'ACTIVE')}" scope="request" />
+		<c:set var="useModelRelease" value="#{fullTimecardBean.useModelRelease}" scope="request" />
+
+		<ui:include src="../common/header2.xhtml" />
+
+		<div id="mainCont">
+			<div id="ctrCont">
+				<div id="pnlCont">
+					<!--  Begin Element Details - pnlFull -->
+					<div id="pnlFull" class="MA">
+						<div class="topBdrCont FL">
+							<div class="midTop">
+								<div class="ltTopCnr"></div>
+								<div class="rtTopCnr"></div>
+							</div>
+						</div>
+
+						<div class="rowCont FL ltrtBdr BKwhite"> <!-- Top header -->
+							<h:panelGroup styleClass="pad10tp" rendered="#{(not fullTimecardBean.showSetMultiplier) and
+									(not commentPinPromptBean.askPin) and (not changePinBean.visible) and
+									(not fullTimecardBean.showClone) and (not submitPromptBean.askPin)}">
+								<ui:include src="../common/errorsMain.xhtml" />
+							</h:panelGroup>
+
+							<div class="rowCont">
+								<div class="pnlHdrTxt FL txt12 B LH20" style="width:78%;">
+									<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+										<!-- Week-ending date -->
+										<h:panelGroup>
+											<div class="FL LH20" style="width:19%;">
+												<h:outputText value="W/E &#160;" styleClass="FL" />
+												<h:outputText value="#{fullTimecardBean.weekEndDate}"
+														styleClass="#{fullTimecardBean.weeklyTimecard.status eq 'VOID' ? 'FL tcVoid' : 'FL'}">
+													<f:convertDateTime pattern="MM/dd/yyyy" timeZone="#{timezone}" />
+												</h:outputText>
+												<h:outputText rendered="#{fullTimecardBean.weeklyTimecard.adjusted}"
+														value="-Adj" styleClass="FL tcAdj" />
+											</div>
+										</h:panelGroup>
+									</icecore:setEventPhase>
+
+									<!-- ONLY NAME for MY TIMECARD -->
+									<h:panelGroup rendered="#{mytc}">
+										<div class="FL LH20" style="width:35%;">
+											<div class="CT">
+												<h:outputText
+														value=" #{fullTimecardBean.weeklyTimecard.lastNameFirstName}" />
+											</div>
+										</div>
+									</h:panelGroup>
+
+									<!-- DEPT/BATCH/... FILTER -->
+									<h:panelGroup rendered="#{(not mytc)}">
+										<div class="FL LH20" style="width:44%;">
+											<icecore:setEventPhase events="ValueChangeEvent" phase="INVOKE_APPLICATION">
+												<h:outputText styleClass="txt12 B" value="Filter:" />
+												<h:selectOneMenu immediate="true" styleClass="pad8lt"
+														disabled="#{fullTimecardBean.editMode}"
+														value="#{fullTimecardFilterBean.filterType}" style="width:80px;"
+														valueChangeListener="#{fullTimecardFilterBean.listenFilterByChange}" >
+													<f:selectItems value="#{fullTimecardFilterBean.filterByList}"/>
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectOneMenu>
+												<h:selectOneMenu id="dept" immediate="true" styleClass="pad8lt"
+														disabled="#{fullTimecardBean.editMode}"
+														value="#{fullTimecardFilterBean.selectFilterValue}" style="min-width:195px;"
+														valueChangeListener="#{fullTimecardFilterBean.listenSelectFilterChange}" >
+													<f:selectItems value="#{fullTimecardFilterBean.selectFilterList}"/>
+													<f:ajax execute="@this" render="@all"/>
+												</h:selectOneMenu>
+											</icecore:setEventPhase>
+										</div>
+									</h:panelGroup>
+
+									<!-- Name & left/right scrolling arrows -->
+									<h:panelGroup rendered="#{(not mytc)}">
+										<div class="FL" style="width:4%;">&#160;
+											<h:commandLink value=""
+													action="#{fullTimecardBean.actionPreviousTimecard}" styleClass="previous2 FR"
+													title="View the previous timecard in this week's list"
+													disabled="#{(empty authBean.pgFields['0.2,tc_approval'] or fullTimecardBean.editMode)}"
+													style="padding:0;
+															visibility: #{(not (empty authBean.pgFields['0.2,tc_approval'] or fullTimecardBean.editMode))
+															and fullTimecardBean.showScrollArrows ? '' : 'hidden'}">
+												<h:graphicImage value="../../i/previous.gif" alt="" />
+											</h:commandLink>
+
+										</div>
+										<div class="FL LH20" style="width:29%;">
+											<div class="CT">
+												<h:outputText
+														value=" #{fullTimecardBean.weeklyTimecard.lastNameFirstName}" />
+											</div>
+										</div>
+										<div class="FL">&#160;
+											<h:commandLink value=""
+													action="#{fullTimecardBean.actionNextTimecard}" styleClass="next2"
+													title="View the next timecard in this week's list"
+													disabled="#{(empty authBean.pgFields['0.2,tc_approval'] or fullTimecardBean.editMode)}"
+													style="padding:0;
+															visibility: #{(not (empty authBean.pgFields['0.2,tc_approval'] or fullTimecardBean.editMode))
+															and fullTimecardBean.showScrollArrows ? '' : 'hidden'}">
+												<h:graphicImage value="../../i/next.gif" alt="" />
+											</h:commandLink>
+										</div>
+									</h:panelGroup>
+
+								</div>
+
+								<!--
+								<ui:include src="tcDebug.xhtml"><ui:param name="bean" value="#{indivTimecardBean}" /></ui:include>
+								-->
+
+								<!-- DELETE BUTTON -->
+								<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.status eq 'OPEN'
+										and (fullTimecardBean.editAuth) and (headerViewBean.miniTab lt 3) and projectActive}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton value="Delete" onclick="queueClick(this,event);" title="Delete this timecard"
+												action="#{fullTimecardBean.actionDelete}" styleClass="btnPriEnbCt btnPriHotCt" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- VOID BUTTON -->
+								<h:panelGroup rendered="#{(not mytc) and
+										(fullTimecardBean.weeklyTimecard.id ne null) and
+										fullTimecardBean.weeklyTimecard.status ne 'OPEN' and
+										fullTimecardBean.weeklyTimecard.status ne 'VOID' and
+										fullTimecardBean.weeklyTimecard.status ne 'LOCKED' and
+										fullTimecardBean.weeklyTimecard.timeFinal eq null and
+										fullTimecardBean.weeklyTimecard.timePaid eq null and
+										(not empty authBean.pgFields['9.1,void'])
+										and (headerViewBean.miniTab lt 3)
+										and projectActive}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton value="Void" title="Void this timecard"
+													onclick="queueClick(this,event);"
+													action="#{fullTimecardBean.actionVoid}" styleClass="btnPriEnbCt btnPriHotCt" />
+										</span>
+										<span class="btnPriEnbRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- EDIT BUTTON -->
+								<h:panelGroup
+										rendered="#{! (fullTimecardBean.editMode) and (headerViewBean.miniTab lt 3) and
+										(fullTimecardBean.editAuth or fullTimecardBean.recallAuth or fullTimecardBean.pullAuth)
+										and projectActive}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Edit" action="#{fullTimecardBean.actionEdit}"
+												styleClass="btnPriHotCt" />
+										</span>
+										<span class="btnPriHotRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{(fullTimecardBean.editMode)
+													and (headerViewBean.miniTab ne 3)}">
+									<span class="FR pad5rt">
+										<span class="btnPriDisLt" />
+										<span>
+											<ace:linkButton value="Edit" styleClass="btnPriDisCt" type="text" onclick="return false;"/>
+										</span>
+										<span class="btnPriDisRt" />
+									</span>
+								</h:panelGroup>
+
+								<!-- PRINT BUTTON -->
+								<h:panelGroup rendered="#{(! fullTimecardBean.editMode) and
+										(fullTimecardBean.weeklyTimecard.id ne null) and
+										((headerViewBean.user.accountNumber eq fullTimecardBean.weeklyTimecard.userAccount) or
+										(fullTimecardBean.cloneAuth) or
+										(fullTimecardBean.userHasEditHtg) or (not empty authBean.pgFields['9.1,view_htg'])) and
+										(headerViewBean.miniTab lt 3)}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Print" styleClass="btnPriHotCt" style="min-width:10px;"
+												title="Print one or more timecards"
+												action="#{fullTimecardBean.actionPrint}"/>
+										</span>
+										<span class="btnPriHotRt"/>
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- DELETE BUTTON FOR ATTACHMENT -->
+								<h:panelGroup rendered="#{(fullTimecardBean.weeklyTimecard.id ne null) 
+											and (attachmentBean.attachment ne null)
+											and (headerViewBean.miniTab eq 3)
+											and projectActive
+											and ((not empty authBean.pgFields['2.0,write_any'])
+													or (attachmentBean.attachment.isOwner))}">
+									<span class="FR pad5rt">
+										<span class="btnPriEnbLt"/>
+										<span>
+										<ace:linkButton value="Delete" action="#{attachmentBean.actionDelete}"
+											title="Delete the selected attachment." styleClass="btnPriEnbCt" />
+										</span>
+										<span class="btnPriEnbRt"/>
+									</span>
+								</h:panelGroup>
+
+								<!-- ATTACH BUTTON FOR ATTACHMENTS -->
+								<h:panelGroup rendered="#{(fullTimecardBean.weeklyTimecard.id ne null)
+											and (headerViewBean.miniTab eq 3) and projectActive}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Attach" styleClass="btnPriHotCt" style="min-width:10px;"
+												title="Upload another attachment for this timecard"
+												action="#{fullTimecardBean.actionUploadAttachment}"/>
+										</span>
+										<span class="btnPriHotRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+	
+								<!-- PRINT BUTTON FOR ATTACHMENTS -->
+								<h:panelGroup rendered="#{(fullTimecardBean.weeklyTimecard.id ne null) and
+												(attachmentBean.attachment ne null)
+												and (headerViewBean.miniTab eq 3)}">
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriHotLt" />
+										<span>
+											<ace:linkButton value="Print" styleClass="btnPriHotCt" style="min-width:10px;"
+												title="Print the selected attachment"
+												action="#{attachmentBean.actionPrint}"/>
+										</span>
+										<span class="btnPriHotRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+
+								<!-- CLONE BUTTON -->
+								<h:panelGroup rendered="#{(! fullTimecardBean.editMode) and
+										(fullTimecardBean.cloneAuth) and
+										(headerViewBean.miniTab lt 3)
+										and projectActive}">
+									<!-- note: cloneAuth is never true on My Timecards page -->
+									<h:panelGroup styleClass="FR pad5rt">
+										<span class="btnPriHotLt"/>
+										<span>
+											<ace:linkButton value="Clone" styleClass="btnPriHotCt" style="min-width:10px;"
+												action="#{fullTimecardBean.actionClone}"/>
+										</span>
+										<span class="btnPriHotRt" />
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</div><!-- End of Top header -->
+
+							<div class="centerFullPg2">
+								<h:panelGrid id="miniView" styleClass="miniPanel">
+
+									<!-- Tabs -->
+									<ace:tabSet id="tabs"
+										selectedIndex="#{fullTimecardBean.selectedTab}" width="100%"
+										cellpadding="0" cellspacing="0" border="0">
+
+										<!--  consolidated timecard tab  -->
+										<ui:include src="fulltcConsolidated.xhtml"><!-- include consolidated TC mini-tab -->
+										</ui:include>
+										<!-- Box Rental tab -->
+										<ace:tabPane label="Box Rental #{fullTimecardBean.boxTabText}">
+											<div id="scrollBoxRental" class="scrollPnlTab">
+												<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id ne null}">
+													<!-- Full timecard header area -->
+													<c:if test="#{not useModelRelease}">
+														<ui:include src="fulltcTop.xhtml">
+															<ui:param name="idPrefix" value="fvBr" />  <!-- fvBr full view box rental form  -->
+														</ui:include>
+													</c:if>
+													<c:if test="#{useModelRelease}">
+														<ui:include src="fulltcModelTop.xhtml">
+															<ui:param name="idPrefix" value="fvBr" /><!-- fvBr full view box rental form -->
+														
+														</ui:include>
+													</c:if>
+													<!-- Box Rental minitab contents -->
+													<ui:include src="boxrental.xhtml" >
+														<ui:param name="timecardBean" value="#{fullTimecardBean}"></ui:param>
+														<ui:param name="page" value="full"></ui:param>
+													</ui:include>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id eq null}">
+													<br/>
+													<h:outputText styleClass="pad20lt txt14"  value="No timecard is currently available."/>
+												</h:panelGroup>
+											</div>
+										</ace:tabPane>
+
+										<!-- Mileage tab -->
+										<ace:tabPane label="Mileage">
+											<div id="scrollMiles" class="scrollPnlTab">
+												<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id ne null}">
+													<!-- Full timecard header area -->
+													<c:if test="#{not useModelRelease}">
+														<ui:include src="fulltcTop.xhtml">
+															<ui:param name="idPrefix" value="fvMl" /><!-- fvMl  full view mileage form -->
+														</ui:include>
+													</c:if>
+													<c:if test="#{useModelRelease}">
+														<ui:include src="fulltcModelTop.xhtml">
+															<ui:param name="idPrefix" value="fvMl" /><!-- fvMl  full view mileage form -->
+														</ui:include>
+													</c:if>
+													<!-- Mileage minitab contents -->
+													<ui:include src="mileage.xhtml" >
+														<ui:param name="timecardBean" value="#{fullTimecardBean}"></ui:param>
+														<ui:param name="page" value="full"></ui:param>
+													</ui:include>
+												</h:panelGroup>
+												<h:panelGroup rendered="#{fullTimecardBean.weeklyTimecard.id eq null}">
+													<br/>
+													<h:outputText styleClass="pad20lt txt14"  value="No timecard is currently available."/>
+												</h:panelGroup>
+											</div>
+										</ace:tabPane>
+										
+										<!-- Attachment tab -->
+										<ui:include src="tcAttachment.xhtml" >
+											<ui:param name="bean" value="#{fullTimecardBean}" />
+										</ui:include>
+
+										<!-- Timecard Audit -->
+										<!-- <c:set var="audit" value="#{not empty authBean.pgFields['9.1,view_tc_audit']}" />
+										<c:if test="#{audit}"> -->
+											<ui:include src="timecardAudit.xhtml" />
+										<!-- </c:if> -->
+										
+									</ace:tabSet>
+									<!--  END TAB set  -->
+								</h:panelGrid>
+								<!-- end miniView -->
+
+								<!-- secondary (bottom right corner) buttons -->
+								<div class="rowBtnFullPg">
+									<div class="rowBtnBdr"></div>
+									<div class="FL MA rowCont">
+										<div>
+											<h:panelGroup rendered="#{(fullTimecardBean.mayApprove and (not mytc))
+																		and (headerViewBean.miniTab ne 3) }">
+												<div class="stdTxt FL pad6lt">
+													<h:selectBooleanCheckbox styleClass="FL"
+															valueChangeListener="#{fullTimecardBean.listenMark}"
+															value="#{fullTimecardBean.weeklyTimecard.markedForApproval}" >
+														<f:ajax execute="@this" render="@all"/>
+													</h:selectBooleanCheckbox>
+													<h:outputText value="Mark for Approval"
+															styleClass="FL B pad8lt pad3tp" />
+												</div>
+											</h:panelGroup>
+										</div>
+
+										<!-- Submit btn -->
+										<h:panelGroup rendered="#{! fullTimecardBean.editMode and
+												fullTimecardBean.selectedTab eq 0 and
+												fullTimecardBean.viewProduction.status.allowsWrite and
+												(fullTimecardBean.approvalAuth or (headerViewBean.user.accountNumber eq fullTimecardBean.weeklyTimecard.userAccount)) and
+												(fullTimecardBean.weeklyTimecard.submitable)
+												and projectActive}">
+											<span class="FR pad10rt">
+												<span class="btnSecHotLt" />
+												<span>
+													<ace:linkButton title="Submit timecard for approval" value="Submit"
+														action="#{fullTimecardBean.actionSubmit}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+										<!-- end Submit btn -->
+
+										<!-- Approve/Reject buttons -->
+										<h:panelGroup rendered="#{(not mytc)
+												and (not fullTimecardBean.editMode)
+												and fullTimecardBean.selectedTab eq 0
+												and (fullTimecardBean.mayApprove)
+												and not (fullTimecardBean.weeklyTimecard.status eq 'OPEN')
+												and (not empty authBean.pgFields['0.2,tc_approval'])
+												and projectActive}">
+											<span class="FR pad10rt">
+												<span class="btnPriEnbLt" />
+												<span><ace:linkButton styleClass="btnPriEnbCt"
+															title="Return timecard to prior approver or employee"
+															value="Reject" action="#{fullTimecardBean.actionReject}" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+											<span class="FR pad10rt">
+												<span class="btnSecHotLt" />
+												<span><ace:linkButton styleClass="btnSecHotCt"
+															title="Approve the data on this timecard"
+															value="Approve" action="#{fullTimecardBean.actionApprove}" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+
+										<!-- Save/Cancel buttons -->
+										<h:panelGroup rendered="#{(fullTimecardBean.editMode)
+															and (headerViewBean.miniTab ne 3)}">
+											<span class="FR pad10rt">
+												<span class="btnPriEnbLt" />
+												<span><ace:linkButton styleClass="btnPriEnbCt" immediate="true"
+															onmouseup="showErrors();" title="Do NOT save changes to this timecard"
+															onclick="queueClick(this,event);"
+															value="Cancel" action="#{fullTimecardBean.actionCancel}" />
+												</span>
+												<span class="btnPriEnbRt" />
+											</span>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{(fullTimecardBean.editMode)
+																and (headerViewBean.miniTab ne 3)}">
+											<span class="FR pad5rt"><span class="btnSecHotLt" />
+												<span><ace:linkButton value="Save"
+															onmouseup="showErrors();" title="Save all changes to this timecard"
+															onclick="queueClick(this,event);"
+															action="#{fullTimecardBean.actionSave}" styleClass="btnSecHotCt" />
+												</span>
+												<span class="btnSecHotRt" />
+											</span>
+										</h:panelGroup>
+
+									</div>
+								</div>
+								<!-- end secondary buttons -->
+							</div>
+
+						</div><!-- end outer container -->
+
+						<div class="btmBdrCont">
+							<div class="midBtm">
+								<div class="ltBtmCnr"></div>
+								<div class="rtBtmCnr"></div>
+							</div>
+						</div>
+					</div><!-- end pnlFull -->
+				</div>
+				<!--  end pnlCont -->
+			</div>
+			<!-- end ctrCont -->
+			<div class="CB"></div>
+			<!-- clears float for liquid layout -->
+		</div>
+		<!-- end mainCont -->
+
+		<div class="footerCont CT">
+			<ui:include src="../common/footercont.xhtml" />
+		</div>
+
+	</div>
+	<!-- end main -->
+</ui:composition>

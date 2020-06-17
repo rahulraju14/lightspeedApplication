@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<h:head>
+<!-- Title text displayed will depend on which domain the user is coming from.
+	 coming from TTC online domain will display TTC Online specific wording.
+	 All else will display Lightspeed specific wording.
+-->
+<title>#{headerViewBean.domainTabTitle} Import Script - Final Review</title>
+ 
+<ui:include src="../common/head.xhtml" />
+
+<script language="javascript">
+function resize() {
+	<c:if test="#{not headerViewBean.mobile}">
+	element = document.getElementById('impFinSceneList');
+	resizeElement(element, 300, 160);
+
+	element = document.getElementById('impFinCont');
+	resizeElement(element, 178, 300);
+	</c:if>
+}
+
+var formname = "importreview";
+</script>
+</h:head>
+<h:body>
+<c:if test="#{not headerViewBean.mobile}">
+<script language="javascript">
+ice.ace.jq( document ).ready(function() {
+	initDomLoaded(); // do our standard page initialization tasks.
+});
+</script>
+</c:if>
+<h:form autocomplete="off" id="importreview">
+
+<h:outputText binding="#{headerRequestBean.tabName}" value="#{headerViewBean.tabValue}" style="visibility:hidden" >
+	<f:attribute name="tabid" value="newrevision" />
+</h:outputText>
+
+<div id="main">
+	<ui:include src="../common/header2.xhtml" />
+	<div id="mainCont">
+		<div id="ctrCont">
+			<div id="pnlCont">
+
+				<!-- Begin Lists pnlLt -->
+				<div id="pnlFull" class="MA">
+
+					<div class="topBdrCont">
+						<div class="midTop"><div class="ltTopCnr"></div><div class="rtTopCnr"></div></div>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+
+						<span class="pnlHdrTxt FL">
+							<h:outputText value="#{headerViewBean.project.title}"/>
+						</span>
+						<!-- temporarily hide this until we generate the steps dynamically
+						<span class="pnlHdrTxt FR pad10rt">
+							<h:outputText
+								value="Step 4 of 4"/>
+						</span>
+						-->
+						<h:panelGroup styleClass="pad5lt">
+							<h:panelGroup styleClass="FR pad5rt">
+								<span class="btnPriHotLt" />
+								<ace:linkButton
+									action="#{scriptFinalReviewBean.actionRedoBreakdown}"
+									value="Re-do Breakdown" immediate="true"
+									styleClass="btnPriHotCt btnLbl2lines btnTxt " style="width:90px;">
+								</ace:linkButton>
+								<span class="btnPriHotRt" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+
+					<div class="rowCont ltrtBdr BKwhite FL">
+						<div class="centerFullTb MA">
+
+							<div id="miniView">
+
+								<div id="impFinCont">
+									<!-- Tabs for import final -->
+									<ace:tabSet id="tabs" selectedIndex="0" styleClass="W100percnt">
+
+										<!--  Final Review Tab   -->
+										<ace:tabPane label="Final Review">
+
+<div class="rowCont pad10tp">
+	<h:panelGroup styleClass="FL" rendered="#{empty scriptFinalReviewBean.script.scenes}">
+		<h:outputText value=" The script has no scenes."/>
+	</h:panelGroup>
+
+	<h:panelGroup styleClass="FL pad20lt B"
+			rendered="#{not empty scriptFinalReviewBean.script.scenes}">
+		<h:outputText value=" #{scriptFinalReviewBean.script.description}"/>
+		<h:outputText value="(Rev. #{scriptFinalReviewBean.script.revisionNumber} -&#160;" styleClass="pad5lt"/>
+		<h:outputText value="#{scriptFinalReviewBean.script.date}">
+			<f:convertDateTime type="both" timeZone="#{applicationScopeBean.timeZone}" pattern="M/d/yy h:mm a)" />
+		</h:outputText>
+	</h:panelGroup>
+</div>
+
+<div class="MA pad10tp" style="width:938px;">
+	<ace:dataTable value="#{scriptFinalReviewBean.sceneViewList}"
+			var="sceneView" styleClass="grid_import" style="width:920px;border:1px solid #a3a3a3;"
+			rows="1">
+		<ui:include src="scenelistcolheadings.xhtml" />
+		<ace:column colspan="8" style="display:none;"></ace:column>
+	</ace:dataTable>
+</div>
+
+<div id="impFinSceneList" class="FL rowCont">
+	<table align="center">
+		<tr>
+			<td valign="top" align="center">
+				<!-- data representation -->
+				<ui:repeat value="#{scriptFinalReviewBean.sceneViewList}"
+						var="sceneView" id="scenelist" >
+
+					<ui:include src="scenelistdata.xhtml" />
+
+
+
+
+
+					<ui:include src="scriptelementexpansion.xhtml" />
+
+				</ui:repeat>
+			</td>
+		</tr>
+	</table>
+</div>
+
+										</ace:tabPane><!--  End Import Final Review Tab -->
+									</ace:tabSet>
+
+								</div>
+							</div><!-- end miniView -->
+						</div><!-- end centerFullTab -->
+
+						<div class="rowBtn">
+							<div class="rowBtnBdr"></div>
+							<div class="FL rowCont">
+
+								<h:panelGroup styleClass="FL pad5lt">
+										<span class="btnPriEnbLt" />
+										<span>
+											<ace:linkButton
+												action="#{scriptFinalReviewBean.actionCancelImport}"
+												value="Cancel Import"
+												styleClass="btnPriEnbCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnPriEnbRt" />
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<span class="FR pad15rt">
+										<span class="btnSecHotLt" />
+										<span>
+											<ace:linkButton
+												action="done"
+												actionListener="#{scriptFinalReviewBean.exitFinalReview}"
+												value="Finish"
+												styleClass="btnSecHotCt">
+											</ace:linkButton>
+										</span>
+										<span class="btnSecHotRt" />
+									</span>
+								</h:panelGroup>
+							</div>
+						</div><!-- end Btn row -->
+
+					</div><!-- end outer list cont -->
+
+					<div class="btmBdrCont">
+						<div class="midBtm"><div class="ltBtmCnr"></div><div class="rtBtmCnr"></div></div>
+					</div>
+
+				</div><!-- end pnlFull -->
+			</div><!--  end pnlCont -->
+		</div><!-- end ctrCont -->
+
+		<div class="CB"></div><!-- clears float for liquid layout -->
+
+	</div><!-- end mainCont -->
+
+	<div class="footerCont CT">
+		<ui:include src="../common/footercont.xhtml" />
+	</div>
+
+</div><!-- end main -->
+</h:form>
+<ui:include src="../common/releaseNotes.xhtml" />
+<ui:include src="../common/confirmpopup.xhtml" /><!-- 'New Location' popup dialog -->
+<ui:include src="../common/locationdialog.xhtml" /><!-- 'New Location' popup dialog -->
+
+</h:body>
+</html>

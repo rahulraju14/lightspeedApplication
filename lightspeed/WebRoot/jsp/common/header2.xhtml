@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+<!-- This generates to top menu line and the sub-menus that appear when the top
+	items are hovered over.  The menu contents are maintained by HeaderViewBean. -->
+
+<c:set var="showUS" value="#{headerViewBean.user.showUS}" scope="request" />
+<c:set var="timezone" value="#{applicationScopeBean.timeZone}" scope="application" />
+
+<div id="topCont">
+
+	<h:outputText rendered="#{headerViewBean.branded}">
+		<div class="topLt logoStyle pad2lt">
+			<!-- TODO DH: We are not getting this logo for the first time. Also, the logs are showing a warning -
+				"Component UIGraphic has no attribute alt or attribute resolves to null". -->
+			<ace:graphicImage value="#{headerViewBean.brandDesktopLogo.content}" />
+		</div>
+	</h:outputText>
+	<h:outputText rendered="#{! headerViewBean.branded}">
+		<div class="topLt logo pad2lt"></div>
+	</h:outputText>
+	<h:outputText
+		rendered="#{headerViewBean.mobile}"
+		value="- mobile"
+		styleClass="FL top_fdNm B pad10lt pad10tp" />
+	<h:outputText
+		rendered="#{headerViewBean.offline}"
+		value="OFFLINE" style="color:red;"
+		styleClass="FL top_fdNm B pad10lt pad10tp" />
+  
+	<div id="topRT" class="FR" style="width:200px;">
+		<div class="FR">
+			<h:commandLink id="myHome" styleClass="pad10rt"
+				action="#{headerViewBean.actionChangeProduction}"
+				rendered="#{headerViewBean.production ne null}"
+				value="My Home" />
+				<h:panelGroup rendered="#{fFApplicationScopeBean.useFeature('TTCO_RELEASE_NOTES')}"> 
+					<h:commandLink id="releaseNotes" styleClass="pad10rt"
+						action="#{releaseNotesBean.actionShowReleaseNotes}"
+						value="Updates" />
+				</h:panelGroup> 
+				<h:commandLink id="logOut" styleClass="pad10rt"
+				actionListener="#{headerViewBean.actionLogout}"
+				value="Logout" />
+			<h:commandLink id="help" styleClass="pad5rt"
+				value="Help"
+				actionListener="#{headerViewBean.openHelpWindow}" />
+		</div>
+		<div class="FR">
+			Welcome&#160;&#160;
+			<h:outputText styleClass="pad5rt"
+				value="#{headerViewBean.user.anyName}"/>
+		</div>
+	</div>
+	<h:panelGroup rendered="#{releaseNotesBean.showUpdateMsg and (headerViewBean.production eq null or headerViewBean.production.type eq 'OTHER')}">
+		<div style="color:red;font-weight: bold;width: 50%;margin-left: 29%;margin-top: 10px;" >
+	         <h:outputFormat value="#{msg.Release_Notes_info}">
+	          <f:param value="#{applicationScopeBean.latestReleaseDate}"></f:param>
+	          </h:outputFormat>
+	    </div>  
+    </h:panelGroup> 
+</div>
+<div style="position:relative;float:left;width:100%;display:block;">
+
+	<div id="headNav" style="text-align:center;position:relative;margin:auto;height:50px;display:block;">
+
+		<div style="position:relative;top:-34px;height:32px;width:60%;margin-left:20%;">
+			<h:panelGroup styleClass="MA pad1tp"
+					rendered="#{authBean.productionId ne null}">
+				<h:outputText value="#{headerViewBean.production.title}" styleClass="top_fdNm NW" />
+				<div>
+					<h:outputText rendered="#{headerViewBean.production.type.episodic}">
+						<span class="top_fdNm">#{showUS ? 'Project' : 'Production'}:</span>
+						<span>&#160;
+							<h:selectOneMenu immediate="true" style="height:20px;line-height:13px;z-index:200;"
+									value="#{headerViewBean.selectedProjectId}" rendered="#{!headerViewBean.production.type.talent}"
+									valueChangeListener="#{headerViewBean.actionChangeProject}">
+								<f:selectItems value="#{headerViewBean.projectTitles}"/>
+								<f:ajax execute="@this" render="@all"/>
+							</h:selectOneMenu>
+							<h:outputText value="#{headerViewBean.projectTitle}" rendered="#{headerViewBean.production.type.talent}" />
+						</span>
+					</h:outputText>
+				</div>
+
+			</h:panelGroup>
+		</div>
+
+		<div style="position:relative;margin-top:-29px;min-width:1004px;">
+		<h:panelGroup styleClass="MA"
+				style="position:relative;width:100%;height:25px;z-index:200;background-color:#fff;">
+
+			<!-- Loop through the main (top) navigation tabs -->
+			<!-- The 'tnloop' id is referenced by javascript functions! -->
+			<ui:repeat id="tnloop"
+					varStatus="status" value="#{headerViewBean.mainMenus}" var="menu">
+				<h:panelGroup style="position:relative;display:inline-block;"
+						rendered="#{not empty authBean.pgFields[(headerViewBean.tours ? menu.toursPermission : (headerViewBean.talent ? menu.talentPermission : menu.permission))]}">
+					<span style="position:absolute;right:-9891px;top:0px;width:10000px;height:24px;line-height:24px;background-image:url('../../i/bk_mainNav1x25.jpg');background-repeat:repeat-x;">&#160;</span>
+					<div style="position:relative;display:inline-block;width:115px;"><!-- This being 5px smaller than the actual tab shrinks the rendered output and removes gaps between tabs -->
+
+						<!-- Render an inactive main tab -->
+						<!-- The 'topNav' id is referenced by javascript functions! -->
+						<h:commandLink id="topNav"
+								styleClass="mainNavLkInactive"
+								value="#{showUS ? menu.subText : menu.subTextCa}"
+								rendered="#{status.index ne headerViewBean.mainMenuTrackingIx}"
+								onmouseover="checkTpNav(#{status.index});"
+								action="#{headerViewBean.actionHeaderClicked}"
+								actionListener="#{headerViewBean.mainvalueTracking}">
+							<f:attribute name="index" value="#{status.index}"/>
+						</h:commandLink>
+
+						<!-- NOTE: The Active main tab has to be part of the block below, that's how we maintain relativity for sub nav position -->
+						
+						<!-- Active Main tab section -->
+
+						<!-- Render the active main tab as text (not a link) -->
+						<h:panelGroup rendered="#{status.index eq headerViewBean.mainMenuTrackingIx}">
+							<!-- The 'activeTopNav' id is referenced by javascript functions! -->
+							<div onmouseover="resetTpNav(#{status.index});">
+								<h:outputText id="activeTopNav"
+										styleClass="mainNavLkActive"
+										value="#{showUS ? menu.subText : menu.subTextCa}"/>
+							</div>
+							<!-- The 'activeSubNav' id is referenced by javascript functions! -->
+							<h:panelGroup id="activeSubNav"
+									style="position:absolute;left:-225px;min-width:560px;height:25px;text-align:center;margin-top:21px;display:inline-block;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">
+								<span style="margin:auto;text-align:center;">
+									<span style="position:absolute;float:left;left:-10000px;top:0px;width:10000px;height:25px;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">&#160;</span>
+									<span style="position:relative;margin:auto;display:inline-block;background-color:#fff;">
+									<h:panelGroup style="display:table-cell;width:100%;"
+											rendered="#{menu.showSubTabs}">
+										<!-- Loop through the sub-tabs for the current main tab -->
+										<ui:repeat value="#{menu.subTabs}" var="tab">
+											<h:outputText
+													style="font-weight:bold;color:#000;float:left;padding-left:5px;padding-right:5px;display:inline-block;z-index:200;height:23px;line-height:23px;background-color:#fff;"
+													value="#{showUS ? tab.subText : tab.subTextCa}"
+													rendered="#{tab.tabIx == headerViewBean.currentTabIx}" />
+											<h:commandLink id="subNavTxt" styleClass="subNavLk"
+													value="#{showUS ? tab.subText : tab.subTextCa}" immediate="true"
+													rendered="#{(tab.tabIx != headerViewBean.currentTabIx) and 
+													(not empty authBean.pgFields[(headerViewBean.tours ? tab.toursPermission : tab.permission)])}"
+													actionListener="#{headerViewBean.valueTracking}"
+													action="#{headerViewBean.actionMenuClicked}">
+												<f:attribute name="tabix" value="#{tab.tabIx}"/>
+											</h:commandLink>
+										</ui:repeat>
+									</h:panelGroup>
+									</span>
+									<span style="position:absolute;right:-10000px;top:0px;width:10000px;height:25px;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">&#160;</span>
+								</span>
+							</h:panelGroup>
+						</h:panelGroup>
+
+						<!-- Inactive/Hovered Sub tab loop -->
+
+						<h:panelGroup id="subNav"
+								rendered="#{status.index ne headerViewBean.mainMenuTrackingIx}"
+								style="position:relative;width:0px;left:-225px;height:0px;z-index:0;display:inline-block;z-index:200;
+								#{status.index eq headerViewBean.mainMenuTrackingIx ? '':'display:none'}">
+							<h:panelGroup
+									style="position:absolute;left:-193%;min-width:560px;height:25px;margin-top:22px;display:inline-block;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">
+								<span style="margin:auto;text-align:center;">
+									<span style="position:absolute;float:left;left:-10000px;top:0px;width:10000px;height:25px;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">&#160;</span>
+									<span style="position:relative;margin:auto;display:inline-block;">
+										<h:panelGroup style="display:table-cell;width:100%;"
+												rendered="#{menu.showSubTabs}">
+											<ui:repeat value="#{menu.subTabs}" var="tab">
+												<h:outputText
+														style="font-weight:bold;color:#000;float:left;padding-left:5px;padding-right:5px;display:table-cell;z-index:200;height:23px;line-height:23px;background-color:#fff;"
+														value="#{showUS ? tab.subText : tab.subTextCa}"
+														rendered="#{tab.tabIx == headerViewBean.currentTabIx}" />
+												<h:commandLink id="navSubTxt" styleClass="subNavLk"
+														value="#{showUS ? tab.subText : tab.subTextCa}" immediate="true"
+														rendered="#{(tab.tabIx != headerViewBean.currentTabIx) and 
+															(not empty authBean.pgFields[(headerViewBean.tours ? tab.toursPermission : tab.permission)])}"
+														actionListener="#{headerViewBean.valueTracking}"
+														action="#{headerViewBean.actionMenuClicked}">
+													<f:attribute name="tabix" value="#{tab.tabIx}"/>
+												</h:commandLink>
+											</ui:repeat>
+										</h:panelGroup>
+									</span>
+									<span style="position:absolute;right:-9998px;top:0px;width:10000px;height:25px;z-index:200;background-image:url('../../i/bk_subNav1x25.jpg');background-repeat:repeat-x;">&#160;</span>
+								</span>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+					<span style="position:absolute;display:inline-block;left:112px;top:0px;width:10000px;height:24px;line-height:24px;background-color:#fff;">&#160;</span>
+				</h:panelGroup>
+
+			</ui:repeat>
+		</h:panelGroup>
+		</div>
+
+	</div>
+</div>
+</ui:composition>

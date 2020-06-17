@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptheader" columnCount="3" pageWidth="552" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="184" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5e1e0ba2-4400-4f5d-a593-9148ae9c6173">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="projectId" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select element_id_str, name from script_element where type = 'character' and project_id = $P{projectId} order by element_id;]]>
+	</queryString>
+	<field name="element_id_str" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<textField>
+				<reportElement uuid="1c821bc7-f35e-4962-ad49-0e7373e15129" x="0" y="0" width="182" height="15"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{element_id_str}+ ". "+ $F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
